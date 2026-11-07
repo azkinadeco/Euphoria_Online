@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqvs4213g03s1"
-path="res://.godot/imported/kali_char_special_depth.png-1cf2e5891d2281021943ee9577544d4a.ctex"
+uid="uid://danuxbjoiow0c"
+path="res://.godot/imported/item_exp_potion.png-f0ba46d11580b91b83277a5f138b686e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/depth/kali_char_special_depth.png"
-dest_files=["res://.godot/imported/kali_char_special_depth.png-1cf2e5891d2281021943ee9577544d4a.ctex"]
+source_file="res://art/icons/item_exp_potion.png"
+dest_files=["res://.godot/imported/item_exp_potion.png-f0ba46d11580b91b83277a5f138b686e.ctex"]
 
 [params]
 

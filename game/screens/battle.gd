@@ -42,6 +42,8 @@ const ATMO := {"ice": ["snow", "#ffffff"], "hell": ["lantern", "#ff7a3d"], "boss
 	"world": ["petal", "#ffd1e8"], "lobby": ["firefly", "#d4b8ff"]}
 
 ## Units dash in from their side of the screen at battle start.
+var _foes: Array = []
+
 func _entrance() -> void:
 	if _skip:
 		return
@@ -71,7 +73,8 @@ func build() -> void:
 	set_bg(Game.battle_bg(params), 0.25)
 	_living_bg.call_deferred()
 	var boss_fight := false
-	for en in Game.enemies_for(params):
+	_foes = Game.enemies_for(params)
+	for en in _foes:
 		if en.get("boss", false):
 			boss_fight = true
 	Game.play_bgm("battle/bgm_boss" if boss_fight else "battle/bgm_battle")
@@ -1082,6 +1085,9 @@ func _intro_banners() -> void:
 	if not sim.tactic.is_empty():
 		var td := DB.tactic_def(str(sim.tactic["id"]))
 		lines.append(["TACTIC: %s Lv.%d  •  %s" % [td["name"], int(sim.tactic["lv"]), td["trigger"]], UI.GOLD])
+	var first_fight: bool = str(params.get("mode", "")) == "story" and Game.stages_cleared() == 0
+	if first_fight:
+		lines.append(["Your team fights on its own. Your Formation decides the battle!", UI.GOLD])
 	if lines.is_empty():
 		return
 	var box := UI.vbox(4)
@@ -1100,7 +1106,7 @@ func _intro_banners() -> void:
 		box.add_child(p)
 	UI.stagger(box, 0.08)
 	_bsfx("buff")
-	await _wait(1.1)
+	await _wait(2.8 if first_fight else 1.1)
 	if is_instance_valid(box):
 		var tw := box.create_tween()
 		tw.tween_property(box, "modulate:a", 0.0, 0.25)
@@ -1562,7 +1568,7 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 			why = "You retreated from battle."
 		elif reason == "trial_fallen":
 			why = "%s fell in battle — in her Trial she must survive to the end." % DB.name_of(str(params.get("hero", ""))).split(" ")[0]
-		var l := UI.wrap_label(why + "\nTips: level up or Star Up heroes, move tanks to the front column, and line heroes up with the rows of key enemies.", 16, Color.WHITE)
+		var l := UI.wrap_label(why + "\nTip: " + Game.defeat_tip(_foes), 16, Color.WHITE)
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(l)
 	if not rewards.is_empty():

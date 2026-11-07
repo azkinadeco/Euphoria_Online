@@ -8,6 +8,7 @@ var _sel := 0
 var _map: PanelContainer
 var _map_layer: Control
 var _detail: VBoxContainer
+var _actions: VBoxContainer
 var _tabs: HBoxContainer
 var _hard := false
 var _mode_btns: Array = []
@@ -36,6 +37,7 @@ func build() -> void:
 		mb.set_meta("hard", hm)
 		if hm:
 			mb.add_theme_color_override("font_color", Color("#ff8a9a"))
+			mb.visible = Game.hard_chapter_open(0)   # stays out of a new player's way
 		hb.add_child(mb)
 		hb.move_child(mb, 2 + int(hm))
 		_mode_btns.append(mb)
@@ -66,8 +68,12 @@ func build() -> void:
 	rp.offset_top = 122
 	rp.offset_bottom = -16
 	add_child(rp)
+	var col := UI.vbox(8)
+	rp.add_child(col)
 	_detail = UI.vbox(8)
-	rp.add_child(UI.scroll(_detail))
+	col.add_child(UI.scroll(_detail))
+	_actions = UI.vbox(8)   # outside the scroll: BATTLE must always be on screen
+	col.add_child(_actions)
 	_render()
 	tutorial("story")
 
@@ -110,6 +116,7 @@ func _render() -> void:
 		ab.toggle_mode = true
 		ab.button_pressed = ai == cur_arc
 		ab.disabled = not _chapter_unlocked(first)
+		ab.visible = ai == 0 or _chapter_unlocked(arcs[ai - 1][0])   # reached arcs plus the next one
 		ab.add_theme_color_override("font_color", Color("#d4b8ff"))
 		_tabs.add_child(ab)
 	var sep := ColorRect.new()
@@ -347,6 +354,8 @@ func _archive() -> void:
 func _render_detail() -> void:
 	for c in _detail.get_children():
 		c.queue_free()
+	for c in _actions.get_children():
+		c.queue_free()
 	var st := _st(_sel)
 	var stars := _stars(_sel)
 	_detail.add_child(UI.label("STAGE %s" % st["id"], 15, Color("#9fb4ff"), 3))
@@ -362,7 +371,8 @@ func _render_detail() -> void:
 	if tp < ep:
 		_detail.add_child(UI.label("⚠ Your team may be too weak!", 14, Color("#ff8a9a")))
 
-	_detail.add_child(UI.label("ENEMIES", 15, UI.GOLD, 3))
+	var sc := Game.scout(st["enemies"])
+	_detail.add_child(UI.label("ENEMIES" + ("  •  mostly %s" % sc["main"] if not sc.is_empty() else ""), 15, UI.GOLD, 3))
 	var ef := HFlowContainer.new()
 	ef.add_theme_constant_override("h_separation", 6)
 	for e in st["enemies"]:
@@ -374,6 +384,13 @@ func _render_detail() -> void:
 		p.tooltip_text = (str(e.get("variant", "")).capitalize() + " " if e.get("mirror", false) else "") + DB.name_of(e["id"])
 		ef.add_child(p)
 	_detail.add_child(ef)
+	if not sc.is_empty():
+		var sh := UI.hbox(6)
+		sh.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON[sc["counter"]]), Vector2(24, 24)))
+		var owned := (sc["heroes"] as Array).size()
+		var note := "%d in your team" % int(sc["deployed"]) if owned > 0 else "none owned yet"
+		sh.add_child(UI.label("Bring %s: +30%% ATK  •  %s" % [sc["counter"], note], 14, Color("#9fe3c0"), 2))
+		_detail.add_child(sh)
 
 	_detail.add_child(UI.label("REWARDS", 15, UI.GOLD, 3))
 	var rw := {"gold": st["gold"], "hero_exp": st["hero_exp"]}
@@ -394,18 +411,19 @@ func _render_detail() -> void:
 		var mp := UI.styled_panel(Color(0.05, 0.1, 0.2, 0.9), Color("#5fb8ff"), 8, 1, 8)
 		mp.add_child(UI.wrap_label("FIELD EFFECT • " + str(md["name"]) + " (both sides)", 13, Color("#9fd0ff")))
 		_detail.add_child(mp)
-	_detail.add_child(UI.spacer(false))
 	var bb := UI.button("⚔ BATTLE   (%d Energy)" % st["energy"], _battle, "GoldButton", Vector2(0, 56))
-	_detail.add_child(bb)
+	_actions.add_child(bb)
 	var sw := UI.hbox(8)
-	_detail.add_child(sw)
+	_actions.add_child(sw)
 	for n in [1, 5]:
 		var times: int = n
 		var b := UI.button("SWEEP x%d" % n, func(): _sweep(times), "", Vector2(0, 44))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.disabled = stars < 3
 		sw.add_child(b)
-	_detail.add_child(UI.button("FORMATION", func(): main.go("formation"), "", Vector2(0, 44)))
+	var fb := UI.button("FORMATION", func(): main.go("formation"), "", Vector2(0, 44))
+	fb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sw.add_child(fb)
 
 func _sweep(times: int) -> void:
 	var r := Game.sweep_stage(_sel, times, _hard)

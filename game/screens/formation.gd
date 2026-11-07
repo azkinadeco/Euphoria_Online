@@ -9,6 +9,7 @@ var _info: HBoxContainer
 var _power: Label
 var _sel := ""
 var _enemies: Array = []
+var _scout: Dictionary = {}
 var _mode := ""
 var _land := ""
 var _land_fx: SkillFX
@@ -17,6 +18,7 @@ const SUPPORT := "@support"
 func build() -> void:
 	_mode = str(params.get("mode", ""))
 	_enemies = Game.enemies_for(params)
+	_scout = Game.scout(_enemies)
 	set_bg(Game.battle_bg(params) if _mode != "" else "battle", 0.55)
 	var bar := header("FORMATION" if _mode == "" else "BATTLE PREP", ["energy"] if _mode in ["story", "event", "hard"] else [])
 	_power = UI.label("", 18, Color("#ffb86b"), 4)
@@ -112,23 +114,23 @@ func build() -> void:
 	dh.add_child(btns)
 	var row := UI.hbox(8)
 	btns.add_child(row)
-	var ab := UI.button("AUTO", func(): Game.auto_formation(); _sel = ""; _render(), "", Vector2(0, 50))
+	var ab := UI.button("AUTO", func(): Game.auto_formation(str(_scout.get("counter", ""))); _sel = ""; _render(), "", Vector2(0, 38 if _mode != "" else 50))
 	ab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(ab)
-	var cb := UI.button("CLEAR", func(): Game.s["formation"].clear(); Game.mark_dirty(); _sel = ""; _render(), "", Vector2(0, 50))
+	var cb := UI.button("CLEAR", func(): Game.s["formation"].clear(); Game.mark_dirty(); _sel = ""; _render(), "", Vector2(0, 38 if _mode != "" else 50))
 	cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(cb)
 	var extra := UI.hbox(8)
 	btns.add_child(extra)
 	if _mode in ["story", "event", "tower", "dungeon", "hard", "hunt"]:
-		var sb := UI.button("+ SUPPORT" if not params.has("support") else "CHANGE SUPPORT", _pick_support, "", Vector2(0, 40))
+		var sb := UI.button("+ SUPPORT" if not params.has("support") else "CHANGE SUPPORT", _pick_support, "", Vector2(0, 34))
 		sb.add_theme_color_override("font_color", UI.GREEN)
 		sb.add_theme_font_size_override("font_size", 14)
 		sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		extra.add_child(sb)
 	if _mode != "":
 		var et := Game.equipped_tactic()
-		var tb := UI.button(str(DB.tactic_def(et["id"])["name"]) if not et.is_empty() else "+ TACTIC", _pick_tactic, "", Vector2(0, 40))
+		var tb := UI.button(str(DB.tactic_def(et["id"])["name"]) if not et.is_empty() else "+ TACTIC", _pick_tactic, "", Vector2(0, 34))
 		tb.tooltip_text = "Commander Tactic"
 		tb.add_theme_color_override("font_color", UI.GOLD)
 		tb.add_theme_font_size_override("font_size", 14)
@@ -162,13 +164,18 @@ func build() -> void:
 			cost_txt = "\n1 Attempt (%d left)" % int(Game.s["wboss"]["tries"])
 		elif _mode == "raid":
 			cost_txt = "\n1 Attempt (%d left)" % int(Game.s["guild"]["raid_tries"])
-		var go_b := UI.button("⚔ START BATTLE" + cost_txt, _start, "GoldButton", Vector2(0, 80))
-		go_b.add_theme_font_size_override("font_size", 19)
-		btns.add_child(go_b)
+		# the dock is 156px tall inside: three rows must fit, so REPEAT sits beside START
+		var start_row := UI.hbox(8)
+		btns.add_child(start_row)
+		var go_b := UI.button("⚔ START BATTLE" + cost_txt, _start, "GoldButton", Vector2(0, 66))
+		go_b.add_theme_font_size_override("font_size", 17)
+		go_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		start_row.add_child(go_b)
 		if _mode in ["story", "event", "dungeon", "hard"] and _cleared_before():
-			var rb := UI.button("AUTO-REPEAT ↻", _ask_repeat, "", Vector2(0, 40))
+			var rb := UI.button("↻\nREPEAT", _ask_repeat, "", Vector2(76, 66))
+			rb.add_theme_font_size_override("font_size", 13)
 			rb.add_theme_color_override("font_color", Color("#9fd0ff"))
-			btns.add_child(rb)
+			start_row.add_child(rb)
 	else:
 		btns.add_child(UI.wrap_label("Tap a hero to deploy, then tap a tile to move. Drag & drop also works. Numbers = action order.", 13, UI.MUTED))
 		btns.add_child(UI.button("STORY ▶", func(): main.go("story"), "GoldButton", Vector2(0, 48)))
@@ -248,7 +255,10 @@ func _render_info() -> void:
 		return
 	if _sel == "":
 		var lk := Game.active_links()
-		var lt := UI.label("Deployed %d / %d   —   select a hero to see her skill range%s" % [Game.formation().size(), DB.MAX_DEPLOY, " on the enemy grid" if not _enemies.is_empty() else ""], 16, UI.MUTED)
+		var hint := "select a hero to see her skill range"
+		if not _scout.is_empty():
+			hint = "enemies are mostly %s, bring %s (+30%% ATK)" % [_scout["main"], _scout["counter"]]
+		var lt := UI.label("Deployed %d / %d   —   %s" % [Game.formation().size(), DB.MAX_DEPLOY, hint], 16, UI.MUTED)
 		lt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		lt.clip_text = true
 		_info.add_child(lt)
@@ -296,6 +306,12 @@ func _render_roster() -> void:
 		card.set_selected(hid == _sel)
 		if order >= 0:
 			card.modulate = Color(0.75, 0.75, 0.8)
+		if (_scout.get("heroes", []) as Array).has(hid):
+			var up := UI.styled_panel(Color(0, 0, 0, 0.8), UI.GREEN, 6, 1, 3)
+			up.add_child(UI.label("▲ +30%", 12, UI.GREEN, 2))
+			up.position = Vector2(8, 34)
+			up.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			card.add_child(up)
 		card.pressed.connect(func(): _on_roster(hid))
 		card.set_drag_forwarding(func(_p): return _make_drag(hid, false), Callable(), Callable())
 		_roster.add_child(card)

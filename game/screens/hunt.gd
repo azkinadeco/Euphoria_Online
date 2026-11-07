@@ -201,7 +201,7 @@ func _build_shop() -> void:
 	var v := UI.vbox(8)
 	rp.add_child(v)
 	var hh := UI.hbox(8)
-	hh.add_child(UI.tex_rect(DB.icon("icon_shards"), Vector2(30, 30)))
+	hh.add_child(UI.tex_rect(DB.icon("item_hunt_core"), Vector2(30, 30)))
 	hh.add_child(UI.label("HUNTER'S EXCHANGE  •  Hunt Cores: %s" % Game.fmt(Game.amount("hunt_core")), 18, UI.GOLD, 3))
 	v.add_child(hh)
 	v.add_child(UI.label("Stock resets every week.", 12, UI.MUTED))

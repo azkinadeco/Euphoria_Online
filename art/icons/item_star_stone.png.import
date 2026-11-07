@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u8l7oq08qtd2"
-path="res://.godot/imported/lucidria_char_special_depth.png-29591e7ce849a284fd44eddd7c05daff.ctex"
+uid="uid://bunj4splv5igr"
+path="res://.godot/imported/item_star_stone.png-b0b533872b9b642789039f320f1fc470.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/depth/lucidria_char_special_depth.png"
-dest_files=["res://.godot/imported/lucidria_char_special_depth.png-29591e7ce849a284fd44eddd7c05daff.ctex"]
+source_file="res://art/icons/item_star_stone.png"
+dest_files=["res://.godot/imported/item_star_stone.png-b0b533872b9b642789039f320f1fc470.ctex"]
 
 [params]
 

@@ -108,6 +108,12 @@ func _render() -> void:
 	for c in _info.get_children():
 		c.queue_free()
 	_info.add_child(UI.label(b["name"].to_upper(), 24, UI.GOLD, 5))
+	if not bool(Game.s["gacha"].get("first10_done", false)):
+		var fl := UI.label("★ FIRST 10x SUMMON: GUARANTEED SSR! ★", 15, UI.GOLD, 4)
+		_info.add_child(fl)
+		var ft := fl.create_tween().set_loops()
+		ft.tween_property(fl, "modulate", Color(1.4, 1.3, 1.0), 0.6)
+		ft.tween_property(fl, "modulate", Color.WHITE, 0.6)
 	if fid2 != "":
 		var r := UI.hbox(8)
 		r.add_child(UI.rarity_tag("SSR", 15))
@@ -140,12 +146,6 @@ func _render() -> void:
 		_info.add_child(sr)
 		_info.add_child(UI.bar(mini(spk, DB.SPARK_COST), DB.SPARK_COST, "", 8))
 	_info.add_child(UI.wrap_label("10x summon guarantees at least one SR. Duplicates turn into hero shards. Each pull on a rate-up banner gives 1 Summon Point — %d points = the featured hero." % DB.SPARK_COST, 12, UI.MUTED))
-	if not bool(Game.s["gacha"].get("first10_done", false)):
-		var fl := UI.label("★ FIRST 10x SUMMON: GUARANTEED SSR! ★", 15, UI.GOLD, 4)
-		_info.add_child(fl)
-		var ft := fl.create_tween().set_loops()
-		ft.tween_property(fl, "modulate", Color(1.4, 1.3, 1.0), 0.6)
-		ft.tween_property(fl, "modulate", Color.WHITE, 0.6)
 	var ir := UI.hbox(8)
 	var rb := UI.button("RATES & HERO LIST", _show_rates, "", Vector2(0, 40))
 	rb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -159,11 +159,18 @@ func _render() -> void:
 func _render_buttons() -> void:
 	for c in _btns.get_children():
 		c.queue_free()
-	var tickets := Game.amount("summon_ticket")
 	if Game.can_free_pull():
 		_btns.add_child(_pull_btn("FREE DAILY\nSUMMON x1", 1, "free"))
-	_btns.add_child(_pull_btn("SUMMON x1\n%s" % ("1 Ticket" if tickets >= 1 else "%d Gems" % DB.GACHA_COST), 1, "ticket" if tickets >= 1 else "gems"))
-	_btns.add_child(_pull_btn("SUMMON x10\n%s" % ("10 Tickets" if tickets >= 10 else "%s Gems" % Game.fmt(DB.GACHA_COST * 10)), 10, "ticket" if tickets >= 10 else "gems"))
+	_btns.add_child(_pull_btn("SUMMON x1\n%s" % _price(1), 1, Game.pull_pay(1)))
+	_btns.add_child(_pull_btn("SUMMON x10\n%s" % _price(10), 10, Game.pull_pay(10)))
+
+func _price(count: int) -> String:
+	var tk := mini(Game.amount("summon_ticket"), count)
+	var gems := "%s Gems" % Game.fmt(DB.GACHA_COST * (count - tk))
+	if tk == 0:
+		return gems
+	var tickets := "%d Ticket%s" % [tk, "" if tk == 1 else "s"]
+	return tickets if tk == count else "%s + %s" % [tickets, gems]
 
 func _pull_btn(text: String, count: int, pay: String) -> Button:
 	var b := UI.button(text, func(): _pull(count, pay), "GoldButton" if count == 10 or pay == "free" else "", Vector2(230, 92))
@@ -220,7 +227,7 @@ func _pull(count: int, pay: String) -> void:
 	var res := Game.pull(b["id"], count, pay)
 	if res.has("error"):
 		main.toast(res["error"], UI.RED)
-		if pay == "gems":
+		if pay != "ticket":
 			main.toast("Get Gems from Missions, Mail, Story first clears and the Tower.", UI.MUTED)
 		return
 	_play_reveal(res["results"])
@@ -430,7 +437,7 @@ func _play_reveal(results: Array) -> void:
 		_reveal.queue_free()
 		_render(), "", Vector2(200, 56)))
 	var again_count := results.size()
-	var pay := "ticket" if Game.amount("summon_ticket") >= again_count else "gems"
+	var pay := Game.pull_pay(again_count)
 	bar.add_child(UI.button("SUMMON x%d AGAIN" % again_count, func():
 		_reveal.queue_free()
 		_reveal = null

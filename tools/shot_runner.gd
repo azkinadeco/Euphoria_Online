@@ -180,6 +180,9 @@ func _next() -> void:
 		g.give({"oath_ring": 1})
 		print("OATH ", g.swear_oath(oid))
 		main_node.current._ceremony(Callable())
+	elif v == "notips":
+		# mark every first-visit tutorial as seen so screens are not covered
+		root.get_node("Game").s["tips_seen"] = DB.TUTORIALS.keys()
 	elif v == "news":
 		main_node.show_news()
 	elif v.begins_with("drag:"):
@@ -217,6 +220,11 @@ func _next() -> void:
 		var g = root.get_node("Game")
 		for i in 12:
 			g.record_kills([v.substr(5)])
+	elif v.begins_with("msgreply:"):
+		# answer the open Messenger chat with reply 0/1
+		for c in main_node.host.get_children():
+			if c.has_method("_reply"):
+				c._reply(int(v.substr(9)))
 	elif v == "bond5":
 		var g = root.get_node("Game")
 		for hid in g.s["heroes"].keys():

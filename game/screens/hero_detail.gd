@@ -11,7 +11,7 @@ var _holder: Control
 
 func build() -> void:
 	id = str(params.get("id", Game.s["lobby_hero"]))
-	_tab = str(params.get("tab", "INFO"))
+	_tab = str(params.get("tab", "INFO")) if Game.owns(id) else "INFO"
 	set_bg("lobby", 0.7)
 	var tint := ColorRect.new()
 	tint.color = Color(DB.theme_color(id), 0.12)
@@ -938,6 +938,7 @@ func _render_outfits() -> void:
 	_panel_box.add_child(UI.wrap_label("Outfits unlock through Star Up, Bond levels and the Oath. Each outfit tier also grants +2% ATK & HP while worn (max +10%).", 14, UI.MUTED))
 	var g := GridContainer.new()
 	g.columns = 3
+	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	g.add_theme_constant_override("h_separation", 10)
 	g.add_theme_constant_override("v_separation", 10)
 	_panel_box.add_child(g)
@@ -945,7 +946,9 @@ func _render_outfits() -> void:
 		var idx: int = i
 		var b := Button.new()
 		b.theme_type_variation = "FlatButton"
-		b.custom_minimum_size = Vector2(150, 200)
+		# cells share the panel width; a fixed width pushed the third column off-screen
+		b.custom_minimum_size = Vector2(0, 200)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.focus_mode = Control.FOCUS_NONE
 		var fr := Panel.new()
 		var eq := int(Game.hero(id)["skin"]) == i
@@ -976,8 +979,8 @@ func _render_outfits() -> void:
 				var wb := UI.button("WARDROBE ▶", func(): main.go("wardrobe", {"hero": id}), "GoldButton", Vector2(0, 30))
 				wb.add_theme_font_size_override("font_size", 12)
 				wb.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-				wb.offset_left = -64
-				wb.offset_right = 64
+				wb.offset_left = -52
+				wb.offset_right = 52
 				wb.offset_top = -16
 				wb.offset_bottom = 16
 				fr.add_child(wb)
@@ -994,13 +997,13 @@ func _render_outfits() -> void:
 						Game.set_skin(id, idx)
 						main.toast("New outfit unlocked!", Color("#ff8fb8"))
 					_render(), "UNLOCK"), "GoldButton", Vector2(0, 30))
-			ib.text = "UNLOCK %d Gems" % DB.costume_price(i)
+			ib.text = "UNLOCK\n%d Gems" % DB.costume_price(i)
 			ib.add_theme_font_size_override("font_size", 12)
 			ib.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-			ib.offset_left = -64
-			ib.offset_right = 64
-			ib.offset_top = -16
-			ib.offset_bottom = 16
+			ib.offset_left = -52
+			ib.offset_right = 52
+			ib.offset_top = -24
+			ib.offset_bottom = 24
 			fr.add_child(ib)
 			fr.mouse_filter = Control.MOUSE_FILTER_PASS
 		g.add_child(b)
@@ -1064,6 +1067,8 @@ func _render_bond() -> void:
 
 	var gp := UI.panel("CardPanel")
 	_panel_box.add_child(gp)
+	# gifts are the main Bond action (and a First Steps goal): keep them right under the bar
+	_panel_box.move_child(gp, bp.get_index() + 1)
 	var gv := UI.vbox(8)
 	gp.add_child(gv)
 	gv.add_child(UI.label("GIVE A GIFT", 18, UI.GOLD, 3))

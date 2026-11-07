@@ -2,22 +2,22 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://can4wb20rea2q"
-path="res://.godot/imported/kali_char_special.png-47ed02ff26468326d6508e529ab614d3.ctex"
+uid="uid://ceuhs185mddk0"
+path="res://.godot/imported/item_gold_bag.png-5304bf3d0668b8097b54398eecfbb96e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/characters/heroes/kali/char/kali_char_special.png"
-dest_files=["res://.godot/imported/kali_char_special.png-47ed02ff26468326d6508e529ab614d3.ctex"]
+source_file="res://art/icons/item_gold_bag.png"
+dest_files=["res://.godot/imported/item_gold_bag.png-5304bf3d0668b8097b54398eecfbb96e.ctex"]
 
 [params]
 
-compress/mode=1
+compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.85
+compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
@@ -36,5 +36,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=1200
+process/size_limit=0
 detect_3d/compress_to=1

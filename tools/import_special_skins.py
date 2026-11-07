@@ -7,9 +7,7 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 K = os.path.join(ROOT, 'Karakter Euphoria Online', 'hero')
 spec = importlib.util.spec_from_file_location("imp", os.path.join(ROOT, 'tools', 'import_new_heroes.py'))
 SKINS = {  # source → hero id
-    'Lucidria/gada_char_evo_special.png': 'lucidria', 'Hyeonxa/hydra_char_evo_special.png': 'hyeonxa',
-    'NEW HERO NOVEMBER 2026/Kali/100samurai_char_evo_special.png': 'kali',
-    'NEW HERO NOVEMBER 2026/Abadonia/Abadon_Char_evo_special.png': 'abadonia',
+    # Lucidria, Hyeonxa, Kali, Abadonia: withdrawn, their source files are damaged.
     'New Hero 4 November/Ning Er/ninger_char_evo_special.png': 'ninger', 'New Hero 4 November/Spimei/spide_char_evo_special.png': 'spimei',
 }
 def has_white_bg(im):

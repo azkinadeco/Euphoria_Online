@@ -40,6 +40,115 @@ func _run() -> void:
 
 	check(G.next_goal()["route"] == "mail", "guide: first goal is mailbox")
 
+	print("[first steps]")
+	check(G.next_goal().get("tag", "") == "STEP 1/8" and G.claim_first_step().is_empty(), "step can't be claimed before it is done")
+	var fs: Dictionary = G.new_state()
+	var fs_save: Dictionary = G.s
+	G.s = fs
+	G.claim_mail("welcome")
+	check(G.next_goal().get("ready", false), "finished step offers a claim")
+	var fg0: int = G.amount("gold")
+	check(not G.claim_first_step().is_empty() and G.amount("gold") == fg0 + 5000, "step pays its reward")
+	check(G.claim_first_step().is_empty() and G.next_goal()["route"] == "gacha", "step pays once, then moves on")
+	check(G.feature_badge("heroes") == 0, "heroes badge quiet before the first win")
+	G.s["gacha"]["total"] = 1
+	G.claim_first_step()
+	for i in DB.STAGES_PER_CHAPTER:
+		G.s["story"]["cleared"][DB.stage_id(i)] = 3
+	G.claim_first_step()
+	G.use_item("exp_potion", 2)
+	check(G.level_up("shina", 4) == 4, "step rewards are enough to reach Lv.5")
+	G.claim_first_step()
+	check(G.give_gift("shina", "bouquet") == "" and G.first_step_done("bond"), "starter bouquet completes the gift step")
+	G.claim_first_step()
+	G.claim_first_step()
+	check(G.s["gear"].size() == 1, "stage 3 step grants the weapon")
+	G.equip(int(G.s["gear"][0]["uid"]), "shina")
+	G.claim_first_step()
+	var ft0: int = G.amount("summon_ticket")
+	check(not G.claim_first_step().is_empty() and G.amount("summon_ticket") == ft0 + 2, "chapter step pays tickets")
+	check(G.first_step().is_empty() and not G.next_goal().has("tag"), "path ends, normal goals return")
+	G.s = fs_save
+
+	print("[mixed summon]")
+	var ms: Dictionary = G.new_state()
+	var ms_save: Dictionary = G.s
+	G.s = ms
+	G.claim_mail("welcome")
+	check(G.pull_pay(10) == "mixed" and G.pull_pay(1) == "ticket", "tickets first, gems cover the rest")
+	var mg: int = G.amount("gems")
+	var mt: int = G.amount("summon_ticket")
+	var mr: Dictionary = G.pull("standard", 10, "mixed")
+	check(mr.has("results") and G.amount("summon_ticket") == 0 and G.amount("gems") == mg - DB.GACHA_COST * (10 - mt), "welcome gifts afford the first 10x")
+	check(mr["results"].any(func(x): return x["rarity"] == "SSR"), "first 10x still guarantees an SSR")
+	G.s["cur"]["gems"] = 0
+	G.s["items"]["summon_ticket"] = 3
+	check(G.pull("standard", 10, "mixed").has("error") and G.amount("summon_ticket") == 3, "mixed summon short on gems spends nothing")
+	G.s = ms_save
+
+	print("[item icons]")
+	var seen_icons := {}
+	for ik in DB.ITEMS.keys():
+		var icn := str(DB.ITEMS[ik]["icon"])
+		check(ResourceLoader.exists("res://art/icons/%s.png" % icn), "item %s icon exists" % ik)
+		check(not seen_icons.has(icn), "item %s has its own icon (shared with %s)" % [ik, seen_icons.get(icn, "-")])
+		seen_icons[icn] = ik
+	for cur_icon in ["icon_gold", "icon_gem", "icon_crystal", "icon_energy"]:
+		check(not seen_icons.has(cur_icon), "no item looks like a currency (%s)" % cur_icon)
+
+	print("[messenger]")
+	var mg_save: Dictionary = G.s
+	G.s = G.new_state()
+	check(G.msg_unread() == 0, "messenger stays quiet before it unlocks")
+	G.s["player"]["level"] = DB.FEATURE_UNLOCK["messenger"]
+	for hid in ["shina", "furu", "valeria", "glytta"]:
+		G.add_hero(hid)
+	G.s.erase("messenger")
+	check(G.msg_unread() == DB.MSG_PER_DAY, "messenger delivers %d chats a day" % DB.MSG_PER_DAY)
+	for hid in DB.hero_ids():
+		check(DB.MSG_PERSONAL.has(hid), "hero %s has a personal chat" % hid)
+	for th in DB.MSG_PERSONAL.values() + DB.MSG_TOPICS:
+		check((th[0] as Array).size() >= 1 and (th[1] as Array).size() == 2 and (th[2] as Array).size() == 2 and int(th[3]) in [0, 1], "chat thread is well formed")
+	G.hero("shina")["bond"] = DB.MSG_BOND
+	G.s.erase("messenger")
+	check(G.msg_pending().get("shina", "") == "p", "a Bond %d hero sends her personal chat first" % DB.MSG_BOND)
+	var mg_gems: int = G.amount("gems")
+	var mg_bond := int(G.hero("shina")["bond_exp"]) + 1000 * int(G.hero("shina")["bond"])
+	var mg_r: Dictionary = G.msg_reply("shina", int(DB.MSG_PERSONAL["shina"][3]))
+	check(bool(mg_r.get("best", false)) and int(mg_r["bond"]) == DB.MSG_BOND_BEST, "the favourite reply gives the big Bond bonus")
+	check(G.amount("gems") == mg_gems + DB.MSG_PERSONAL_GEMS, "first personal chat pays Gems")
+	check(int(G.hero("shina")["bond_exp"]) + 1000 * int(G.hero("shina")["bond"]) > mg_bond, "replying raises Bond")
+	check(not G.msg_pending().has("shina") and G.msg_log("shina").size() == (DB.MSG_PERSONAL["shina"][0] as Array).size() + 2, "the reply moves the chat into the log")
+	check(G.msg_reply("shina", 0).is_empty(), "no double reply")
+	check(G.msg_contacts()[0] != "shina" or G.msg_pending().is_empty(), "waiting chats are listed first")
+	G.s["messenger"]["day"] = G.day_key() - 1
+	check(G.msg_pending().size() == DB.MSG_PER_DAY and str(G.msg_pending().get("shina", "t0")).begins_with("t"), "next day refills the inbox with everyday chats")
+	G.s = mg_save
+
+	print("[scout report]")
+	var sc_save: Dictionary = G.s
+	G.s = G.new_state()
+	var fire := [{"id": "shina", "cell": Vector2i(0, 0), "level": 1}, {"id": "shina", "cell": Vector2i(0, 1), "level": 1}]
+	var mixed := [{"id": "fidelia", "cell": Vector2i(0, 0), "level": 1}, {"id": "fidelia", "cell": Vector2i(0, 1), "level": 1}, {"id": "shina", "cell": Vector2i(1, 1), "level": 1, "boss": true}]
+	check(G.scout(fire)["main"] == "FIRE" and G.scout(fire)["counter"] == "WATER", "scout finds the main element and its counter")
+	check(is_equal_approx(DB.element_mult(G.scout(fire)["counter"], G.scout(fire)["main"]), 1.3), "scout's counter really gets +30%")
+	check(G.scout(mixed)["main"] == "FIRE", "a boss outweighs two minions")
+	check((G.scout(fire)["heroes"] as Array).has("fidelia") and int(G.scout(fire)["deployed"]) >= 1, "scout lists owned counters")
+	var uncounted := 0
+	for i in DB.stage_count():
+		if G.scout(DB.stage(i)["enemies"]).is_empty():
+			uncounted += 1
+	check(uncounted == 0, "every story stage has a scout report (%d missing)" % uncounted)
+	G.add_hero("zennyo") if DB.HEROES.has("zennyo") else null
+	G.auto_formation("WATER")
+	check(G.formation().any(func(e): return DB.ELEMENT_GROUP.get(DB.element_of(e[0]), "") == "WATER"), "auto team fields the counter element")
+	G.auto_formation()
+	check(G.defeat_tip(DB.stage(DB.stage_count() - 1)["enemies"]).contains("far stronger"), "defeat tip names a huge power gap")
+	G.s["formation"] = G.s["formation"].filter(func(e): return DB.ELEMENT_GROUP.get(DB.element_of(e[0]), "") != "WATER")
+	check(G.defeat_tip(fire.slice(0, 1)).contains("Bring"), "defeat tip names the counter hero")
+	check(not G.defeat_tip([]).is_empty(), "defeat tip survives an empty enemy list")
+	G.s = sc_save
+
 	print("[mail]")
 	var r: Dictionary = G.claim_mail("welcome")
 	check(int(r.get("gems", 0)) == 900 and int(r.get("summon_ticket", 0)) == 5, "welcome mail: 900 gems + 5 tickets (rebalanced)")
@@ -631,8 +740,23 @@ func _run() -> void:
 	check(G.buy_hunt(DB.HUNT_SHOP[0]) == "" and G.buy_hunt(DB.HUNT_SHOP[0]) == "" and G.buy_hunt(DB.HUNT_SHOP[0]) != "", "hunter's exchange weekly limit")
 
 	print("[special skins]")
-	for sh in ["lucidria", "hyeonxa", "kali", "abadonia", "ninger", "spimei"]:
+	for sh in DB.SPECIAL_SKINS.keys():
 		check(DB.special_index(sh) > 0, "special skin for %s" % sh) if DB.special_index(sh) <= 0 else null
+	for sh in DB.WITHDRAWN_SKINS:
+		check(DB.special_index(sh) == -1 and not DB.SPECIAL_SKINS.has(sh), "%s special skin withdrawn" % sh) if DB.special_index(sh) != -1 or DB.SPECIAL_SKINS.has(sh) else null
+	# an old save that bought and wore a withdrawn skin: refund once, back to a real outfit
+	if not G.owns("kali"):
+		G.add_hero("kali")
+	var kn: int = DB.art_list("kali").size()
+	var tk0: int = G.amount("skin_ticket")
+	G.s["skins_bought"]["kali"] = [kn]
+	G.s["heroes"]["kali"]["skin"] = kn
+	G._sanitize()
+	check(G.amount("skin_ticket") == tk0 + 1 and (G.s["skins_bought"]["kali"] as Array).is_empty(), "withdrawn skin refunds a ticket")
+	check(int(G.s["heroes"]["kali"]["skin"]) < kn and G.skin_unlocked("kali", int(G.s["heroes"]["kali"]["skin"])), "withdrawn skin falls back to an unlocked outfit")
+	G._sanitize()
+	check(G.amount("skin_ticket") == tk0 + 1, "withdrawn skin refund happens once")
+	G.s["items"]["skin_ticket"] = tk0
 	var ssh := "ninger"
 	if not G.owns(ssh):
 		G.add_hero(ssh)

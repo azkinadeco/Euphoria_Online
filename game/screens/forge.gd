@@ -215,7 +215,7 @@ func _render_well() -> void:
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_well.add_child(v)
 	if _tab == "salvage":
-		v.add_child(_center(UI.tex_rect(DB.icon("icon_energy"), Vector2(150, 150))))
+		v.add_child(_center(UI.tex_rect(DB.icon("item_forge_ember"), Vector2(150, 150))))
 		v.add_child(_center(UI.label("THE FURNACE", 22, UI.GOLD, 4)))
 		return
 	if g.is_empty():

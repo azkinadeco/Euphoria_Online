@@ -223,8 +223,8 @@ func _build_left_menu() -> void:
 	v.position = Vector2(14, 120)
 	add_child(v)
 	var avail := get_viewport_rect().size.y - 120 - 96
-	var icon_sz := clampf(avail / 4.6 - 24.0, 26.0, 46.0)
-	var menu := [["icon_mail", "Mail", "mail"], ["icon_quest", "Missions", "quests"], ["icon_ticket", "Login", "login"], ["icon_codex", "Notices", "news"]]
+	var icon_sz := clampf(avail / 5.6 - 24.0, 24.0, 46.0)
+	var menu := [["icon_mail", "Mail", "mail"], ["icon_quest", "Missions", "quests"], ["icon_messenger", "Chats", "messenger"], ["icon_ticket", "Login", "login"], ["icon_codex", "Notices", "news"]]
 	for e in menu:
 		var route: String = e[2]
 		var b := UI.icon_button(DB.icon(e[0]), e[1], func():
@@ -276,8 +276,8 @@ func _build_right_cards() -> void:
 	if not fest.is_empty() and Game.feature_unlocked("festival"):
 		_slides.append({"tag": "SEASONAL FESTIVAL", "tag_col": Color(str(fest["color"])), "title": str(fest["name"]).to_upper(), "sub": "Lantern Charms • %s & %s" % [DB.name_of(fest["featured"][0]).split(" ")[0], DB.name_of(fest["featured"][1]).split(" ")[0]],
 			"bg": fest["bg"], "art": fest["featured"][0], "btn": "VISIT", "route": "festival", "params": {}})
-	_slides.append({"tag": "WARDROBE", "tag_col": Color("#ffd479"), "title": "SPECIAL SKINS", "sub": "6 exclusive outfits • +10% ATK & HP while worn",
-		"bg": "blackmarket", "art": "lucidria", "img": ["res://art/characters/heroes/lucidria/char/lucidria_char_special.png"], "btn": "WARDROBE", "route": "wardrobe", "params": {}})
+	_slides.append({"tag": "WARDROBE", "tag_col": Color("#ffd479"), "title": "SPECIAL SKINS", "sub": "%d exclusive outfits • +10%% ATK & HP while worn" % DB.SPECIAL_SKINS.size(),
+		"bg": "blackmarket", "art": "ninger", "img": ["res://art/characters/heroes/ninger/char/ninger_char_special.png"], "btn": "WARDROBE", "route": "wardrobe", "params": {}})
 	if Game.feature_unlocked("pass"):
 		_slides.append({"tag": "SEASON PASS", "tag_col": Color("#c77dff"), "title": "PASS Lv.%d / %d" % [Game.pass_level(), DB.PASS_LEVELS], "sub": "Free + Premium rewards • Oath Ring at Lv.30",
 		"bg": "galaxy", "art": "micca", "btn": "OPEN", "route": "pass", "params": {}})
@@ -434,6 +434,8 @@ func _menu_tile(f: Array, v: Control) -> Button:
 
 var _goal_box: PanelContainer
 var _goal_label: Label
+var _goal_tag: Label
+var _goal_go: Button
 
 func _build_goal() -> void:
 	_goal_box = UI.styled_panel(Color(0.05, 0.03, 0.1, 0.88), UI.GREEN, 20, 2, 10)
@@ -446,19 +448,22 @@ func _build_goal() -> void:
 	add_child(_goal_box)
 	var h := UI.hbox(10)
 	_goal_box.add_child(h)
-	h.add_child(UI.label("NEXT ▶", 14, UI.GREEN, 3))
+	_goal_tag = UI.label("NEXT ▶", 14, UI.GREEN, 3)
+	h.add_child(_goal_tag)
 	_goal_label = UI.label("", 15, Color.WHITE, 3)
 	_goal_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_goal_label.clip_text = true
 	h.add_child(_goal_label)
-	var go := UI.button("GO", func():
+	_goal_go = UI.button("GO", func():
 		var g := Game.next_goal()
-		if str(g.get("route", "")) == "":
+		if g.get("ready", false):
+			_claim_step()
+		elif str(g.get("route", "")) == "":
 			_claim_afk()
 		else:
 			main.go(g["route"], g.get("params", {})), "GoldButton", Vector2(64, 32))
-	go.add_theme_font_size_override("font_size", 14)
-	h.add_child(go)
+	_goal_go.add_theme_font_size_override("font_size", 14)
+	h.add_child(_goal_go)
 	var tw := _goal_box.create_tween().set_loops()
 	tw.tween_property(_goal_box, "modulate", Color(1.15, 1.15, 1.15), 0.9).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(_goal_box, "modulate", Color.WHITE, 0.9).set_trans(Tween.TRANS_SINE)
@@ -466,7 +471,10 @@ func _build_goal() -> void:
 func refresh() -> void:
 	super.refresh()
 	if is_instance_valid(_goal_label):
-		_goal_label.text = str(Game.next_goal()["text"])
+		var g := Game.next_goal()
+		_goal_label.text = str(g["text"])
+		_goal_tag.text = str(g.get("tag", "NEXT")) + " ▶"
+		_goal_go.text = "CLAIM" if g.get("ready", false) else "GO"
 	_update_pointer()
 	var p: Dictionary = Game.s["player"]
 	_lv_label.text = "Lv.%d" % int(p["level"])
@@ -478,7 +486,7 @@ func refresh() -> void:
 		var target := float(d[0]) / float(maxi(1, d[1]))
 		var rt := _ring.create_tween()
 		rt.tween_method(func(x: float): _ring_val = x; _ring.queue_redraw(), _ring_val, target, 0.8).set_trans(Tween.TRANS_CUBIC)
-	for r in ["mail", "quests", "login", "event", "heroes", "news", "festival"]:
+	for r in ["mail", "quests", "messenger", "login", "event", "heroes", "news", "festival"]:
 		_set_badge(r, Game.feature_badge(r))
 	# MENU shows how many features have something to do (not the sum of everything)
 	var menu_n := 0
@@ -530,6 +538,14 @@ func _update_afk() -> void:
 	var secs: int = a["secs"]
 	_afk_label.text = "%02d:%02d:%02d  •  %s Gold  •  %s EXP" % [secs / 3600, (secs / 60) % 60, secs % 60, Game.fmt(a["gold"]), Game.fmt(a["hero_exp"])]
 
+func _claim_step() -> void:
+	var r := Game.claim_first_step()
+	if r.is_empty():
+		return
+	Game.sfx("star_up")
+	var finished := Game.first_step().is_empty()
+	main.show_rewards("FIRST STEPS COMPLETE!" if finished else "STEP COMPLETE", r, refresh)
+
 func _claim_afk() -> void:
 	var r := Game.claim_afk()
 	if r.is_empty():
@@ -545,7 +561,7 @@ func _update_pointer() -> void:
 		return
 	var g := Game.next_goal()
 	var route := str(g.get("route", ""))
-	_pointer_target = _route_btn.get(route)
+	_pointer_target = _goal_go if g.get("ready", false) else _route_btn.get(route)
 	if _pointer_target == null and route == "hero_detail":
 		_pointer_target = _route_btn.get("heroes")
 	if _pointer_target == null and route != "":

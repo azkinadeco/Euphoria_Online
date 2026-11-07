@@ -519,6 +519,72 @@ Tes web di iPhone: `zsh run_iphone_server.sh`, lalu buka `https://<IP-Mac>:8443/
 - Balance (tim bawaan, Lv90, 40 battle, bonus 0,40 lawan perkiraan rata-rata 0,44 + Crit 2,3%, artinya 15 gear SSR +10): 23-6 37→72%, 27-6 25→77%, 35-6 50→65%, 38-6 12→17%. Nilai awal (HP 3%, ATK 2,5%) ditolak karena 27-6 jadi 95%. Catatan: 29-6 dan 30-6 terlihat ~0% hanya untuk tim bawaan; formasi lain menang 76-90%, jadi bukan lonjakan kesulitan.
 - Tes: smoke kini mencakup 11/11 mode battle (arena, raid, event, hard ditambahkan) dan alur TEMPER lewat tombol sungguhan; step baru `press:<awalan teks>` di shot_runner. flow_test: blok `[gear substats]`.
 
+## 2bl. Penarikan 4 skin spesial rusak
+
+- Skin spesial Lucidria, Hyeonxa, Kali, dan Abadonia dihapus dari game (art, depth map, `character_database.json`, `DB.SPECIAL_SKINS`, teks mail/news, slide lobby). Wardrobe kini berisi Ning Er, Spimei, Luby.
+- Save lama: `Game._withdraw_skins()` mengembalikan 1 Skin Ticket per skin yang sudah dibeli, lalu hero dipindah ke outfit terbuka tertinggi. Daftarnya di `DB.WITHDRAWN_SKINS`.
+- Untuk mengembalikan: art lama masih ada di riwayat git (commit `4ce50f4`), tetapi itu versi yang rusak. Bila file asli ditemukan, jalankan ulang impor lalu hapus hero terkait dari `WITHDRAWN_SKINS`.
+
+## 2bm. Update batch 62 — First Steps
+
+- Jalur 8 langkah pemain baru di kotak NEXT lobby (`DB.FIRST_STEPS`): Mailbox, Summon, Stage 1-1, hero Lv.5, hadiah Bond, Stage 1-3, pasang senjata, Chapter 1. Tiap langkah berhadiah; tombol GO berubah jadi CLAIM dan penunjuk mengarah ke sana.
+- Progres dibaca dari save, jadi pemain lama cukup menekan CLAIM. Yang disimpan hanya langkah yang sudah diklaim (`s["first_steps"]`).
+- Badge Heroes disembunyikan sampai menang pertama, supaya pemain baru tidak terdistraksi.
+- Tes: flow_test blok `[first steps]` dan cek penarikan skin di `[special skins]`.
+
+## 2bn. Update batch 63 — Jam pertama permainan
+
+- Summon: tiket dipakai dulu, sisanya ditutup Gems (`Game.pull_pay`, bayar "mixed"). Hadiah mail selamat datang (5 tiket + 1.200 Gems) kini cukup untuk 10x pertama yang menjamin SSR; sebelumnya tidak bisa dicapai. Tulisan jaminan dipindah ke atas panel.
+- Story: tab HARD disembunyikan sampai dibuka, tab ARC hanya menampilkan arc yang tercapai dan satu arc berikutnya.
+- Battle pertama menampilkan satu baris penjelasan bahwa tim bertarung otomatis.
+- Cek balance tim bawaan tanpa gear: Chapter 1 menang 85-100% di Lv.1 dan 100% di Lv.5, jadi tidak ada perubahan angka.
+
+## 2bo. Update batch 64 — Scout Report
+
+- Tombol BATTLE di Story sebelumnya berada di bawah area scroll; kini BATTLE, SWEEP, dan FORMATION dipasang tetap di bawah panel.
+- `Game.scout(enemies)`: elemen utama musuh (boss berbobot 3x), elemen penangkalnya, dan hero milik pemain untuk elemen itu. Tampil di detail stage dan baris info Formation; hero penangkal diberi tanda "▲ +30%".
+- Tombol AUTO di Formation yang punya musuh kini memperhitungkan keunggulan elemen (`auto_formation(prefer)`).
+- `Game.defeat_tip(enemies)`: saran saat kalah kini spesifik (selisih power, atau nama hero penangkal), menggantikan tips umum.
+- Formation: tombol di panel bawah lebih tinggi dari panelnya (186 vs 156 px), sehingga START BATTLE terpotong dan AUTO-REPEAT keluar layar. Kini tiga baris muat, dan REPEAT berada di samping START.
+
+## 2bp. Update batch 65 — Ikon item yang bisa dibedakan
+
+Hasil pemeriksaan layar Heroes, Hero Detail, Shop, Bag, Missions, Mail, Pass, Forge dan Settings. Tata letaknya aman, tapi banyak item memakai ikon yang sama sehingga mudah tertukar:
+- Skin Ticket, Moonlight Perfume dan Celestial Gem sama-sama memakai `item_celestial_gem`, dan ikonnya mirip ikon Gems.
+- Hero EXP Potion memakai ikon Hero EXP, Energy Flask dan Forge Ember memakai ikon Energy, Gold Pouch memakai ikon Gold.
+- Sweet Cake sama dengan Bouquet; Universal Shard, Rune Pouch dan Hunt Core sama-sama `icon_shards`; Grand Rune Chest dan Royal Gear Chest sama-sama `icon_awakening`.
+
+Perbaikan:
+- `tools/gen_item_icons.py` menggambar 12 ikon baru dengan gaya yang sama (cakram gelap, cincin berwarna, simbol datar): `item_sweet_cake`, `item_perfume`, `item_skin_ticket`, `item_exp_potion`, `item_energy_potion`, `item_forge_ember`, `item_hunt_core`, `item_rune_pouch`, `item_star_stone`, `item_gold_bag`, `item_rune_chest`, `item_royal_chest`. Script bisa dijalankan ulang dari root proyek.
+- `DB.ITEMS` diarahkan ke ikon baru. Header Hunter's Exchange (`hunt.gd`) dan tungku Salvage di Forge (`forge.gd`) ikut memakai ikon Hunt Core dan Forge Ember.
+- flow_test `[item icons]`: setiap item harus punya file ikon, tidak boleh berbagi ikon dengan item lain, dan tidak boleh memakai ikon mata uang (Gold, Gems, Hero EXP, Energy).
+- News `n2026-11-07g`.
+
+Catatan kecil yang belum diubah: grid Bag hanya menampilkan ikon dan jumlah (nama baru muncul setelah item dipilih), dan Arena Coin tetap tampil walau x0.
+
+## 2bq. Update batch 66 — Perbaikan layar Hero Detail & Wardrobe
+
+Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, kali ini tanpa dialog tutorial yang menutupi layar (langkah baru `notips` di `tools/shot_runner.gd`).
+- **Tab OUTFITS meluber:** sel grid punya lebar tetap 150 px dan tombol "UNLOCK 800 Gems" lebih lebar dari selnya, sehingga panel melebar keluar layar (kolom ketiga dan tab BOND terpotong). Sekarang sel berbagi lebar panel (`SIZE_EXPAND_FILL`), dan tombol dibuat dua baris: "UNLOCK / 320 Gems".
+- **Tab BOND:** "GIVE A GIFT" dipindah tepat di bawah bar Bond. Sebelumnya ada di bawah Daily Talk dan Memories, jadi harus di-scroll, padahal langkah First Steps menyuruh pemain memberi hadiah.
+- **Wardrobe:** teks "+10%% ATK & HP" (persen ganda, karena string tanpa format `%`) diperbaiki menjadi "+10%". "Recruit Ning" menjadi "Recruit Ning Er" (dulu nama dipotong di spasi pertama).
+- **Pengaman:** `hero_detail` untuk hero yang belum dimiliki selalu membuka tab INFO, walau dipanggil dengan parameter `tab` lain (sebelumnya script error di tab OUTFITS).
+
+## 2br. Update batch 67 — Messenger + nama item di Bag
+
+**Messenger (fitur baru, buka di Player Lv.2):** hero mengirim pesan chat ke Commander.
+- Setiap hari maksimal 3 chat baru masuk (`DB.MSG_PER_DAY`). Chat yang belum dibalas tetap ada dan mengisi kuota hari itu.
+- Tiap hero punya 1 **chat pribadi** (33 hero, `DB.MSG_PERSONAL`), terbuka di Bond Lv.2 dan dikirim lebih dulu dari chat lain. Balasan pertama memberi +30 Gems.
+- Selain itu ada 6 **chat harian** umum (`DB.MSG_TOPICS`) yang bergiliran per hero per hari.
+- Pemain memilih 1 dari 2 balasan. Balasan favorit hero memberi +40 Bond, balasan lain +20 Bond. Keduanya menghitung misi "bond".
+- Riwayat chat disimpan per hero (maks. 40 baris) di `s["messenger"]`.
+- Layar baru `game/screens/messenger.gd`: daftar chat dengan wajah dan titik merah di kiri, gelembung chat di kanan, animasi "typing…" sebelum hero membalas.
+- Tombol baru **Chats** di kolom kiri lobby (dengan badge jumlah pesan), entri di MENU → HEROES & BOND, dan tutorial singkat.
+- Ikon baru `icon_messenger`, dibuat dengan `tools/gen_item_icons.py icon_messenger` (script sekarang bisa membuat ikon tertentu saja).
+- `flow_test`: blok `[messenger]` (terkunci sebelum Lv.2, kuota harian, semua hero punya chat pribadi, format thread, Bond/Gems, tidak bisa balas dua kali, isi ulang hari berikutnya).
+
+**Bag:** setiap kotak sekarang menampilkan nama item, nama set gear, jenis rune atau nama hero (untuk shard). Hero EXP, Energy dan Arena Coin disembunyikan kalau jumlahnya 0. Gold dan Gems selalu tampil.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

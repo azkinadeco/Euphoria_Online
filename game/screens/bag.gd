@@ -47,7 +47,8 @@ func _entries() -> Array:
 	var out: Array = []
 	if _tab == "ITEMS":
 		for k in ["gold", "gems", "hero_exp", "energy", "arena_coin"]:
-			out.append(k)
+			if k in ["gold", "gems"] or Game.amount(k) > 0:
+				out.append(k)
 		for k in DB.ITEMS.keys():
 			if Game.amount(k) > 0:
 				out.append(k)
@@ -95,7 +96,7 @@ func _render() -> void:
 		btn.theme_type_variation = "TabButton"
 		btn.toggle_mode = true
 		btn.button_pressed = key == _sel
-		btn.custom_minimum_size = Vector2(104, 112)
+		btn.custom_minimum_size = Vector2(104, 132)
 		btn.focus_mode = Control.FOCUS_NONE
 		btn.pressed.connect(func(): Game.sfx("ui_click"); _sel = key; _render())
 		var v := UI.vbox(2)
@@ -119,11 +120,28 @@ func _render() -> void:
 			l.add_theme_color_override("font_color", DB.RARITY_COLOR[gk["rarity"]].lightened(0.3))
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(l)
+		var nm := _short_name(key, gk, rk)
+		if nm != "":
+			var nl := UI.label(nm, 11, UI.MUTED, 2)
+			nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			nl.custom_minimum_size.x = 96
+			nl.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			v.add_child(nl)
 		_grid.add_child(btn)
 	if entries.is_empty():
 		_grid.add_child(UI.label("Nothing here yet.", 16, UI.MUTED))
 	UI.stagger(_grid, 0.02)
 	_render_detail()
+
+func _short_name(k: String, gk: Dictionary, rk: Dictionary) -> String:
+	if not gk.is_empty():
+		return str(DB.GEAR_SETS[DB.gear_set(gk)]["name"])
+	if not rk.is_empty():
+		return str(DB.RUNES[rk["type"]]["name"])
+	if k.begins_with("shard:"):
+		return DB.name_of(k.substr(6))
+	return Game.reward_name(k)
 
 func _fuse_fx() -> void:
 	var fx := SkillFX.new()

@@ -44,7 +44,7 @@ const MAX_SKILL_LV := 5
 
 ## Feature gating by player level (progressive disclosure for new players).
 const FEATURE_UNLOCK := {"garden": 2, "minigame": 2, "gallery": 2, "dungeon": 3, "pass": 3, "friends": 4, "event": 4,
-	"arena": 5, "worldboss": 5, "festival": 2, "bestiary": 2, "date": 4, "hunt": 12, "rift": 15, "room": 3, "photo": 2, "forge": 6, "tower": 6, "expedition": 6, "guild": 7}
+	"arena": 5, "worldboss": 5, "festival": 2, "bestiary": 2, "date": 4, "hunt": 12, "rift": 15, "room": 3, "photo": 2, "forge": 6, "tower": 6, "expedition": 6, "guild": 7, "messenger": 2}
 ## Grid shown in the lobby MENU (route, icon, label).
 const MENU_FEATURES := [
 	["shop", "icon_shop", "Shop"], ["bag", "icon_bag", "Bag"], ["pass", "icon_pass", "Season Pass"],
@@ -53,13 +53,13 @@ const MENU_FEATURES := [
 	["event", "icon_live_ops", "Event"], ["festival", "icon_festival", "Festival"], ["bestiary", "icon_boss", "Bestiary"],
 	["expedition", "icon_afk", "Expedition"], ["garden", "icon_garden", "Garden"], ["room", "icon_room", "Private Room"], ["date", "icon_date", "Date"],
 	["wardrobe", "icon_heart", "Wardrobe"], ["guild", "icon_guild", "Guild"], ["friends", "icon_friends", "Friends"], ["gallery", "icon_codex", "Gallery"], ["settings", "icon_settings", "Settings"],
-	["photo", "icon_codex", "Photo Studio"], ["forge", "icon_equipment", "Forge"],
+	["photo", "icon_codex", "Photo Studio"], ["forge", "icon_equipment", "Forge"], ["messenger", "icon_messenger", "Messenger"],
 ]
 ## MENU sections (route lists, in display order).
 const MENU_SECTIONS := [
 	["BATTLE", ["dungeon", "arena", "tower", "worldboss", "hunt", "rift"]],
 	["EVENTS", ["event", "festival", "pass"]],
-	["HEROES & BOND", ["date", "room", "photo", "garden", "expedition", "gallery", "bestiary"]],
+	["HEROES & BOND", ["messenger", "date", "room", "photo", "garden", "expedition", "gallery", "bestiary"]],
 	["SHOP & SOCIAL", ["shop", "forge", "wardrobe", "bag", "guild", "friends", "settings"]],
 ]
 const MAX_AWAKEN := 5
@@ -940,23 +940,23 @@ const CHAPTER_REWARD := {"gems": 300, "summon_ticket": 3, "gear_chest": 1}
 
 const ITEMS := {
 	"summon_ticket": {"name": "Summon Ticket", "icon": "icon_ticket", "desc": "Use for one summon on any banner.", "kind": "currency"},
-	"exp_potion": {"name": "Hero EXP Potion", "icon": "icon_crystal", "desc": "Grants 1,000 Hero EXP.", "kind": "use", "give": {"hero_exp": 1000}},
-	"energy_potion": {"name": "Energy Flask", "icon": "icon_energy", "desc": "Restores 60 Energy.", "kind": "use", "give": {"energy": 60}},
-	"gold_bag": {"name": "Gold Pouch", "icon": "icon_gold", "desc": "Contains 20,000 Gold.", "kind": "use", "give": {"gold": 20000}},
+	"exp_potion": {"name": "Hero EXP Potion", "icon": "item_exp_potion", "desc": "Grants 1,000 Hero EXP.", "kind": "use", "give": {"hero_exp": 1000}},
+	"energy_potion": {"name": "Energy Flask", "icon": "item_energy_potion", "desc": "Restores 60 Energy.", "kind": "use", "give": {"energy": 60}},
+	"gold_bag": {"name": "Gold Pouch", "icon": "item_gold_bag", "desc": "Contains 20,000 Gold.", "kind": "use", "give": {"gold": 20000}},
 	"bouquet": {"name": "Flower Bouquet", "icon": "item_bouquet", "desc": "Gift: +40 Bond EXP.", "kind": "gift", "bond": 40},
-	"sweet_cake": {"name": "Sweet Cake", "icon": "item_bouquet", "desc": "Gift: +60 Bond EXP.", "kind": "gift", "bond": 60},
-	"perfume": {"name": "Moonlight Perfume", "icon": "item_celestial_gem", "desc": "Gift: +80 Bond EXP.", "kind": "gift", "bond": 80},
+	"sweet_cake": {"name": "Sweet Cake", "icon": "item_sweet_cake", "desc": "Gift: +60 Bond EXP.", "kind": "gift", "bond": 60},
+	"perfume": {"name": "Moonlight Perfume", "icon": "item_perfume", "desc": "Gift: +80 Bond EXP.", "kind": "gift", "bond": 80},
 	"celestial_gem": {"name": "Celestial Gem", "icon": "item_celestial_gem", "desc": "Precious gift: +120 Bond EXP.", "kind": "gift", "bond": 120},
 	"oath_ring": {"name": "Oath Ring", "icon": "item_oath_ring", "desc": "Swear an Oath with a Bond Lv.10 hero (+10% all stats).", "kind": "oath"},
-	"star_stone": {"name": "Universal Shard", "icon": "icon_shards", "desc": "Works as 1 shard for any hero's Star Up.", "kind": "shard"},
+	"star_stone": {"name": "Universal Shard", "icon": "item_star_stone", "desc": "Works as 1 shard for any hero's Star Up.", "kind": "shard"},
 	"skill_book": {"name": "Skill Book", "icon": "icon_skills", "desc": "Used to raise a hero's skill level (+12% skill power per level).", "kind": "material"},
-	"rune_pouch": {"name": "Rune Pouch", "icon": "icon_shards", "desc": "Open for 2 random runes (Tier 1-2).", "kind": "runes", "count": 2, "max_tier": 2},
-	"rune_chest": {"name": "Grand Rune Chest", "icon": "icon_awakening", "desc": "Open for 3 random runes (Tier 1-3).", "kind": "runes", "count": 3, "max_tier": 3},
+	"rune_pouch": {"name": "Rune Pouch", "icon": "item_rune_pouch", "desc": "Open for 2 random runes (Tier 1-2).", "kind": "runes", "count": 2, "max_tier": 2},
+	"rune_chest": {"name": "Grand Rune Chest", "icon": "item_rune_chest", "desc": "Open for 3 random runes (Tier 1-3).", "kind": "runes", "count": 3, "max_tier": 3},
 	"gear_chest": {"name": "Gear Chest", "icon": "icon_equipment", "desc": "Open for random equipment (R 70% • SR 27% • SSR 3%).", "kind": "chest", "rates": {"SSR": 0.03, "SR": 0.27}},
-	"gear_chest_ssr": {"name": "Royal Gear Chest", "icon": "icon_awakening", "desc": "Open for SR or SSR equipment (SSR 30%).", "kind": "chest", "rates": {"SSR": 0.3, "SR": 0.7}},
-	"forge_ember": {"name": "Forge Ember", "icon": "icon_energy", "desc": "Salvaged from equipment and won in the Armory Ruins. Fuels Reforging at the Forge.", "kind": "currency"},
-	"skin_ticket": {"name": "Special Skin Ticket", "icon": "item_celestial_gem", "desc": "Unlocks any Special Skin in the Wardrobe.", "kind": "currency"},
-	"hunt_core": {"name": "Hunt Core", "icon": "icon_shards", "desc": "Trophy from Boss Hunts. Trade it at the Hunter's Exchange.", "kind": "currency"},
+	"gear_chest_ssr": {"name": "Royal Gear Chest", "icon": "item_royal_chest", "desc": "Open for SR or SSR equipment (SSR 30%).", "kind": "chest", "rates": {"SSR": 0.3, "SR": 0.7}},
+	"forge_ember": {"name": "Forge Ember", "icon": "item_forge_ember", "desc": "Salvaged from equipment and won in the Armory Ruins. Fuels Reforging at the Forge.", "kind": "currency"},
+	"skin_ticket": {"name": "Special Skin Ticket", "icon": "item_skin_ticket", "desc": "Unlocks any Special Skin in the Wardrobe.", "kind": "currency"},
+	"hunt_core": {"name": "Hunt Core", "icon": "item_hunt_core", "desc": "Trophy from Boss Hunts. Trade it at the Hunter's Exchange.", "kind": "currency"},
 	"season_token": {"name": "Lantern Charm", "icon": "item_season_token", "desc": "Seasonal Festival currency. Earned from battles while a festival is running. Spend it in the Festival Exchange.", "kind": "currency"},
 	"festival_token": {"name": "Event Token", "icon": "icon_live_ops", "desc": "Event currency. Spend it in the Event Exchange.", "kind": "currency"},
 }
@@ -1048,7 +1048,7 @@ const ACHIEVEMENTS := [
 ]
 
 const MAIL := [
-	{"id": "skins_nov5", "title": "Special Skins Have Arrived!", "body": "Six exclusive outfits are now in the WARDROBE: Lucidria, Hyeonxa, Kali, Abadonia, Ning Er and Spimei. Here is a Skin Ticket on us — pick your favourite!", "give": {"skin_ticket": 1, "gems": 200}},
+	{"id": "skins_nov5", "title": "Special Skins Have Arrived!", "body": "Exclusive outfits are now in the WARDROBE: Ning Er, Spimei and Luby. Here is a Skin Ticket on us — pick your favourite!", "give": {"skin_ticket": 1, "gems": 200}},
 	{"id": "nov2026", "title": "10 New Heroes Have Arrived!", "body": "Abadonia, Atalanta, Kali, Zennyo Ryuo, Aqua, Rubby, Schylua, Vexira, Siv and Sven join Euphoria! Meet them at the new rate-up banners. Lulu now runs the Shop (and the Black Market at night).", "give": {"summon_ticket": 2, "gems": 300}},
 	{"id": "welcome", "title": "Welcome to Euphoria Online!", "body": "Commander, thank you for joining us. Please accept these gifts to begin your journey.", "give": {"gems": 900, "summon_ticket": 5, "gold": 50000}},
 	{"id": "patch_v2", "title": "Version 2.0 Update", "body": "The battle system, formation and summoning have been fully rebuilt. Enjoy this compensation!", "give": {"exp_potion": 10, "energy_potion": 3}},
@@ -1350,8 +1350,23 @@ static func event_stage(i: int) -> Dictionary:
 		units.append({"id": pool[rng.randi_range(0, pool.size() - 1)], "cell": cell, "level": e["level"], "boss": false})
 	return {"index": i, "name": e["name"], "level": e["level"], "enemies": units, "energy": 8, "tokens": e["tokens"], "first_gems": 80 + i * 40}
 
+# ---------------------------------------------------------------- first steps
+## New-player path, one step at a time in the lobby goal box. Progress is read from the save.
+const FIRST_STEPS := [
+	{"id": "mail", "text": "Collect your gifts in the Mailbox", "route": "mail", "give": {"gold": 5000}},
+	{"id": "summon", "text": "Summon heroes at the Aether Gate", "route": "gacha", "give": {"gems": 100}},
+	{"id": "stage1", "text": "Clear Stage 1-1", "route": "story", "give": {"exp_potion": 2}},
+	{"id": "level", "text": "Raise any hero to Lv.5", "route": "hero_detail", "params": {"id": "shina", "tab": "UPGRADE"}, "give": {"gold": 10000}},
+	{"id": "bond", "text": "Give Shina a gift in the Bond tab", "route": "hero_detail", "params": {"id": "shina", "tab": "BOND"}, "give": {"bouquet": 3}},
+	{"id": "stage3", "text": "Clear Stage 1-3", "route": "story", "give": {"gear:weapon:SR": 1}},
+	{"id": "gear", "text": "Equip your new weapon on Shina", "route": "hero_detail", "params": {"id": "shina", "tab": "GEAR"}, "give": {"gems": 150}},
+	{"id": "chapter1", "text": "Clear Chapter 1", "route": "story", "give": {"summon_ticket": 2, "gems": 200}},
+]
+
 # ---------------------------------------------------------------- first-visit tutorials
 const TUTORIALS := {
+	"messenger": [["lumeira", "We can text you now! Every day a few of us will send you a message."],
+		["lumeira", "Pick a reply. Some answers make us happier than others... and that means more Bond~"]],
 	"forge": [["shina", "The Forge! Salvage old gear for Embers, then REFORGE a piece into the set you want."],
 		["shina", "FUSE three of a rarity into the next one. And LOCK anything you can't bear to lose~"]],
 	"temper": [["shina", "TEMPER rerolls a piece's substats. Keep the ones you like, but each one you keep doubles the price."],
@@ -1417,9 +1432,10 @@ static func costume_price(idx: int) -> int:
 ## ---- Special skins (Wardrobe-exclusive outfits, state key "special")
 const SPECIAL_PRICE := 1280
 const SPECIAL_SKINS := {
-	"lucidria": "Infernal Morningstar", "hyeonxa": "Crimson Hydra Bloom", "kali": "Moonlit Hundred Blades",
-	"abadonia": "Night Wolf Empress", "ninger": "Golden Jackpot", "spimei": "Scarlet Overdrive", "luby": "Plush Panther Purr",
+	"ninger": "Golden Jackpot", "spimei": "Scarlet Overdrive", "luby": "Plush Panther Purr",
 }
+## Heroes whose special skin was taken out of the game. Saves that bought one get a Skin Ticket back.
+const WITHDRAWN_SKINS := ["lucidria", "hyeonxa", "kali", "abadonia"]
 
 ## Outfit index of a hero's special skin (-1 if none).
 static func special_index(id: String) -> int:
@@ -2532,6 +2548,13 @@ static func stats_for(id: String, level: int, star: int, bond: int = 1, oath: bo
 static func power_of(stats: Dictionary) -> int:
 	return int(stats["hp"] * 0.25 + stats["atk"] * 2.2 + stats["def"] * 1.6)
 
+## The element group that deals +30% to `grp` ("" when nothing does).
+static func counter_of(grp: String) -> String:
+	for k in ELEMENT_BEATS.keys():
+		if ELEMENT_BEATS[k] == grp:
+			return k
+	return ""
+
 static func element_mult(att_elem: String, def_elem: String) -> float:
 	var a: String = ELEMENT_GROUP.get(att_elem, att_elem)
 	var d: String = ELEMENT_GROUP.get(def_elem, def_elem)
@@ -2690,3 +2713,64 @@ static func tower_floor(floor_no: int) -> Dictionary:
 		units.append({"id": ids[rng.randi_range(0, ids.size() - 1)], "cell": cell, "level": level, "star": clampi(1 + floor_no / 5, 1, 6), "boss": floor_no % 5 == 0 and units.is_empty()})
 	return {"floor": floor_no, "level": level, "enemies": units, "bg": ["galaxy", "hell", "ice", "asgard"][floor_no % 4],
 		"gems": 100 if floor_no % 5 == 0 else 30, "gold": 1500 + floor_no * 400, "items": {"summon_ticket": 1} if floor_no % 5 == 0 else {}}
+
+# ---------------------------------------------------------------- messenger
+## Heroes text the Commander. Each day up to MSG_PER_DAY new chats arrive; reply to raise Bond.
+## Thread: [hero lines, [reply A, reply B], [answer A, answer B], index of the reply she likes best].
+const MSG_PER_DAY := 3
+const MSG_BOND := 2            # personal chat unlocks at this Bond level
+const MSG_BOND_BEST := 40
+const MSG_BOND_OK := 20
+const MSG_PERSONAL_GEMS := 30
+const MSG_LOG_MAX := 40
+const MSG_PERSONAL := {
+	"shina": [["Commander, are you awake?", "I accidentally melted the training dummy again. Third one this week."], ["Your flame is getting stronger. I'm proud of you.", "...Should I order them in bulk?"], ["P-proud? Hmph. Then I'll melt a fourth one just for you.", "Bulk?! ...Actually, yes. Fireproof ones, please."], 0],
+	"xylia": [["I drew up plans for a new wing of the base.", "There's a balcony. Facing your office. Purely for strategic reasons."], ["Strategic reasons, huh?", "Approved. Build it."], ["...Fine. It has a nice view of you working. Is that a crime?", "Efficient. I like that about you. Construction starts tomorrow."], 1],
+	"micca": [["Commander~ I found something shiny in the dungeon!", "Guess what's inside my box today. Wrong answers get bitten. Hehe."], ["Is it... me?", "Treasure?"], ["...How did you know?! Okay, it's a photo of you. Don't tell anyone.", "Close! It's a cookie I saved for you. Only slightly chewed."], 0],
+	"cthollia": [["The abyss is quiet tonight.", "It usually screams. I think it's sulking because I talk about you too much."], ["Tell it I said hello.", "Maybe talk about me a little less?"], ["...It purred. The abyss has never purred before.", "No. The abyss will simply have to cope."], 0],
+	"valeria": [["It snowed on the northern ridge.", "I built a small snow fort. It has two seats."], ["Save me a seat.", "Isn't it cold?"], ["Already saved. I'll bring a blanket... for you, not me.", "Cold? I'm a Frost Knight. ...But you can hold my hand if you're worried."], 0],
+	"eropatra": [["Commander. Your Empress requires grapes.", "Peeled. By you. Within the hour."], ["Yes, Your Majesty.", "Peel them yourself~"], ["Good. Obedient AND handsome. I chose well.", "...How bold. Nobody has ever refused me. I find that intriguing."], 1],
+	"furu": [["I lit a candle for everyone in the squad today.", "Yours was the biggest one. I hope that's okay."], ["Thank you, Furu.", "The biggest? Am I in trouble?"], ["You protect all of us. The light should protect you too.", "No! It's just... you're very important. To the squad. And to me."], 0],
+	"glytta": [["I'm practicing a new dance!", "It needs a partner. Hint: it's you. Hint two: you can't say no."], ["I have two left feet.", "Teach me."], ["Then I'll lead! Crystal steps are very forgiving.", "Yay! One, two, crystal spin... You're a natural, Commander!"], 1],
+	"hyeonxa": [["Nine heads, nine opinions.", "Today all nine agree on one thing. Lunch. With you."], ["Unanimous? Then I can't refuse.", "What do the heads want to eat?"], ["Democracy wins! Meet me at the mess hall.", "Head four wants spicy soup. Head seven wants whatever you're having."], 0],
+	"scylla": [["The tide came in strange today.", "It left a perfect seashell right at my feet. I'm giving it to you."], ["I'll keep it on my desk.", "The sea must like you."], ["Then a piece of my ocean will always be with you.", "The sea and I agree on many things. Including you."], 0],
+	"lumeira": [["Commander! A golden butterfly landed on my nose!", "That means great luck is coming. Maybe for both of us?"], ["I already feel lucky.", "Make a wish!"], ["Ehehe... the butterflies were right again!", "I did! ...I won't tell you what it was. But you're in it."], 0],
+	"gemora": [["Recon report: the eastern pass is clear.", "Also, you skipped lunch. I can see your desk from here."], ["You're watching me?", "Okay, I'll eat now."], ["Overwatch is my job. Your health is... a priority target.", "Confirmed. Target is eating. Mission success."], 1],
+	"fidelia": [["I reinforced the gate today.", "And the walls. And your door. Twice."], ["Twice?", "Thank you for always protecting me."], ["You can never be too safe. Especially you.", "...That's my oath. But it doesn't feel like a duty anymore."], 1],
+	"lucidria": [["I found an old inscription in the ruins.", "A promise between a guardian and her lord. It made me think of us."], ["What did it say?", "Then let's make our own promise."], ["'Until the walls fall.' ...Mine never will.", "Agreed. I won't fall, and you won't stop trusting me."], 1],
+	"eurnipha": [["It's cold today...", "Can I sit next to you for a while? Just to warm up."], ["Of course.", "I'll make you hot cocoa."], ["Mm... you're so warm, Commander. Five more minutes.", "With marshmallows? ...You spoil me."], 1],
+	"rumi": [["Exorcised three ghosts at the old barracks!", "I believe the standard fee is one dessert per ghost."], ["Three desserts, coming up.", "That's not standard at all."], ["Pleasure doing business! Next ghost is half price for you.", "It is now. I set the standards. Pay up~"], 0],
+	"mora": [["I paused time for a second today.", "Just to look at you a little longer. ...Don't make that face."], ["What face?", "You could've just asked."], ["That one. The smug one. I'm pausing time again.", "...Then I'm asking. Can I stay a little longer?"], 1],
+	"abadonia": [["My lions are restless.", "They want to hunt. I want to ride. You're coming."], ["Is that an order?", "Lead the way, my Queen."], ["It's an invitation. From a queen, those are the same thing.", "Ha! Good answer. Saddle up, Commander."], 1],
+	"atalanta": [["Ran around the whole base 40 times!", "Bet you can't do 10. Loser buys dinner~"], ["You're on.", "I'll just buy dinner now."], ["Ooh, brave! I'll wait at the finish line. For a while.", "Smart AND generous! Tonight, the big steak place~"], 0],
+	"kali": [["I polished all hundred blades today.", "It took eight hours. I thought about you for most of it."], ["Only most?", "That's dedication."], ["The other hours were about how to impress you. So... all of it.", "Dedication is my weapon too. You'll see."], 0],
+	"zennyo": [["One of my little dragons sneezed fire on the curtains.", "He's sorry. He wants a head pat from you as forgiveness."], ["Bring him over.", "Only if you get one too."], ["He's purring! I've never heard him purr before.", "...Fine. But only one. ...Okay, two."], 1],
+	"aqua": [["I blessed the water supply today.", "Everyone who drinks it will feel refreshed. Especially you."], ["Is that why I feel so good?", "Thank you, Aqua."], ["Of course! And maybe a little because of me~", "Stay hydrated, Commander. The chalice is always full for you."], 0],
+	"rubby": [["Small problem.", "Big boom. Nobody's hurt! The kitchen is just... redecorated."], ["Rubby...", "Was it at least fun?"], ["I'll fix it! With fewer explosions this time. Probably.", "SO fun. Next time I'll invite you. From a safe distance."], 1],
+	"schylua": [["Harvest season for the frost reaper.", "I reaped many enemies today. I left a flower on your desk."], ["A flower from a reaper?", "It's beautiful."], ["Even reapers can grow things. ...Only for you.", "Like you. ...Forget I said that."], 1],
+	"vexira": [["Ara~ I stole something from you today.", "Check your pocket, Commander~"], ["My lucky coin is gone!", "...You left a note instead?"], ["I'll return it... in exchange for a date. Fair trade~", "'IOU one kiss.' I always pay my debts, Commander~"], 1],
+	"siv": [["I fixed your chair!", "It was squeaking. Now it's... in four pieces. But they're really strong pieces!"], ["Thanks, I guess?", "Let's fix it together."], ["I'll make you a NEW one! With a cupholder!", "Together? Okay! You hold, I hammer. Wait, not your hand—"], 1],
+	"sven": [["I've been to many lands.", "None of them had a sunset like the one from your tower. Join me tonight?"], ["I'll be there.", "Tell me about the other lands."], ["Then my sword can rest. And so can I.", "Gladly. Though the best story is still how I met you."], 0],
+	"angela": [["The heavens sent me another message.", "'Make sure the Commander sleeps before midnight.' ...I may have written that one myself."], ["Caught you.", "I'll go to bed now."], ["It's a holy mission! Self-assigned, but still holy.", "Good. I'll stand guard by the door. Goodnight, Commander."], 1],
+	"kara": [["Death checked her list today.", "Your name isn't on it. I made sure. You're welcome."], ["That's... comforting?", "Thank you, Kara."], ["It should be. I'm very thorough.", "Don't thank me. Just stay alive. That's all I ask."], 1],
+	"mei": [["Someone touched my ears at the market today.", "I almost drew my sword. ...You're the only one allowed."], ["I'm honored.", "Can I touch them now?"], ["You should be. It's a very exclusive privilege.", "...Just once. Gently. And you never tell anyone."], 1],
+	"ninger": [["I flipped my lucky coin 10 times today!", "Heads every time. You know what that means? Today is YOUR lucky day!"], ["Then let's summon!", "Are you sure it's a fair coin?"], ["That's the spirit! Pull one for me too!", "It's... mostly fair. Luck is a skill, Commander!"], 0],
+	"spimei": [["Drone 3 took a photo of you yawning.", "For security. I'm not keeping it. ...I'm keeping it."], ["Delete it!", "Send me a copy."], ["Sorry, access denied. Encryption level: crush.", "...Okay. But you have to send me a selfie back. Fair trade."], 1],
+	"luby": [["Nya~ My mecha cat got an upgrade!", "It can give head pats now. ...Please test it. On me. For science."], ["For science, then.", "Why not ask the cat?"], ["Nyaa~ ...The experiment is a success. Repeat daily.", "It's not the same! Only your hands are calibrated right!"], 0],
+}
+## Everyday chats any hero can send (one is picked per hero per day).
+const MSG_TOPICS := [
+	[["Good morning, Commander!", "Did you sleep well?"], ["Like a rock. You?", "Not really. Too much paperwork."], ["Great! I dreamed we won every battle.", "Then take a break with me later. The paperwork can wait."], 1],
+	[["That last battle was intense!", "Did you see my finishing move?"], ["You were amazing out there.", "I was busy giving orders."], ["Hehe... I fight better when you're watching.", "Then I'll do it again next time. Watch closely!"], 0],
+	[["It's raining outside.", "Do you like the rain, Commander?"], ["I love the sound of it.", "I prefer sunny days."], ["Me too. It makes the base feel cozy.", "Then I'll be your sunshine until it stops."], 0],
+	[["I'm starving after training.", "What should we eat tonight?"], ["Something sweet.", "Whatever you like."], ["Dessert for dinner? I like the way you think.", "Careful, I might pick something very expensive~"], 0],
+	[["The stars are really clear tonight.", "Are you still awake?"], ["Yes. Want to stargaze?", "Just finishing some reports."], ["Meet me on the roof. I'll bring a blanket.", "Don't stay up too late. ...Okay, I'll keep you company."], 0],
+	[["Hey, Commander.", "Thanks for always looking out for us."], ["That's what I'm here for.", "You all look out for me too."], ["Still. It means a lot. To me especially.", "...Then we'll keep looking out for each other. Deal?"], 1],
+]
+
+## Thread data for a key: "p" = her personal chat, "t<N>" = everyday topic N.
+static func msg_thread(id: String, key: String) -> Array:
+	if key == "p":
+		return MSG_PERSONAL.get(base_id(id), [])
+	var i := int(key.substr(1))
+	return MSG_TOPICS[i] if i >= 0 and i < MSG_TOPICS.size() else []

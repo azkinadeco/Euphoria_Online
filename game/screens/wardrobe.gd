@@ -85,10 +85,10 @@ func build() -> void:
 	v.add_child(UI.label("✦ SPECIAL SKIN ✦", 14, UI.GOLD, 3))
 	v.add_child(UI.wrap_label(DB.SPECIAL_SKINS[_sel], 24, Color.WHITE))
 	v.add_child(UI.label(DB.name_of(_sel) + "  •  " + DB.title_of(_sel), 13, Color("#d4b8ff"), 2))
-	v.add_child(UI.wrap_label("Exclusive outfit — not available from Star Up or Bond. Wearing it always grants the top outfit bonus: +10%% ATK & HP.", 13, UI.MUTED))
+	v.add_child(UI.wrap_label("Exclusive outfit — not available from Star Up or Bond. Wearing it always grants the top outfit bonus: +10% ATK & HP.", 13, UI.MUTED))
 	var owned2 := Game.skin_unlocked(_sel, idx)
 	if not Game.owns(_sel):
-		v.add_child(UI.label("Recruit %s to wear this skin." % DB.name_of(_sel).split(" ")[0], 14, Color("#ff8a9a"), 2))
+		v.add_child(UI.label("Recruit %s to wear this skin." % DB.name_of(_sel), 14, Color("#ff8a9a"), 2))
 	elif owned2:
 		var eq := int(Game.hero(_sel).get("skin", 0)) == idx
 		v.add_child(UI.button("EQUIPPED" if eq else "WEAR NOW", func():

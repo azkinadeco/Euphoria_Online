@@ -285,10 +285,6 @@
       "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo3_a.png",
       "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo3_b.png"
      ]
-    },
-    "special": {
-     "base": "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_special.png",
-     "interactions": []
     }
    },
    "sprites": [
@@ -325,10 +321,6 @@
     },
     "evo2": {
      "base": "res://art/characters/heroes/lucidria/char/lucidria_char_evo2.png",
-     "interactions": []
-    },
-    "special": {
-     "base": "res://art/characters/heroes/lucidria/char/lucidria_char_special.png",
      "interactions": []
     }
    },
@@ -686,10 +678,6 @@
     "evo5": {
      "base": "res://art/characters/heroes/abadonia/char/abadonia_char_evo5.png",
      "interactions": []
-    },
-    "special": {
-     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_special.png",
-     "interactions": []
     }
    },
    "sprites": [
@@ -800,10 +788,6 @@
     },
     "evo4": {
      "base": "res://art/characters/heroes/kali/char/kali_char_evo4.png",
-     "interactions": []
-    },
-    "special": {
-     "base": "res://art/characters/heroes/kali/char/kali_char_special.png",
      "interactions": []
     }
    },

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gy4oakohgure"
-path="res://.godot/imported/hyeonxa_char_special_depth.png-4517e155ed5c95a203b4c665eb4f57b0.ctex"
+uid="uid://cakphjby2focu"
+path="res://.godot/imported/item_perfume.png-5c21b12ca20180b9ffb3e4349e242134.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/depth/hyeonxa_char_special_depth.png"
-dest_files=["res://.godot/imported/hyeonxa_char_special_depth.png-4517e155ed5c95a203b4c665eb4f57b0.ctex"]
+source_file="res://art/icons/item_perfume.png"
+dest_files=["res://.godot/imported/item_perfume.png-5c21b12ca20180b9ffb3e4349e242134.ctex"]
 
 [params]
 

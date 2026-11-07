@@ -1,5 +1,53 @@
 [
  {
+  "id": "n2026-11-07h",
+  "date": "2026-11-07",
+  "tag": "NEW",
+  "title": "Messenger",
+  "bg": "lobby",
+  "body": "Your heroes can text you now! Every day up to 3 heroes send you a message. Open CHATS in the lobby and pick a reply.\nThe reply she likes best gives +40 Bond, any other reply gives +20. At Bond Lv.2 every hero sends one personal chat that also gives 30 Gems.\nThe Bag now shows item names, and empty currencies are hidden."
+ },
+ {
+  "id": "n2026-11-07g",
+  "date": "2026-11-07",
+  "tag": "UPDATE",
+  "title": "New Item Icons",
+  "bg": "lobby",
+  "body": "Twelve items now have their own icons, so you can tell them apart at a glance.\nSkin Tickets, Moonlight Perfume and Celestial Gems no longer look alike, potions no longer look like Hero EXP or Energy, and the Gold Pouch, Forge Ember, Hunt Core, Rune Pouch, Universal Shard and both gear and rune chests each have their own art."
+ },
+ {
+  "id": "n2026-11-07f",
+  "date": "2026-11-07",
+  "tag": "NEW",
+  "title": "Scout Report",
+  "bg": "forest",
+  "body": "Know your enemy before you fight. Stage details now show the enemies' main element and which element to bring for +30% ATK.\nIn Formation, heroes that counter the enemy are marked, and AUTO takes the advantage into account.\nLost a battle? The result screen now tells you what to change, including which hero to bring."
+ },
+ {
+  "id": "n2026-11-07e",
+  "date": "2026-11-07",
+  "tag": "UPDATE",
+  "title": "Summon With Tickets and Gems",
+  "bg": "lobby",
+  "body": "Summon x10 now spends your Tickets first and covers the rest with Gems, so 5 Tickets plus 750 Gems is enough for a full 10x.\nThe Story screen is also tidier: Hard mode and later Arcs appear as you reach them."
+ },
+ {
+  "id": "n2026-11-07d",
+  "date": "2026-11-07",
+  "tag": "NEW",
+  "title": "First Steps",
+  "bg": "lobby",
+  "body": "New Commanders now get a guided path of 8 steps, shown in the NEXT box in the lobby. Each step pays a reward, ending with 2 Summon Tickets and 200 Gems for clearing Chapter 1.\nAlready past them? Your finished steps are waiting: just tap CLAIM."
+ },
+ {
+  "id": "n2026-11-07c",
+  "date": "2026-11-07",
+  "tag": "INFO",
+  "title": "Four Special Skins Withdrawn",
+  "bg": "blackmarket",
+  "body": "The special skins for Lucidria, Hyeonxa, Kali and Abadonia have been removed from the Wardrobe because their art was damaged.\nIf you unlocked one, you have received 1 Skin Ticket back for each, and the hero now wears her best unlocked outfit.\nThe skins of Ning Er, Spimei and Luby are not affected."
+ },
+ {
   "id": "n2026-11-07b",
   "date": "2026-11-07",
   "tag": "NEW",
@@ -149,7 +197,7 @@
   "tag": "NEW",
   "title": "Special Skins & the Wardrobe",
   "bg": "blackmarket",
-  "body": "Six exclusive outfits arrive: Infernal Morningstar (Lucidria), Crimson Hydra Bloom (Hyeonxa), Moonlit Hundred Blades (Kali), Night Wolf Empress (Abadonia), Golden Jackpot (Ning Er) and Scarlet Overdrive (Spimei).\nUnlock them in the WARDROBE with a Skin Ticket or Gems — every special skin gives +10% ATK & HP, and golden sparkles in the lobby.\nA free Skin Ticket is waiting in your Mailbox!"
+  "body": "Exclusive outfits arrive: Golden Jackpot (Ning Er) and Scarlet Overdrive (Spimei).\nUnlock them in the WARDROBE with a Skin Ticket or Gems — every special skin gives +10% ATK & HP, and golden sparkles in the lobby.\nA free Skin Ticket is waiting in your Mailbox!"
  },
  {
   "id": "n2026-11-05e",

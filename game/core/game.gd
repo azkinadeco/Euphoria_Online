@@ -72,6 +72,7 @@ func new_state() -> Dictionary:
 		"quests": {"day": -1, "progress": {}, "claimed": {}},
 		"achievements": {},
 		"mail_claimed": [],
+		"first_steps": [],
 		"shop": {"day": -1, "bought": {}},
 		"stats": {"oaths": 0},
 		"gear": [],
@@ -136,6 +137,18 @@ func _merge(dst: Dictionary, src: Dictionary) -> void:
 			_merge(dst[k], src[k])
 		else:
 			dst[k] = src[k]
+
+## Special skins sort last, so a saved index past the end of the outfit list is a withdrawn skin.
+func _withdraw_skins() -> void:
+	for hid in DB.WITHDRAWN_SKINS:
+		var n: int = DB.art_list(hid).size()
+		var kept: Array = (s["skins_bought"].get(hid, []) as Array).filter(func(x): return int(x) < n)
+		var lost: int = (s["skins_bought"].get(hid, []) as Array).size() - kept.size()
+		if lost > 0:
+			s["skins_bought"][hid] = kept
+			s["items"]["skin_ticket"] = int(s["items"].get("skin_ticket", 0)) + lost
+		if s["heroes"].has(hid) and int(s["heroes"][hid]["skin"]) >= n:
+			s["heroes"][hid]["skin"] = unlocked_skins(hid) - 1
 
 func _sanitize() -> void:
 	_ensure_gear_subs()
@@ -208,6 +221,7 @@ func _sanitize() -> void:
 		for x in s["skins_bought"][hid]:
 			arr.append(int(x))
 		s["skins_bought"][hid] = arr
+	_withdraw_skins()
 	for o in s["market"]["offers"]:
 		o["price"] = int(o["price"])
 		o["off"] = int(o.get("off", 0))
@@ -910,9 +924,12 @@ func move_order(id: String, dir: int) -> void:
 			break
 	mark_dirty()
 
-func auto_formation() -> void:
+## Builds the strongest team. `prefer` (an element group) counts as its +30% ATK advantage.
+func auto_formation(prefer: String = "") -> void:
 	var ids: Array = s["heroes"].keys()
-	ids.sort_custom(func(a, b): return hero_power(a) > hero_power(b))
+	var score := func(id: String) -> float:
+		return hero_power(id) * (1.3 if prefer != "" and DB.ELEMENT_GROUP.get(DB.element_of(id), "") == prefer else 1.0)
+	ids.sort_custom(func(a, b): return score.call(a) > score.call(b))
 	ids = ids.slice(0, DB.MAX_DEPLOY)
 	var front: Array = []
 	var mid: Array = []
@@ -1053,6 +1070,11 @@ func claim_afk() -> Dictionary:
 func can_free_pull() -> bool:
 	return int(s["gacha"]["free_day"]) != day_key()
 
+## How a summon of `count` is paid: tickets first, Gems cover the rest.
+func pull_pay(count: int) -> String:
+	var tk := amount("summon_ticket")
+	return "ticket" if tk >= count else ("mixed" if tk > 0 else "gems")
+
 func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 	var banner: Dictionary = {}
 	for b in DB.BANNERS:
@@ -1065,6 +1087,12 @@ func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 	elif pay == "ticket":
 		if not spend("summon_ticket", count):
 			return {"error": "Not enough Summon Tickets."}
+	elif pay == "mixed":
+		var tk := mini(amount("summon_ticket"), count)
+		if amount("gems") < DB.GACHA_COST * (count - tk):
+			return {"error": "Not enough Gems."}
+		spend("summon_ticket", tk)
+		spend("gems", DB.GACHA_COST * (count - tk))
 	else:
 		if not spend("gems", DB.GACHA_COST * count):
 			return {"error": "Not enough Gems."}
@@ -1432,6 +1460,39 @@ func enemy_power(enemies: Array) -> int:
 		var st := DB.stats_for(e["id"], int(e.get("level", 1)), int(e.get("star", 1)))
 		p += DB.power_of(st) * (3 if e.get("boss", false) else 1)
 	return p
+
+## What to bring against `enemies`: their main element (bosses weigh 3x), the element that
+## counters it, the owned heroes of that element (strongest first) and how many are deployed.
+func scout(enemies: Array) -> Dictionary:
+	var weight := {}
+	for e in enemies:
+		var g: String = DB.ELEMENT_GROUP.get(DB.element_of(e["id"]), "")
+		if g != "":
+			weight[g] = int(weight.get(g, 0)) + (3 if e.get("boss", false) else 1)
+	var top := ""
+	for g in weight.keys():
+		if top == "" or int(weight[g]) > int(weight[top]):
+			top = g
+	var counter := DB.counter_of(top)
+	if counter == "":
+		return {}
+	var heroes: Array = s["heroes"].keys().filter(func(id): return DB.ELEMENT_GROUP.get(DB.element_of(id), "") == counter)
+	heroes.sort_custom(func(a, b): return hero_power(a) > hero_power(b))
+	var deployed: int = s["formation"].filter(func(e): return heroes.has(e[0])).size()
+	return {"main": top, "counter": counter, "heroes": heroes, "deployed": deployed}
+
+## The most useful single piece of advice after losing to `enemies`.
+func defeat_tip(enemies: Array) -> String:
+	var ep := enemy_power(enemies)
+	var tp := team_power()
+	if tp * 10 < ep * 7:
+		return "This enemy is far stronger (Power %s vs your %s). Level up or Star Up your team first." % [fmt(ep), fmt(tp)]
+	var sc := scout(enemies)
+	if not sc.is_empty() and int(sc["deployed"]) == 0:
+		if (sc["heroes"] as Array).is_empty():
+			return "These enemies are mostly %s. %s heroes deal +30%% ATK to them, so look for one at the Aether Gate." % [sc["main"], sc["counter"]]
+		return "These enemies are mostly %s. Bring %s: %s heroes deal +30%% ATK to them." % [sc["main"], DB.name_of(sc["heroes"][0]).split(" ")[0], sc["counter"]]
+	return "Move tanks to the front column and line heroes up with the rows of key enemies."
 
 ## Pays the entry cost. Returns "" on success or an error message.
 func pay_battle(params: Dictionary) -> String:
@@ -1925,7 +1986,41 @@ func use_support(idx: int) -> void:
 # =================================================================== guide
 
 ## Recommended next step for new players (shown in the lobby).
+func first_step_done(id: String) -> bool:
+	match id:
+		"mail": return not (s["mail_claimed"] as Array).is_empty()
+		"summon": return int(s["gacha"]["total"]) > 0
+		"stage1": return stages_cleared() >= 1
+		"level": return s["heroes"].values().any(func(h): return int(h["level"]) >= 5)
+		"bond": return s["heroes"].values().any(func(h): return int(h["bond"]) >= 2 or int(h["bond_exp"]) > 0)
+		"stage3": return stages_cleared() >= 3
+		"gear": return s["gear"].any(func(g): return str(g.get("owner", "")) != "")
+		"chapter1": return stages_cleared() >= DB.STAGES_PER_CHAPTER
+	return false
+
+## The first step not yet claimed ({} once the path is finished).
+func first_step() -> Dictionary:
+	for st in DB.FIRST_STEPS:
+		if not (s["first_steps"] as Array).has(st["id"]):
+			return st
+	return {}
+
+## Claims the current step if it is done. Returns its rewards ({} otherwise).
+func claim_first_step() -> Dictionary:
+	var st := first_step()
+	if st.is_empty() or not first_step_done(st["id"]):
+		return {}
+	s["first_steps"].append(st["id"])
+	give(st["give"])
+	return st["give"]
+
 func next_goal() -> Dictionary:
+	var st := first_step()
+	if not st.is_empty():
+		var step := "STEP %d/%d" % [(s["first_steps"] as Array).size() + 1, DB.FIRST_STEPS.size()]
+		if first_step_done(st["id"]):
+			return {"text": "Done! Reward: %s" % reward_text(st["give"]), "route": "", "ready": true, "tag": step}
+		return {"text": st["text"], "route": st["route"], "params": st.get("params", {}), "tag": step}
 	var g := _next_goal_raw()
 	if str(g.get("route", "")) != "" and not feature_unlocked(str(g["route"])):
 		return {"text": "Continue the story: Stage %s" % DB.stage_id(story_progress()), "route": "story"}
@@ -2478,7 +2573,7 @@ func feature_badge(route: String) -> int:
 		"quests": n = badge_quests() + road_ready()
 		"login": n = 1 if can_claim_login() else 0
 		"friends": n = 0 if bool(s["friends"]["hearts_sent"]) else 1
-		"heroes": n = bond_stories_new() + codex_claimable()
+		"heroes": n = bond_stories_new() + codex_claimable() if stages_cleared() > 0 else 0   # quiet until the first win
 		"pass": n = pass_claimable()
 		"expedition": n = expeditions_ready()
 		"hunt": n = hunt_tries() + hunt_shop_ready()
@@ -2491,6 +2586,7 @@ func feature_badge(route: String) -> int:
 			if not (_rift()["offer"] as Array).is_empty():
 				n += 1
 		"room": n = room_visits_left() if feature_unlocked("room") else 0
+		"messenger": n = msg_unread()
 		"date": n = dates_left() if s["heroes"].values().any(func(h): return int(h["bond"]) >= DB.DATE_BOND) else 0
 		"news": n = news_unread()
 		"festival": n = (1 if fest_can_wish() else 0) + (0 if festival().is_empty() or bool(_fest_state()["greeted"]) else 1)
@@ -3621,6 +3717,100 @@ func finish_date(id: String, key: String, score: int) -> Dictionary:
 
 func date_album() -> Array:
 	return _date_state()["album"]
+
+# =================================================================== messenger
+
+## {"day", "pending": {hero: key}, "done": {hero: [keys]}, "log": {hero: [[who, text], ...]}}
+## who: "h" = hero, "p" = player. New chats are delivered once per day, up to DB.MSG_PER_DAY waiting.
+func _msg_state() -> Dictionary:
+	var m: Dictionary = s.get("messenger", {"day": -1, "pending": {}, "done": {}, "log": {}})
+	s["messenger"] = m
+	if int(m["day"]) != day_key() and feature_unlocked("messenger"):
+		m["day"] = day_key()
+		_msg_deliver(m)
+	return m
+
+func _msg_next_key(id: String, m: Dictionary) -> String:
+	var done: Array = m["done"].get(id, [])
+	if DB.MSG_PERSONAL.has(DB.base_id(id)) and not done.has("p") and int(hero(id)["bond"]) >= DB.MSG_BOND:
+		return "p"
+	return "t%d" % ((day_key() + id.hash()) % DB.MSG_TOPICS.size())
+
+func _msg_deliver(m: Dictionary) -> void:
+	var pending: Dictionary = m["pending"]
+	var free := DB.MSG_PER_DAY - pending.size()
+	if free <= 0:
+		return
+	var cands: Array = s["heroes"].keys().filter(func(id): return not pending.has(id))
+	var day := day_key()
+	# personal chats first, then a daily rotation so every hero gets a turn
+	cands.sort_custom(func(a, b):
+		var pa := _msg_next_key(a, m) == "p"
+		var pb := _msg_next_key(b, m) == "p"
+		if pa != pb:
+			return pa
+		return (str(a) + str(day)).hash() < (str(b) + str(day)).hash())
+	for id in cands.slice(0, free):
+		pending[id] = _msg_next_key(id, m)
+	mark_dirty()
+
+func msg_pending() -> Dictionary:
+	return _msg_state()["pending"]
+
+func msg_unread() -> int:
+	return msg_pending().size() if feature_unlocked("messenger") else 0
+
+func msg_log(id: String) -> Array:
+	return _msg_state()["log"].get(id, [])
+
+## Heroes with any chat history or a waiting message; waiting ones first.
+func msg_contacts() -> Array:
+	var m := _msg_state()
+	var out: Array = []
+	for id in s["heroes"].keys():
+		if m["pending"].has(id) or m["log"].has(id):
+			out.append(id)
+	out.sort_custom(func(a, b):
+		var pa: bool = m["pending"].has(a)
+		var pb: bool = m["pending"].has(b)
+		return pa if pa != pb else int(hero(a)["bond"]) > int(hero(b)["bond"]))
+	return out
+
+## Answer the waiting chat from a hero with reply 0 or 1.
+## Returns {answer, best, bond, gems} or {} when nothing is waiting.
+func msg_reply(id: String, choice: int) -> Dictionary:
+	var m := _msg_state()
+	if not m["pending"].has(id) or not owns(id):
+		return {}
+	var key: String = m["pending"][id]
+	var th := DB.msg_thread(id, key)
+	if th.is_empty():
+		m["pending"].erase(id)
+		return {}
+	choice = clampi(choice, 0, 1)
+	var hist: Array = m["log"].get(id, [])
+	for line in th[0]:
+		hist.append(["h", line])
+	hist.append(["p", th[1][choice]])
+	hist.append(["h", th[2][choice]])
+	while hist.size() > DB.MSG_LOG_MAX:
+		hist.pop_front()
+	m["log"][id] = hist
+	m["pending"].erase(id)
+	var done: Array = m["done"].get(id, [])
+	var first := not done.has(key)
+	if first:
+		done.append(key)
+	m["done"][id] = done
+	var best: bool = choice == int(th[3])
+	var bond := DB.MSG_BOND_BEST if best else DB.MSG_BOND_OK
+	add_bond(id, bond)
+	var gems := DB.MSG_PERSONAL_GEMS if key == "p" and first else 0
+	if gems > 0:
+		give({"gems": gems})
+	quest_progress("bond")
+	mark_dirty()
+	return {"answer": th[2][choice], "best": best, "bond": bond, "gems": gems}
 
 # =================================================================== commander road
 
