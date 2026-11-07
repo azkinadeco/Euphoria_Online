@@ -611,6 +611,23 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - Fitur "Duo Links" sempat dikerjakan, tapi dibatalkan karena sistem **Links** (`DB.LINKS`, 22 pasangan) sudah ada.
 - `tools/shot_runner.gd`: langkah baru `scroll:<px>`.
 
+## 2bu. Update batch 70 — Kitchen (Dapur)
+
+- **Layar baru Kitchen** (MENU → HEROES & BOND, terbuka di Player Lv.3, file `game/screens/kitchen.gd`). Panel kiri berisi level Kitchen, makanan yang sedang aktif, Market Basket, isi Pantry dan hidangan yang dimiliki. Panel kanan berisi daftar resep dengan tombol COOK dan COOK xN.
+- **4 bahan** (`DB.INGREDIENTS`): Moonwheat Flour, Starberry, Dewleaf Herb, Wild Game. Sumbernya:
+  - Menang di story, Hard dan Event: peluang 60% dapat 1 bahan. Boss selalu memberi 2 bahan.
+  - Garden: tap hero kadang memberi Starberry atau Dewleaf Herb.
+  - Expedition Herb Gathering: +3 Dewleaf Herb.
+  - Market Basket gratis sekali sehari. Isinya 2 dari setiap bahan (8 total), cukup untuk langsung memasak di hari pertama. Setiap level Kitchen di atas Lv.1 menambah 1 bahan acak.
+- **5 resep** (`DB.RECIPES`), masing-masing memakan bahan dan Gold:
+  - Hadiah: Starberry Pancakes (+70 Bond) dan Starberry Tart (+110 Bond, butuh Kitchen Lv.2). Keduanya muncul di daftar GIVE A GIFT di Hero Detail dan Private Room. Hidangan ini tidak pernah jadi hadiah favorit hero, jadi favorit lama tidak berubah.
+  - Meal: Hunter's Stew (ATK +8%, 3 battle), Dewleaf Salad (HP +12%, 3 battle), Royal Meat Pie (HP/ATK/DEF +7%, 5 battle, butuh Kitchen Lv.3).
+- **Buff Meal:** tekan SERVE di Kitchen atau Bag. Buff berlaku untuk seluruh tim dan berkurang satu setiap kali battle sungguhan dimulai (`Game.meal_consume`, dipanggil dari tombol mulai di Formation dan dari Auto-Repeat). Sweep dan Arena tidak memakai Meal. Hanya satu Meal yang bisa aktif; Meal baru menggantikan yang lama.
+- **Level Kitchen** naik sesuai total hidangan yang dimasak (`DB.KITCHEN_LV`: 0/10/30/60).
+- Misi harian baru "Cook a dish in the Kitchen", dengan tombol GO ke Kitchen. Achievement baru "Cook 20 dishes" dan "Cook 60 dishes" (stat `dishes`). Badge di menu muncul saat Market Basket bisa diambil. Ada tutorial singkat dari Furu.
+- Ikon baru: 4 bahan, 5 hidangan dan `icon_kitchen` (dari `tools/gen_item_icons.py`).
+- `flow_test`: blok `[kitchen]` mengecek basket, resep, biaya, level, buff Meal di battle, pengecualian Arena dan drop bahan dari boss.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

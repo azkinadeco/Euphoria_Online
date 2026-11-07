@@ -246,5 +246,14 @@ func _render_detail() -> void:
 				_detail.add_child(UI.button("OPEN ALL (x%d)" % _count(ck), func(): Game.use_item(ck, _count(ck)); _sel = ""; _render(), "", Vector2(0, 44)))
 		"gift", "oath":
 			_detail.add_child(UI.button("GIVE TO A HERO", func(): main.go("hero_detail", {"id": Game.s["lobby_hero"], "tab": "BOND", "list": Game.s["heroes"].keys()}), "GoldButton", Vector2(0, 48)))
+		"meal":
+			var mk := _sel
+			_detail.add_child(UI.button("SERVE MEAL", func():
+				var err := Game.serve_meal(mk)
+				main.toast(err if err != "" else "%s served!" % DB.ITEMS[mk]["name"], UI.RED if err != "" else UI.GREEN)
+				_render(), "GoldButton", Vector2(0, 48)))
+			_detail.add_child(UI.button("GO TO KITCHEN", func(): main.go("kitchen"), "", Vector2(0, 44)))
+		"ingredient":
+			_detail.add_child(UI.button("GO TO KITCHEN", func(): main.go("kitchen"), "GoldButton", Vector2(0, 48)))
 		"currency":
 			_detail.add_child(UI.button("GO TO SUMMON", func(): main.go("gacha"), "GoldButton", Vector2(0, 48)))

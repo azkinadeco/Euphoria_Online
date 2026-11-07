@@ -44,7 +44,7 @@ const MAX_SKILL_LV := 5
 
 ## Feature gating by player level (progressive disclosure for new players).
 const FEATURE_UNLOCK := {"garden": 2, "minigame": 2, "gallery": 2, "dungeon": 3, "pass": 3, "friends": 4, "event": 4,
-	"arena": 5, "worldboss": 5, "festival": 2, "bestiary": 2, "date": 4, "hunt": 12, "rift": 15, "room": 3, "photo": 2, "forge": 6, "tower": 6, "expedition": 6, "guild": 7, "messenger": 2}
+	"arena": 5, "worldboss": 5, "festival": 2, "bestiary": 2, "date": 4, "hunt": 12, "rift": 15, "room": 3, "photo": 2, "forge": 6, "tower": 6, "expedition": 6, "guild": 7, "messenger": 2, "kitchen": 3}
 ## Grid shown in the lobby MENU (route, icon, label).
 const MENU_FEATURES := [
 	["shop", "icon_shop", "Shop"], ["bag", "icon_bag", "Bag"], ["pass", "icon_pass", "Season Pass"],
@@ -53,13 +53,13 @@ const MENU_FEATURES := [
 	["event", "icon_live_ops", "Event"], ["festival", "icon_festival", "Festival"], ["bestiary", "icon_boss", "Bestiary"],
 	["expedition", "icon_afk", "Expedition"], ["garden", "icon_garden", "Garden"], ["room", "icon_room", "Private Room"], ["date", "icon_date", "Date"],
 	["wardrobe", "icon_heart", "Wardrobe"], ["guild", "icon_guild", "Guild"], ["friends", "icon_friends", "Friends"], ["gallery", "icon_codex", "Gallery"], ["settings", "icon_settings", "Settings"],
-	["photo", "icon_codex", "Photo Studio"], ["forge", "icon_equipment", "Forge"], ["messenger", "icon_messenger", "Messenger"],
+	["photo", "icon_codex", "Photo Studio"], ["forge", "icon_equipment", "Forge"], ["messenger", "icon_messenger", "Messenger"], ["kitchen", "icon_kitchen", "Kitchen"],
 ]
 ## MENU sections (route lists, in display order).
 const MENU_SECTIONS := [
 	["BATTLE", ["dungeon", "arena", "tower", "worldboss", "hunt", "rift"]],
 	["EVENTS", ["event", "festival", "pass"]],
-	["HEROES & BOND", ["messenger", "date", "room", "photo", "garden", "expedition", "gallery", "bestiary"]],
+	["HEROES & BOND", ["messenger", "date", "room", "photo", "garden", "kitchen", "expedition", "gallery", "bestiary"]],
 	["SHOP & SOCIAL", ["shop", "forge", "wardrobe", "bag", "guild", "friends", "settings"]],
 ]
 const MAX_AWAKEN := 5
@@ -959,6 +959,15 @@ const ITEMS := {
 	"hunt_core": {"name": "Hunt Core", "icon": "item_hunt_core", "desc": "Trophy from Boss Hunts. Trade it at the Hunter's Exchange.", "kind": "currency"},
 	"season_token": {"name": "Lantern Charm", "icon": "item_season_token", "desc": "Seasonal Festival currency. Earned from battles while a festival is running. Spend it in the Festival Exchange.", "kind": "currency"},
 	"festival_token": {"name": "Event Token", "icon": "icon_live_ops", "desc": "Event currency. Spend it in the Event Exchange.", "kind": "currency"},
+	"ing_flour": {"name": "Moonwheat Flour", "icon": "item_ing_flour", "desc": "Kitchen ingredient. Found after story battles and in the Market Basket.", "kind": "ingredient"},
+	"ing_berry": {"name": "Starberry", "icon": "item_ing_berry", "desc": "Kitchen ingredient. Heroes in the Garden sometimes pick some for you.", "kind": "ingredient"},
+	"ing_herb": {"name": "Dewleaf Herb", "icon": "item_ing_herb", "desc": "Kitchen ingredient. Gathered in the Garden and on Herb Gathering expeditions.", "kind": "ingredient"},
+	"ing_meat": {"name": "Wild Game", "icon": "item_ing_meat", "desc": "Kitchen ingredient. Dropped by monsters in story and Hard stages.", "kind": "ingredient"},
+	"dish_pancake": {"name": "Starberry Pancakes", "icon": "item_dish_pancake", "desc": "Home-made gift: +70 Bond EXP.", "kind": "gift", "bond": 70},
+	"dish_tart": {"name": "Starberry Tart", "icon": "item_dish_tart", "desc": "Home-made gift: +110 Bond EXP.", "kind": "gift", "bond": 110},
+	"dish_stew": {"name": "Hunter's Stew", "icon": "item_dish_stew", "desc": "Meal: team ATK +8% for the next 3 battles.", "kind": "meal"},
+	"dish_salad": {"name": "Dewleaf Salad", "icon": "item_dish_salad", "desc": "Meal: team HP +12% for the next 3 battles.", "kind": "meal"},
+	"dish_pie": {"name": "Royal Meat Pie", "icon": "item_dish_pie", "desc": "Meal: team HP, ATK and DEF +7% for the next 5 battles.", "kind": "meal"},
 }
 
 const SHOP := [
@@ -999,6 +1008,7 @@ const DAILY_QUESTS := [
 	{"id": "arena", "name": "Fight in the Arena", "target": 1, "give": {"arena_coin": 50, "gems": 20}},
 	{"id": "bond", "name": "Interact with a hero 3 times", "target": 3, "give": {"bouquet": 1}},
 	{"id": "chat", "name": "Reply to a hero's message", "target": 1, "give": {"gems": 20, "gold": 3000}},
+	{"id": "cook", "name": "Cook a dish in the Kitchen", "target": 1, "give": {"gems": 20, "ing_berry": 2}},
 	{"id": "guild", "name": "Check in or donate to your guild", "target": 1, "give": {"guild_coin": 30, "gold": 3000}},
 	{"id": "dungeon", "name": "Clear a Daily Dungeon", "target": 2, "give": {"gems": 30, "gear_chest": 1}},
 ]
@@ -1023,12 +1033,42 @@ const CODEX_STEPS := [
 ## Where a mission's GO button leads (by quest id / weekly "src" / achievement "stat").
 const QUEST_ROUTE := {
 	"stage": "story", "summon": "gacha", "levelup": "heroes", "afk": "lobby", "arena": "arena", "bond": "garden",
-	"chat": "messenger", "guild": "guild", "dungeon": "dungeon", "quest": "quests",
+	"chat": "messenger", "cook": "kitchen", "dishes": "kitchen", "guild": "guild", "dungeon": "dungeon", "quest": "quests",
 	"stages_cleared": "story", "hard_cleared": "story", "heroes_owned": "gacha", "total_pulls": "gacha", "tower_floor": "tower",
 	"max_star": "heroes", "oaths": "heroes", "max_skill": "heroes", "memories": "heroes", "pass_level": "pass",
 	"chats": "messenger", "personal_chats": "messenger",
 }
 ## Redeem codes (Settings → REDEEM CODE). Case and spaces don't matter. Each code works once per save.
+# =================================================================== kitchen
+## Ingredients drop from battles, the Garden and a daily Market Basket. Cook them into gifts or meals.
+const INGREDIENTS := ["ing_flour", "ing_berry", "ing_herb", "ing_meat"]
+## Gift dishes join the normal gift list (they are never a hero's favourite).
+const DISH_GIFTS := ["dish_pancake", "dish_tart"]
+const RECIPES := [
+	{"id": "dish_pancake", "need": {"ing_flour": 2, "ing_berry": 1}, "gold": 1000},
+	{"id": "dish_stew", "need": {"ing_meat": 2, "ing_herb": 1}, "gold": 1500},
+	{"id": "dish_salad", "need": {"ing_herb": 2, "ing_berry": 1}, "gold": 1500},
+	{"id": "dish_tart", "need": {"ing_flour": 1, "ing_berry": 3}, "gold": 2500, "lv": 2},
+	{"id": "dish_pie", "need": {"ing_flour": 2, "ing_meat": 2, "ing_herb": 1}, "gold": 4000, "lv": 3},
+]
+## Meal buffs: stat bonus for the whole team and how many battles it lasts.
+const MEALS := {
+	"dish_stew": {"bonus": {"atk": 0.08}, "battles": 3},
+	"dish_salad": {"bonus": {"hp": 0.12}, "battles": 3},
+	"dish_pie": {"bonus": {"hp": 0.07, "atk": 0.07, "def": 0.07}, "battles": 5},
+}
+## Kitchen level from total dishes cooked. Higher levels unlock recipes and a bigger basket.
+const KITCHEN_LV := [0, 10, 30, 60]
+const BASKET_SIZE := 8   # 2 of each ingredient, +1 random per Kitchen level above 1
+## Chance for a won story/Hard/Event battle to drop one ingredient.
+const INGREDIENT_DROP := 0.6
+
+static func recipe(id: String) -> Dictionary:
+	for r in RECIPES:
+		if r["id"] == id:
+			return r
+	return {}
+
 const REDEEM_CODES := {
 	"EUPHORIA2026": {"gems": 500, "summon_ticket": 2},
 	"WELCOMECOMMANDER": {"gems": 300, "gold": 50000, "exp_potion": 5},
@@ -1060,6 +1100,8 @@ const ACHIEVEMENTS := [
 	{"id": "skill5", "name": "Master a skill (Lv.5)", "stat": "max_skill", "target": 5, "give": {"gems": 400, "skill_book": 3}},
 	{"id": "memories", "name": "Read 10 Memories", "stat": "memories", "target": 10, "give": {"gems": 500, "celestial_gem": 3}},
 	{"id": "pass30", "name": "Reach Season Pass Lv.30", "stat": "pass_level", "target": 30, "give": {"gems": 1000}},
+	{"id": "cook20", "name": "Cook 20 dishes", "stat": "dishes", "target": 20, "give": {"gems": 200, "sweet_cake": 3}},
+	{"id": "cook60", "name": "Cook 60 dishes (Master Chef)", "stat": "dishes", "target": 60, "give": {"gems": 500, "celestial_gem": 2}},
 	{"id": "chats10", "name": "Reply to 10 messages", "stat": "chats", "target": 10, "give": {"gems": 300, "bouquet": 3}},
 	{"id": "chats50", "name": "Reply to 50 messages", "stat": "chats", "target": 50, "give": {"gems": 800, "sweet_cake": 3}},
 	{"id": "personal", "name": "Read 10 personal chats", "stat": "personal_chats", "target": 10, "give": {"gems": 500, "celestial_gem": 2}},
@@ -1399,6 +1441,8 @@ const TUTORIALS := {
 		["atalanta", "Each target drops something different. Hunt Cores go to Lulu's exchange — and to Limit Break!"]],
 	"rift": [["mora", "The Starlight Rift. Climb as high as you can — after every win, choose one Blessing. They stack."],
 		["mora", "One defeat ends the run, but your best floor this week is kept. Every fifth floor... someone familiar waits."]],
+	"kitchen": [["furu", "Welcome to the Kitchen! Ingredients drop from battles, the Garden and the free daily Market Basket."],
+		["furu", "Sweet dishes make lovely gifts. Hearty meals buff the whole team for the next few battles. Cook more to learn new recipes!"]],
 	"room": [["eurnipha", "Our private room~ Invite anyone, talk, give gifts, or just rest together."],
 		["eurnipha", "Each of us has a favourite room — Bond doubles there. Higher Bond unlocks more rooms!"]],
 	"festival": [["furu", "A festival changes every month! Win battles to collect Lantern Charms."],
@@ -1487,7 +1531,7 @@ const COLLECTION_PER_HERO := 0.005   # +0.5% HP/ATK/DEF per hero owned
 const GARDEN_SLOTS := 6
 const GARDEN_TAPS_PER_DAY := 5
 const EXPEDITIONS := [
-	{"id": "herb", "name": "Herb Gathering", "hours": 1, "heroes": 1, "min_level": 1, "give": {"gold": 6000, "bouquet": 1}},
+	{"id": "herb", "name": "Herb Gathering", "hours": 1, "heroes": 1, "min_level": 1, "give": {"gold": 6000, "bouquet": 1, "ing_herb": 3}},
 	{"id": "patrol", "name": "Border Patrol", "hours": 2, "heroes": 2, "min_level": 5, "give": {"hero_exp": 6000, "gold": 8000}},
 	{"id": "ruins", "name": "Ancient Ruins Survey", "hours": 4, "heroes": 2, "min_level": 10, "give": {"gear_chest": 1, "skill_book": 1}},
 	{"id": "hunt", "name": "Monster Hunt", "hours": 6, "heroes": 3, "min_level": 15, "give": {"gems": 80, "exp_potion": 4}},

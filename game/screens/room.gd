@@ -119,7 +119,7 @@ func build() -> void:
 	gf.add_theme_constant_override("h_separation", 6)
 	gf.add_theme_constant_override("v_separation", 6)
 	v.add_child(gf)
-	for gid in DB.GIFTS:
+	for gid in DB.GIFTS + DB.DISH_GIFTS:
 		var g: String = gid
 		var n := Game.amount(g)
 		var gb := UI.button("%s x%d%s" % [DB.ITEMS[g]["name"].split(" ")[-1], n, "  ♥" if DB.fav_gift(hid) == g else ""], func():

@@ -197,6 +197,133 @@ def messenger():
     return im
 
 
+def plate(d, rim=(235, 230, 245, 255)):
+    ell(d, 22, 70, 106, 104, fill=(200, 195, 215, 255))
+    ell(d, 24, 66, 104, 98, fill=rim)
+    ell(d, 36, 72, 92, 92, fill=(250, 248, 255, 255))
+
+
+def ing_flour():
+    im, d = base((240, 220, 160))
+    poly(d, [(38, 46), (90, 46), (98, 104), (30, 104)], fill=(236, 222, 188, 255), outline=(255, 245, 220, 255), width=2)
+    poly(d, [(42, 46), (86, 46), (78, 30), (50, 30)], fill=(214, 196, 156, 255))
+    rect(d, 44, 42, 84, 50, 3, fill=(180, 120, 72, 255))
+    # moon on the sack
+    ell(d, 52, 64, 78, 90, fill=(255, 215, 110, 255))
+    ell(d, 58, 60, 84, 86, fill=(236, 222, 188, 255))
+    return im
+
+
+def ing_berry():
+    im, d = base((255, 110, 150))
+    for cx, cy in [(50, 74), (78, 74), (64, 54)]:
+        ell(d, cx - 18, cy - 18, cx + 18, cy + 18, fill=(230, 50, 90, 255), outline=(255, 150, 180, 255), width=2)
+        ell(d, cx - 10, cy - 12, cx - 3, cy - 5, fill=(255, 210, 225, 255))
+    pts = []
+    for k in range(10):
+        a = -math.pi / 2 + k * math.pi / 5
+        r = 12 if k % 2 == 0 else 5
+        pts.append((64 + r * math.cos(a), 34 + r * math.sin(a)))
+    poly(d, pts, fill=(255, 235, 140, 255))
+    return im
+
+
+def ing_herb():
+    im, d = base((110, 230, 140))
+    line(d, [(64, 104), (64, 40)], (70, 150, 80, 255), 4)
+    for sx, y in [(-1, 50), (1, 62), (-1, 76), (1, 88)]:
+        poly(d, [(64, y), (64 + sx * 34, y - 14), (64 + sx * 26, y + 6)], fill=(90, 210, 120, 255), outline=(170, 255, 190, 255), width=1)
+    ell(d, 58, 28, 70, 40, fill=(120, 230, 150, 255))
+    ell(d, 80, 40, 88, 48, fill=(190, 240, 255, 255))
+    return im
+
+
+def ing_meat():
+    im, d = base((240, 120, 90))
+    ell(d, 30, 40, 86, 96, fill=(200, 70, 60, 255), outline=(255, 160, 140, 255), width=3)
+    ell(d, 44, 54, 68, 78, fill=(255, 200, 180, 255))
+    line(d, [(76, 80), (98, 102)], (245, 240, 230, 255), 9)
+    ell(d, 92, 94, 106, 108, fill=(245, 240, 230, 255))
+    ell(d, 98, 88, 110, 100, fill=(245, 240, 230, 255))
+    return im
+
+
+def dish_pancake():
+    im, d = base((255, 190, 110))
+    plate(d)
+    for i, y in enumerate([74, 64, 54]):
+        ell(d, 36, y - 10, 92, y + 10, fill=(220, 150, 70, 255), outline=(250, 200, 120, 255), width=2)
+    poly(d, [(46, 48), (82, 48), (78, 60), (50, 60)], fill=(150, 80, 30, 200))
+    ell(d, 54, 32, 66, 44, fill=(230, 50, 90, 255))
+    ell(d, 64, 30, 76, 42, fill=(230, 50, 90, 255))
+    return im
+
+
+def dish_tart():
+    im, d = base((255, 120, 170))
+    plate(d)
+    ell(d, 32, 50, 96, 88, fill=(225, 165, 90, 255))
+    ell(d, 38, 54, 90, 82, fill=(240, 80, 120, 255))
+    for cx, cy in [(52, 64), (64, 60), (76, 64), (58, 74), (72, 74)]:
+        ell(d, cx - 6, cy - 6, cx + 6, cy + 6, fill=(200, 30, 70, 255), outline=(255, 160, 190, 255), width=1)
+    poly(d, [(64, 30), (67, 38), (75, 40), (67, 43), (64, 50), (61, 43), (53, 40), (61, 38)], fill=(255, 255, 255, 255))
+    return im
+
+
+def bowl(d, soup, rim):
+    d.chord([26 * S, 40 * S, 102 * S, 106 * S], 0, 180, fill=rim)
+    ell(d, 26, 58, 102, 82, fill=rim)
+    ell(d, 32, 61, 96, 79, fill=soup)
+
+
+def dish_stew():
+    im, d = base((240, 120, 70))
+    bowl(d, (190, 90, 40, 255), (120, 80, 60, 255))
+    ell(d, 44, 64, 56, 72, fill=(240, 140, 60, 255))
+    ell(d, 66, 63, 80, 73, fill=(160, 60, 50, 255))
+    ell(d, 56, 70, 66, 76, fill=(110, 200, 110, 255))
+    for x in (48, 64, 80):
+        d.arc([(x - 6) * S, 30 * S, (x + 6) * S, 46 * S], 200, 340, fill=(255, 255, 255, 200), width=3 * S)
+        d.arc([(x - 6) * S, 40 * S, (x + 6) * S, 56 * S], 20, 160, fill=(255, 255, 255, 200), width=3 * S)
+    return im
+
+
+def dish_salad():
+    im, d = base((120, 230, 140))
+    bowl(d, (90, 200, 110, 255), (235, 230, 245, 255))
+    for cx, cy, c in [(46, 60, (70, 180, 90)), (60, 54, (120, 230, 140)), (76, 58, (70, 180, 90)), (86, 64, (120, 230, 140)), (40, 68, (120, 230, 140))]:
+        ell(d, cx - 12, cy - 8, cx + 12, cy + 8, fill=c + (255,))
+    ell(d, 54, 62, 64, 72, fill=(230, 50, 90, 255))
+    ell(d, 70, 64, 80, 74, fill=(230, 50, 90, 255))
+    return im
+
+
+def dish_pie():
+    im, d = base((255, 200, 70))
+    plate(d)
+    d.chord([30 * S, 36 * S, 98 * S, 100 * S], 180, 360, fill=(215, 145, 70, 255))
+    rect(d, 30, 66, 98, 82, 4, fill=(190, 120, 55, 255))
+    for x in (44, 58, 72, 86):
+        line(d, [(x - 6, 50), (x + 2, 62)], (150, 90, 40, 255), 3)
+    poly(d, [(64, 26), (72, 36), (64, 46), (56, 36)], fill=(255, 220, 90, 255), outline=(255, 250, 210, 255), width=1)
+    return im
+
+
+def kitchen():
+    im, d = base((255, 190, 110))
+    # cooking pot with steam and a ladle
+    rect(d, 30, 60, 98, 100, 10, fill=(200, 110, 80, 255), outline=(255, 190, 150, 255), width=3)
+    rect(d, 24, 54, 104, 64, 4, fill=(230, 140, 100, 255))
+    rect(d, 18, 64, 30, 72, 3, fill=(230, 140, 100, 255))
+    rect(d, 98, 64, 110, 72, 3, fill=(230, 140, 100, 255))
+    ell(d, 54, 74, 74, 90, fill=(255, 225, 235, 255))
+    poly(d, [(56, 84), (72, 84), (64, 94)], fill=(255, 225, 235, 255))
+    for x in (46, 64, 82):
+        d.arc([(x - 6) * S, 24 * S, (x + 6) * S, 40 * S], 200, 340, fill=(255, 255, 255, 220), width=3 * S)
+        d.arc([(x - 6) * S, 34 * S, (x + 6) * S, 50 * S], 20, 160, fill=(255, 255, 255, 220), width=3 * S)
+    return im
+
+
 ICONS = {
     "item_sweet_cake": sweet_cake,
     "item_perfume": perfume,
@@ -211,6 +338,16 @@ ICONS = {
     "item_rune_chest": rune_chest,
     "item_royal_chest": royal_chest,
     "icon_messenger": messenger,
+    "item_ing_flour": ing_flour,
+    "item_ing_berry": ing_berry,
+    "item_ing_herb": ing_herb,
+    "item_ing_meat": ing_meat,
+    "item_dish_pancake": dish_pancake,
+    "item_dish_tart": dish_tart,
+    "item_dish_stew": dish_stew,
+    "item_dish_salad": dish_salad,
+    "item_dish_pie": dish_pie,
+    "icon_kitchen": kitchen,
 }
 
 if __name__ == "__main__":

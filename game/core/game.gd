@@ -95,6 +95,7 @@ func new_state() -> Dictionary:
 		"expeditions": {},
 		"event": {"period": -1, "cleared": {}, "bought": {}},
 		"tactics": {"eq": "", "lv": {}},
+		"kitchen": {"meal": "", "left": 0, "basket_day": -1, "cooked": 0},
 		"room": {"day": -1, "visits": 0, "rested": [], "hero": "", "loc": "gameroom"},
 		"rift": {"week": -1, "floor": 1, "best": 0, "bless": [], "offer": [], "alive": false, "claimed": [], "runs": 0},
 		"hunt": {"day": -1, "used": 0, "cleared": {}, "week": -1, "bought": {}, "abyss": false},
@@ -537,6 +538,8 @@ func use_item(item_id: String, count: int = 1) -> bool:
 			got.append("%s T%d" % [DB.RUNES[rt]["name"], tier])
 		notify("Opened %s: %s" % [it["name"], ", ".join(got)], Color("#7dffb0"))
 		return true
+	if it.get("kind", "") == "meal":
+		return serve_meal(item_id) == ""
 	if it.get("kind", "") != "use" or amount(item_id) < count:
 		return false
 	spend(item_id, count)
@@ -1045,6 +1048,7 @@ func apply_stage_result(index: int, won: bool, stars: int) -> Dictionary:
 			rar = "SR"
 		rewards["gear:%s:%s" % [DB.GEAR_SLOTS[randi() % 3], rar]] = 1
 	s["story"]["cleared"][DB.stage_id(index)] = maxi(stars, stage_stars(index))
+	_ingredient_drop(rewards, st["boss"])
 	quest_progress("stage")
 	var team: Array = s["formation"].map(func(e): return str(e[0])).filter(func(hid): return owns(hid))
 	if not team.is_empty():
@@ -1223,6 +1227,7 @@ func stat_value(stat: String) -> int:
 				n += (s["bond_stories"][id] as Array).size()
 			return n
 		"pass_level": return pass_level()
+		"dishes": return int(s["kitchen"]["cooked"])
 		"chats": return int(s.get("messenger", {}).get("replies", 0))
 		"personal_chats":
 			var pc := 0
@@ -1431,6 +1436,8 @@ func ally_team(params: Dictionary = {}) -> Array:
 	for e in s["formation"]:
 		var h := hero(e[0])
 		var bonus: Dictionary = stat_bonus(e[0]).duplicate()
+		for k in _meal_bonus.keys():
+			bonus[k] = float(bonus.get(k, 0.0)) + float(_meal_bonus[k])
 		for l in links:
 			if (l["heroes"] as Array).has(e[0]):
 				for k in l["bonus"].keys():
@@ -1451,6 +1458,7 @@ func quick_battle(params: Dictionary) -> Dictionary:
 	var err := pay_battle(params)
 	if err != "":
 		return {"error": err}
+	meal_consume(params)
 	var sim := BattleSim.new()
 	sim.setup(ally_team(params), enemies_for(params), 0, battle_mod(params))
 	sim.tactic = equipped_tactic()
@@ -1853,6 +1861,7 @@ func apply_event_result(i: int, won: bool, stars: int) -> Dictionary:
 	if event_stars(i) == 0:
 		r["gems"] = st["first_gems"]
 	s["event"]["cleared"][str(i)] = maxi(stars, event_stars(i))
+	_ingredient_drop(r, false)
 	quest_progress("stage")
 	give(r)
 	return r
@@ -2243,8 +2252,10 @@ func garden_tap(id: String) -> Dictionary:
 		s["quests"]["progress"][key] = n + 1
 		add_bond(id, 6)
 		out["bond"] = 6
-		if randf() < 0.15:
-			var g := {"bouquet": 1} if randf() < 0.8 else {"celestial_gem": 1}
+		if randf() < 0.25:
+			var g := {"bouquet": 1} if randf() < 0.4 else ({"ing_berry": 1} if randf() < 0.5 else {"ing_herb": 1})
+			if randf() < 0.1:
+				g = {"celestial_gem": 1}
 			give(g)
 			out["gift"] = g
 	mark_dirty()
@@ -2622,6 +2633,7 @@ func feature_badge(route: String) -> int:
 				n += 1
 		"room": n = room_visits_left() if feature_unlocked("room") else 0
 		"messenger": n = msg_unread()
+		"kitchen": n = 1 if basket_ready() else 0
 		"date": n = dates_left() if s["heroes"].values().any(func(h): return int(h["bond"]) >= DB.DATE_BOND) else 0
 		"news": n = news_unread()
 		"festival": n = (1 if fest_can_wish() else 0) + (0 if festival().is_empty() or bool(_fest_state()["greeted"]) else 1)
@@ -2702,6 +2714,7 @@ func apply_hard_result(index: int, won: bool, stars: int) -> Dictionary:
 	if not s["story"].has("hard"):
 		s["story"]["hard"] = {}
 	s["story"]["hard"][DB.stage_id(index)] = maxi(stars, hard_stars(index))
+	_ingredient_drop(r, bool(st.get("boss", false)))
 	quest_progress("stage")
 	give(r)
 	return r
@@ -3886,3 +3899,120 @@ func claim_road(lv: int) -> bool:
 
 func road_ready() -> int:
 	return DB.road_levels().filter(func(l): return road_state(l) == "ready").size()
+
+# =================================================================== kitchen
+
+## Team-wide stat bonus of the meal eaten for the battle that is starting (set by meal_consume).
+var _meal_bonus: Dictionary = {}
+
+func _kitchen() -> Dictionary:
+	return s["kitchen"]
+
+func kitchen_level() -> int:
+	var lv := 0
+	for i in DB.KITCHEN_LV.size():
+		if int(_kitchen()["cooked"]) >= int(DB.KITCHEN_LV[i]):
+			lv = i + 1
+	return lv
+
+## Dishes still needed for the next Kitchen level (0 at max).
+func kitchen_next() -> int:
+	var lv := kitchen_level()
+	if lv >= DB.KITCHEN_LV.size():
+		return 0
+	return int(DB.KITCHEN_LV[lv]) - int(_kitchen()["cooked"])
+
+func recipe_unlocked(id: String) -> bool:
+	return kitchen_level() >= int(DB.recipe(id).get("lv", 1))
+
+## How many times the recipe can be cooked with what is in the pantry.
+func can_cook(id: String) -> int:
+	var r := DB.recipe(id)
+	if r.is_empty() or not recipe_unlocked(id):
+		return 0
+	var n := amount("gold") / maxi(1, int(r["gold"]))
+	for k in r["need"].keys():
+		n = mini(n, amount(k) / int(r["need"][k]))
+	return n
+
+## Cook a recipe `times` times. Returns "" or an error.
+func cook(id: String, times: int = 1) -> String:
+	var r := DB.recipe(id)
+	if r.is_empty():
+		return "Unknown recipe."
+	if not recipe_unlocked(id):
+		return "Reach Kitchen Lv.%d to learn this recipe." % int(r.get("lv", 1))
+	if times <= 0 or can_cook(id) < times:
+		return "Not enough ingredients or Gold."
+	for k in r["need"].keys():
+		spend(k, int(r["need"][k]) * times)
+	spend("gold", int(r["gold"]) * times)
+	var before := kitchen_level()
+	_kitchen()["cooked"] = int(_kitchen()["cooked"]) + times
+	give({id: times})
+	quest_progress("cook", times)
+	if kitchen_level() > before:
+		notify("Kitchen Lv.%d! New recipes unlocked." % kitchen_level(), Color("#ffd27a"))
+	mark_dirty()
+	return ""
+
+## Eat a meal dish: its buff replaces the current one.
+func serve_meal(id: String) -> String:
+	if not DB.MEALS.has(id):
+		return "This dish is not a meal."
+	if amount(id) <= 0:
+		return "You have no %s." % DB.ITEMS[id]["name"]
+	spend(id, 1)
+	_kitchen()["meal"] = id
+	_kitchen()["left"] = int(DB.MEALS[id]["battles"])
+	mark_dirty()
+	return ""
+
+## {"id", "left", "bonus"} of the active meal, or {} when none.
+func active_meal() -> Dictionary:
+	var id := str(_kitchen()["meal"])
+	if id == "" or int(_kitchen()["left"]) <= 0 or not DB.MEALS.has(id):
+		return {}
+	return {"id": id, "left": int(_kitchen()["left"]), "bonus": DB.MEALS[id]["bonus"]}
+
+## Called when a real battle starts (not sweeps). Uses one charge of the active meal.
+func meal_consume(params: Dictionary) -> void:
+	_meal_bonus = {}
+	if str(params.get("mode", "")) == "arena":
+		return
+	var m := active_meal()
+	if m.is_empty():
+		return
+	_meal_bonus = m["bonus"]
+	_kitchen()["left"] = int(m["left"]) - 1
+	if int(_kitchen()["left"]) <= 0:
+		_kitchen()["meal"] = ""
+	mark_dirty()
+
+func meal_text(bonus: Dictionary) -> String:
+	var parts: Array = []
+	for k in ["hp", "atk", "def"]:
+		if bonus.has(k):
+			parts.append("%s +%d%%" % [k.to_upper(), roundi(float(bonus[k]) * 100.0)])
+	return ", ".join(parts)
+
+func basket_ready() -> bool:
+	return int(_kitchen()["basket_day"]) != day_key()
+
+## Daily free ingredients. Size grows with Kitchen level.
+func claim_basket() -> Dictionary:
+	if not basket_ready():
+		return {}
+	_kitchen()["basket_day"] = day_key()
+	var r: Dictionary = {}
+	for i in DB.BASKET_SIZE + kitchen_level() - 1:
+		var k: String = DB.INGREDIENTS[i % DB.INGREDIENTS.size()] if i < DB.BASKET_SIZE else DB.INGREDIENTS[randi() % DB.INGREDIENTS.size()]
+		r[k] = int(r.get(k, 0)) + 1
+	give(r)
+	return r
+
+func _ingredient_drop(rewards: Dictionary, boss: bool) -> void:
+	if not boss and randf() >= DB.INGREDIENT_DROP:
+		return
+	var k: String = ["ing_flour", "ing_meat", "ing_meat", "ing_flour", "ing_herb"][randi() % 5]
+	rewards[k] = int(rewards.get(k, 0)) + (2 if boss else 1)

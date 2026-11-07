@@ -173,6 +173,62 @@ func _run() -> void:
 	check(G.fps_cap() == 30, "30 FPS battery saver")
 	G.s = rd_save
 
+	print("[kitchen]")
+	var kt_save: Dictionary = G.s
+	G.s = G.new_state()
+	G.s["cur"]["gold"] = 100000
+	check(G.kitchen_level() == 1 and G.basket_ready(), "kitchen starts at Lv.1 with a basket ready")
+	var kt_b: Dictionary = G.claim_basket()
+	var kt_n := 0
+	for k in kt_b.keys():
+		check(DB.INGREDIENTS.has(k), "basket only holds ingredients")
+		kt_n += int(kt_b[k])
+	check(kt_n == DB.BASKET_SIZE and G.claim_basket().is_empty() and not G.basket_ready(), "basket gives %d once a day" % DB.BASKET_SIZE)
+	for r in DB.RECIPES:
+		check(DB.ITEMS.has(r["id"]), "recipe %s is an item" % r["id"])
+		check(DB.MEALS.has(r["id"]) or DB.DISH_GIFTS.has(r["id"]), "recipe %s is a meal or a gift" % r["id"])
+		for k in r["need"].keys():
+			check(DB.INGREDIENTS.has(k), "recipe %s uses ingredients" % r["id"])
+	for g in DB.DISH_GIFTS:
+		check(str(DB.ITEMS[g]["kind"]) == "gift" and int(DB.ITEMS[g]["bond"]) > 0, "%s works as a gift" % g)
+	check(G.cook("dish_tart") != "", "Lv.2 recipe is locked at Lv.1")
+	G.s["items"]["ing_meat"] = 4
+	G.s["items"]["ing_herb"] = 2
+	check(G.can_cook("dish_stew") == 2, "can_cook counts ingredient sets")
+	var kt_gold: int = G.amount("gold")
+	check(G.cook("dish_stew", 2) == "" and G.amount("dish_stew") == 2 and G.amount("ing_meat") == 0, "cooking uses ingredients and makes dishes")
+	check(G.amount("gold") == kt_gold - 2 * int(DB.recipe("dish_stew")["gold"]), "cooking costs Gold")
+	check(G.cook("dish_stew") != "", "no cooking without ingredients")
+	check(G.stat_value("dishes") == 2 and int(G.s["quests"]["progress"].get("cook", 0)) >= 1, "dishes count for quests and achievements")
+	var kt_base: Array = G.ally_team({"mode": "story"})
+	check(G.serve_meal("dish_stew") == "" and int(G.active_meal()["left"]) == 3, "serving a meal gives 3 battles")
+	G.meal_consume({"mode": "story"})
+	var kt_fed: Array = G.ally_team({"mode": "story"})
+	if not kt_base.is_empty():
+		check(is_equal_approx(float(kt_fed[0]["bonus"].get("atk", 0.0)) - float(kt_base[0]["bonus"].get("atk", 0.0)), 0.08), "the meal adds +8% ATK in battle")
+	check(int(G.active_meal()["left"]) == 2, "each battle uses one meal charge")
+	G.meal_consume({"mode": "arena"})
+	check(int(G.active_meal()["left"]) == 2 and G.ally_team({"mode": "arena"})[0]["bonus"].get("atk", 0.0) == kt_base[0]["bonus"].get("atk", 0.0) if not kt_base.is_empty() else true, "Arena does not use the meal")
+	G.meal_consume({"mode": "story"})
+	G.meal_consume({"mode": "story"})
+	check(G.active_meal().is_empty(), "the meal runs out")
+	G.meal_consume({"mode": "story"})
+	check(G._meal_bonus.is_empty(), "no buff without a meal")
+	G.s["kitchen"]["cooked"] = DB.KITCHEN_LV[1]
+	check(G.kitchen_level() == 2 and G.recipe_unlocked("dish_tart") and not G.recipe_unlocked("dish_pie"), "Kitchen Lv.2 unlocks the tart")
+	G.s["kitchen"]["basket_day"] = G.day_key() - 1
+	var kt_b2: Dictionary = G.claim_basket()
+	var kt_n2 := 0
+	for k in kt_b2.keys():
+		kt_n2 += int(kt_b2[k])
+	check(kt_n2 == DB.BASKET_SIZE + 1, "a higher Kitchen level fills a bigger basket")
+	var kt_drop := {}
+	G._ingredient_drop(kt_drop, true)
+	check(kt_drop.size() == 1 and int(kt_drop.values()[0]) == 2, "bosses always drop 2 ingredients")
+	check(DB.QUEST_ROUTE.get("cook", "") == "kitchen" and DB.FEATURE_UNLOCK.has("kitchen"), "kitchen quest has a GO route")
+	G._meal_bonus = {}
+	G.s = kt_save
+
 	print("[scout report]")
 	var sc_save: Dictionary = G.s
 	G.s = G.new_state()

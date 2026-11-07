@@ -37,10 +37,11 @@ const SCREENS := {
 	"photo": preload("res://game/screens/photo.gd"),
 	"forge": preload("res://game/screens/forge.gd"),
 	"messenger": preload("res://game/screens/messenger.gd"),
+	"kitchen": preload("res://game/screens/kitchen.gd"),
 }
 
 const BGM := {"story": "bgm_story", "formation": "bgm_story", "event": "bgm_story", "dungeon": "bgm_story", "tower": "bgm_story",
-	"arena": "bgm_story", "guild": "bgm_story", "worldboss": "bgm_story", "hunt": "bgm_story", "rift": "bgm_story", "room": "bgm_lobby", "date": "bgm_lobby", "photo": "bgm_lobby", "messenger": "bgm_lobby", "gacha": "bgm_gacha", "title": "bgm_lobby"}
+	"arena": "bgm_story", "guild": "bgm_story", "worldboss": "bgm_story", "hunt": "bgm_story", "rift": "bgm_story", "room": "bgm_lobby", "date": "bgm_lobby", "photo": "bgm_lobby", "messenger": "bgm_lobby", "kitchen": "bgm_lobby", "gacha": "bgm_gacha", "title": "bgm_lobby"}
 
 var host: Control
 var overlay: Control

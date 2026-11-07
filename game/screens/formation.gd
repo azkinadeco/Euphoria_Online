@@ -718,5 +718,6 @@ func _start() -> void:
 	if err != "":
 		main.toast(err, UI.RED)
 		return
+	Game.meal_consume(params)
 	Game.save_game()
 	main.replace("battle", params)

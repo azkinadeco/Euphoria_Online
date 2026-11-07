@@ -1074,7 +1074,7 @@ func _render_bond() -> void:
 	gv.add_child(UI.label("GIVE A GIFT", 18, UI.GOLD, 3))
 	var fav := DB.fav_gift(id)
 	gv.add_child(UI.label("♥ Favourite: %s (x2 Bond EXP)" % DB.ITEMS[fav]["name"], 14, Color("#ff8fb8"), 2))
-	for item_id in DB.GIFTS:
+	for item_id in DB.GIFTS + DB.DISH_GIFTS:
 		var it: Dictionary = DB.ITEMS[item_id]
 		var iid: String = item_id
 		var r := UI.hbox(10)
