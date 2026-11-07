@@ -53,6 +53,7 @@ var _going_back := false
 func _ready() -> void:
 	theme = UI.theme()
 	Game.apply_ui_scale()
+	Game.apply_fps()
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var bgc := ColorRect.new()
 	bgc.color = Color("#07040d")

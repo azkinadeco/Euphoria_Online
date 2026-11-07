@@ -120,6 +120,8 @@ func _run() -> void:
 	check(int(G.hero("shina")["bond_exp"]) + 1000 * int(G.hero("shina")["bond"]) > mg_bond, "replying raises Bond")
 	check(not G.msg_pending().has("shina") and G.msg_log("shina").size() == (DB.MSG_PERSONAL["shina"][0] as Array).size() + 2, "the reply moves the chat into the log")
 	check(G.msg_reply("shina", 0).is_empty(), "no double reply")
+	check(G.stat_value("chats") == 1 and G.stat_value("personal_chats") == 1, "replies count for achievements")
+	check(int(G.s["quests"]["progress"].get("chat", 0)) == 1, "a reply counts for the daily chat quest")
 	check(G.msg_contacts()[0] != "shina" or G.msg_pending().is_empty(), "waiting chats are listed first")
 	G.s["messenger"]["day"] = G.day_key() - 1
 	check(G.msg_pending().size() == DB.MSG_PER_DAY and str(G.msg_pending().get("shina", "t0")).begins_with("t"), "next day refills the inbox with everyday chats")
@@ -144,6 +146,32 @@ func _run() -> void:
 	check(G.msg_notify("valeria", "win") and str(G.msg_pending()["valeria"]).begins_with("win"), "a victory makes a hero text")
 	check(not G.msg_notify("glytta", "win"), "only one victory chat a day")
 	G.s = mg_save
+
+	print("[mission GO]")
+	for qk in DB.QUEST_ROUTE.keys():
+		check(ResourceLoader.exists("res://game/screens/%s.gd" % DB.QUEST_ROUTE[qk]), "mission %s leads to a real screen" % qk)
+	for dq in DB.DAILY_QUESTS:
+		check(dq["id"] == "login" or DB.QUEST_ROUTE.has(dq["id"]), "daily mission %s has a GO route" % dq["id"])
+	for wq in DB.WEEKLY_QUESTS:
+		check(DB.QUEST_ROUTE.has(wq["src"]), "weekly mission %s has a GO route" % wq["id"])
+	for ac in DB.ACHIEVEMENTS:
+		check(DB.QUEST_ROUTE.has(ac["stat"]), "achievement %s has a GO route" % ac["id"])
+
+	print("[redeem & fps]")
+	var rd_save: Dictionary = G.s
+	G.s = G.new_state()
+	var rd_gems: int = G.amount("gems")
+	check(G.redeem("  euphoria-2026 ").has("give") and G.amount("gems") == rd_gems + int(DB.REDEEM_CODES["EUPHORIA2026"]["gems"]), "a code works, ignoring case, spaces and dashes")
+	check(G.redeem("EUPHORIA2026").has("error"), "a code works only once")
+	check(G.redeem("NOPE").has("error") and G.redeem("").has("error"), "bad or empty codes are refused")
+	for rc in DB.REDEEM_CODES.keys():
+		check(rc == rc.to_upper() and not rc.contains(" ") and not rc.contains("-"), "code %s is stored normalised" % rc)
+		for rk in DB.REDEEM_CODES[rc].keys():
+			check(rk in ["gold", "gems", "hero_exp", "energy", "arena_coin"] or DB.ITEMS.has(rk), "code %s gives a real item (%s)" % [rc, rk])
+	check(G.fps_cap() == 60, "60 FPS by default")
+	G.s["settings"]["fps"] = 30
+	check(G.fps_cap() == 30, "30 FPS battery saver")
+	G.s = rd_save
 
 	print("[scout report]")
 	var sc_save: Dictionary = G.s

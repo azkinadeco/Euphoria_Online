@@ -51,29 +51,35 @@ func _render() -> void:
 	var a: Dictionary = Game.s["arena"]
 	for c in _info.get_children():
 		c.queue_free()
-	_info.add_child(UI.tex_rect(DB.icon("icon_arena"), Vector2(0, 96)))
-	var t := UI.label(_tier(int(a["rp"])), 30, UI.GOLD, 6)
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_info.add_child(t)
-	var rp := UI.label("%d RP" % int(a["rp"]), 22, Color.WHITE, 3)
-	rp.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_info.add_child(rp)
-	_info.add_child(UI.label("Wins %d   •   Losses %d" % [int(a["wins"]), int(a["losses"])], 15, UI.MUTED))
+	var top := UI.hbox(10)
+	_info.add_child(top)
+	var ic := UI.tex_rect(DB.icon("icon_arena"), Vector2(64, 64))
+	top.add_child(ic)
+	var tv := UI.vbox(0)
+	tv.alignment = BoxContainer.ALIGNMENT_CENTER
+	top.add_child(tv)
+	tv.add_child(UI.label(_tier(int(a["rp"])), 28, UI.GOLD, 6))
+	tv.add_child(UI.label("%d RP" % int(a["rp"]), 18, Color.WHITE, 3))
+	var se := maxi(0, Game.arena_season_ends_in())
+	var nt := DB.arena_tier(int(a["rp"]))
+	_info.add_child(UI.label("Season ends in %dd %02dh  •  reward (%s):" % [se / 86400, (se / 3600) % 24, nt["name"]], 13, Color("#9fd0ff")))
+	_info.add_child(UI.reward_row(nt["give"], 24, 13))
 	_info.add_child(UI.label("Tickets today: %d / %d" % [int(a["tickets"]), Game.ARENA_TICKETS], 17, UI.GREEN if int(a["tickets"]) > 0 else UI.RED, 3))
-	_info.add_child(UI.label("Your Team Power: %s" % Game.fmt(Game.team_power()), 15, Color("#ffb86b")))
-	_info.add_child(UI.wrap_label("Win: +24 RP, 60 Arena Coins, 3,000 Gold.\nLose: -12 RP, 15 Arena Coins.\nSpend coins on Oath Rings and Universal Shards in the Arena Shop.", 13, UI.MUTED))
+	_info.add_child(UI.label("Wins %d  •  Losses %d  •  Power %s" % [int(a["wins"]), int(a["losses"]), Game.fmt(Game.team_power())], 14, UI.MUTED))
+	var btns := UI.hbox(8)
+	_info.add_child(btns)
+	var sb := UI.button("ARENA SHOP", func(): main.go("shop", {"tab": "arena_coin"}), "GoldButton", Vector2(0, 44))
+	sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btns.add_child(sb)
+	var fb := UI.button("FORMATION", func(): main.go("formation"), "", Vector2(0, 44))
+	fb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btns.add_child(fb)
+	_info.add_child(UI.wrap_label("Win: +24 RP, 60 Arena Coins, 3,000 Gold. Lose: -12 RP, 15 Arena Coins. Spend coins on Oath Rings and Universal Shards in the Arena Shop.", 12, UI.MUTED))
 	_info.add_child(UI.wrap_label("Practice season: rivals are AI commanders until online PvP launches.", 12, Color("#9fd0ff")))
-	_info.add_child(UI.button("ARENA SHOP", func(): main.go("shop"), "", Vector2(0, 44)))
-	_info.add_child(UI.button("DEFENSE / FORMATION", func(): main.go("formation"), "", Vector2(0, 44)))
 
 	for tb in find_children("*", "Button", true, false):
 		if tb.has_meta("key"):
 			tb.button_pressed = tb.get_meta("key") == _tab
-	var se := maxi(0, Game.arena_season_ends_in())
-	_info.add_child(UI.label("Season ends in %dd %02dh" % [se / 86400, (se / 3600) % 24], 14, Color("#9fd0ff")))
-	var nt := DB.arena_tier(int(a["rp"]))
-	_info.add_child(UI.label("Season reward (%s):" % nt["name"], 13, UI.MUTED))
-	_info.add_child(UI.reward_row(nt["give"], 24, 13))
 	for c in _list.get_children():
 		c.queue_free()
 	if _tab == "RANKING":

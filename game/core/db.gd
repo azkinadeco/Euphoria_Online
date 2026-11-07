@@ -998,6 +998,7 @@ const DAILY_QUESTS := [
 	{"id": "afk", "name": "Claim AFK rewards", "target": 1, "give": {"gold": 8000}},
 	{"id": "arena", "name": "Fight in the Arena", "target": 1, "give": {"arena_coin": 50, "gems": 20}},
 	{"id": "bond", "name": "Interact with a hero 3 times", "target": 3, "give": {"bouquet": 1}},
+	{"id": "chat", "name": "Reply to a hero's message", "target": 1, "give": {"gems": 20, "gold": 3000}},
 	{"id": "guild", "name": "Check in or donate to your guild", "target": 1, "give": {"guild_coin": 30, "gold": 3000}},
 	{"id": "dungeon", "name": "Clear a Daily Dungeon", "target": 2, "give": {"gems": 30, "gear_chest": 1}},
 ]
@@ -1019,6 +1020,20 @@ const CODEX_STEPS := [
 	{"id": "awaken5", "name": "Awakening A5", "give": {"summon_ticket": 3}},
 ]
 
+## Where a mission's GO button leads (by quest id / weekly "src" / achievement "stat").
+const QUEST_ROUTE := {
+	"stage": "story", "summon": "gacha", "levelup": "heroes", "afk": "lobby", "arena": "arena", "bond": "garden",
+	"chat": "messenger", "guild": "guild", "dungeon": "dungeon", "quest": "quests",
+	"stages_cleared": "story", "hard_cleared": "story", "heroes_owned": "gacha", "total_pulls": "gacha", "tower_floor": "tower",
+	"max_star": "heroes", "oaths": "heroes", "max_skill": "heroes", "memories": "heroes", "pass_level": "pass",
+	"chats": "messenger", "personal_chats": "messenger",
+}
+## Redeem codes (Settings → REDEEM CODE). Case and spaces don't matter. Each code works once per save.
+const REDEEM_CODES := {
+	"EUPHORIA2026": {"gems": 500, "summon_ticket": 2},
+	"WELCOMECOMMANDER": {"gems": 300, "gold": 50000, "exp_potion": 5},
+	"HEROESTEXTME": {"gems": 200, "bouquet": 3, "sweet_cake": 2},
+}
 const ACHIEVEMENTS := [
 	{"id": "ch1", "name": "Clear Chapter 1", "stat": "stages_cleared", "target": 6, "give": {"gems": 300, "summon_ticket": 2}},
 	{"id": "ch3", "name": "Clear Chapter 3", "stat": "stages_cleared", "target": 18, "give": {"gems": 600, "summon_ticket": 5}},
@@ -1035,7 +1050,7 @@ const ACHIEVEMENTS := [
 	{"id": "ch38", "name": "Clear Arc 9: The Wild Hunt", "stat": "stages_cleared", "target": 228, "give": {"gems": 16000, "summon_ticket": 30, "celestial_gem": 7}},
 	{"id": "hard30", "name": "Clear 30 Hard stages", "stat": "hard_cleared", "target": 30, "give": {"gems": 1500, "star_stone": 20}},
 	{"id": "own8", "name": "Recruit 8 heroes", "stat": "heroes_owned", "target": 8, "give": {"gems": 300}},
-	{"id": "own27", "name": "Recruit every hero (27)", "stat": "heroes_owned", "target": 27, "give": {"gems": 3000}},
+	{"id": "own27", "name": "Recruit 27 heroes", "stat": "heroes_owned", "target": 27, "give": {"gems": 3000}},
 	{"id": "pull50", "name": "Summon 50 times", "stat": "total_pulls", "target": 50, "give": {"summon_ticket": 5}},
 	{"id": "tower10", "name": "Reach Tower floor 10", "stat": "tower_floor", "target": 10, "give": {"gems": 400}},
 	{"id": "star6", "name": "Raise a hero to 6★", "stat": "max_star", "target": 6, "give": {"gems": 500, "celestial_gem": 2}},
@@ -1045,6 +1060,9 @@ const ACHIEVEMENTS := [
 	{"id": "skill5", "name": "Master a skill (Lv.5)", "stat": "max_skill", "target": 5, "give": {"gems": 400, "skill_book": 3}},
 	{"id": "memories", "name": "Read 10 Memories", "stat": "memories", "target": 10, "give": {"gems": 500, "celestial_gem": 3}},
 	{"id": "pass30", "name": "Reach Season Pass Lv.30", "stat": "pass_level", "target": 30, "give": {"gems": 1000}},
+	{"id": "chats10", "name": "Reply to 10 messages", "stat": "chats", "target": 10, "give": {"gems": 300, "bouquet": 3}},
+	{"id": "chats50", "name": "Reply to 50 messages", "stat": "chats", "target": 50, "give": {"gems": 800, "sweet_cake": 3}},
+	{"id": "personal", "name": "Read 10 personal chats", "stat": "personal_chats", "target": 10, "give": {"gems": 500, "celestial_gem": 2}},
 ]
 
 const MAIL := [

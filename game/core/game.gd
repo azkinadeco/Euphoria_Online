@@ -358,6 +358,30 @@ func ui_scale() -> float:
 		return v
 	return 1.15 if DisplayServer.is_touchscreen_available() else 1.0
 
+## Frame-rate cap: 60 (smooth) or 30 (cooler, longer battery on phones).
+func fps_cap() -> int:
+	return 30 if int(s["settings"].get("fps", 60)) == 30 else 60
+
+func apply_fps() -> void:
+	Engine.max_fps = fps_cap()
+
+## Redeem a code. Returns {"error": text} or {"give": rewards}.
+func redeem(code: String) -> Dictionary:
+	var c := code.strip_edges().to_upper().replace(" ", "").replace("-", "")
+	if c == "":
+		return {"error": "Enter a code first."}
+	if not DB.REDEEM_CODES.has(c):
+		return {"error": "That code doesn't exist."}
+	var used: Array = s.get("redeemed", [])
+	if used.has(c):
+		return {"error": "You already used this code."}
+	used.append(c)
+	s["redeemed"] = used
+	var r: Dictionary = DB.REDEEM_CODES[c]
+	give(r)
+	mark_dirty()
+	return {"give": r}
+
 func apply_ui_scale() -> void:
 	var tree := get_tree()
 	if tree:
@@ -1199,6 +1223,13 @@ func stat_value(stat: String) -> int:
 				n += (s["bond_stories"][id] as Array).size()
 			return n
 		"pass_level": return pass_level()
+		"chats": return int(s.get("messenger", {}).get("replies", 0))
+		"personal_chats":
+			var pc := 0
+			for hid in s.get("messenger", {}).get("done", {}).keys():
+				for k in s["messenger"]["done"][hid]:
+					pc += 1 if str(k).begins_with("p") else 0
+			return pc
 		"hard_cleared": return (s["story"].get("hard", {}) as Dictionary).size()
 	return 0
 
@@ -3828,6 +3859,8 @@ func msg_reply(id: String, choice: int) -> Dictionary:
 	var best: bool = choice == int(th[3])
 	var bond := DB.MSG_BOND_BEST if best else DB.MSG_BOND_OK
 	add_bond(id, bond)
+	m["replies"] = int(m.get("replies", 0)) + 1
+	quest_progress("chat")
 	var gems := DB.MSG_PERSONAL_GEMS if key.begins_with("p") and first else 0
 	if gems > 0:
 		give({"gems": gems})

@@ -596,6 +596,21 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - Fungsi baru `Game.msg_notify(id, kind)`. Kunci thread: `p`, `p2`, `gift<N>`, `win<N>`, `t<N>`.
 - `flow_test`: cek chat pribadi kedua, Gems, chat hadiah dan kemenangan beserta batas sekali sehari.
 
+## 2bt. Update batch 69 — Tombol GO di Missions, misi Messenger, layar Arena, Redeem Code, 30 FPS
+
+- Batch ini dimulai dengan memeriksa tampilan layar Arena, Guild, Summon, Tower, Daily Dungeon, World Boss dan Event lewat screenshot. Guild, Tower, Dungeon dan World Boss sudah rapi.
+- **Arena:** panel kiri ditata ulang. Info musim dan hadiahnya, tiket, serta tombol ARENA SHOP dan FORMATION sekarang muat di layar tanpa scroll. Sebelumnya tombol terpotong dan info musim tersembunyi di bawah.
+- **Bug Arena:** tombol ARENA SHOP dulu membuka tab Gem Shop. Sekarang membuka tab Arena Shop (`{"tab": "arena_coin"}`).
+- **Tombol GO di Missions:** misi yang belum selesai sekarang punya tombol "GO ▶" yang membuka layar terkait, menggantikan tulisan "IN PROGRESS" yang tidak bisa ditekan. Tujuannya diatur di `DB.QUEST_ROUTE`, dan bisa dicari lewat id misi harian, `src` misi mingguan, atau `stat` achievement.
+- **Misi Messenger:** misi harian baru "Reply to a hero's message" (+20 Gems, +3.000 Gold). Achievement baru: "Reply to 10 messages", "Reply to 50 messages" dan "Read 10 personal chats" (stat `chats` dan `personal_chats`).
+- Nama achievement "Recruit every hero (27)" diganti menjadi "Recruit 27 heroes", karena sekarang ada 33 hero.
+- `flow_test`: blok `[mission GO]` mengecek bahwa semua tujuan GO adalah layar yang ada dan semua misi punya rute. Ditambah cek penghitung balasan Messenger.
+
+- **Frame rate (Settings → DISPLAY):** pilihan 60 FPS atau 30 FPS (hemat baterai). Disimpan di `settings.fps`, dipasang lewat `Game.apply_fps()` (`Engine.max_fps`) saat game dibuka.
+- **Redeem Code (Settings → PLAYER):** kode di `DB.REDEEM_CODES` (`EUPHORIA2026`, `WELCOMECOMMANDER`, `HEROESTEXTME`). Huruf besar/kecil, spasi dan tanda "-" diabaikan, dan tiap kode hanya bisa dipakai sekali per save (`s["redeemed"]`). Karena repo publik, kode-kode ini bisa dilihat siapa saja. Untuk game offline hal ini tidak masalah.
+- Fitur "Duo Links" sempat dikerjakan, tapi dibatalkan karena sistem **Links** (`DB.LINKS`, 22 pasangan) sudah ada.
+- `tools/shot_runner.gd`: langkah baru `scroll:<px>`.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

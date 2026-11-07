@@ -85,6 +85,22 @@ func build() -> void:
 		sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		sh.add_child(sb)
 	v.add_child(sh)
+	var fh := UI.hbox(8)
+	var fl := UI.label("Frame rate", 16)
+	fl.custom_minimum_size = Vector2(160, 0)
+	fh.add_child(fl)
+	for opt in [[60, "60 FPS (smooth)"], [30, "30 FPS (battery saver)"]]:
+		var fps: int = opt[0]
+		var fb := UI.button(opt[1], func():
+			st["fps"] = fps
+			Game.apply_fps()
+			Game.mark_dirty()
+			main.replace("settings"), "TabButton", Vector2(0, 40))
+		fb.toggle_mode = true
+		fb.button_pressed = Game.fps_cap() == fps
+		fb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fh.add_child(fb)
+	v.add_child(fh)
 
 	v.add_child(UI.label("PLAYER", 18, UI.GOLD, 3))
 	var nh := UI.hbox(10)
@@ -103,6 +119,21 @@ func build() -> void:
 		Game.mark_dirty()
 		main.toast("Name changed to %s" % n), "", Vector2(130, 44)))
 	v.add_child(nh)
+	var rh := UI.hbox(10)
+	var ce := LineEdit.new()
+	ce.placeholder_text = "Redeem code"
+	ce.max_length = 24
+	ce.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	ce.custom_minimum_size = Vector2(0, 44)
+	rh.add_child(ce)
+	rh.add_child(UI.button("REDEEM", func():
+		var r := Game.redeem(ce.text)
+		if r.has("error"):
+			main.toast(str(r["error"]), UI.RED)
+			return
+		ce.text = ""
+		main.show_rewards("CODE REDEEMED", r["give"]), "GoldButton", Vector2(130, 44)))
+	v.add_child(rh)
 
 	v.add_child(UI.label("DATA", 18, UI.GOLD, 3))
 	v.add_child(UI.wrap_label("Progress is saved automatically on this device. Browsers (especially Safari on iPhone) may delete game data if you don't play for a while — make a BACKUP CODE and keep it somewhere safe.", 14, UI.MUTED))

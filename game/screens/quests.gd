@@ -41,7 +41,7 @@ func _render() -> void:
 		_list.add_child(UI.label("Resets in %dd %02dh — bigger rewards for steady play" % [we / 86400, (we / 3600) % 24], 14, Color("#9fd0ff"), 2))
 		for q in DB.WEEKLY_QUESTS:
 			var prog := mini(int(Game.s["weekly"]["progress"].get(q["id"], 0)), int(q["target"]))
-			_row(q["name"], prog, int(q["target"]), q["give"], Game.weekly_state(q), func(): return Game.claim_weekly(q))
+			_row(q["name"], prog, int(q["target"]), q["give"], Game.weekly_state(q), func(): return Game.claim_weekly(q), str(DB.QUEST_ROUTE.get(q["src"], "")))
 	elif _tab == "COMMANDER ROAD":
 		var plv := int(Game.s["player"]["level"])
 		_list.add_child(UI.label("Commander Lv.%d — rewards for every 5 levels, grand rewards every 25." % plv, 14, Color("#9fd0ff"), 2))
@@ -51,14 +51,14 @@ func _render() -> void:
 	elif _tab == "DAILY":
 		for q in DB.DAILY_QUESTS:
 			var prog := mini(int(Game.s["quests"]["progress"].get(q["id"], 0)), int(q["target"]))
-			_row(q["name"], prog, int(q["target"]), q["give"], Game.quest_state(q), func(): return Game.claim_quest(q))
+			_row(q["name"], prog, int(q["target"]), q["give"], Game.quest_state(q), func(): return Game.claim_quest(q), str(DB.QUEST_ROUTE.get(q["id"], "")))
 	else:
 		for a in DB.ACHIEVEMENTS:
 			var prog := mini(Game.stat_value(a["stat"]), int(a["target"]))
-			_row(a["name"], prog, int(a["target"]), a["give"], Game.achievement_state(a), func(): return Game.claim_achievement(a))
+			_row(a["name"], prog, int(a["target"]), a["give"], Game.achievement_state(a), func(): return Game.claim_achievement(a), str(DB.QUEST_ROUTE.get(a["stat"], "")))
 	UI.stagger(_list)
 
-func _row(title: String, prog: int, target: int, give: Dictionary, state: String, claim: Callable) -> void:
+func _row(title: String, prog: int, target: int, give: Dictionary, state: String, claim: Callable, go: String = "") -> void:
 	var p := UI.panel("CardPanel")
 	_list.add_child(p)
 	var h := UI.hbox(14)
@@ -75,11 +75,15 @@ func _row(title: String, prog: int, target: int, give: Dictionary, state: String
 	br.add_child(UI.label("%d / %d" % [prog, target], 14, UI.MUTED))
 	v.add_child(br)
 	h.add_child(UI.reward_row(give, 30, 14))
-	var b := UI.button("CLAIMED" if state == "claimed" else ("CLAIM" if state == "ready" else "IN PROGRESS"), func():
+	var can_go := state == "progress" and go != "" and go != "quests"
+	var b := UI.button("CLAIMED" if state == "claimed" else ("CLAIM" if state == "ready" else ("GO ▶" if can_go else "IN PROGRESS")), func():
+		if can_go:
+			main.go(go)
+			return
 		if claim.call():
 			main.show_rewards("MISSION COMPLETE", give)
 		_render(), "GoldButton" if state == "ready" else "", Vector2(150, 46))
-	b.disabled = state != "ready"
+	b.disabled = state != "ready" and not can_go
 	h.add_child(b)
 
 func _claim_all() -> void:

@@ -225,6 +225,10 @@ func _next() -> void:
 		for c in main_node.host.get_children():
 			if c.has_method("_reply"):
 				c._reply(int(v.substr(9)))
+	elif v.begins_with("scroll:"):
+		# scroll:<px> → scroll every ScrollContainer of the current screen down by px
+		for sc in main_node.host.find_children("*", "ScrollContainer", true, false):
+			sc.scroll_vertical += int(v.substr(7))
 	elif v == "bond5":
 		var g = root.get_node("Game")
 		for hid in g.s["heroes"].keys():
