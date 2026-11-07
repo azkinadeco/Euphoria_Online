@@ -1,0 +1,266 @@
+{
+ "shina": {
+  "birthday": "08-14",
+  "height": 158,
+  "likes": "Spicy food, sparring, shiny scales",
+  "dislikes": "Being treated like a kid",
+  "hobby": "Polishing her horns",
+  "cv": "TBA"
+ },
+ "xylia": {
+  "birthday": "11-03",
+  "height": 171,
+  "likes": "Blueprints, dark tea, quiet nights",
+  "dislikes": "Messy rooms",
+  "hobby": "Redesigning castles",
+  "cv": "TBA"
+ },
+ "micca": {
+  "birthday": "04-01",
+  "height": 149,
+  "likes": "Pranks, sweets, surprises",
+  "dislikes": "Boring days",
+  "hobby": "Collecting odd trinkets",
+  "cv": "TBA"
+ },
+ "cthollia": {
+  "birthday": "06-21",
+  "height": 166,
+  "likes": "Deep water, lullabies, seafood (ironically)",
+  "dislikes": "Bright sunlight",
+  "hobby": "Singing to the tide",
+  "cv": "TBA"
+ },
+ "valeria": {
+  "birthday": "12-24",
+  "height": 172,
+  "likes": "Snowfall, hot cocoa, swordplay",
+  "dislikes": "Hot summers",
+  "hobby": "Ice sculpting",
+  "cv": "TBA"
+ },
+ "eropatra": {
+  "birthday": "07-23",
+  "height": 170,
+  "likes": "Gold, perfume, being admired",
+  "dislikes": "Sand in her shoes",
+  "hobby": "Collecting jewelry",
+  "cv": "TBA"
+ },
+ "furu": {
+  "birthday": "03-03",
+  "height": 155,
+  "likes": "Prayer, warm bread, children",
+  "dislikes": "Arguments",
+  "hobby": "Tending a herb garden",
+  "cv": "TBA"
+ },
+ "glytta": {
+  "birthday": "05-05",
+  "height": 157,
+  "likes": "Dancing, festivals, glitter",
+  "dislikes": "Standing still",
+  "hobby": "Choreography",
+  "cv": "TBA"
+ },
+ "hyeonxa": {
+  "birthday": "10-31",
+  "height": 168,
+  "likes": "Herbal brews, chess, silence",
+  "dislikes": "Fools",
+  "hobby": "Brewing antidotes",
+  "cv": "TBA"
+ },
+ "scylla": {
+  "birthday": "09-09",
+  "height": 163,
+  "likes": "The sea at night, quiet company",
+  "dislikes": "Crowds",
+  "hobby": "Watching the tide",
+  "cv": "TBA"
+ },
+ "lumeira": {
+  "birthday": "04-21",
+  "height": 154,
+  "likes": "Butterflies, naps, starlight",
+  "dislikes": "Loud noises",
+  "hobby": "Dream journaling",
+  "cv": "TBA"
+ },
+ "gemora": {
+  "birthday": "02-29",
+  "height": 160,
+  "likes": "Data, star maps, new words",
+  "dislikes": "Rain (static!)",
+  "hobby": "Studying human customs",
+  "cv": "TBA"
+ },
+ "fidelia": {
+  "birthday": "06-01",
+  "height": 164,
+  "likes": "Training, honor, the Commander's safety",
+  "dislikes": "Cowardice",
+  "hobby": "Shield polishing",
+  "cv": "TBA"
+ },
+ "lucidria": {
+  "birthday": "01-15",
+  "height": 175,
+  "likes": "Old ruins, flowers, stillness",
+  "dislikes": "Chatter",
+  "hobby": "Pressing flowers",
+  "cv": "TBA"
+ },
+ "eurnipha": {
+  "birthday": "11-30",
+  "height": 174,
+  "likes": "Warmth, embraces, midnight snacks",
+  "dislikes": "Being alone",
+  "hobby": "Knitting (badly)",
+  "cv": "TBA"
+ },
+ "rumi": {
+  "birthday": "10-13",
+  "height": 152,
+  "likes": "Money, mochi, exorcism gigs",
+  "dislikes": "Free work",
+  "hobby": "Counting coins",
+  "cv": "TBA"
+ },
+ "mora": {
+  "birthday": "01-01",
+  "height": 162,
+  "likes": "Clocks, sunsets, long stories",
+  "dislikes": "Being rushed",
+  "hobby": "Keeping a diary",
+  "cv": "TBA"
+ },
+ "abadonia": {
+  "birthday": "08-08",
+  "height": 178,
+  "likes": "Her lion, loyalty, red wine",
+  "dislikes": "Disrespect",
+  "hobby": "Grooming her lion",
+  "cv": "TBA"
+ },
+ "aqua": {
+  "birthday": "07-07",
+  "height": 156,
+  "likes": "Clean water, rain, tea parties",
+  "dislikes": "Droughts",
+  "hobby": "Polishing her chalice",
+  "cv": "TBA"
+ },
+ "atalanta": {
+  "birthday": "05-20",
+  "height": 165,
+  "likes": "Running, thunderstorms, races",
+  "dislikes": "Slowpokes",
+  "hobby": "Morning sprints",
+  "cv": "TBA"
+ },
+ "kali": {
+  "birthday": "03-15",
+  "height": 167,
+  "likes": "Blades, calligraphy, discipline",
+  "dislikes": "Rust",
+  "hobby": "Sword care",
+  "cv": "TBA"
+ },
+ "rubby": {
+  "birthday": "12-31",
+  "height": 161,
+  "likes": "Fireworks, her bomb friends, cake",
+  "dislikes": "Damp gunpowder",
+  "hobby": "Making fireworks",
+  "cv": "TBA"
+ },
+ "schylua": {
+  "birthday": "02-02",
+  "height": 159,
+  "likes": "Snow, silence, warm scarves",
+  "dislikes": "Hot weather",
+  "hobby": "Ice fishing",
+  "cv": "TBA"
+ },
+ "vexira": {
+  "birthday": "02-14",
+  "height": 163,
+  "likes": "Sweets, mischief, the Commander",
+  "dislikes": "Holy water",
+  "hobby": "Visiting dreams",
+  "cv": "TBA"
+ },
+ "siv": {
+  "birthday": "09-21",
+  "height": 150,
+  "likes": "Thunder, big hammers, praise",
+  "dislikes": "Missing her target",
+  "hobby": "Hammer practice",
+  "cv": "TBA"
+ },
+ "sven": {
+  "birthday": "11-11",
+  "height": 176,
+  "likes": "Campfires, quiet roads, stew",
+  "dislikes": "Small talk",
+  "hobby": "Whittling wood",
+  "cv": "TBA"
+ },
+ "zennyo": {
+  "birthday": "06-15",
+  "height": 166,
+  "likes": "Her little dragons, hot springs",
+  "dislikes": "Cold rain",
+  "hobby": "Dragon babysitting",
+  "cv": "TBA"
+ },
+ "angela": {
+  "birthday": "12-08",
+  "height": 172,
+  "likes": "Sunrise, feathers, honest people",
+  "dislikes": "Lies, cages",
+  "hobby": "Polishing her sword",
+  "cv": "TBA"
+ },
+ "kara": {
+  "birthday": "10-02",
+  "height": 170,
+  "likes": "Black tea, phoenixes, quiet graveyards",
+  "dislikes": "Wasted lives",
+  "hobby": "Caring for her phoenix birds",
+  "cv": "TBA"
+ },
+ "mei": {
+  "birthday": "04-14",
+  "height": 163,
+  "likes": "Swords, carrots, moonlit nights",
+  "dislikes": "Ear jokes",
+  "hobby": "Naming her blades",
+  "cv": "TBA"
+ },
+ "ninger": {
+  "birthday": "02-08",
+  "height": 158,
+  "likes": "Gold, treasure maps, good luck charms",
+  "dislikes": "Debt",
+  "hobby": "Counting coins",
+  "cv": "TBA"
+ },
+ "spimei": {
+  "birthday": "07-30",
+  "height": 165,
+  "likes": "Machines, red paint, efficiency",
+  "dislikes": "Rust, small talk",
+  "hobby": "Building drones",
+  "cv": "TBA"
+ },
+ "luby": {
+  "birthday": "02-22",
+  "height": 152,
+  "likes": "Sunbeams, fish snacks, tinkering",
+  "dislikes": "Baths, loud vacuums",
+  "hobby": "Upgrading her mecha cat",
+  "cv": "TBA"
+ }
+}

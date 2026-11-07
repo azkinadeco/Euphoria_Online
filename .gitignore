@@ -1,0 +1,26 @@
+# Godot cache and generated files
+.godot/
+*.translation
+
+# Export output (also holds the local HTTPS key for iPhone testing)
+builds/
+
+# Local backups and raw source art (not needed to run the game)
+_recut_backup/
+Karakter Euphoria Online/
+
+# Secrets and signing files
+*.pem
+*.key
+*.p12
+*.keystore
+*.jks
+*.mobileprovision
+.env
+.env.*
+export_credentials.cfg
+
+# OS and Python noise
+.DS_Store
+__pycache__/
+*.pyc

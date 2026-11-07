@@ -1,0 +1,1432 @@
+{
+ "shina": {
+  "pitch": 1.18,
+  "rate": 200,
+  "lines": {
+   "greet": [
+    "ふん、やっと来たのね。べ、別に待ってなんかいないんだから！",
+    "Hmph, you finally came. I-It's not like I was waiting for you!"
+   ],
+   "tap": [
+    "ちょっと！気安く触らないでよ、燃やすわよ！",
+    "Hey! Don't touch me so casually, or I'll burn you!"
+   ],
+   "bond": [
+    "あなたの隣なら…この炎も怖くないの。",
+    "Next to you... even this flame doesn't scare me."
+   ],
+   "skill": [
+    "竜の炎よ、焼き尽くせ！",
+    "Dragon flame, burn them all!"
+   ],
+   "win": [
+    "当然の結果よ。私を誰だと思ってるの？",
+    "Obviously. Who do you think I am?"
+   ],
+   "summon": [
+    "竜炎の君主、シーナよ。せいぜい私に相応しい主でいなさい。",
+    "I am Shina, the Dragon Flame Monarch. Try to be a master worthy of me."
+   ],
+   "hurt": [
+    "やったわね！",
+    "You'll pay for that!"
+   ],
+   "ko": [
+    "司令官…あとは…",
+    "Commander... the rest is..."
+   ]
+  }
+ },
+ "xylia": {
+  "pitch": 1.06,
+  "rate": 175,
+  "lines": {
+   "greet": [
+    "おかえりなさい、司令官。今日の設計図も完璧よ。",
+    "Welcome back, Commander. Today's blueprint is perfect too."
+   ],
+   "tap": [
+    "ふふ、私の計画に興味があるのかしら？",
+    "Fufu, are you interested in my plans?"
+   ],
+   "bond": [
+    "私の帝国の中心には…あなたがいるの。",
+    "At the center of my empire... there is you."
+   ],
+   "skill": [
+    "魔界の設計図、展開！",
+    "Demonic blueprint, deploy!"
+   ],
+   "win": [
+    "計算通りね。",
+    "Exactly as calculated."
+   ],
+   "summon": [
+    "大魔設計士シリア。世界を作り直してあげましょう。",
+    "Xylia, the Arch-Demon Architect. Let me redesign the world for you."
+   ],
+   "hurt": [
+    "うっ…！",
+    "Ugh...!"
+   ],
+   "ko": [
+    "司令官…あとは…",
+    "Commander... the rest is..."
+   ]
+  }
+ },
+ "micca": {
+  "pitch": 1.28,
+  "rate": 215,
+  "lines": {
+   "greet": [
+    "やっほー！今日はどんなイタズラする？",
+    "Yahoo! What kind of mischief are we doing today?"
+   ],
+   "tap": [
+    "箱の中、見たい？だーめ、ひみつ！",
+    "Wanna see inside the box? Nope, it's a secret!"
+   ],
+   "bond": [
+    "司令官だけ、特別に箱の中を見せてあげる…かも？",
+    "Only for you, I might show what's inside the box... maybe?"
+   ],
+   "skill": [
+    "パンドラボックス、オープン！",
+    "Pandora's box, open!"
+   ],
+   "win": [
+    "あはは！みんな箱に入っちゃえ！",
+    "Ahaha! Everyone into the box!"
+   ],
+   "summon": [
+    "ミッカ・パンドラだよ！カオスはお好き？",
+    "I'm Micca Pandora! Do you like chaos?"
+   ],
+   "hurt": [
+    "ひゃっ！",
+    "Hya!"
+   ],
+   "ko": [
+    "まだ…戦えるのに…",
+    "I can... still fight..."
+   ]
+  }
+ },
+ "cthollia": {
+  "pitch": 1.08,
+  "rate": 160,
+  "lines": {
+   "greet": [
+    "深淵があなたの名を囁いていたわ。",
+    "The abyss was whispering your name."
+   ],
+   "tap": [
+    "触手が…勝手に動いちゃうの。ごめんなさい。",
+    "My tentacles... move on their own. Sorry."
+   ],
+   "bond": [
+    "暗い海の底でも、あなたの光は見えるわ。",
+    "Even at the bottom of the dark sea, I can see your light."
+   ],
+   "skill": [
+    "深淵の渦よ、飲み込みなさい！",
+    "Abyssal maelstrom, swallow them!"
+   ],
+   "win": [
+    "海は、静かになったわ。",
+    "The sea has grown quiet."
+   ],
+   "summon": [
+    "深淵の女王、クトリア。あなたを海の底まで守るわ。",
+    "Cthollia, sovereign of the abyss. I'll protect you to the bottom of the sea."
+   ],
+   "hurt": [
+    "やったわね！",
+    "You'll pay for that!"
+   ],
+   "ko": [
+    "そんな…",
+    "No way..."
+   ]
+  }
+ },
+ "valeria": {
+  "pitch": 1.04,
+  "rate": 170,
+  "lines": {
+   "greet": [
+    "司令官、凍える前に中へどうぞ。",
+    "Commander, come inside before you freeze."
+   ],
+   "tap": [
+    "…冷たい手でしょう？でも、離さないで。",
+    "...My hands are cold, aren't they? But don't let go."
+   ],
+   "bond": [
+    "氷の心も、あなたの前では溶けてしまうの。",
+    "Even a heart of ice melts in front of you."
+   ],
+   "skill": [
+    "フロストヴェイルの裁きを！",
+    "The judgement of Frostvale!"
+   ],
+   "win": [
+    "吹雪は止んだわ。行きましょう。",
+    "The blizzard has stopped. Let's go."
+   ],
+   "summon": [
+    "フロストヴェイルの女帝、ヴァレリア。剣はあなたのために。",
+    "Valeria, Empress of Frostvale. My sword is yours."
+   ],
+   "hurt": [
+    "やったわね！",
+    "You'll pay for that!"
+   ],
+   "ko": [
+    "まだ…戦えるのに…",
+    "I can... still fight..."
+   ]
+  }
+ },
+ "eropatra": {
+  "pitch": 1.03,
+  "rate": 165,
+  "lines": {
+   "greet": [
+    "あら、女帝を待たせるなんて、いい度胸ね。",
+    "My, keeping an Empress waiting? How bold."
+   ],
+   "tap": [
+    "跪きなさい…なんて、冗談よ。隣に立って。",
+    "Kneel... just kidding. Stand beside me."
+   ],
+   "bond": [
+    "砂漠の太陽よりも、あなたが眩しいわ。",
+    "You shine brighter than the desert sun."
+   ],
+   "skill": [
+    "蛇の毒牙、受けてみなさい！",
+    "Taste the serpent's fang!"
+   ],
+   "win": [
+    "女帝に敗北はないの。",
+    "An Empress knows no defeat."
+   ],
+   "summon": [
+    "砂漠の蛇女帝、エロパトラ。忠誠を誓いなさい。",
+    "Eropatra, Serpent Empress of the desert. Swear your loyalty."
+   ],
+   "hurt": [
+    "ひゃっ！",
+    "Hya!"
+   ],
+   "ko": [
+    "司令官…あとは…",
+    "Commander... the rest is..."
+   ]
+  }
+ },
+ "furu": {
+  "pitch": 1.16,
+  "rate": 175,
+  "lines": {
+   "greet": [
+    "司令官、今日も光のご加護がありますように。",
+    "Commander, may the light bless you today too."
+   ],
+   "tap": [
+    "きゃっ！…も、もう、驚かせないでください。",
+    "Kya! ...P-please don't startle me like that."
+   ],
+   "bond": [
+    "祈りの言葉に、あなたの名前を加えました。",
+    "I've added your name to my prayers."
+   ],
+   "skill": [
+    "聖なる祝福を、みんなに！",
+    "Holy blessing, to everyone!"
+   ],
+   "win": [
+    "誰も傷つかなくて、よかった…。",
+    "I'm so glad no one was hurt..."
+   ],
+   "summon": [
+    "天の大司祭、フルです。皆さんを癒やします。",
+    "I'm Furu, the Celestial Arch-Priestess. I'll heal everyone."
+   ],
+   "hurt": [
+    "きゃっ！",
+    "Kya!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "glytta": {
+  "pitch": 1.24,
+  "rate": 210,
+  "lines": {
+   "greet": [
+    "司令官！一緒に踊ろうよ、ワン、ツー！",
+    "Commander! Let's dance, one, two!"
+   ],
+   "tap": [
+    "えへへ、くるっと一回転！見てた？",
+    "Ehehe, a full spin! Did you see?"
+   ],
+   "bond": [
+    "あなたと踊る時が、一番キラキラしてるの。",
+    "I sparkle the most when I'm dancing with you."
+   ],
+   "skill": [
+    "クリスタル・ワルツ！",
+    "Crystal Waltz!"
+   ],
+   "win": [
+    "フィナーレ！拍手してー！",
+    "Finale! Give me a round of applause!"
+   ],
+   "summon": [
+    "水晶の舞姫、グリッタだよ！よろしくね！",
+    "I'm Glytta, the Crystal Blade Dancer! Nice to meet you!"
+   ],
+   "hurt": [
+    "ひゃっ！",
+    "Hya!"
+   ],
+   "ko": [
+    "まだ…戦えるのに…",
+    "I can... still fight..."
+   ]
+  }
+ },
+ "hyeonxa": {
+  "pitch": 1.02,
+  "rate": 165,
+  "lines": {
+   "greet": [
+    "九つの頭、全部があなたを待っていたわ。",
+    "All nine of my heads were waiting for you."
+   ],
+   "tap": [
+    "毒には気をつけなさい。…あなたには使わないけど。",
+    "Mind the poison. ...Not that I'd use it on you."
+   ],
+   "bond": [
+    "九つの心が、一つになってあなたを想うの。",
+    "Nine hearts become one, thinking of you."
+   ],
+   "skill": [
+    "九頭の猛毒、食らいなさい！",
+    "Take the venom of nine fangs!"
+   ],
+   "win": [
+    "素人の毒とは格が違うのよ。",
+    "My venom is on another level."
+   ],
+   "summon": [
+    "九頭竜の母、ヒョンシャ。私の毒は芸術よ。",
+    "Hyeonxa, matriarch of the hydra. My venom is art."
+   ],
+   "hurt": [
+    "ひゃっ！",
+    "Hya!"
+   ],
+   "ko": [
+    "司令官…あとは…",
+    "Commander... the rest is..."
+   ]
+  }
+ },
+ "scylla": {
+  "pitch": 1.07,
+  "rate": 160,
+  "lines": {
+   "greet": [
+    "…潮が、あなたの帰りを知らせてくれた。",
+    "...The tide told me you were back."
+   ],
+   "tap": [
+    "…何？用がないなら、少しだけそばにいて。",
+    "...What? If you need nothing, just stay by me a while."
+   ],
+   "bond": [
+    "海に帰る理由が、なくなったわ。",
+    "I no longer have a reason to return to the sea."
+   ],
+   "skill": [
+    "クラーケンの奇襲。",
+    "Kraken ambush."
+   ],
+   "win": [
+    "…終わり。",
+    "...It's over."
+   ],
+   "summon": [
+    "深海の女王、スキュラ。獲物は逃さない。",
+    "Scylla, queen of the deep. My prey never escapes."
+   ],
+   "hurt": [
+    "いたっ！",
+    "Ouch!"
+   ],
+   "ko": [
+    "司令官…あとは…",
+    "Commander... the rest is..."
+   ]
+  }
+ },
+ "lumeira": {
+  "pitch": 1.2,
+  "rate": 170,
+  "lines": {
+   "greet": [
+    "蝶々たちが、今日はいい日だって言ってるよ。",
+    "The butterflies say today will be a good day."
+   ],
+   "tap": [
+    "ふわぁ…あ、司令官。夢を見てたの。",
+    "Fuwaa... oh, Commander. I was dreaming."
+   ],
+   "bond": [
+    "夢の中でも、あなたに会いに行くね。",
+    "I'll come to see you even in my dreams."
+   ],
+   "skill": [
+    "星の翅よ、みんなに力を！",
+    "Wings of stars, give everyone strength!"
+   ],
+   "win": [
+    "蝶々たちも喜んでるよ。",
+    "The butterflies are happy too."
+   ],
+   "summon": [
+    "星蝶の賢者、ルメイラ。夢の導きでここに来たの。",
+    "Lumeira, the Astral Butterfly Sage. A dream guided me here."
+   ],
+   "hurt": [
+    "うっ…！",
+    "Ugh...!"
+   ],
+   "ko": [
+    "司令官…あとは…",
+    "Commander... the rest is..."
+   ]
+  }
+ },
+ "gemora": {
+  "pitch": 1.14,
+  "rate": 185,
+  "lines": {
+   "greet": [
+    "シグナル確認。司令官、おかえりなさい。",
+    "Signal confirmed. Welcome back, Commander."
+   ],
+   "tap": [
+    "接触を検知。…心拍数、上昇中。",
+    "Contact detected. ...Heart rate rising."
+   ],
+   "bond": [
+    "このデータは…愛、と呼ぶのですか？",
+    "This data... is it called love?"
+   ],
+   "skill": [
+    "ヴォイド・レールガン、発射！",
+    "Void railgun, fire!"
+   ],
+   "win": [
+    "目標、全て排除しました。",
+    "All targets eliminated."
+   ],
+   "summon": [
+    "宇宙の使者、ジェモラ。地球の調査に来ました。",
+    "Gemora, envoy of the cosmos. I came to study your world."
+   ],
+   "hurt": [
+    "くっ…まだよ！",
+    "Tch... not yet!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "fidelia": {
+  "pitch": 1.08,
+  "rate": 175,
+  "lines": {
+   "greet": [
+    "司令官、お守りします。今日もご無事で。",
+    "Commander, I'll protect you. Stay safe today too."
+   ],
+   "tap": [
+    "は、はい！何かご命令でしょうか！",
+    "Y-yes! Do you have an order for me?"
+   ],
+   "bond": [
+    "私の盾は、永遠にあなたのものです。",
+    "My shield is yours, forever."
+   ],
+   "skill": [
+    "潮の防壁、展開！",
+    "Tidal bulwark, deploy!"
+   ],
+   "win": [
+    "守り抜きました！",
+    "I protected everyone!"
+   ],
+   "summon": [
+    "戦乙女フィデリア、ここに。あなたの盾となりましょう。",
+    "Valkyrie Fidelia, at your service. I will be your shield."
+   ],
+   "hurt": [
+    "いたっ！",
+    "Ouch!"
+   ],
+   "ko": [
+    "そんな…",
+    "No way..."
+   ]
+  }
+ },
+ "lucidria": {
+  "pitch": 1.0,
+  "rate": 150,
+  "lines": {
+   "greet": [
+    "…来たか。今日も城壁は崩れない。",
+    "...You came. The walls won't fall today either."
+   ],
+   "tap": [
+    "…何だ。…いや、嫌ではない。",
+    "...What is it. ...No, I don't mind."
+   ],
+   "bond": [
+    "古い城壁にも、花は咲くものだな。",
+    "Even old walls can grow flowers, it seems."
+   ],
+   "skill": [
+    "古代のメイス、砕け！",
+    "Ancient mace, crush!"
+   ],
+   "win": [
+    "守りきった。",
+    "We held the line."
+   ],
+   "summon": [
+    "古代の守護者、ルシドリア。動かぬ壁となろう。",
+    "Lucidria, the ancient guardian. I will be an unmoving wall."
+   ],
+   "hurt": [
+    "うっ…！",
+    "Ugh...!"
+   ],
+   "ko": [
+    "司令官…あとは…",
+    "Commander... the rest is..."
+   ]
+  }
+ },
+ "eurnipha": {
+  "pitch": 1.0,
+  "rate": 155,
+  "lines": {
+   "greet": [
+    "あら、いい子ね。こっちにいらっしゃい。",
+    "My, what a good child. Come here."
+   ],
+   "tap": [
+    "あなたのぬくもり…少し、もらってもいい？",
+    "Your warmth... may I take a little?"
+   ],
+   "bond": [
+    "虚無の中で、あなただけが温かいの。",
+    "In the void, only you are warm."
+   ],
+   "skill": [
+    "虚無よ、吸い尽くしなさい。",
+    "Void, drain them dry."
+   ],
+   "win": [
+    "ごちそうさま。",
+    "Thank you for the meal."
+   ],
+   "summon": [
+    "虚無の母、エウルニファ。抱きしめてあげましょうか？",
+    "Eurnipha, mother of the void. Shall I embrace you?"
+   ],
+   "hurt": [
+    "きゃっ！",
+    "Kya!"
+   ],
+   "ko": [
+    "くやしい…",
+    "So frustrating..."
+   ]
+  }
+ },
+ "rumi": {
+  "pitch": 1.22,
+  "rate": 205,
+  "lines": {
+   "greet": [
+    "司令官！お祓いの依頼？報酬は前払いでね！",
+    "Commander! An exorcism job? Payment up front!"
+   ],
+   "tap": [
+    "ちょっと、角は触っちゃダメ！",
+    "Hey, no touching the horns!"
+   ],
+   "bond": [
+    "司令官のためなら…タダで働いてもいいよ。",
+    "For you... I'd even work for free."
+   ],
+   "skill": [
+    "紅き祓い、成敗！",
+    "Crimson exorcism, begone!"
+   ],
+   "win": [
+    "お祓い完了！ご褒美ちょうだい！",
+    "Exorcism complete! Give me my reward!"
+   ],
+   "summon": [
+    "紅角の祓い師、ルミだよ！料金表はこちら！",
+    "I'm Rumi, the Crimson Horn Exorcist! Here's my price list!"
+   ],
+   "hurt": [
+    "やったわね！",
+    "You'll pay for that!"
+   ],
+   "ko": [
+    "まだ…戦えるのに…",
+    "I can... still fight..."
+   ]
+  }
+ },
+ "mora": {
+  "pitch": 1.1,
+  "rate": 160,
+  "lines": {
+   "greet": [
+    "時は流れても、あなたを待つ時間は好きです。",
+    "Time flows on, but I love the time spent waiting for you."
+   ],
+   "tap": [
+    "あら、時間が止まったみたい。",
+    "Oh, it feels like time stopped."
+   ],
+   "bond": [
+    "永遠の時の中で、この瞬間を一番大切にします。",
+    "Of all eternity, I treasure this moment most."
+   ],
+   "skill": [
+    "時の輪よ、巡れ！",
+    "Ring of time, turn!"
+   ],
+   "win": [
+    "時は、私たちの味方です。",
+    "Time is on our side."
+   ],
+   "summon": [
+    "時の星の修道女、モラ。あなたの時を見守ります。",
+    "Mora, sister of the chronos stars. I will watch over your time."
+   ],
+   "hurt": [
+    "やったわね！",
+    "You'll pay for that!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "abadonia": {
+  "pitch": 1.02,
+  "rate": 160,
+  "lines": {
+   "greet": [
+    "獅子の女王が、あなたを待っていたわ。",
+    "The Lion Queen has been waiting for you."
+   ],
+   "tap": [
+    "無礼者…でも、あなたなら許してあげる。",
+    "How rude... but for you, I'll allow it."
+   ],
+   "bond": [
+    "この盾は、あなたの心も守るためにあるの。",
+    "This shield exists to protect your heart as well."
+   ],
+   "skill": [
+    "獅子王の突撃、受けてみなさい！",
+    "Face the Lion Sovereign's charge!"
+   ],
+   "win": [
+    "王の前に、敵はなし。",
+    "No enemy stands before a queen."
+   ],
+   "summon": [
+    "深淵の獅子女王、アバドニア。我が軍門に迎えましょう。",
+    "Abadonia, Abyssal Lion Queen. I welcome you to my legion."
+   ],
+   "hurt": [
+    "うっ…！",
+    "Ugh...!"
+   ],
+   "ko": [
+    "まだ…戦えるのに…",
+    "I can... still fight..."
+   ]
+  }
+ },
+ "aqua": {
+  "pitch": 1.2,
+  "rate": 185,
+  "lines": {
+   "greet": [
+    "おかえりなさい！聖杯のお水、飲みますか？",
+    "Welcome back! Want a sip from the holy chalice?"
+   ],
+   "tap": [
+    "ひゃっ！お水がこぼれちゃいます！",
+    "Hya! The water's going to spill!"
+   ],
+   "bond": [
+    "あなたの喉が渇かないように、ずっとそばにいます。",
+    "I'll stay by your side so you'll never go thirsty."
+   ],
+   "skill": [
+    "潮の聖杯よ、みんなを癒して！",
+    "Chalice of the tides, heal everyone!"
+   ],
+   "win": [
+    "みんな無事でよかったです〜！",
+    "I'm so glad everyone's okay~!"
+   ],
+   "summon": [
+    "潮の聖杯を運ぶ者、アクアです！よろしくお願いします！",
+    "I'm Aqua, bearer of the tidal chalice! Nice to meet you!"
+   ],
+   "hurt": [
+    "いたっ！",
+    "Ouch!"
+   ],
+   "ko": [
+    "まだ…戦えるのに…",
+    "I can... still fight..."
+   ]
+  }
+ },
+ "atalanta": {
+  "pitch": 1.16,
+  "rate": 215,
+  "lines": {
+   "greet": [
+    "遅いよ、司令官！私はもう三周走ったんだから！",
+    "You're slow, Commander! I've already run three laps!"
+   ],
+   "tap": [
+    "捕まえてみなよ！…あ、捕まっちゃった。",
+    "Catch me if you can! ...Ah, you caught me."
+   ],
+   "bond": [
+    "どんなに速く走っても、あなたの所に戻ってくるの。",
+    "No matter how fast I run, I always come back to you."
+   ],
+   "skill": [
+    "雷鳴の一歩！",
+    "Thunderstep!"
+   ],
+   "win": [
+    "私の勝ち！誰も追いつけないよ！",
+    "I win! No one can keep up!"
+   ],
+   "summon": [
+    "雷の狩人アタランテ！最速で駆けつけたよ！",
+    "Atalanta the thunder huntress! I got here at top speed!"
+   ],
+   "hurt": [
+    "やったわね！",
+    "You'll pay for that!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "kali": {
+  "pitch": 1.06,
+  "rate": 160,
+  "lines": {
+   "greet": [
+    "百本の刀が、今日もあなたを守ります。",
+    "A hundred blades will guard you again today."
+   ],
+   "tap": [
+    "…刀に触れないでください。指が切れますよ。",
+    "...Please don't touch the swords. You'll cut your fingers."
+   ],
+   "bond": [
+    "百本の刀より、あなた一人のほうが重いのです。",
+    "You alone weigh more to me than a hundred blades."
+   ],
+   "skill": [
+    "百刀の雨！",
+    "Hundred Blade Rain!"
+   ],
+   "win": [
+    "刃は鞘に。戦いは終わりました。",
+    "Blades to their sheaths. The battle is over."
+   ],
+   "summon": [
+    "百刀の聖女、カーリー。あなたの剣となりましょう。",
+    "Kali, Saint of a Hundred Blades. I shall be your sword."
+   ],
+   "hurt": [
+    "きゃっ！",
+    "Kya!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "zennyo": {
+  "pitch": 1.12,
+  "rate": 175,
+  "lines": {
+   "greet": [
+    "竜王の娘を待たせるなんて…まあ、今日は許します。",
+    "Keeping the Dragon King's daughter waiting... I'll forgive you today."
+   ],
+   "tap": [
+    "こら、ちびドラゴンたちが真似しちゃうでしょ。",
+    "Hey, the little dragons will copy you!"
+   ],
+   "bond": [
+    "この子たちも、あなたを家族だと思ってるわ。",
+    "These little ones think of you as family too."
+   ],
+   "skill": [
+    "竜王の行進、焼き尽くせ！",
+    "Dragon King's parade, burn them!"
+   ],
+   "win": [
+    "ふふ、竜の炎に敵はいないわ。",
+    "Fufu, nothing survives dragon fire."
+   ],
+   "summon": [
+    "竜王の娘、善女竜王。小さな竜たちと一緒にお仕えします。",
+    "Zennyo Ryuo, daughter of the Dragon King. My little dragons and I are at your service."
+   ],
+   "hurt": [
+    "うっ…！",
+    "Ugh...!"
+   ],
+   "ko": [
+    "そんな…",
+    "No way..."
+   ]
+  }
+ },
+ "rubby": {
+  "pitch": 1.1,
+  "rate": 170,
+  "lines": {
+   "greet": [
+    "あら、司令官。今日は何を爆発させましょうか？",
+    "Oh, Commander. What shall we blow up today?"
+   ],
+   "tap": [
+    "ふふ、触ると…ドカン、ですよ？",
+    "Fufu, if you touch me... boom, you know?"
+   ],
+   "bond": [
+    "あなたといると、心臓が爆発しそう。",
+    "Being with you makes my heart want to explode."
+   ],
+   "skill": [
+    "ビッグバン・バラード！",
+    "Big Bang Ballad!"
+   ],
+   "win": [
+    "綺麗な花火だったでしょう？",
+    "Wasn't that a pretty firework?"
+   ],
+   "summon": [
+    "爆弾令嬢ルビー。素敵な爆発をお届けします。",
+    "Rubby, the Bomb Belle. I deliver lovely explosions."
+   ],
+   "hurt": [
+    "くっ…まだよ！",
+    "Tch... not yet!"
+   ],
+   "ko": [
+    "そんな…",
+    "No way..."
+   ]
+  }
+ },
+ "schylua": {
+  "pitch": 1.08,
+  "rate": 165,
+  "lines": {
+   "greet": [
+    "…凍える風の中、あなたの声だけが温かい。",
+    "...In the freezing wind, only your voice is warm."
+   ],
+   "tap": [
+    "鎌に近づかないで。凍っちゃうから。",
+    "Don't get near the scythe. You'll freeze."
+   ],
+   "bond": [
+    "氷の鎌は、あなたを守るためだけに振るう。",
+    "I swing this ice scythe only to protect you."
+   ],
+   "skill": [
+    "氷河の刈り取り。",
+    "Glacial reap."
+   ],
+   "win": [
+    "すべて、凍りついた。",
+    "Everything has frozen."
+   ],
+   "summon": [
+    "氷の死神、シュルア。命を刈る…でも、あなたは別。",
+    "Schylua, the Frost Reaper. I reap lives... but not yours."
+   ],
+   "hurt": [
+    "いたっ！",
+    "Ouch!"
+   ],
+   "ko": [
+    "まだ…戦えるのに…",
+    "I can... still fight..."
+   ]
+  }
+ },
+ "vexira": {
+  "pitch": 1.1,
+  "rate": 170,
+  "lines": {
+   "greet": [
+    "あら〜、司令官。今夜も私に会いに来たの？",
+    "Ara~ Commander. Did you come to see me again tonight?"
+   ],
+   "tap": [
+    "ふふっ、くすぐったい。もっと…？",
+    "Fufu, that tickles. More...?"
+   ],
+   "bond": [
+    "魅了するつもりが…私が魅了されちゃった。",
+    "I meant to charm you... but you charmed me instead."
+   ],
+   "skill": [
+    "破滅の魅惑！",
+    "Charm of Ruin!"
+   ],
+   "win": [
+    "みんな私に夢中ね。",
+    "Everyone's crazy about me."
+   ],
+   "summon": [
+    "サキュバスのヴェクシラよ。あなたの夢にお邪魔するわ。",
+    "I'm Vexira the succubus. I'll be visiting your dreams."
+   ],
+   "hurt": [
+    "いたっ！",
+    "Ouch!"
+   ],
+   "ko": [
+    "司令官…あとは…",
+    "Commander... the rest is..."
+   ]
+  }
+ },
+ "siv": {
+  "pitch": 1.2,
+  "rate": 190,
+  "lines": {
+   "greet": [
+    "し、司令官！ハンマーの準備はできてます！",
+    "C-Commander! My hammer is ready!"
+   ],
+   "tap": [
+    "わわっ、ハンマー落としちゃう！",
+    "Wawa, I'm going to drop my hammer!"
+   ],
+   "bond": [
+    "重いハンマーも、あなたのためなら軽く感じます。",
+    "Even this heavy hammer feels light when it's for you."
+   ],
+   "skill": [
+    "サンダー・タップ！",
+    "Thunder tap!"
+   ],
+   "win": [
+    "や、やりました！ちゃんと当たりました！",
+    "I-I did it! I actually hit them!"
+   ],
+   "summon": [
+    "雷槌の乙女、シヴです！が、頑張ります！",
+    "I'm Siv, the Thunder Hammer Maiden! I'll do my best!"
+   ],
+   "hurt": [
+    "くっ…まだよ！",
+    "Tch... not yet!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "sven": {
+  "pitch": 1.0,
+  "rate": 150,
+  "lines": {
+   "greet": [
+    "…戻ったか。剣の手入れは済ませておいた。",
+    "...You're back. I've already polished my sword."
+   ],
+   "tap": [
+    "何だ。…暇なら、隣に座れ。",
+    "What is it. ...If you're free, sit next to me."
+   ],
+   "bond": [
+    "旅の終わりを探していた。それは、ここだったのかもしれない。",
+    "I was looking for the end of my journey. Maybe it was here."
+   ],
+   "skill": [
+    "裂け、大剣よ。",
+    "Cleave, greatsword."
+   ],
+   "win": [
+    "…悪くない戦いだった。",
+    "...Not a bad fight."
+   ],
+   "summon": [
+    "流浪の大剣士、スヴェン。剣を貸そう。",
+    "Sven, wandering greatsword. I'll lend you my blade."
+   ],
+   "hurt": [
+    "ひゃっ！",
+    "Hya!"
+   ],
+   "ko": [
+    "そんな…",
+    "No way..."
+   ]
+  }
+ },
+ "shop1": {
+  "pitch": 1.18,
+  "rate": 190,
+  "lines": {
+   "greet": [
+    "いらっしゃいませ！今日もいい品物、揃ってますよ！",
+    "Welcome! I've got lots of great goods today!"
+   ],
+   "tap": [
+    "きゃっ！お、お客様、商品はあちらです！",
+    "Kya! C-customer, the goods are over there!"
+   ],
+   "thanks": [
+    "お買い上げ、ありがとうございます！",
+    "Thank you for your purchase!"
+   ],
+   "poor": [
+    "あら、お金が足りないみたいですね…",
+    "Oh, looks like you're a little short..."
+   ],
+   "tap_head": [
+    "えへへ、撫でてくれるんですか？今日はサービスしちゃいます！",
+    "Ehehe, a head pat? I'll give you a discount today!"
+   ],
+   "tap_body": [
+    "きゃっ！お、お客様、商品はあちらです！",
+    "Kya! C-customer, the goods are over there!"
+   ],
+   "tap_legs": [
+    "もうっ、どこ見てるんですか！",
+    "Geez, where are you looking?!"
+   ],
+   "idle": [
+    "お悩みですか？おすすめは毎日変わりますよ！",
+    "Can't decide? My recommendations change every day!"
+   ],
+   "browse": [
+    "その棚、今日の新入荷ですよ！",
+    "That shelf just got new stock today!"
+   ],
+   "bye": [
+    "またのお越しをお待ちしてます！",
+    "Please come again soon!"
+   ]
+  }
+ },
+ "shop2": {
+  "pitch": 1.04,
+  "rate": 160,
+  "lines": {
+   "greet": [
+    "ふふ…闇市へようこそ。珍しい品、ありますよ。",
+    "Fufu... welcome to the black market. I have rare goods."
+   ],
+   "tap": [
+    "触るなら…代金をいただくわ。",
+    "If you're going to touch... I'll charge you for it."
+   ],
+   "thanks": [
+    "いい取引だったわ。またどうぞ。",
+    "A fine deal. Come again."
+   ],
+   "poor": [
+    "お金がないなら、また今度ね。",
+    "No money? Then next time."
+   ],
+   "tap_head": [
+    "あら、頭を撫でるの？…悪くないわね。",
+    "Oh, patting my head? ...Not bad."
+   ],
+   "tap_body": [
+    "ふふ…高くつくわよ、それ。",
+    "Fufu... that's going to cost you."
+   ],
+   "tap_legs": [
+    "どこ見てるの？商品はこっちよ。",
+    "Where are you looking? The goods are over here."
+   ],
+   "idle": [
+    "決まった？迷う時間も楽しいでしょう？",
+    "Decided yet? Choosing is half the fun, isn't it?"
+   ],
+   "browse": [
+    "その棚は掘り出し物だらけよ。",
+    "That shelf is full of hidden treasures."
+   ],
+   "bye": [
+    "またいらっしゃい。待ってるわ。",
+    "Come again. I'll be waiting."
+   ]
+  }
+ },
+ "hairly": {
+  "pitch": 0.98,
+  "rate": 150,
+  "lines": {
+   "greet": [
+    "…来たのね。あなたの運命、少しだけ覗かせて。",
+    "...You came. Let me peek at your fate, just a little."
+   ],
+   "tap": [
+    "髪に触れないで…絡まるわよ、あなたの運命ごと。",
+    "Don't touch my hair... your fate will tangle with it."
+   ],
+   "tap_head": [
+    "冠に触れるなんて…大胆ね。",
+    "Touching my crown... how bold."
+   ],
+   "tap_body": [
+    "ふふ…その手、少し震えているわ。",
+    "Fufu... your hand is trembling a little."
+   ],
+   "tap_legs": [
+    "見つめすぎよ。占いの代金、上乗せね。",
+    "You're staring. I'm adding that to the fortune fee."
+   ],
+   "idle": [
+    "星が囁いているわ…今日は何かが起こる、と。",
+    "The stars are whispering... something will happen today."
+   ],
+   "browse": [
+    "カードが選ばれたわ。…ほら、これがあなたの今日よ。",
+    "The card has chosen. ...See, this is your day."
+   ],
+   "thanks": [
+    "また明日、運命を聞きにいらっしゃい。",
+    "Come back tomorrow to hear your fate again."
+   ],
+   "poor": [
+    "今日の運命はもう告げたわ。また明日ね。",
+    "I've already told today's fate. Tomorrow, then."
+   ]
+  }
+ },
+ "angela": {
+  "pitch": 1.08,
+  "rate": 165,
+  "lines": {
+   "greet": [
+    "天はあなたを守れと命じたわ。…志願したのは私だけど。",
+    "Heaven ordered me to guard you. ...I volunteered, actually."
+   ],
+   "tap": [
+    "羽に触れないで！…くすぐったいの。",
+    "Don't touch my wings! ...It tickles."
+   ],
+   "bond": [
+    "この翼は、あなたの空を守るためにあるの。",
+    "These wings exist to guard your sky."
+   ],
+   "skill": [
+    "熾天使の審判を！",
+    "Seraph's Verdict!"
+   ],
+   "win": [
+    "光は、いつも正しい側に。",
+    "The light is always on the right side."
+   ],
+   "summon": [
+    "熾天のヴァルキリー、アンジェラ。あなたの剣となりましょう。",
+    "Angela, Seraphic Valkyrie. I shall be your sword."
+   ],
+   "hurt": [
+    "くっ…！",
+    "Ngh...!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "kara": {
+  "pitch": 1.0,
+  "rate": 155,
+  "lines": {
+   "greet": [
+    "死神があなたの隣を歩いているわ。幸運ね、気に入られてるもの。",
+    "Death walks beside you. Lucky you — she likes you."
+   ],
+   "tap": [
+    "鎌に気をつけて。魂ごと刈り取っちゃうわよ。",
+    "Careful with the scythes. I might reap your soul too."
+   ],
+   "bond": [
+    "何千の魂を刈ってきたけど、あなたの魂だけは守りたいの。",
+    "I've reaped thousands of souls. Yours is the only one I want to protect."
+   ],
+   "skill": [
+    "不死鳥の収穫！",
+    "Phoenix Harvest!"
+   ],
+   "win": [
+    "灰から蘇るのは、私たちだけ。",
+    "Only we rise from the ashes."
+   ],
+   "summon": [
+    "不死鳥の死神、カーラ。あなたの命、預かるわ。",
+    "Kara, the Phoenix Reaper. I'll take care of your life."
+   ],
+   "hurt": [
+    "くっ…！",
+    "Ngh...!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "mei": {
+  "pitch": 1.14,
+  "rate": 180,
+  "lines": {
+   "greet": [
+    "耳を見ないで。剣を見て。そっちの方が鋭いから。",
+    "Don't stare at the ears. Stare at the sword. It's sharper."
+   ],
+   "tap": [
+    "ちょっと！うさ耳は飾りじゃないんだから！",
+    "Hey! The bunny ears aren't just for show!"
+   ],
+   "bond": [
+    "百本の剣より、あなた一人を守りたい。",
+    "I'd rather protect you than a hundred swords."
+   ],
+   "skill": [
+    "紅月斬！",
+    "Crimson Moon Slash!"
+   ],
+   "win": [
+    "ぴょんっと勝利！…今の、忘れて。",
+    "Hop to victory! ...Forget I said that."
+   ],
+   "summon": [
+    "紅刃のバニー、メイ！剣も耳も、全部あなたのもの！",
+    "Mei, the Crimson Blade Bunny! My swords and ears are all yours!"
+   ],
+   "hurt": [
+    "くっ…！",
+    "Ngh...!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "ninger": {
+  "pitch": 1.22,
+  "rate": 190,
+  "lines": {
+   "greet": [
+    "私のコイン全部が言ってるわ、今日はいい日になるって！",
+    "Every coin I own says you'll have a lucky day!"
+   ],
+   "tap": [
+    "きゃっ、金貨が落ちちゃう！",
+    "Kya, my gold coins will fall!"
+   ],
+   "bond": [
+    "宝箱いっぱいの金より、あなたの笑顔の方が価値があるわ。",
+    "Your smile is worth more than a chest full of gold."
+   ],
+   "skill": [
+    "黄金の幸運の雨！",
+    "Rain of Golden Fortune!"
+   ],
+   "win": [
+    "勝利の配当、山分けね！",
+    "Let's split the victory dividends!"
+   ],
+   "summon": [
+    "千金の姫、寧兒です！幸運をお届けします！",
+    "Ning Er, Princess of a Thousand Coins! Delivering good luck!"
+   ],
+   "hurt": [
+    "くっ…！",
+    "Ngh...!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "spimei": {
+  "pitch": 1.1,
+  "rate": 175,
+  "lines": {
+   "greet": [
+    "ドローン起動。翼起動。心も起動…困ったことにね。",
+    "Drones online. Wings online. Heart... also online, unfortunately."
+   ],
+   "tap": [
+    "警告：接触を検知。…嫌じゃない、けど。",
+    "Warning: contact detected. ...Not unpleasant, though."
+   ],
+   "bond": [
+    "私の全回路が、あなたのことで熱くなるの。",
+    "Every circuit I have heats up because of you."
+   ],
+   "skill": [
+    "深紅のドローン群、発進！",
+    "Scarlet Drone Swarm, launch!"
+   ],
+   "win": [
+    "任務完了。損害ゼロ。…褒めて？",
+    "Mission complete. Zero damage. ...Praise me?"
+   ],
+   "summon": [
+    "深紅の蜘蛛機関、スパイメイ。あなたの命令を待ってる。",
+    "Spimei, Scarlet Spider Engine. Awaiting your orders."
+   ],
+   "hurt": [
+    "くっ…！",
+    "Ngh...!"
+   ],
+   "ko": [
+    "ごめん…なさい…",
+    "I'm... sorry..."
+   ]
+  }
+ },
+ "grafity": {
+  "pitch": 1.18,
+  "rate": 185,
+  "lines": {
+   "greet": [
+    "な、何よ…別に待ってたわけじゃないんだから！",
+    "W-what? It's not like I was waiting for you!"
+   ],
+   "tap": [
+    "ひゃっ！い、いきなり触らないでよ！",
+    "Hya! D-don't touch me so suddenly!"
+   ],
+   "tap_head": [
+    "頭撫でるとか…こ、子供扱いしないで！…もうちょっとだけなら。",
+    "Patting my head? D-don't treat me like a kid! ...Maybe a little longer."
+   ],
+   "tap_body": [
+    "ば、ばかっ！燃やすわよ！？",
+    "Y-you idiot! I'll set you on fire!?"
+   ],
+   "tap_legs": [
+    "どこ見てるのよ、この変態！",
+    "Where are you looking, you pervert!"
+   ],
+   "idle": [
+    "…ずっと黙ってないで、何か買いなさいよ。",
+    "...Don't just stand there silently. Buy something already."
+   ],
+   "browse": [
+    "そ、それ…私のおすすめ。別にあんたのためじゃないけど。",
+    "Th-that one's my recommendation. Not that I picked it for you."
+   ],
+   "thanks": [
+    "…ありがと。また来てもいいわよ。たまにならね！",
+    "...Thanks. You can come again. Sometimes!"
+   ],
+   "poor": [
+    "お金足りないじゃない！…今回だけ、見なかったことにしてあげる。",
+    "You don't have enough! ...I'll pretend I didn't see, just this once."
+   ]
+  }
+ },
+ "luby": {
+  "pitch": 1.24,
+  "rate": 200,
+  "lines": {
+   "greet": [
+    "にゃ〜！メカ猫が撫でてほしいって。…私も、ちょっとだけ。",
+    "Nya~! My mecha cat wants head pats. ...Fine, me too."
+   ],
+   "tap": [
+    "にゃっ！？しっぽは触っちゃダメ！",
+    "Nya!? Don't touch the tail!"
+   ],
+   "bond": [
+    "あなたの膝の上、私専用の場所にしてもいい？",
+    "Can your lap be my personal spot? Forever?"
+   ],
+   "skill": [
+    "メカ猫パウンス！",
+    "Mecha-Cat Pounce!"
+   ],
+   "win": [
+    "勝ったにゃ！ご褒美はおやつで！",
+    "We won, nya! Snacks as a reward!"
+   ],
+   "summon": [
+    "メカ猫いたずら娘、ルビー参上にゃ！",
+    "Luby, the mecha-cat troublemaker, has arrived, nya!"
+   ],
+   "hurt": [
+    "にゃうっ！",
+    "Nyau!"
+   ],
+   "ko": [
+    "もう…お昼寝…",
+    "Just... a nap..."
+   ]
+  }
+ }
+}

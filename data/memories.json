@@ -1,0 +1,2139 @@
+{
+ "shina": [
+  {
+   "title": "The Flame That Won't Listen",
+   "lines": [
+    [
+     "shina",
+     "D-don't look! I just... lost control of my flames for a second."
+    ],
+    [
+     "commander",
+     "Your hand is burned. Let me see."
+    ],
+    [
+     "shina",
+     "It's nothing! A Dragon Monarch doesn't need bandages!"
+    ],
+    [
+     "commander",
+     "Then let a Commander wrap it anyway."
+    ],
+    [
+     "shina",
+     "...Hmph. Just this once. And don't tell anyone."
+    ]
+   ]
+  },
+  {
+   "title": "Dragon's Hoard",
+   "lines": [
+    [
+     "shina",
+     "Dragons keep treasure, you know. I've been collecting mine."
+    ],
+    [
+     "commander",
+     "Gold? Gems?"
+    ],
+    [
+     "shina",
+     "...Ribbons from every battle we won together. Don't laugh!"
+    ],
+    [
+     "commander",
+     "I'm not laughing. I'm happy."
+    ],
+    [
+     "shina",
+     "Y-you're so annoying. ...Will you give me another one tomorrow?"
+    ]
+   ]
+  },
+  {
+   "title": "Monarch's Oath",
+   "lines": [
+    [
+     "shina",
+     "My mother told me a Monarch bows to no one."
+    ],
+    [
+     "shina",
+     "But I'd lower my head for you. Only for you."
+    ],
+    [
+     "commander",
+     "I'd never ask you to bow."
+    ],
+    [
+     "shina",
+     "I know. That's why... I'm choosing to stand beside you. Forever."
+    ],
+    [
+     "shina",
+     "If you ever leave, I'll chase you across the sky. Understood?"
+    ]
+   ]
+  }
+ ],
+ "xylia": [
+  {
+   "title": "Blueprint of a Smile",
+   "lines": [
+    [
+     "xylia",
+     "I'm drafting a new fortress. Every wall has a purpose."
+    ],
+    [
+     "commander",
+     "And this little room in the center?"
+    ],
+    [
+     "xylia",
+     "...That one is yours. A place where you can rest."
+    ],
+    [
+     "commander",
+     "You designed it for me?"
+    ],
+    [
+     "xylia",
+     "Every empire needs a heart. Don't make it complicated."
+    ]
+   ]
+  },
+  {
+   "title": "Demolition Night",
+   "lines": [
+    [
+     "xylia",
+     "Sometimes I want to tear everything down and start over."
+    ],
+    [
+     "commander",
+     "Even us?"
+    ],
+    [
+     "xylia",
+     "Never us. You're the one structure I refuse to remodel."
+    ],
+    [
+     "commander",
+     "That's... surprisingly sweet."
+    ],
+    [
+     "xylia",
+     "Fufu. Don't tell the other demons, they'll think I've gone soft."
+    ]
+   ]
+  },
+  {
+   "title": "The Final Design",
+   "lines": [
+    [
+     "xylia",
+     "I've finished my masterpiece. Want to see?"
+    ],
+    [
+     "commander",
+     "It's... a blank page."
+    ],
+    [
+     "xylia",
+     "Because the future I want isn't one I can draw alone."
+    ],
+    [
+     "xylia",
+     "Let's design it together, Commander. Line by line."
+    ],
+    [
+     "commander",
+     "Then let's start tonight."
+    ],
+    [
+     "xylia",
+     "Contract accepted. No refunds, darling."
+    ]
+   ]
+  }
+ ],
+ "micca": [
+  {
+   "title": "What's in the Box?",
+   "lines": [
+    [
+     "micca",
+     "Guess what's in my box today!"
+    ],
+    [
+     "commander",
+     "A monster?"
+    ],
+    [
+     "micca",
+     "Nope!"
+    ],
+    [
+     "commander",
+     "Treasure?"
+    ],
+    [
+     "micca",
+     "Wrong again! It's... a cookie I saved for you. Hehe!"
+    ]
+   ]
+  },
+  {
+   "title": "Chaos Picnic",
+   "lines": [
+    [
+     "micca",
+     "I planned a picnic! Totally normal, no chaos at all!"
+    ],
+    [
+     "commander",
+     "The sandwiches are floating."
+    ],
+    [
+     "micca",
+     "...Okay, a LITTLE chaos. But they're tasty!"
+    ],
+    [
+     "commander",
+     "They are. Thanks, Micca."
+    ],
+    [
+     "micca",
+     "You're the only one who never runs away from my chaos..."
+    ]
+   ]
+  },
+  {
+   "title": "The Bottom of the Box",
+   "lines": [
+    [
+     "micca",
+     "Everyone thinks there's something scary at the bottom of my box."
+    ],
+    [
+     "micca",
+     "But it's just... hope. That's how the old story goes, right?"
+    ],
+    [
+     "commander",
+     "Why tell me now?"
+    ],
+    [
+     "micca",
+     "Because you're my hope, dummy. Now you know my biggest secret."
+    ],
+    [
+     "micca",
+     "Promise you'll keep it safe? Pinky swear!"
+    ]
+   ]
+  }
+ ],
+ "cthollia": [
+  {
+   "title": "Tentacle Trouble",
+   "lines": [
+    [
+     "cthollia",
+     "I'm sorry! My tentacles grabbed your coat again..."
+    ],
+    [
+     "commander",
+     "They seem to like me."
+    ],
+    [
+     "cthollia",
+     "They... they reflect my feelings. That's what makes it embarrassing."
+    ],
+    [
+     "commander",
+     "Then I don't mind at all."
+    ]
+   ]
+  },
+  {
+   "title": "Song of the Deep",
+   "lines": [
+    [
+     "cthollia",
+     "Deep sea creatures sing to find each other in the dark."
+    ],
+    [
+     "commander",
+     "Will you sing for me?"
+    ],
+    [
+     "cthollia",
+     "My voice is strange... but okay. Just for you."
+    ],
+    [
+     "cthollia",
+     "...♪ ...Did it sound scary?"
+    ],
+    [
+     "commander",
+     "It sounded like home."
+    ]
+   ]
+  },
+  {
+   "title": "Surfacing",
+   "lines": [
+    [
+     "cthollia",
+     "I stayed in the abyss for centuries. I thought light would hurt."
+    ],
+    [
+     "cthollia",
+     "But your light is warm."
+    ],
+    [
+     "commander",
+     "Then stay up here with me."
+    ],
+    [
+     "cthollia",
+     "I will. And if the dark ever comes for you, I'll pull you out. With all eight arms."
+    ]
+   ]
+  }
+ ],
+ "valeria": [
+  {
+   "title": "Cold Hands",
+   "lines": [
+    [
+     "valeria",
+     "Don't touch my hands. They're always freezing."
+    ],
+    [
+     "commander",
+     "Then I'll warm them."
+    ],
+    [
+     "valeria",
+     "...You're a stubborn Commander."
+    ],
+    [
+     "commander",
+     "I learned it from an Empress."
+    ],
+    [
+     "valeria",
+     "Hm. ...Five more minutes. That's an order."
+    ]
+   ]
+  },
+  {
+   "title": "Empress Without a Throne",
+   "lines": [
+    [
+     "valeria",
+     "My throne in Frostvale is empty. Snow covers it now."
+    ],
+    [
+     "commander",
+     "Do you want to go back?"
+    ],
+    [
+     "valeria",
+     "I used to. But a throne is lonely. A camp with you is not."
+    ],
+    [
+     "commander",
+     "You can always have both."
+    ],
+    [
+     "valeria",
+     "Perhaps. After we win, will you visit Frostvale with me?"
+    ]
+   ]
+  },
+  {
+   "title": "The Spring of Frostvale",
+   "lines": [
+    [
+     "valeria",
+     "Legend says spring returns to Frostvale when the Empress's heart melts."
+    ],
+    [
+     "commander",
+     "Has it?"
+    ],
+    [
+     "valeria",
+     "Look outside. The first flower bloomed this morning."
+    ],
+    [
+     "valeria",
+     "You did that, you know."
+    ],
+    [
+     "commander",
+     "We did it together."
+    ],
+    [
+     "valeria",
+     "Then rule beside me. Not as a subject. As my equal."
+    ]
+   ]
+  }
+ ],
+ "eropatra": [
+  {
+   "title": "Royal Tea",
+   "lines": [
+    [
+     "eropatra",
+     "You may serve me tea. Consider it an honor."
+    ],
+    [
+     "commander",
+     "Here you go, Your Majesty."
+    ],
+    [
+     "eropatra",
+     "...It's actually good. Who taught you?"
+    ],
+    [
+     "commander",
+     "I practiced. For you."
+    ],
+    [
+     "eropatra",
+     "Hmph. Fine. You may sit and drink with me."
+    ]
+   ]
+  },
+  {
+   "title": "The Serpent's Shed",
+   "lines": [
+    [
+     "eropatra",
+     "Serpents shed their skin to grow. Empresses... shed their pride."
+    ],
+    [
+     "commander",
+     "That sounds painful."
+    ],
+    [
+     "eropatra",
+     "It is. But in front of you, I don't need my crown."
+    ],
+    [
+     "eropatra",
+     "Look at me. Just Eropatra. Do you still like what you see?"
+    ],
+    [
+     "commander",
+     "Even more."
+    ]
+   ]
+  },
+  {
+   "title": "Sands of Eternity",
+   "lines": [
+    [
+     "eropatra",
+     "My ancestors built pyramids to be remembered forever."
+    ],
+    [
+     "eropatra",
+     "I don't need stone. I only want to be remembered by you."
+    ],
+    [
+     "commander",
+     "I'll never forget you."
+    ],
+    [
+     "eropatra",
+     "Then it's a royal decree. Stay with me until the sands stop falling."
+    ]
+   ]
+  }
+ ],
+ "furu": [
+  {
+   "title": "Clumsy Prayers",
+   "lines": [
+    [
+     "furu",
+     "Kya! I dropped the holy water again..."
+    ],
+    [
+     "commander",
+     "Are you okay?"
+    ],
+    [
+     "furu",
+     "I'm the Arch-Priestess, but I'm always so clumsy. The gods must be laughing."
+    ],
+    [
+     "commander",
+     "I think they're smiling."
+    ],
+    [
+     "furu",
+     "...Thank you. Your words heal me more than any spell."
+    ]
+   ]
+  },
+  {
+   "title": "Healer's Rest",
+   "lines": [
+    [
+     "furu",
+     "Healers aren't supposed to get tired..."
+    ],
+    [
+     "commander",
+     "Then rest. That's an order."
+    ],
+    [
+     "furu",
+     "C-can I lean on your shoulder? Just for a little while?"
+    ],
+    [
+     "commander",
+     "As long as you want."
+    ],
+    [
+     "furu",
+     "...Zzz..."
+    ]
+   ]
+  },
+  {
+   "title": "A Prayer of My Own",
+   "lines": [
+    [
+     "furu",
+     "I always pray for others. Today I made a selfish prayer."
+    ],
+    [
+     "commander",
+     "What did you ask for?"
+    ],
+    [
+     "furu",
+     "That I can stay by your side. Even when the war ends."
+    ],
+    [
+     "furu",
+     "Is that... too much to wish for?"
+    ],
+    [
+     "commander",
+     "It's already granted."
+    ]
+   ]
+  }
+ ],
+ "glytta": [
+  {
+   "title": "Dance Lesson",
+   "lines": [
+    [
+     "glytta",
+     "Today I'll teach you a dance! Ready? One, two!"
+    ],
+    [
+     "commander",
+     "Ow, I stepped on your foot."
+    ],
+    [
+     "glytta",
+     "Hehe, it's fine! Crystal feet are tough!"
+    ],
+    [
+     "commander",
+     "You're very patient."
+    ],
+    [
+     "glytta",
+     "Because it's you! Again, again!"
+    ]
+   ]
+  },
+  {
+   "title": "The Cracked Crystal",
+   "lines": [
+    [
+     "glytta",
+     "...Oh, you found me. Look, one of my crystals cracked."
+    ],
+    [
+     "commander",
+     "Does it hurt?"
+    ],
+    [
+     "glytta",
+     "A little. Dancers aren't allowed to show pain on stage."
+    ],
+    [
+     "commander",
+     "You're not on stage now."
+    ],
+    [
+     "glytta",
+     "...Then I'll cry a little. Just for a minute. Stay?"
+    ]
+   ]
+  },
+  {
+   "title": "Last Waltz",
+   "lines": [
+    [
+     "glytta",
+     "The festival ends tonight. I saved the last dance for you."
+    ],
+    [
+     "glytta",
+     "No steps, no rules. Just us."
+    ],
+    [
+     "commander",
+     "I'd love to."
+    ],
+    [
+     "glytta",
+     "Promise me every last dance from now on, okay? Every single one!"
+    ]
+   ]
+  }
+ ],
+ "hyeonxa": [
+  {
+   "title": "Nine Opinions",
+   "lines": [
+    [
+     "hyeonxa",
+     "My heads are arguing again. About you."
+    ],
+    [
+     "commander",
+     "What do they say?"
+    ],
+    [
+     "hyeonxa",
+     "Three say you're foolish. Five say you're charming. One won't stop blushing."
+    ],
+    [
+     "commander",
+     "Which one are you?"
+    ],
+    [
+     "hyeonxa",
+     "...Don't ask stupid questions."
+    ]
+   ]
+  },
+  {
+   "title": "Antidote",
+   "lines": [
+    [
+     "hyeonxa",
+     "Here. Drink this."
+    ],
+    [
+     "commander",
+     "Is it poison?"
+    ],
+    [
+     "hyeonxa",
+     "It's an antidote, fool. You were scratched yesterday and didn't tell me."
+    ],
+    [
+     "commander",
+     "You noticed?"
+    ],
+    [
+     "hyeonxa",
+     "I notice everything about you. ...That's not a compliment."
+    ]
+   ]
+  },
+  {
+   "title": "One Heart",
+   "lines": [
+    [
+     "hyeonxa",
+     "For the first time in centuries, all nine of my heads agree on something."
+    ],
+    [
+     "commander",
+     "What is it?"
+    ],
+    [
+     "hyeonxa",
+     "That we love you. Unanimously."
+    ],
+    [
+     "hyeonxa",
+     "Don't make that face. Accept it gracefully, Commander."
+    ]
+   ]
+  }
+ ],
+ "scylla": [
+  {
+   "title": "Silent Company",
+   "lines": [
+    [
+     "scylla",
+     "..."
+    ],
+    [
+     "commander",
+     "You've been sitting here for an hour."
+    ],
+    [
+     "scylla",
+     "...I like the quiet. And your breathing."
+    ],
+    [
+     "commander",
+     "My breathing?"
+    ],
+    [
+     "scylla",
+     "It's like waves. ...Don't move."
+    ]
+   ]
+  },
+  {
+   "title": "Tide Pool",
+   "lines": [
+    [
+     "scylla",
+     "Look. A small fish trapped in a tide pool."
+    ],
+    [
+     "commander",
+     "Should we help it?"
+    ],
+    [
+     "scylla",
+     "...I was like that fish once. Until you came."
+    ],
+    [
+     "scylla",
+     "I'll carry it back to the sea. Come with me."
+    ]
+   ]
+  },
+  {
+   "title": "Queen of the Deep",
+   "lines": [
+    [
+     "scylla",
+     "Krakens don't have mates. We hunt alone."
+    ],
+    [
+     "scylla",
+     "But I don't want to be alone anymore."
+    ],
+    [
+     "commander",
+     "You never will be."
+    ],
+    [
+     "scylla",
+     "...Then I'll stop hunting alone. You're mine now, Commander. That's how krakens love."
+    ]
+   ]
+  }
+ ],
+ "lumeira": [
+  {
+   "title": "Butterfly Messenger",
+   "lines": [
+    [
+     "lumeira",
+     "A butterfly told me you were sad today."
+    ],
+    [
+     "commander",
+     "They tell you that?"
+    ],
+    [
+     "lumeira",
+     "They tell me everything. So I came to cheer you up~"
+    ],
+    [
+     "commander",
+     "It's working."
+    ]
+   ]
+  },
+  {
+   "title": "Dream Walk",
+   "lines": [
+    [
+     "lumeira",
+     "Last night I walked into your dream. Sorry~"
+    ],
+    [
+     "commander",
+     "What did you see?"
+    ],
+    [
+     "lumeira",
+     "You were fighting alone. So I held your hand."
+    ],
+    [
+     "lumeira",
+     "You don't have to be alone, even in dreams."
+    ]
+   ]
+  },
+  {
+   "title": "Metamorphosis",
+   "lines": [
+    [
+     "lumeira",
+     "Butterflies were caterpillars once. They change completely."
+    ],
+    [
+     "lumeira",
+     "I changed too, since meeting you. My wings feel lighter."
+    ],
+    [
+     "commander",
+     "You look beautiful."
+    ],
+    [
+     "lumeira",
+     "Then let's fly together. Wherever the stars lead us~"
+    ]
+   ]
+  }
+ ],
+ "gemora": [
+  {
+   "title": "First Contact",
+   "lines": [
+    [
+     "gemora",
+     "Query: what is this human ritual called 'holding hands'?"
+    ],
+    [
+     "commander",
+     "It means we trust each other."
+    ],
+    [
+     "gemora",
+     "Executing ritual. ...Warning: core temperature rising."
+    ],
+    [
+     "commander",
+     "That's normal."
+    ]
+   ]
+  },
+  {
+   "title": "Malfunction",
+   "lines": [
+    [
+     "gemora",
+     "Commander, my systems report an error whenever you smile."
+    ],
+    [
+     "commander",
+     "What kind of error?"
+    ],
+    [
+     "gemora",
+     "Heart rate +40%. Language module unstable. I-I-I think I like this error."
+    ]
+   ]
+  },
+  {
+   "title": "Signal Home",
+   "lines": [
+    [
+     "gemora",
+     "My home planet sent a signal. They want me to return."
+    ],
+    [
+     "commander",
+     "Will you go?"
+    ],
+    [
+     "gemora",
+     "I sent my reply: 'Mission extended indefinitely. Reason: found something important.'"
+    ],
+    [
+     "gemora",
+     "The important thing is you. Transmission complete."
+    ]
+   ]
+  }
+ ],
+ "fidelia": [
+  {
+   "title": "Night Watch",
+   "lines": [
+    [
+     "fidelia",
+     "Commander! You should be sleeping. I'm on watch."
+    ],
+    [
+     "commander",
+     "I'll keep you company."
+    ],
+    [
+     "fidelia",
+     "B-but a knight shouldn't let her lord stay up..."
+    ],
+    [
+     "commander",
+     "Then consider it an order."
+    ],
+    [
+     "fidelia",
+     "...Yes, sir. I'm... actually glad."
+    ]
+   ]
+  },
+  {
+   "title": "Dented Shield",
+   "lines": [
+    [
+     "fidelia",
+     "My shield has so many dents now."
+    ],
+    [
+     "commander",
+     "Each one saved someone."
+    ],
+    [
+     "fidelia",
+     "This one... is from protecting you in Chapter 3. I'll never repair it."
+    ],
+    [
+     "commander",
+     "Why not?"
+    ],
+    [
+     "fidelia",
+     "Because it's my proudest scar."
+    ]
+   ]
+  },
+  {
+   "title": "Knight's Vow",
+   "lines": [
+    [
+     "fidelia",
+     "Commander, please kneel. ...No, wait, I'm the one who should kneel!"
+    ],
+    [
+     "commander",
+     "Let's both stand."
+    ],
+    [
+     "fidelia",
+     "Then hear my vow, standing as your equal: I will guard your life and your heart."
+    ],
+    [
+     "fidelia",
+     "Not because it's my duty. Because I love you."
+    ]
+   ]
+  }
+ ],
+ "lucidria": [
+  {
+   "title": "The Wall Speaks",
+   "lines": [
+    [
+     "lucidria",
+     "..."
+    ],
+    [
+     "commander",
+     "Do you ever take a break?"
+    ],
+    [
+     "lucidria",
+     "Walls don't rest."
+    ],
+    [
+     "commander",
+     "You're not a wall. You're Lucidria."
+    ],
+    [
+     "lucidria",
+     "...No one has said that in a thousand years."
+    ]
+   ]
+  },
+  {
+   "title": "Flowers on Stone",
+   "lines": [
+    [
+     "lucidria",
+     "I found a flower growing between the stones of the old fort."
+    ],
+    [
+     "commander",
+     "It's beautiful."
+    ],
+    [
+     "lucidria",
+     "I thought of you. Something soft, surviving in a hard place."
+    ],
+    [
+     "lucidria",
+     "...Take it."
+    ]
+   ]
+  },
+  {
+   "title": "Unbreakable",
+   "lines": [
+    [
+     "lucidria",
+     "I have guarded ruins for ages. Ruins don't need guarding."
+    ],
+    [
+     "lucidria",
+     "But you do. And I want to."
+    ],
+    [
+     "commander",
+     "Then guard me. And let me guard you too."
+    ],
+    [
+     "lucidria",
+     "...An unusual arrangement. I accept."
+    ]
+   ]
+  }
+ ],
+ "eurnipha": [
+  {
+   "title": "Warm Hands",
+   "lines": [
+    [
+     "eurnipha",
+     "Come here, little one. You look cold."
+    ],
+    [
+     "commander",
+     "I'm the Commander, you know."
+    ],
+    [
+     "eurnipha",
+     "And I'm older than this world. Let me spoil you a bit."
+    ]
+   ]
+  },
+  {
+   "title": "Hunger of the Void",
+   "lines": [
+    [
+     "eurnipha",
+     "The void inside me is always hungry. Always empty."
+    ],
+    [
+     "commander",
+     "Is it still empty now?"
+    ],
+    [
+     "eurnipha",
+     "...No. When you're near, it's quiet. Full, even."
+    ],
+    [
+     "eurnipha",
+     "Isn't that strange?"
+    ]
+   ]
+  },
+  {
+   "title": "Embrace",
+   "lines": [
+    [
+     "eurnipha",
+     "I've devoured stars. Kingdoms. Gods."
+    ],
+    [
+     "eurnipha",
+     "But I only want to hold you, gently."
+    ],
+    [
+     "commander",
+     "Then hold me."
+    ],
+    [
+     "eurnipha",
+     "...Ah. So this is what being full of warmth feels like. Don't let go."
+    ]
+   ]
+  }
+ ],
+ "rumi": [
+  {
+   "title": "Exorcist's Invoice",
+   "lines": [
+    [
+     "rumi",
+     "Here's your bill for this month's exorcisms!"
+    ],
+    [
+     "commander",
+     "This is... very expensive."
+    ],
+    [
+     "rumi",
+     "Hehe~ but for you there's a discount. 0.1%!"
+    ],
+    [
+     "commander",
+     "So generous."
+    ]
+   ]
+  },
+  {
+   "title": "Haunted Heart",
+   "lines": [
+    [
+     "rumi",
+     "I think I'm possessed. My heart beats weird around you."
+    ],
+    [
+     "commander",
+     "Should I call an exorcist?"
+    ],
+    [
+     "rumi",
+     "I AM the exorcist! And... I don't want this one gone."
+    ]
+   ]
+  },
+  {
+   "title": "Free of Charge",
+   "lines": [
+    [
+     "rumi",
+     "I've decided! From today, all services for you are free."
+    ],
+    [
+     "commander",
+     "Why?"
+    ],
+    [
+     "rumi",
+     "Because... you can't put a price on the person you love! There, I said it!"
+    ],
+    [
+     "rumi",
+     "Now give me a hug as payment. That's the only fee!"
+    ]
+   ]
+  }
+ ],
+ "mora": [
+  {
+   "title": "Stopped Clock",
+   "lines": [
+    [
+     "mora",
+     "Do you hear that? The clock tower stopped."
+    ],
+    [
+     "commander",
+     "Did you do it?"
+    ],
+    [
+     "mora",
+     "Just for a moment. I wanted this sunset to last a little longer with you."
+    ]
+   ]
+  },
+  {
+   "title": "Sister's Diary",
+   "lines": [
+    [
+     "mora",
+     "I keep a diary of every timeline I've seen."
+    ],
+    [
+     "commander",
+     "Am I in it?"
+    ],
+    [
+     "mora",
+     "In every single one. In some you're a farmer, in some a king."
+    ],
+    [
+     "mora",
+     "In all of them, I fall for you."
+    ]
+   ]
+  },
+  {
+   "title": "Eternity's Answer",
+   "lines": [
+    [
+     "mora",
+     "I can see the end of time. It's quiet and cold."
+    ],
+    [
+     "mora",
+     "But this moment, with you, is the warmest point in all of eternity."
+    ],
+    [
+     "commander",
+     "Then let's make more moments like this."
+    ],
+    [
+     "mora",
+     "Yes. Let's fill eternity with them, one by one."
+    ]
+   ]
+  }
+ ],
+ "abadonia": [
+  {
+   "title": "The Lion's Stable",
+   "lines": [
+    [
+     "abadonia",
+     "Do not approach my lion carelessly. He has eaten knights."
+    ],
+    [
+     "commander",
+     "He's purring at me."
+    ],
+    [
+     "abadonia",
+     "...Traitor. He has never purred for anyone but me."
+    ],
+    [
+     "abadonia",
+     "Perhaps he senses what I sense. Hmph."
+    ]
+   ]
+  },
+  {
+   "title": "A Queen's Armor",
+   "lines": [
+    [
+     "abadonia",
+     "Help me remove this armor. The clasp is stuck."
+    ],
+    [
+     "commander",
+     "It's heavy."
+    ],
+    [
+     "abadonia",
+     "A queen carries the weight of her people. Every day."
+    ],
+    [
+     "commander",
+     "Then let me carry some of it."
+    ],
+    [
+     "abadonia",
+     "...You say the most foolish, wonderful things."
+    ]
+   ]
+  },
+  {
+   "title": "Crown and Oath",
+   "lines": [
+    [
+     "abadonia",
+     "I have ruled the abyss for an age. I swore never to bow."
+    ],
+    [
+     "abadonia",
+     "So I will not bow. I will offer my hand instead."
+    ],
+    [
+     "commander",
+     "I'll take it."
+    ],
+    [
+     "abadonia",
+     "Then from today, my kingdom has two rulers. Do not disappoint me, my consort."
+    ]
+   ]
+  }
+ ],
+ "aqua": [
+  {
+   "title": "Spilled Water",
+   "lines": [
+    [
+     "aqua",
+     "Ah! I spilled the holy water on your map..."
+    ],
+    [
+     "commander",
+     "It's okay, it'll dry."
+    ],
+    [
+     "aqua",
+     "You're too kind! Here, have a drink to make up for it!"
+    ],
+    [
+     "commander",
+     "...It tastes sweet."
+    ],
+    [
+     "aqua",
+     "That's my blessing! Ehehe."
+    ]
+   ]
+  },
+  {
+   "title": "Rain Dance",
+   "lines": [
+    [
+     "aqua",
+     "It's raining! Come dance with me!"
+    ],
+    [
+     "commander",
+     "We'll get soaked."
+    ],
+    [
+     "aqua",
+     "That's the fun part! Water is life, and you're... um... my life?"
+    ],
+    [
+     "aqua",
+     "W-wait, forget I said that!"
+    ]
+   ]
+  },
+  {
+   "title": "The Bottomless Chalice",
+   "lines": [
+    [
+     "aqua",
+     "They say my chalice never runs dry. But my heart did, for a long time."
+    ],
+    [
+     "aqua",
+     "Then you came, and it overflowed."
+    ],
+    [
+     "commander",
+     "I'm glad."
+    ],
+    [
+     "aqua",
+     "Let me fill your cup for the rest of our lives, okay?"
+    ]
+   ]
+  }
+ ],
+ "atalanta": [
+  {
+   "title": "The Race",
+   "lines": [
+    [
+     "atalanta",
+     "Race me to the tree! Loser buys dinner!"
+    ],
+    [
+     "commander",
+     "You're made of lightning. That's unfair."
+    ],
+    [
+     "atalanta",
+     "Fine, I'll give you a ten-second head start! ...Go! ...Caught you!"
+    ],
+    [
+     "commander",
+     "I'm buying dinner, aren't I?"
+    ]
+   ]
+  },
+  {
+   "title": "Static",
+   "lines": [
+    [
+     "atalanta",
+     "Ouch! Sorry, I shocked you again."
+    ],
+    [
+     "commander",
+     "It's fine. It's kind of nice."
+    ],
+    [
+     "atalanta",
+     "Nice? Weirdo! ...My lightning only sparks like that around you, you know."
+    ]
+   ]
+  },
+  {
+   "title": "Standing Still",
+   "lines": [
+    [
+     "atalanta",
+     "I've never stopped running. Not once, my whole life."
+    ],
+    [
+     "atalanta",
+     "But right now... I just want to stand still. Here, with you."
+    ],
+    [
+     "commander",
+     "Then stay."
+    ],
+    [
+     "atalanta",
+     "Okay. For you, I'll be the slowest girl in the world."
+    ]
+   ]
+  }
+ ],
+ "kali": [
+  {
+   "title": "Counting Swords",
+   "lines": [
+    [
+     "kali",
+     "Ninety-eight, ninety-nine... one is missing."
+    ],
+    [
+     "commander",
+     "This one? I found it by the river."
+    ],
+    [
+     "kali",
+     "...Thank you. That sword was my mother's."
+    ],
+    [
+     "kali",
+     "You carried it back all this way? You are a strange person."
+    ]
+   ]
+  },
+  {
+   "title": "Lesson of the Blade",
+   "lines": [
+    [
+     "kali",
+     "Hold the sword like this. Gently. Like holding a bird."
+    ],
+    [
+     "commander",
+     "Like this?"
+    ],
+    [
+     "kali",
+     "...Yes. Your hands are warm. Don't let go yet."
+    ]
+   ]
+  },
+  {
+   "title": "The Hundred and First",
+   "lines": [
+    [
+     "kali",
+     "A hundred blades, and I trusted none of them more than my own two hands."
+    ],
+    [
+     "kali",
+     "Now I have a hundred and one. You are my newest blade."
+    ],
+    [
+     "commander",
+     "And your most loyal one."
+    ],
+    [
+     "kali",
+     "Then let us never be sheathed apart."
+    ]
+   ]
+  }
+ ],
+ "zennyo": [
+  {
+   "title": "Dragon Daycare",
+   "lines": [
+    [
+     "zennyo",
+     "Can you watch my little dragons for an hour?"
+    ],
+    [
+     "commander",
+     "Sure. How hard can it be?"
+    ],
+    [
+     "zennyo",
+     "...Why is the tent on fire?"
+    ],
+    [
+     "commander",
+     "They wanted to play."
+    ],
+    [
+     "zennyo",
+     "Fufu. They really do like you."
+    ]
+   ]
+  },
+  {
+   "title": "Princess Lessons",
+   "lines": [
+    [
+     "zennyo",
+     "Father taught me to rule with fire and fear."
+    ],
+    [
+     "commander",
+     "And what do you think?"
+    ],
+    [
+     "zennyo",
+     "I think... I'd rather rule with warmth. Like the way you lead us."
+    ]
+   ]
+  },
+  {
+   "title": "Dragon's Promise",
+   "lines": [
+    [
+     "zennyo",
+     "Dragons mate for life. Did you know that?"
+    ],
+    [
+     "commander",
+     "I didn't."
+    ],
+    [
+     "zennyo",
+     "Now you do. ...Don't make me say it more plainly, Commander."
+    ],
+    [
+     "zennyo",
+     "My dragons already call you 'papa', you know."
+    ]
+   ]
+  }
+ ],
+ "rubby": [
+  {
+   "title": "Bomb Friends",
+   "lines": [
+    [
+     "rubby",
+     "Meet my friends. This is Boom, and this is Kaboom."
+    ],
+    [
+     "commander",
+     "They're... smiling."
+    ],
+    [
+     "rubby",
+     "They're happy to meet you. Don't worry, they only explode when I ask nicely."
+    ]
+   ]
+  },
+  {
+   "title": "Quiet Night",
+   "lines": [
+    [
+     "rubby",
+     "Everyone thinks I love loud things. Explosions, fireworks..."
+    ],
+    [
+     "rubby",
+     "But I love quiet nights like this. With you."
+    ],
+    [
+     "commander",
+     "Me too."
+    ]
+   ]
+  },
+  {
+   "title": "The Biggest Firework",
+   "lines": [
+    [
+     "rubby",
+     "I saved my biggest firework for a special day."
+    ],
+    [
+     "commander",
+     "What day is that?"
+    ],
+    [
+     "rubby",
+     "Today. Look up!"
+    ],
+    [
+     "rubby",
+     "...It spells your name. Do you like it?"
+    ]
+   ]
+  }
+ ],
+ "schylua": [
+  {
+   "title": "Frozen Breath",
+   "lines": [
+    [
+     "schylua",
+     "Don't stand so close. You'll catch a cold."
+    ],
+    [
+     "commander",
+     "I'll risk it."
+    ],
+    [
+     "schylua",
+     "...Foolish. Here, take my scarf. It's the only warm thing I own."
+    ]
+   ]
+  },
+  {
+   "title": "The Reaper's List",
+   "lines": [
+    [
+     "schylua",
+     "Death gave me a list of souls to reap."
+    ],
+    [
+     "commander",
+     "Am I on it?"
+    ],
+    [
+     "schylua",
+     "You were. I tore that page out."
+    ]
+   ]
+  },
+  {
+   "title": "Thaw",
+   "lines": [
+    [
+     "schylua",
+     "My body is made of ice. Holding me will hurt."
+    ],
+    [
+     "commander",
+     "I don't care."
+    ],
+    [
+     "schylua",
+     "...Strange. Your arms are warm, and I'm not melting."
+    ],
+    [
+     "schylua",
+     "Maybe I was waiting for someone like you to thaw me."
+    ]
+   ]
+  }
+ ],
+ "vexira": [
+  {
+   "title": "Dream Visit",
+   "lines": [
+    [
+     "vexira",
+     "Ara~ Did you enjoy my visit in your dream last night?"
+    ],
+    [
+     "commander",
+     "I don't remember anything."
+    ],
+    [
+     "vexira",
+     "Fufu, that's how it should be. Some secrets are sweeter kept."
+    ]
+   ]
+  },
+  {
+   "title": "Imp Trouble",
+   "lines": [
+    [
+     "vexira",
+     "My imps stole your boots again. Sorry~"
+    ],
+    [
+     "commander",
+     "Why do they keep doing that?"
+    ],
+    [
+     "vexira",
+     "They want you to stay longer. ...They take after me."
+    ]
+   ]
+  },
+  {
+   "title": "Real Feelings",
+   "lines": [
+    [
+     "vexira",
+     "A succubus lives on desire. Love is supposed to be a game."
+    ],
+    [
+     "vexira",
+     "So why does this hurt so much when you're away?"
+    ],
+    [
+     "commander",
+     "Maybe it's not a game anymore."
+    ],
+    [
+     "vexira",
+     "...Then I lose. Happily."
+    ]
+   ]
+  }
+ ],
+ "siv": [
+  {
+   "title": "Hammer Practice",
+   "lines": [
+    [
+     "siv",
+     "Watch me! Hyaa!"
+    ],
+    [
+     "commander",
+     "You hit the target!"
+    ],
+    [
+     "siv",
+     "I did?! I always miss! It must be because you're watching!"
+    ]
+   ]
+  },
+  {
+   "title": "Too Heavy",
+   "lines": [
+    [
+     "siv",
+     "This hammer is too heavy for me. Everyone says so."
+    ],
+    [
+     "commander",
+     "But you carry it every day."
+    ],
+    [
+     "siv",
+     "...Because I want to protect people. Like you."
+    ]
+   ]
+  },
+  {
+   "title": "Lightning Strikes Twice",
+   "lines": [
+    [
+     "siv",
+     "They say lightning never strikes the same place twice."
+    ],
+    [
+     "siv",
+     "But my heart keeps getting struck. Every time I see you."
+    ],
+    [
+     "commander",
+     "That's a nice way to say it."
+    ],
+    [
+     "siv",
+     "Eh?! Did I say that out loud?!"
+    ]
+   ]
+  }
+ ],
+ "sven": [
+  {
+   "title": "Campfire",
+   "lines": [
+    [
+     "sven",
+     "..."
+    ],
+    [
+     "commander",
+     "You don't talk much."
+    ],
+    [
+     "sven",
+     "Words are cheap. Fire is warm. Sit."
+    ],
+    [
+     "commander",
+     "Thanks."
+    ],
+    [
+     "sven",
+     "...You're welcome."
+    ]
+   ]
+  },
+  {
+   "title": "The Broken Hilt",
+   "lines": [
+    [
+     "sven",
+     "This sword belonged to my old master. He died protecting me."
+    ],
+    [
+     "commander",
+     "I'm sorry."
+    ],
+    [
+     "sven",
+     "Don't be. He'd be glad I found someone worth protecting too."
+    ]
+   ]
+  },
+  {
+   "title": "Wanderer's Rest",
+   "lines": [
+    [
+     "sven",
+     "I've walked across six kingdoms looking for a place to belong."
+    ],
+    [
+     "sven",
+     "I think I can stop walking now."
+    ],
+    [
+     "commander",
+     "Welcome home, Sven."
+    ],
+    [
+     "sven",
+     "...Home. I like the sound of that."
+    ]
+   ]
+  }
+ ],
+ "angela": [
+  {
+   "title": "Feathers on the Floor",
+   "lines": [
+    [
+     "angela",
+     "Don't laugh. I'm molting. Angels molt."
+    ],
+    [
+     "commander",
+     "There are feathers everywhere."
+    ],
+    [
+     "angela",
+     "...Keep one. It's lucky. Probably."
+    ]
+   ]
+  },
+  {
+   "title": "The Volunteer",
+   "lines": [
+    [
+     "angela",
+     "Heaven asked for a guardian. Nobody else raised their hand."
+    ],
+    [
+     "commander",
+     "So you did?"
+    ],
+    [
+     "angela",
+     "I raised both hands. And my wings. ...I wanted it to be me."
+    ]
+   ]
+  },
+  {
+   "title": "Golden Wings",
+   "lines": [
+    [
+     "angela",
+     "My wings turned gold today. That only happens when an angel finds where she belongs."
+    ],
+    [
+     "commander",
+     "And where is that?"
+    ],
+    [
+     "angela",
+     "Right here. Beside you. Don't make me say it twice."
+    ]
+   ]
+  }
+ ],
+ "kara": [
+  {
+   "title": "The Reaper's Tea",
+   "lines": [
+    [
+     "kara",
+     "Even Death takes tea breaks. Sit."
+    ],
+    [
+     "commander",
+     "Is this... safe?"
+    ],
+    [
+     "kara",
+     "Perfectly. I only reap people I dislike. Drink up."
+    ]
+   ]
+  },
+  {
+   "title": "Phoenix Feathers",
+   "lines": [
+    [
+     "kara",
+     "The birds follow me because I keep bringing them back. Every time they burn, they rise."
+    ],
+    [
+     "commander",
+     "Like you."
+    ],
+    [
+     "kara",
+     "...You noticed. Hm. Nobody notices."
+    ]
+   ]
+  },
+  {
+   "title": "A Soul Worth Keeping",
+   "lines": [
+    [
+     "kara",
+     "I've seen every soul's ending. Yours is the only one I refuse to look at."
+    ],
+    [
+     "commander",
+     "Why?"
+    ],
+    [
+     "kara",
+     "Because I want to be surprised. I want to spend all of it with you."
+    ]
+   ]
+  }
+ ],
+ "mei": [
+  {
+   "title": "The Sword Rack",
+   "lines": [
+    [
+     "mei",
+     "Every blade on this rack has a name. This one is 'Breakfast'."
+    ],
+    [
+     "commander",
+     "Why Breakfast?"
+    ],
+    [
+     "mei",
+     "Because I cut toast with it. Don't judge me."
+    ]
+   ]
+  },
+  {
+   "title": "About the Ears",
+   "lines": [
+    [
+     "mei",
+     "Everyone asks if they're real. They are. They twitch when I'm nervous."
+    ],
+    [
+     "commander",
+     "They're twitching now."
+    ],
+    [
+     "mei",
+     "...Shut up. Look at the sword."
+    ]
+   ]
+  },
+  {
+   "title": "Red Moon",
+   "lines": [
+    [
+     "mei",
+     "My blade burns red when I fight for someone I love."
+    ],
+    [
+     "commander",
+     "It's glowing right now."
+    ],
+    [
+     "mei",
+     "...I know. It's been glowing since you walked in. Idiot."
+    ]
+   ]
+  }
+ ],
+ "ninger": [
+  {
+   "title": "Counting Coins",
+   "lines": [
+    [
+     "ninger",
+     "Nine thousand nine hundred ninety-nine... oh! You made me lose count!"
+    ],
+    [
+     "commander",
+     "Sorry."
+    ],
+    [
+     "ninger",
+     "Then you owe me one coin. Or... one smile. Smiles are worth more."
+    ]
+   ]
+  },
+  {
+   "title": "The Treasure Chest",
+   "lines": [
+    [
+     "ninger",
+     "This chest holds my most precious treasure."
+    ],
+    [
+     "commander",
+     "Gold?"
+    ],
+    [
+     "ninger",
+     "A pressed flower you gave me. ...Don't laugh! It's priceless!"
+    ]
+   ]
+  },
+  {
+   "title": "A Thousand Coins",
+   "lines": [
+    [
+     "ninger",
+     "I'd trade every coin I own for one more day like today."
+    ],
+    [
+     "commander",
+     "You don't have to trade anything."
+    ],
+    [
+     "ninger",
+     "...Then I'm the richest princess in the world."
+    ]
+   ]
+  }
+ ],
+ "spimei": [
+  {
+   "title": "Maintenance Day",
+   "lines": [
+    [
+     "spimei",
+     "My drones need oiling. Hold this wrench. No, the other end."
+    ],
+    [
+     "commander",
+     "Like this?"
+    ],
+    [
+     "spimei",
+     "Efficient. You'd make a good engineer. ...Or a good partner."
+    ]
+   ]
+  },
+  {
+   "title": "Error: Heart",
+   "lines": [
+    [
+     "spimei",
+     "My diagnostics show an anomaly. Heart rate elevated near you."
+    ],
+    [
+     "commander",
+     "Is that bad?"
+    ],
+    [
+     "spimei",
+     "Unknown. I've decided not to fix it."
+    ]
+   ]
+  },
+  {
+   "title": "Scarlet Wings",
+   "lines": [
+    [
+     "spimei",
+     "I built these wings to fly away from everyone."
+    ],
+    [
+     "commander",
+     "And now?"
+    ],
+    [
+     "spimei",
+     "Now I use them to fly back to you. Faster than any drone."
+    ]
+   ]
+  }
+ ],
+ "luby": [
+  {
+   "title": "Nap Thief",
+   "lines": [
+    [
+     "luby",
+     "That's my sunbeam. I was here first."
+    ],
+    [
+     "commander",
+     "You were asleep on my desk."
+    ],
+    [
+     "luby",
+     "Exactly. First come, first nap."
+    ]
+   ]
+  },
+  {
+   "title": "The Mecha Cat",
+   "lines": [
+    [
+     "luby",
+     "I built him from scrap. He purrs. Badly. It sounds like a blender."
+    ],
+    [
+     "commander",
+     "He's adorable."
+    ],
+    [
+     "luby",
+     "...He likes you. He doesn't like anyone. Hmph."
+    ]
+   ]
+  },
+  {
+   "title": "Nine Lives",
+   "lines": [
+    [
+     "luby",
+     "Cats have nine lives. I've used, like, six."
+    ],
+    [
+     "commander",
+     "Then spend the rest with me."
+    ],
+    [
+     "luby",
+     "...Nya. Okay. All three. Don't waste them."
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1805 @@
+{
+ "heroes": {
+  "cthollia": {
+   "id": "cthollia",
+   "display_name": "Cthollia",
+   "title": "ABYSS TENTACLE SOVEREIGN",
+   "element": "WATER",
+   "class": "WARLOCK",
+   "type": "AOE",
+   "theme_color": "#e05688",
+   "portrait": "res://art/characters/heroes/cthollia/cthollia_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/cthollia/char/cthollia_char_stage1.png",
+     "interactions": [
+      "res://art/characters/heroes/cthollia/char/cthollia_char_stage1_a.png"
+     ]
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/cthollia/char/cthollia_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/cthollia/char/cthollia_char_stage2_a.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/cthollia/char/cthollia_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/cthollia/char/cthollia_char_evo1_a.png",
+      "res://art/characters/heroes/cthollia/char/cthollia_char_evo1_b.png",
+      "res://art/characters/heroes/cthollia/char/cthollia_char_evo1_c.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/cthollia/char/cthollia_char_evo3.png",
+     "interactions": [
+      "res://art/characters/heroes/cthollia/char/cthollia_char_evo3_a.png",
+      "res://art/characters/heroes/cthollia/char/cthollia_char_evo3_b.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/cthollia/sprite/cthollia_sprite_stage1.png",
+    "res://art/characters/heroes/cthollia/sprite/cthollia_sprite_evo2.png"
+   ]
+  },
+  "eropatra": {
+   "id": "eropatra",
+   "display_name": "Eropatra",
+   "title": "DESERT SERPENT EMPRESS",
+   "element": "FIRE",
+   "class": "ASSASSIN",
+   "type": "BURST",
+   "theme_color": "#e67e22",
+   "portrait": "res://art/characters/heroes/eropatra/eropatra_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_stage1.png",
+    "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_evo1.png"
+   ]
+  },
+  "eurnipha": {
+   "id": "eurnipha",
+   "display_name": "Eurnipha",
+   "title": "VOID ABYSSAL MATRON",
+   "element": "DARK",
+   "class": "WARRIOR",
+   "type": "DRAIN",
+   "theme_color": "#8e44ad",
+   "portrait": "res://art/characters/heroes/eurnipha/eurnipha_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/eurnipha/char/eurnipha_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/eurnipha/char/eurnipha_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/eurnipha/sprite/eurnipha_sprite_stage1.png",
+    "res://art/characters/heroes/eurnipha/sprite/eurnipha_sprite_evo1.png"
+   ]
+  },
+  "fidelia": {
+   "id": "fidelia",
+   "display_name": "Fidelia",
+   "title": "VALKYRIE TIDAL SHIELD",
+   "element": "WATER",
+   "class": "PALADIN",
+   "type": "DEFENSE",
+   "theme_color": "#3498db",
+   "portrait": "res://art/characters/heroes/fidelia/fidelia_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/fidelia/char/fidelia_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/fidelia/char/fidelia_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/fidelia/char/fidelia_char_stage3.png",
+     "interactions": [
+      "res://art/characters/heroes/fidelia/char/fidelia_char_stage3_a.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/fidelia/char/fidelia_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/fidelia/char/fidelia_char_evo1_a.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/fidelia/char/fidelia_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/fidelia/char/fidelia_char_evo2_a.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/fidelia/sprite/fidelia_sprite_stage1.png",
+    "res://art/characters/heroes/fidelia/sprite/fidelia_sprite_evo1.png"
+   ]
+  },
+  "furu": {
+   "id": "furu",
+   "display_name": "Furu",
+   "title": "CELESTIAL ARCH-PRIESTESS",
+   "element": "LIGHT",
+   "class": "HEALER",
+   "type": "SUPPORT",
+   "theme_color": "#f1c40f",
+   "portrait": "res://art/characters/heroes/furu/furu_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/furu/char/furu_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/furu/char/furu_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/furu/char/furu_char_evo1_a.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/furu/char/furu_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/furu/char/furu_char_evo2_a.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/furu/sprite/furu_sprite_stage1.png",
+    "res://art/characters/heroes/furu/sprite/furu_sprite_evo2_a.png",
+    "res://art/characters/heroes/furu/sprite/furu_sprite_evo2_b.png",
+    "res://art/characters/heroes/furu/sprite/furu_sprite_stage2.png"
+   ]
+  },
+  "gemora": {
+   "id": "gemora",
+   "display_name": "Gemora",
+   "title": "COSMIC VOID ENVOY",
+   "element": "LIGHTNING",
+   "class": "RANGER",
+   "type": "CRIT",
+   "theme_color": "#9b59b6",
+   "portrait": "res://art/characters/heroes/gemora/gemora_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/gemora/char/gemora_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/gemora/char/gemora_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/gemora/char/gemora_char_stage3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/gemora/sprite/gemora_sprite_stage1.png",
+    "res://art/characters/heroes/gemora/sprite/gemora_sprite_stage2.png",
+    "res://art/characters/heroes/gemora/sprite/gemora_sprite_evo1.png"
+   ]
+  },
+  "glytta": {
+   "id": "glytta",
+   "display_name": "Glytta",
+   "title": "CRYSTAL BLADE DANCER",
+   "element": "WIND",
+   "class": "WARRIOR",
+   "type": "SPEED",
+   "theme_color": "#2ecc71",
+   "portrait": "res://art/characters/heroes/glytta/glytta_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/glytta/char/glytta_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/glytta/char/glytta_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/glytta/char/glytta_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/glytta/char/glytta_char_evo1_a.png",
+      "res://art/characters/heroes/glytta/char/glytta_char_evo1_b.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/glytta/char/glytta_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/glytta/char/glytta_char_evo2_a.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/glytta/sprite/glytta_sprite_stage1.png",
+    "res://art/characters/heroes/glytta/sprite/glytta_sprite_stage2.png",
+    "res://art/characters/heroes/glytta/sprite/glytta_sprite_evo1_a.png",
+    "res://art/characters/heroes/glytta/sprite/glytta_sprite_evo1_b.png",
+    "res://art/characters/heroes/glytta/sprite/glytta_sprite_evo2.png"
+   ]
+  },
+  "hyeonxa": {
+   "id": "hyeonxa",
+   "display_name": "Hyeonxa",
+   "title": "NINE-HEAD HYDRA MATRIARCH",
+   "element": "WATER",
+   "class": "WARLOCK",
+   "type": "DOT",
+   "theme_color": "#1abc9c",
+   "portrait": "res://art/characters/heroes/hyeonxa/hyeonxa_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo1_a.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo2_a.png",
+      "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo2_b.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo3.png",
+     "interactions": [
+      "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo3_a.png",
+      "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo3_b.png"
+     ]
+    },
+    "special": {
+     "base": "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/hyeonxa/sprite/hyeonxa_sprite_stage1.png",
+    "res://art/characters/heroes/hyeonxa/sprite/hyeonxa_sprite_evo1.png"
+   ]
+  },
+  "lucidria": {
+   "id": "lucidria",
+   "display_name": "Lucidria",
+   "title": "ANCIENT MACE GUARDIAN",
+   "element": "EARTH",
+   "class": "TANK",
+   "type": "STUN",
+   "theme_color": "#d35400",
+   "portrait": "res://art/characters/heroes/lucidria/lucidria_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/lucidria/char/lucidria_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/lucidria/char/lucidria_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/lucidria/char/lucidria_char_stage2_a.png"
+     ]
+    },
+    "evo1": {
+     "base": "",
+     "interactions": [
+      "res://art/characters/heroes/lucidria/char/lucidria_char_evo1_a.png",
+      "res://art/characters/heroes/lucidria/char/lucidria_char_evo1_b.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/lucidria/char/lucidria_char_evo2.png",
+     "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/lucidria/char/lucidria_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/lucidria/sprite/lucidria_sprite_stage1.png"
+   ]
+  },
+  "lumeira": {
+   "id": "lumeira",
+   "display_name": "Lumeira",
+   "title": "ASTRAL BUTTERFLY SAGE",
+   "element": "WIND",
+   "class": "MAGE",
+   "type": "BUFFER",
+   "theme_color": "#16a085",
+   "portrait": "res://art/characters/heroes/lumeira/lumeira_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/lumeira/char/lumeira_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/lumeira/char/lumeira_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/lumeira/char/lumeira_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/lumeira/char/lumeira_char_evo3.png",
+     "interactions": []
+    },
+    "evo4": {
+     "base": "res://art/characters/heroes/lumeira/char/lumeira_char_evo4.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/lumeira/sprite/lumeira_sprite_stage1.png",
+    "res://art/characters/heroes/lumeira/sprite/lumeira_sprite_evo1.png"
+   ]
+  },
+  "micca": {
+   "id": "micca",
+   "display_name": "Micca Pandora",
+   "title": "CHAOS BOX SOVEREIGN",
+   "element": "CHAOS",
+   "class": "MAGE",
+   "type": "BURST",
+   "theme_color": "#e84393",
+   "portrait": "res://art/characters/heroes/micca/micca_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/micca/char/micca_char_stage1.png",
+     "interactions": [
+      "res://art/characters/heroes/micca/char/micca_char_stage1_a.png",
+      "res://art/characters/heroes/micca/char/micca_char_stage1_a.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/micca/char/micca_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/micca/char/micca_char_evo1_b.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/micca/char/micca_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/micca/char/micca_char_evo2_a.png"
+     ]
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/micca/char/micca_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/micca/char/micca_char_stage2_a.png",
+      "res://art/characters/heroes/micca/char/micca_char_stage2_b.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/micca/sprite/micca_sprite_evo1.png",
+    "res://art/characters/heroes/micca/sprite/micca_sprite_evo2.png",
+    "res://art/characters/heroes/micca/sprite/micca_sprite_stage1.png",
+    "res://art/characters/heroes/micca/sprite/micca_sprite_special.png"
+   ]
+  },
+  "mora": {
+   "id": "mora",
+   "display_name": "Mora",
+   "title": "CHRONOS ASTRAL SISTER",
+   "element": "LIGHT",
+   "class": "MAGE",
+   "type": "AOE",
+   "theme_color": "#f39c12",
+   "portrait": "res://art/characters/heroes/mora/mora_portrait.png",
+   "char_states": {
+    "stage2": {
+     "base": "res://art/characters/heroes/mora/char/mora_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/mora/char/mora_char_stage2_a.png"
+     ]
+    },
+    "stage1": {
+     "base": "res://art/characters/heroes/mora/char/mora_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/mora/char/mora_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/mora/char/mora_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": []
+  },
+  "rumi": {
+   "id": "rumi",
+   "display_name": "Rumi",
+   "title": "CRIMSON HORN EXORCIST",
+   "element": "DARK",
+   "class": "MAGE",
+   "type": "EXECUTE",
+   "theme_color": "#c0392b",
+   "portrait": "res://art/characters/heroes/rumi/rumi_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/rumi/char/rumi_char_stage1.png",
+     "interactions": [
+      "res://art/characters/heroes/rumi/char/rumi_char_stage1_a.png",
+      "res://art/characters/heroes/rumi/char/rumi_char_stage1_b.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/rumi/char/rumi_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/rumi/sprite/rumi_sprite_stage1.png",
+    "res://art/characters/heroes/rumi/sprite/rumi_sprite_evo1.png"
+   ]
+  },
+  "scylla": {
+   "id": "scylla",
+   "display_name": "Scylla",
+   "title": "KRAKEN ABYSS QUEEN",
+   "element": "WATER",
+   "class": "ASSASSIN",
+   "type": "BURST",
+   "theme_color": "#2980b9",
+   "portrait": "res://art/characters/heroes/scylla/scylla_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/scylla/char/scylla_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/scylla/char/scylla_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/scylla/char/scylla_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/scylla/char/scylla_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/scylla/char/scylla_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/scylla/sprite/scylla_sprite_stage1.png",
+    "res://art/characters/heroes/scylla/sprite/scylla_sprite_evo1.png"
+   ]
+  },
+  "shina": {
+   "id": "shina",
+   "display_name": "Shina",
+   "title": "DRAGONIC FLAME MONARCH",
+   "element": "FIRE",
+   "class": "WARRIOR",
+   "type": "AOE",
+   "theme_color": "#e74c3c",
+   "portrait": "res://art/characters/heroes/shina/shina_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_stage3.png",
+     "interactions": []
+    },
+    "stage4": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_stage4.png",
+     "interactions": []
+    },
+    "stage5": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_stage5.png",
+     "interactions": []
+    },
+    "stage6": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_stage6.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_evo3.png",
+     "interactions": []
+    },
+    "evo4": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_evo4.png",
+     "interactions": []
+    },
+    "evo5": {
+     "base": "res://art/characters/heroes/shina/char/shina_char_evo5.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/shina/sprite/shina_sprite_stage1.png",
+    "res://art/characters/heroes/shina/sprite/shina_sprite_evo1.png",
+    "res://art/characters/heroes/shina/sprite/shina_sprite_evo2.png"
+   ]
+  },
+  "valeria": {
+   "id": "valeria",
+   "display_name": "Valeria",
+   "title": "FROSTVALE EMPRESS",
+   "element": "ICE",
+   "class": "KNIGHT",
+   "type": "FREEZE",
+   "theme_color": "#74b9ff",
+   "portrait": "res://art/characters/heroes/valeria/valeria_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/valeria/char/valeria_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/valeria/char/valeria_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/valeria/char/valeria_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/valeria/sprite/valeria_sprite_stage1.png",
+    "res://art/characters/heroes/valeria/sprite/valeria_sprite_evo1.png"
+   ]
+  },
+  "xylia": {
+   "id": "xylia",
+   "display_name": "Xylia",
+   "title": "ARCH-DEMON ARCHITECT",
+   "element": "DARK",
+   "class": "WARLOCK",
+   "type": "BURST",
+   "theme_color": "#8854d0",
+   "portrait": "res://art/characters/heroes/xylia/xylia_portrait.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/xylia/char/xylia_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/xylia/char/xylia_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/xylia/char/xylia_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/xylia/char/xylia_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/xylia/char/xylia_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/xylia/char/xylia_char_evo3.png",
+     "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/xylia/char/xylia_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/xylia/sprite/xylia_sprite_stage1.png",
+    "res://art/characters/heroes/xylia/sprite/xylia_sprite_stage2.png",
+    "res://art/characters/heroes/xylia/sprite/xylia_sprite_evo1.png",
+    "res://art/characters/heroes/xylia/sprite/xylia_sprite_special.png"
+   ]
+  },
+  "abadonia": {
+   "id": "abadonia",
+   "display_name": "Abadonia",
+   "title": "ABYSSAL LION QUEEN",
+   "element": "DARK",
+   "class": "KNIGHT",
+   "type": "DEFENSE",
+   "theme_color": "#7b4bd6",
+   "portrait": "res://art/characters/heroes/abadonia/char/abadonia_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_evo3.png",
+     "interactions": []
+    },
+    "evo4": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_evo4.png",
+     "interactions": []
+    },
+    "evo5": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_evo5.png",
+     "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/abadonia/char/abadonia_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/abadonia/sprite/abadonia_sprite_stage1.png",
+    "res://art/characters/heroes/abadonia/sprite/abadonia_sprite_evo1.png",
+    "res://art/characters/heroes/abadonia/sprite/abadonia_sprite_evo2.png"
+   ]
+  },
+  "aqua": {
+   "id": "aqua",
+   "display_name": "Aqua",
+   "title": "CHALICE OF THE TIDES",
+   "element": "WATER",
+   "class": "HEALER",
+   "type": "SUPPORT",
+   "theme_color": "#2ec4b6",
+   "portrait": "res://art/characters/heroes/aqua/char/aqua_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/aqua/char/aqua_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/aqua/char/aqua_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/aqua/char/aqua_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/aqua/char/aqua_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/aqua/sprite/aqua_sprite_stage1.png",
+    "res://art/characters/heroes/aqua/sprite/aqua_sprite_evo1.png",
+    "res://art/characters/heroes/aqua/sprite/aqua_sprite_evo2.png"
+   ]
+  },
+  "atalanta": {
+   "id": "atalanta",
+   "display_name": "Atalanta",
+   "title": "THUNDERSTEP HUNTRESS",
+   "element": "LIGHTNING",
+   "class": "ASSASSIN",
+   "type": "BURST",
+   "theme_color": "#5aa9ff",
+   "portrait": "res://art/characters/heroes/atalanta/char/atalanta_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/atalanta/char/atalanta_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/atalanta/char/atalanta_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/atalanta/char/atalanta_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/atalanta/char/atalanta_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/atalanta/sprite/atalanta_sprite_stage1.png",
+    "res://art/characters/heroes/atalanta/sprite/atalanta_sprite_evo1.png",
+    "res://art/characters/heroes/atalanta/sprite/atalanta_sprite_evo2.png"
+   ]
+  },
+  "kali": {
+   "id": "kali",
+   "display_name": "Kali",
+   "title": "HUNDRED BLADE SAINT",
+   "element": "WIND",
+   "class": "WARRIOR",
+   "type": "AOE",
+   "theme_color": "#d9d2c3",
+   "portrait": "res://art/characters/heroes/kali/char/kali_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/kali/char/kali_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/kali/char/kali_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/kali/char/kali_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/kali/char/kali_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/kali/char/kali_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/kali/char/kali_char_evo3.png",
+     "interactions": []
+    },
+    "evo4": {
+     "base": "res://art/characters/heroes/kali/char/kali_char_evo4.png",
+     "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/kali/char/kali_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/kali/sprite/kali_sprite_stage1.png",
+    "res://art/characters/heroes/kali/sprite/kali_sprite_stage2.png",
+    "res://art/characters/heroes/kali/sprite/kali_sprite_stage3.png",
+    "res://art/characters/heroes/kali/sprite/kali_sprite_evo1.png",
+    "res://art/characters/heroes/kali/sprite/kali_sprite_evo2.png"
+   ]
+  },
+  "rubby": {
+   "id": "rubby",
+   "display_name": "Rubby",
+   "title": "BOMB BELLE",
+   "element": "FIRE",
+   "class": "MAGE",
+   "type": "AOE",
+   "theme_color": "#ff7043",
+   "portrait": "res://art/characters/heroes/rubby/char/rubby_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_stage3.png",
+     "interactions": []
+    },
+    "stage4": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_stage4.png",
+     "interactions": []
+    },
+    "stage5": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_stage5.png",
+     "interactions": []
+    },
+    "stage6": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_stage6.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_evo3.png",
+     "interactions": []
+    },
+    "evo4": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_evo4.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/rubby/sprite/rubby_sprite_stage1.png",
+    "res://art/characters/heroes/rubby/sprite/rubby_sprite_stage2.png",
+    "res://art/characters/heroes/rubby/sprite/rubby_sprite_stage3.png",
+    "res://art/characters/heroes/rubby/sprite/rubby_sprite_stage4.png",
+    "res://art/characters/heroes/rubby/sprite/rubby_sprite_evo1.png"
+   ]
+  },
+  "schylua": {
+   "id": "schylua",
+   "display_name": "Schylua",
+   "title": "FROST REAPER",
+   "element": "ICE",
+   "class": "WARRIOR",
+   "type": "FREEZE",
+   "theme_color": "#7fd6ff",
+   "portrait": "res://art/characters/heroes/schylua/char/schylua_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/schylua/char/schylua_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/schylua/char/schylua_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/schylua/char/schylua_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/schylua/char/schylua_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/schylua/sprite/schylua_sprite_stage1.png",
+    "res://art/characters/heroes/schylua/sprite/schylua_sprite_stage2.png",
+    "res://art/characters/heroes/schylua/sprite/schylua_sprite_evo1.png",
+    "res://art/characters/heroes/schylua/sprite/schylua_sprite_evo2.png"
+   ]
+  },
+  "siv": {
+   "id": "siv",
+   "display_name": "Siv",
+   "title": "THUNDER HAMMER MAIDEN",
+   "element": "LIGHTNING",
+   "class": "TANK",
+   "type": "STUN",
+   "theme_color": "#ff8fc7",
+   "portrait": "res://art/characters/heroes/siv/char/siv_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/siv/char/siv_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/siv/char/siv_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/siv/char/siv_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/siv/char/siv_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/siv/char/siv_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/siv/sprite/siv_sprite_stage1.png",
+    "res://art/characters/heroes/siv/sprite/siv_sprite_stage2.png",
+    "res://art/characters/heroes/siv/sprite/siv_sprite_evo1.png",
+    "res://art/characters/heroes/siv/sprite/siv_sprite_evo2.png"
+   ]
+  },
+  "vexira": {
+   "id": "vexira",
+   "display_name": "Vexira",
+   "title": "SUCCUBUS TEMPTRESS",
+   "element": "DARK",
+   "class": "WARLOCK",
+   "type": "DEBUFF",
+   "theme_color": "#e0457b",
+   "portrait": "res://art/characters/heroes/vexira/char/vexira_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/vexira/char/vexira_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/vexira/char/vexira_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/vexira/char/vexira_char_stage3.png",
+     "interactions": []
+    },
+    "stage4": {
+     "base": "res://art/characters/heroes/vexira/char/vexira_char_stage4.png",
+     "interactions": []
+    },
+    "stage5": {
+     "base": "res://art/characters/heroes/vexira/char/vexira_char_stage5.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/vexira/char/vexira_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/vexira/sprite/vexira_sprite_stage1.png",
+    "res://art/characters/heroes/vexira/sprite/vexira_sprite_evo1.png",
+    "res://art/characters/heroes/vexira/sprite/vexira_sprite_evo2.png"
+   ]
+  },
+  "zennyo": {
+   "id": "zennyo",
+   "display_name": "Zennyo Ryuo",
+   "title": "DRAGON KING'S DAUGHTER",
+   "element": "FIRE",
+   "class": "MAGE",
+   "type": "AOE",
+   "theme_color": "#c0392b",
+   "portrait": "res://art/characters/heroes/zennyo/char/zennyo_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_evo3.png",
+     "interactions": []
+    },
+    "evo4": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_evo4.png",
+     "interactions": []
+    },
+    "evo5": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_evo5.png",
+     "interactions": []
+    },
+    "evo6": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_evo6.png",
+     "interactions": []
+    },
+    "evo7": {
+     "base": "res://art/characters/heroes/zennyo/char/zennyo_char_evo7.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/zennyo/sprite/zennyo_sprite_stage1.png",
+    "res://art/characters/heroes/zennyo/sprite/zennyo_sprite_stage2.png",
+    "res://art/characters/heroes/zennyo/sprite/zennyo_sprite_evo1.png",
+    "res://art/characters/heroes/zennyo/sprite/zennyo_sprite_evo2.png"
+   ]
+  },
+  "sven": {
+   "id": "sven",
+   "display_name": "Sven",
+   "title": "GREATSWORD WANDERER",
+   "element": "EARTH",
+   "class": "WARRIOR",
+   "type": "AOE",
+   "theme_color": "#8d6e63",
+   "portrait": "res://art/characters/heroes/sven/char/sven_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_evo3.png",
+     "interactions": []
+    },
+    "evo4": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_evo4.png",
+     "interactions": []
+    },
+    "evo5": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_evo5.png",
+     "interactions": []
+    },
+    "evo6": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_evo6.png",
+     "interactions": []
+    },
+    "evo7": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_evo7.png",
+     "interactions": []
+    },
+    "evo8": {
+     "base": "res://art/characters/heroes/sven/char/sven_char_evo8.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/sven/sprite/sven_sprite_stage1.png",
+    "res://art/characters/heroes/sven/sprite/sven_sprite_stage2.png",
+    "res://art/characters/heroes/sven/sprite/sven_sprite_evo1.png",
+    "res://art/characters/heroes/sven/sprite/sven_sprite_evo2.png",
+    "res://art/characters/heroes/sven/sprite/sven_sprite_evo3.png"
+   ]
+  },
+  "angela": {
+   "id": "angela",
+   "display_name": "Angela",
+   "title": "SERAPHIC VALKYRIE",
+   "element": "LIGHT",
+   "class": "PALADIN",
+   "type": "DEFENSE",
+   "theme_color": "#ffe08a",
+   "portrait": "res://art/characters/heroes/angela/char/angela_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/angela/char/angela_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/angela/char/angela_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/angela/char/angela_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/angela/char/angela_char_evo1_alt1.png"
+     ]
+    },
+    "lobby": {
+     "base": "res://art/characters/heroes/angela/char/angela_char_lobby.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/angela/sprite/angela_sprite_1.png",
+    "res://art/characters/heroes/angela/sprite/angela_sprite_2.png",
+    "res://art/characters/heroes/angela/sprite/angela_sprite_3.png"
+   ]
+  },
+  "kara": {
+   "id": "kara",
+   "display_name": "Kara",
+   "title": "PHOENIX REAPER",
+   "element": "FIRE",
+   "class": "ASSASSIN",
+   "type": "BURST",
+   "theme_color": "#f2b33d",
+   "portrait": "res://art/characters/heroes/kara/char/kara_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/kara/char/kara_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/kara/char/kara_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/kara/char/kara_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/kara/char/kara_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/kara/char/kara_char_evo2_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/kara/sprite/kara_sprite_1.png",
+    "res://art/characters/heroes/kara/sprite/kara_sprite_2.png",
+    "res://art/characters/heroes/kara/sprite/kara_sprite_3.png",
+    "res://art/characters/heroes/kara/sprite/kara_sprite_4.png"
+   ]
+  },
+  "mei": {
+   "id": "mei",
+   "display_name": "Mei",
+   "title": "CRIMSON BLADE BUNNY",
+   "element": "FIRE",
+   "class": "WARRIOR",
+   "type": "AOE",
+   "theme_color": "#d7263d",
+   "portrait": "res://art/characters/heroes/mei/char/mei_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/mei/char/mei_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/mei/char/mei_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/mei/char/mei_char_stage2_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/mei/char/mei_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/mei/char/mei_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/mei/sprite/mei_sprite_1.png",
+    "res://art/characters/heroes/mei/sprite/mei_sprite_2.png",
+    "res://art/characters/heroes/mei/sprite/mei_sprite_3.png",
+    "res://art/characters/heroes/mei/sprite/mei_sprite_4.png",
+    "res://art/characters/heroes/mei/sprite/mei_sprite_5.png"
+   ]
+  },
+  "ninger": {
+   "id": "ninger",
+   "display_name": "Ning Er",
+   "title": "PRINCESS OF A THOUSAND COINS",
+   "element": "EARTH",
+   "class": "HEALER",
+   "type": "SUPPORT",
+   "theme_color": "#e8c25a",
+   "portrait": "res://art/characters/heroes/ninger/char/ninger_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/ninger/char/ninger_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/ninger/char/ninger_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/ninger/char/ninger_char_stage2_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/ninger/char/ninger_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/ninger/char/ninger_char_evo2.png",
+     "interactions": []
+    },
+    "lobby": {
+     "base": "res://art/characters/heroes/ninger/char/ninger_char_lobby.png",
+     "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/ninger/char/ninger_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/ninger/sprite/ninger_sprite_1.png",
+    "res://art/characters/heroes/ninger/sprite/ninger_sprite_2.png",
+    "res://art/characters/heroes/ninger/sprite/ninger_sprite_3.png",
+    "res://art/characters/heroes/ninger/sprite/ninger_sprite_4.png"
+   ]
+  },
+  "spimei": {
+   "id": "spimei",
+   "display_name": "Spimei",
+   "title": "SCARLET SPIDER ENGINE",
+   "element": "FIRE",
+   "class": "RANGER",
+   "type": "BURST",
+   "theme_color": "#e0402f",
+   "portrait": "res://art/characters/heroes/spimei/char/spimei_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/spimei/char/spimei_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/spimei/char/spimei_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/spimei/char/spimei_char_stage2_alt1.png"
+     ]
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/spimei/char/spimei_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/spimei/char/spimei_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/spimei/char/spimei_char_evo1_alt1.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/spimei/char/spimei_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/spimei/char/spimei_char_evo2_alt1.png"
+     ]
+    },
+    "lobby": {
+     "base": "res://art/characters/heroes/spimei/char/spimei_char_lobby.png",
+     "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/spimei/char/spimei_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/spimei/sprite/spimei_sprite_1.png",
+    "res://art/characters/heroes/spimei/sprite/spimei_sprite_2.png",
+    "res://art/characters/heroes/spimei/sprite/spimei_sprite_3.png"
+   ]
+  },
+  "luby": {
+   "id": "luby",
+   "display_name": "Luby",
+   "title": "MECHA CAT MISCHIEF",
+   "element": "WIND",
+   "class": "ASSASSIN",
+   "type": "BURST",
+   "theme_color": "#8fe63a",
+   "portrait": "res://art/characters/heroes/luby/char/luby_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/luby/char/luby_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/luby/char/luby_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/luby/char/luby_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/luby/char/luby_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/luby/char/luby_char_evo2_alt1.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/luby/char/luby_char_evo3.png",
+     "interactions": [
+      "res://art/characters/heroes/luby/char/luby_char_evo3_alt1.png",
+      "res://art/characters/heroes/luby/char/luby_char_evo3_alt2.png"
+     ]
+    },
+    "special": {
+     "base": "res://art/characters/heroes/luby/char/luby_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/luby/sprite/luby_sprite_1.png",
+    "res://art/characters/heroes/luby/sprite/luby_sprite_2.png",
+    "res://art/characters/heroes/luby/sprite/luby_sprite_3.png",
+    "res://art/characters/heroes/luby/sprite/luby_sprite_4.png"
+   ]
+  }
+ },
+ "enemies": {
+  "eroghost": {
+   "id": "eroghost",
+   "display_name": "Eroghost",
+   "title": "SPECTRAL SHADOW WIGHT",
+   "element": "DARK",
+   "class": "ASSASSIN",
+   "portrait": "res://art/characters/enemies/eroghost/char/eroghost_char_evo1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/eroghost/char/eroghost_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/eroghost/char/eroghost_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/eroghost/char/eroghost_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/eroghost/char/eroghost_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/eroghost/sprite/eroghost_sprite_stage1.png",
+    "res://art/characters/enemies/eroghost/sprite/eroghost_sprite_stage2.png",
+    "res://art/characters/enemies/eroghost/sprite/eroghost_sprite_evo1.png"
+   ]
+  },
+  "evy_blood_sage": {
+   "id": "evy_blood_sage",
+   "display_name": "Evy Blood Sage",
+   "title": "SANGUINE CRIMSON WITCH",
+   "element": "DARK",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/evy_blood_sage/char/evy_blood_sage_char_evo1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/evy_blood_sage/char/evy_blood_sage_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/evy_blood_sage/char/evy_blood_sage_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/evy_blood_sage/char/evy_blood_sage_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/evy_blood_sage/char/evy_blood_sage_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/evy_blood_sage/sprite/evy_blood_sage_sprite_stage1.png",
+    "res://art/characters/enemies/evy_blood_sage/sprite/evy_blood_sage_sprite_evo1.png"
+   ]
+  },
+  "gumi_wolf": {
+   "id": "gumi_wolf",
+   "display_name": "Gumi Wolf",
+   "title": "NINE-TAIL ASTRAL LUPINE",
+   "element": "FIRE",
+   "class": "WARRIOR",
+   "portrait": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_evo1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_evo3.png",
+     "interactions": []
+    },
+    "evo4": {
+     "base": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_evo4.png",
+     "interactions": []
+    },
+    "evo5": {
+     "base": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_evo5.png",
+     "interactions": []
+    },
+    "evo6": {
+     "base": "res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_evo6.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/gumi_wolf/sprite/gumi_wolf_sprite_stage1.png",
+    "res://art/characters/enemies/gumi_wolf/sprite/gumi_wolf_sprite_evo1.png",
+    "res://art/characters/enemies/gumi_wolf/sprite/gumi_wolf_sprite_evo2.png",
+    "res://art/characters/enemies/gumi_wolf/sprite/gumi_wolf_sprite_evo3.png"
+   ]
+  },
+  "slarkoi": {
+   "id": "slarkoi",
+   "display_name": "Slarkoi",
+   "title": "CRYPT MUMMY BEHEMOTH",
+   "element": "EARTH",
+   "class": "TANK",
+   "portrait": "res://art/characters/enemies/slarkoi/char/slarkoi_char_evo1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/slarkoi/char/slarkoi_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/slarkoi/char/slarkoi_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/slarkoi/char/slarkoi_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/slarkoi/char/slarkoi_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/slarkoi/sprite/slarkoi_sprite_stage1.png",
+    "res://art/characters/enemies/slarkoi/sprite/slarkoi_sprite_evo1.png"
+   ]
+  },
+  "ygg_naar": {
+   "id": "ygg_naar",
+   "display_name": "Ygg-Naar",
+   "title": "EYE OF THE PRIMORDIAL",
+   "element": "CHAOS",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/ygg_naar/char/ygg_naar_char_evo1.png",
+   "char_states": {
+    "evo1": {
+     "base": "res://art/characters/enemies/ygg_naar/char/ygg_naar_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/ygg_naar/char/ygg_naar_char_evo2.png",
+     "interactions": []
+    },
+    "stage1": {
+     "base": "res://art/characters/enemies/ygg_naar/char/ygg_naar_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/ygg_naar/char/ygg_naar_char_stage2.png",
+     "interactions": []
+    }
+   },
+   "sprites": []
+  },
+  "ex_nymph": {
+   "id": "ex_nymph",
+   "display_name": "Ex-Nymph",
+   "title": "CORRUPTED FOREST NYMPH",
+   "element": "WIND",
+   "class": "RANGER",
+   "portrait": "res://art/characters/enemies/ex_nymph/char/ex_nymph_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/ex_nymph/char/ex_nymph_char_stage1.png",
+     "interactions": []
+    }
+   },
+   "sprites": []
+  },
+  "slime": {
+   "id": "slime",
+   "display_name": "Slime Queen",
+   "title": "GELATINOUS OVERLORD",
+   "element": "WATER",
+   "class": "TANK",
+   "portrait": "res://art/characters/enemies/slime/char/slime_char_evo1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/slime/char/slime_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/slime/char/slime_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/slime/sprite/slime_sprite_stage1.png",
+    "res://art/characters/enemies/slime/sprite/slime_sprite_stage1.png"
+   ]
+  },
+  "hairly": {
+   "id": "hairly",
+   "display_name": "Hairly",
+   "title": "WITCH OF THE SHADOW TRESSES",
+   "element": "DARK",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/hairly/char/hairly_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/hairly/char/hairly_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/hairly/char/hairly_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/hairly/char/hairly_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/hairly/char/hairly_char_evo1_alt1.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/hairly/char/hairly_char_evo2.png",
+     "interactions": []
+    },
+    "lobby": {
+     "base": "res://art/characters/enemies/hairly/char/hairly_char_lobby.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/hairly/sprite/hairly_sprite_1.png",
+    "res://art/characters/enemies/hairly/sprite/hairly_sprite_2.png",
+    "res://art/characters/enemies/hairly/sprite/hairly_sprite_3.png",
+    "res://art/characters/enemies/hairly/sprite/hairly_sprite_4.png"
+   ]
+  },
+  "svormentis": {
+   "id": "svormentis",
+   "display_name": "Svormentis",
+   "title": "THE DEVOURING MAW",
+   "element": "WATER",
+   "class": "TANK",
+   "portrait": "res://art/characters/enemies/svormentis/char/svormentis_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/svormentis/char/svormentis_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/svormentis/char/svormentis_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/svormentis/char/svormentis_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/svormentis/char/svormentis_char_evo1_alt1.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/svormentis/char/svormentis_char_evo2.png",
+     "interactions": [
+      "res://art/characters/enemies/svormentis/char/svormentis_char_evo2_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/svormentis/sprite/svormentis_sprite_1.png",
+    "res://art/characters/enemies/svormentis/sprite/svormentis_sprite_2.png",
+    "res://art/characters/enemies/svormentis/sprite/svormentis_sprite_3.png"
+   ]
+  },
+  "ymir": {
+   "id": "ymir",
+   "display_name": "Ymir",
+   "title": "QUEEN OF THE BONE THRONE",
+   "element": "EARTH",
+   "class": "WARRIOR",
+   "portrait": "res://art/characters/enemies/ymir/char/ymir_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/ymir/char/ymir_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/ymir/char/ymir_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/enemies/ymir/char/ymir_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/ymir/char/ymir_char_evo1.png",
+     "interactions": []
+    },
+    "lobby": {
+     "base": "res://art/characters/enemies/ymir/char/ymir_char_lobby.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/ymir/sprite/ymir_sprite_1.png",
+    "res://art/characters/enemies/ymir/sprite/ymir_sprite_2.png",
+    "res://art/characters/enemies/ymir/sprite/ymir_sprite_3.png"
+   ]
+  },
+  "scomantis": {
+   "id": "scomantis",
+   "display_name": "Scomantis",
+   "title": "EMERALD STINGER",
+   "element": "WIND",
+   "class": "ASSASSIN",
+   "portrait": "res://art/characters/enemies/scomantis/char/scomantis_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/scomantis/char/scomantis_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/scomantis/char/scomantis_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/scomantis/char/scomantis_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/scomantis/char/scomantis_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/scomantis/sprite/scomantis_sprite_1.png",
+    "res://art/characters/enemies/scomantis/sprite/scomantis_sprite_2.png",
+    "res://art/characters/enemies/scomantis/sprite/scomantis_sprite_3.png",
+    "res://art/characters/enemies/scomantis/sprite/scomantis_sprite_4.png"
+   ]
+  },
+  "skelinch": {
+   "id": "skelinch",
+   "display_name": "Skelinch",
+   "title": "HELLFIRE PUNK",
+   "element": "FIRE",
+   "class": "WARRIOR",
+   "portrait": "res://art/characters/enemies/skelinch/char/skelinch_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/skelinch/char/skelinch_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/skelinch/char/skelinch_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/enemies/skelinch/char/skelinch_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/skelinch/char/skelinch_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/skelinch/char/skelinch_char_evo1_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/skelinch/sprite/skelinch_sprite_1.png",
+    "res://art/characters/enemies/skelinch/sprite/skelinch_sprite_2.png",
+    "res://art/characters/enemies/skelinch/sprite/skelinch_sprite_3.png"
+   ]
+  },
+  "serpentia": {
+   "id": "serpentia",
+   "display_name": "Serpentia",
+   "title": "FLAME-SCALE LAMIA",
+   "element": "FIRE",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/serpentia/char/serpentia_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/serpentia/char/serpentia_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/serpentia/char/serpentia_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/serpentia/char/serpentia_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/serpentia/sprite/serpentia_sprite_1.png",
+    "res://art/characters/enemies/serpentia/sprite/serpentia_sprite_2.png"
+   ]
+  },
+  "voodoo": {
+   "id": "voodoo",
+   "display_name": "Voodoo Doll",
+   "title": "THE STITCHED DANCER",
+   "element": "DARK",
+   "class": "ASSASSIN",
+   "portrait": "res://art/characters/enemies/voodoo/char/voodoo_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/voodoo/char/voodoo_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/voodoo/char/voodoo_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/voodoo/char/voodoo_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/voodoo/char/voodoo_char_evo1_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/voodoo/sprite/voodoo_sprite_1.png",
+    "res://art/characters/enemies/voodoo/sprite/voodoo_sprite_2.png",
+    "res://art/characters/enemies/voodoo/sprite/voodoo_sprite_3.png",
+    "res://art/characters/enemies/voodoo/sprite/voodoo_sprite_4.png"
+   ]
+  },
+  "lizamorph": {
+   "id": "lizamorph",
+   "display_name": "Liza Morph",
+   "title": "THE CRAWLING SHADOW",
+   "element": "DARK",
+   "class": "TANK",
+   "portrait": "res://art/characters/enemies/lizamorph/char/lizamorph_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/lizamorph/char/lizamorph_char_stage1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/lizamorph/sprite/lizamorph_sprite_1.png"
+   ]
+  }
+ }
+}

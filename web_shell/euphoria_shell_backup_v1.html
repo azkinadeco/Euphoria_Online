@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>$GODOT_PROJECT_NAME</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
+
+#status {
+	background-color: #242424;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
+
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+#status-splash.show-image--false {
+	display: none;
+}
+
+#status-splash.fullsize--true {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
+
+#status-progress, #status-notice {
+	display: none;
+}
+
+#status-container {
+	position: absolute;
+	bottom: 8%;
+	left: 5%;
+	right: 5%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	z-index: 10;
+}
+
+#status-progress {
+	width: 80%;
+	max-width: 420px;
+	height: 12px;
+	border-radius: 6px;
+	overflow: hidden;
+	appearance: none;
+	-webkit-appearance: none;
+	border: 1px solid rgba(0, 229, 255, 0.4);
+	background: rgba(10, 15, 30, 0.8);
+	box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+}
+
+#status-progress::-webkit-progress-bar {
+	background: rgba(10, 15, 30, 0.8);
+}
+
+#status-progress::-webkit-progress-value {
+	background: linear-gradient(90deg, #7928ca, #00e5ff, #00ffaa);
+	border-radius: 6px;
+	box-shadow: 0 0 10px #00e5ff;
+}
+
+#status-text {
+	color: #00e5ff;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	font-size: 13px;
+	font-weight: 600;
+	margin-top: 10px;
+	letter-spacing: 0.5px;
+	text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+	text-align: center;
+}
+
+#status-detail {
+	color: #8b9bb4;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	font-size: 11px;
+	margin-top: 4px;
+	text-align: center;
+}
+
+#status-notice {
+	background-color: rgba(91, 57, 67, 0.95);
+	border-radius: 0.5rem;
+	border: 1px solid #ff4b6e;
+	color: #fff;
+	font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+	line-height: 1.4;
+	margin: 1rem;
+	max-width: 90%;
+	padding: 1rem;
+	text-align: left;
+	font-size: 12px;
+	word-break: break-word;
+	z-index: 20;
+	box-shadow: 0 4px 20px rgba(255, 75, 110, 0.4);
+}
+		</style>
+		$GODOT_HEAD_INCLUDE
+	</head>
+	<body>
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
+
+		<noscript>
+			Your browser does not support JavaScript.
+		</noscript>
+
+		<div id="status">
+			<img id="status-splash" class="$GODOT_SPLASH_CLASSES" src="$GODOT_SPLASH" alt="">
+			<div id="status-container">
+				<progress id="status-progress"></progress>
+				<div id="status-text">Menyiapkan Euphoria Online...</div>
+				<div id="status-detail">Memulai koneksi ke server...</div>
+			</div>
+			<div id="status-notice"></div>
+		</div>
+
+		<script>
+// Tangkap semua console.error agar tampil di layar iPhone
+const origConsoleError = console.error;
+console.error = function() {
+	origConsoleError.apply(console, arguments);
+	const errDiv = document.getElementById('status-notice');
+	const statusOverlay = document.getElementById('status');
+	if (errDiv) {
+		const args = Array.from(arguments).map(a => {
+			if (a instanceof Error) return a.message + (a.stack ? '\n' + a.stack : '');
+			if (typeof a === 'object') {
+				try { return JSON.stringify(a); } catch(e) { return String(a); }
+			}
+			return String(a);
+		}).join(' ');
+		errDiv.style.display = 'block';
+		errDiv.innerHTML += '<br><strong>⚠️ Log Error:</strong><br><pre style="font-size:10px; max-height:100px; overflow:auto;">' + args + '</pre>';
+	}
+	if (statusOverlay) {
+		statusOverlay.style.visibility = 'visible';
+	}
+};
+
+// Global Error Handler agar error apapun di iPhone langsung muncul di layar
+window.onerror = function(msg, url, line, col, error) {
+	// Abaikan generic "Script error." tanpa detail karena biasanya dari Safari extension / background
+	if (!error && (msg === 'Script error.' || msg === 'Script error' || !url)) {
+		console.warn('Ignored uninformative script error');
+		return false;
+	}
+	const errDiv = document.getElementById('status-notice');
+	const statusOverlay = document.getElementById('status');
+	if (errDiv) {
+		errDiv.style.display = 'block';
+		let detail = msg;
+		if (error && error.message) {
+			detail += '<br>Detail: ' + error.message;
+		}
+		errDiv.innerHTML = '<strong>⚠️ JavaScript Error di iPhone:</strong><br>' + 
+			detail + '<br><small>' + (url ? url.split('/').pop() : '') + ':' + line + '</small>' +
+			(error && error.stack ? '<br><pre style="font-size:10px; max-height:120px; overflow:auto;">' + error.stack + '</pre>' : '');
+	}
+	if (statusOverlay) {
+		statusOverlay.style.visibility = 'visible';
+	}
+	return false;
+};
+
+window.addEventListener('unhandledrejection', function(event) {
+	const errDiv = document.getElementById('status-notice');
+	const statusOverlay = document.getElementById('status');
+	if (errDiv) {
+		errDiv.style.display = 'block';
+		const reason = event.reason ? (event.reason.stack || event.reason.message || event.reason) : 'Promise Rejection';
+		errDiv.innerHTML = '<strong>⚠️ Web Engine Rejection:</strong><br><pre style="font-size:10px; max-height:100px; overflow:auto;">' + reason + '</pre>';
+	}
+	if (statusOverlay) {
+		statusOverlay.style.visibility = 'visible';
+	}
+});
+		</script>
+		<script src="$GODOT_URL"></script>
+		<script>
+// Bersihkan Service Worker lama yang macet menyimpan cache 600MB
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.getRegistrations().then(function(regs) {
+		for (let reg of regs) {
+			reg.unregister();
+		}
+	}).catch(function() {});
+}
+
+// serviceWorker dimatikan: Safari iOS tidak sanggup cache .pck ratusan MB di CacheStorage
+const GODOT_CONFIG = Object.assign($GODOT_CONFIG, { serviceWorker: '' });
+const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
+	const statusText = document.getElementById('status-text');
+	const statusDetail = document.getElementById('status-detail');
+
+	let initializing = true;
+	let statusMode = '';
+
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		if (statusText) statusText.style.display = mode === 'progress' ? 'block' : 'none';
+		if (statusDetail) statusDetail.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
+
+	function setStatusNotice(text) {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+		});
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occurred.');
+		}
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		const missingMsg = 'Error\nFitur yang dibutuhkan browser tidak tersedia:\n';
+		displayFailureNotice(missingMsg + missing.join('\n'));
+	} else {
+		setStatusMode('progress');
+		statusProgress.removeAttribute('value');
+		statusText.textContent = 'Memulai unduhan aset game...';
+		statusDetail.textContent = 'Kecepatan tergantung koneksi Wi-Fi ke Mac';
+
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+					const pct = Math.min(100, Math.round((current / total) * 100));
+					const curMB = (current / (1024 * 1024)).toFixed(1);
+					const totMB = (total / (1024 * 1024)).toFixed(1);
+					statusText.textContent = 'Mengunduh Aset: ' + pct + '% (' + curMB + ' MB / ' + totMB + ' MB)';
+					if (pct < 100) {
+						statusDetail.textContent = 'Mengunduh data grafik karakter & cutscene HD...';
+					} else {
+						statusText.textContent = '100% Selesai! Menginisialisasi WebAssembly...';
+						statusDetail.textContent = 'Membuka engine WebGL di iPhone, mohon tunggu beberapa detik...';
+					}
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+}());
+		</script>
+	</body>
+</html>
+

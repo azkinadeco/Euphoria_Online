@@ -1,0 +1,258 @@
+[
+ {
+  "id": "n2026-11-07b",
+  "date": "2026-11-07",
+  "tag": "NEW",
+  "title": "Gear Substats & Tempering",
+  "bg": "hell",
+  "body": "Every piece of gear now rolls bonus substats: 1 on R, 2 on SR, 3 on SSR (HP, ATK, DEF or Crit). Your existing gear has already received its rolls.\nEnhancing to +5 and +10 upgrades one random substat, and Fusing adds a new one.\nNew Forge tab, TEMPER: spend Forge Embers to reroll substats. Keep the ones you like (each doubles the cost) and compare the result before it applies, so a bad roll never costs you your old stats."
+ },
+ {
+  "id": "n2026-11-07a",
+  "date": "2026-11-07",
+  "tag": "NEW",
+  "title": "The Forge",
+  "bg": "hell",
+  "body": "The Forge is open (Menu > Shop & Social, Player Lv.6).\nREFORGE: spend Forge Embers to turn a piece into the set you want.  FUSE: 3 pieces of one rarity become the next rarity.  SALVAGE: clear spare gear in bulk for Gold and Embers. Equipped, locked and enhanced gear stays safe.\nArmory Ruins now drops a guaranteed piece of Today's Set on every clear, plus Embers.\nNew on each hero's GEAR tab: WEAR SET equips a whole set in one tap, and AUTO EQUIP no longer breaks a set you are wearing."
+ },
+ {
+  "id": "n2026-11-06a",
+  "date": "2026-11-06",
+  "tag": "NEW",
+  "title": "Gear Sets",
+  "bg": "battle",
+  "body": "Every piece of equipment now belongs to a set. Wear 2 pieces of a set for a stat bonus, 3 pieces for a battle effect:\nFlame Pact — ATK +8% / skills also Burn.  Tidecaller — HP +10% / heal 6% every round.  Bastion — DEF +10% / start with a 15% Shield.  Gale Fang — Crit +6% / crits +30% damage.  Crimson Thirst — ATK & HP +5% / heal 12% of damage dealt.\nYour existing gear already has a set — check the GEAR tab of each hero."
+ },
+ {
+  "id": "n2026-11-05u",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "New skill effects",
+  "bg": "battle",
+  "body": "Skills now look different by their area: 2x2 skills rain meteors, cross / X skills cut with twin crescent slashes, melee strikes leave a slash arc, wide WIND / DARK / WATER skills spin a vortex and FIRE / EARTH / LIGHT / LIGHTNING ones call down a meteor shower. Big hits throw debris that falls back down."
+ },
+ {
+  "id": "n2026-11-05t",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "Battle graphics upgrade",
+  "bg": "forest",
+  "body": "Battles look richer: every unit is now lit by the map's own light (warm on lava, cool on ice and sea, golden in Asgard) with a soft rim light and shaded edges, and stands on a soft contact shadow.\nThe battle backdrop slowly drifts like a living camera, and bright maps get gentle light shafts.\n'Reduce effects' in Settings keeps things calmer."
+ },
+ {
+  "id": "n2026-11-05s",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "Photo Studio",
+  "bg": "lobby",
+  "body": "Compose your own pictures! Choose any hero you own and any unlocked outfit, pick a map as the backdrop, drag and pinch to pose her, flip, add your Companion, a filter (Warm, Cool, Night, Sepia, Dreamy, Mono, Vivid) and a frame (Gold, Polaroid, Film, Hearts) plus a caption.\nPress SNAP — photos go into your album (30 slots), and on the web version you can download them.\nFind it in MENU → Heroes & Bond."
+ },
+ {
+  "id": "n2026-11-05r",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "2.5D Live for every foe too",
+  "bg": "necro",
+  "body": "Every enemy illustration now has 2.5D depth as well — in the Bestiary (all forms), the World Boss, Boss Hunt, Guild Raid and story scenes.\nCorrupted, Mirror, Hollow, Echo, Ashen and Feral foes keep their special look while tilting in 2.5D.\nAlso live now: the Victory MVP art, event banners, the upgrade celebration and the Gallery viewer."
+ },
+ {
+  "id": "n2026-11-05q",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "2.5D Live for every hero",
+  "bg": "lobby",
+  "body": "Every hero illustration now has real depth: she tilts toward your finger (or mouse), the light moves across her as she turns, and she breathes softly.\nGlytta's evolved outfit keeps her special full rig (blinking, construct, glowing eye).\nOn a slower phone? Turn it off in Settings → '2.5D Live art'."
+ },
+ {
+  "id": "n2026-11-05p",
+  "date": "2026-11-05",
+  "tag": "STORY",
+  "title": "Arc 9: The Wild Hunt",
+  "bg": "outland",
+  "body": "A horn sounds across the Outlands, and every tamed beast's eyes turn green. Follow Luby through four new chapters — Howling Wilds, Serpent Springs, The Puppet Fair and The Last Hunt — and face the FERAL foes.\nNew Interlude 'Bath Night for Beasts' after the arc, and a 'Clear Arc 9' mission (16,000 Gems, 30 Summon Tickets, 7 Celestial Gems).\nFixed: mirror / hollow / echo / ashen characters in story scenes show their special look again."
+ },
+ {
+  "id": "n2026-11-05o",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "Companion Assist & Bond Stories",
+  "bg": "forest",
+  "body": "Your Companion now joins the fight! At the start of Round 2 she dashes in and strikes every enemy (stronger with each Bond level) and adds her own skill effect: Burn, DEF down, Stun or Silence.\nEvery tamed foe also has 3 Bond Stories (Bond 3 / 6 / 10) in the Bestiary — read them for gems, gold and a Celestial Gem."
+ },
+ {
+  "id": "n2026-11-05n",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "Companions",
+  "bg": "forest",
+  "body": "Choose one tamed foe as your COMPANION in the Bestiary (Taming tab).\nShe sits beside your secretary in the lobby (tap her for a line and a head-pat), cheers from the corner of every battle, and gives the whole team +0.5% ATK/HP per Bond level (up to +5%)."
+ },
+ {
+  "id": "n2026-11-05m",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "Taming, new Gallery & cleaner art",
+  "bg": "forest",
+  "body": "TAMING: defeat a foe 20 times and you can tame her in the Bestiary. Talk every day, rub her head for pats and give gifts to raise her Bond, unlocking her evolved forms and rewards.\nBestiary now shows every form (level-ups and evolutions) of each foe. Pinch to zoom on hero and bestiary art; tap still plays a reaction.\nGallery: one card per hero, sorted SSR → SR → R; tap a hero to open her album of outfits and evolutions. Hero list now shows 6 per row with bigger art.\nCharacter art was re-cut from the originals: no more missing heads, see-through bodies or white boxes."
+ },
+ {
+  "id": "n2026-11-05l",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "2.5D Live: Glytta",
+  "bg": "necro",
+  "body": "Glytta's evolved outfit is now fully 2.5D! She has real depth: tilt her by touching (or hovering on PC), and watch her breathe, blink and pant while her living construct writhes, its blue fire and great eye pulsing.\nSet her as your secretary to see it in the lobby."
+ },
+ {
+  "id": "n2026-11-05k",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "The Oath Ceremony",
+  "bg": "asgard",
+  "body": "Swearing an Oath is now a full ceremony: a heavenly hall under falling petals, the Oath Ring rising in a beam of light, and your partner revealed in her Oath outfit.\nThe date of your Oath is remembered forever on her Bond page, and you can replay the ceremony any time."
+ },
+ {
+  "id": "n2026-11-05j",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "SSR Ultimates & hero gestures",
+  "bg": "galaxy",
+  "body": "Every SSR hero now unleashes a full-screen ULTIMATE cinematic the first time she uses her skill in a battle: speed lines, her full illustration and the skill name slamming in.\nHero page gestures: rub her head for head-pats (+Bond), long-press for a close-up, swipe left/right to flip through your heroes.\nTip: turn off cut-ins in Settings if you prefer fast battles."
+ },
+ {
+  "id": "n2026-11-05i",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "Luby joins + 5 new foes",
+  "bg": "bigtree",
+  "body": "Luby, the Mecha-Cat troublemaker, arrives with her own rate-up banner and the special skin 'Plush Panther Purr' in the Wardrobe!\nNew enemies Scomantis, Skelinch, Serpentia, Voodoo Doll and Liza Morph now prowl the story, events, the Starlight Rift and the World Boss rotation."
+ },
+ {
+  "id": "n2026-11-05h",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "A brand-new Summon experience",
+  "bg": "galaxy",
+  "body": "The Aether Gate now opens under a sky full of stars, with twin glowing circles and gathering light.\nCards arrive with ornate backs — watch for a purple glow (SR) or a golden glow (SSR) before they turn!\nSSR heroes enter in a burst of light, golden rays and sparkles."
+ },
+ {
+  "id": "n2026-11-05g",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "Livelier battles & lobby gestures",
+  "bg": "battle",
+  "body": "Battle: defeated units now burn away in the attacker's element colour, heroes crouch before they strike, and the last enemy falls with a slow-motion FINISH!\nLobby gestures: rub your secretary's head for a head-pat, press and hold for a close-up, and swipe left/right to change secretary."
+ },
+ {
+  "id": "n2026-11-05f",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "Special Skins & the Wardrobe",
+  "bg": "blackmarket",
+  "body": "Six exclusive outfits arrive: Infernal Morningstar (Lucidria), Crimson Hydra Bloom (Hyeonxa), Moonlit Hundred Blades (Kali), Night Wolf Empress (Abadonia), Golden Jackpot (Ning Er) and Scarlet Overdrive (Spimei).\nUnlock them in the WARDROBE with a Skin Ticket or Gems — every special skin gives +10% ATK & HP, and golden sparkles in the lobby.\nA free Skin Ticket is waiting in your Mailbox!"
+ },
+ {
+  "id": "n2026-11-05e",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "Tidier menus + Commander Road",
+  "bg": "lobby",
+  "body": "The MENU is now grouped into Battle, Events, Heroes & Bond and Shop & Social — and scrolls like a gallery.\nEvent and Festival moved into the MENU and the lobby banner, so the lobby is cleaner.\nNew in Missions: COMMANDER ROAD — rewards every 5 Commander levels, grand rewards every 25!"
+ },
+ {
+  "id": "n2026-11-05d",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "Dates are here!",
+  "bg": "onsen",
+  "body": "Take any hero with Bond 3+ on a date: a forest picnic, the poolside resort, a moonlit onsen, the night market, the starport or the crown of Yggdrasil.\nAnswer the way she likes best for a PERFECT DATE and a golden photo in your Date Album. Two dates per day."
+ },
+ {
+  "id": "n2026-11-05c",
+  "date": "2026-11-05",
+  "tag": "UPDATE",
+  "title": "Arc 8: The Gilded Gate + Bestiary",
+  "bg": "asgard",
+  "body": "A golden gate cracks open above Asgard. Meet Angela, Ning Er, Mei, Kara and Spimei in their own story — and face Hairly, Svormentis, Ymir and a heartless Mirror Spimei.\nNew: the Bestiary (Menu). Every enemy you defeat is recorded; kill milestones give Gems, Summon Tickets and Celestial Gems."
+ },
+ {
+  "id": "n2026-11-05b",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "New faces in the Shop: Grafity & Hairly",
+  "bg": "lobby",
+  "body": "Grafity now runs the Friend Shop — she's definitely NOT happy to see you. Watch her spirit flames flicker.\nHairly the oracle runs the Arena Shop.\nAll four shopkeepers are animated and react when you tap their head, body or legs."
+ },
+ {
+  "id": "n2026-11-05a",
+  "date": "2026-11-05",
+  "tag": "NEW",
+  "title": "5 new heroes + Special Event banners",
+  "bg": "hell",
+  "body": "Welcome Angela (Seraphic Valkyrie), Kara (Phoenix Reaper), Mei (Crimson Blade Bunny), Ning Er (Princess of a Thousand Coins) and Spimei (Scarlet Spider Engine)!\nNew foes Hairly, Svormentis and Ymir appear in story, events, Rift and World Boss.\nTap Mei's Special Event banner to watch her animate. Visit Hairly's Fortune in the lobby once a day!"
+ },
+ {
+  "id": "n2026-11-04e",
+  "date": "2026-11-04",
+  "tag": "EVENT",
+  "title": "Limited events now rotate every 2 weeks",
+  "bg": "necro",
+  "body": "Five limited events take turns: Moonlit Festival (Lumeira), Primeval Safari (Atalanta), Necro Masquerade (Vexira), Starport Gala (Gemora) and Dragonbone Trials (Zennyo).\nEach has its own story, stages and featured-hero exchange.\nMerchant Lulu in the Shop is animated now too!"
+ },
+ {
+  "id": "n2026-11-04d",
+  "date": "2026-11-04",
+  "tag": "NEW",
+  "title": "Lulu comes alive at the Black Market",
+  "bg": "blackmarket",
+  "body": "Night Shift Lulu now breathes, blinks, sways and talks — with new voice lines.\nTry tapping her head, body or legs... she has an opinion about each.\nShe also runs the Hunter's Exchange."
+ },
+ {
+  "id": "n2026-11-04c",
+  "date": "2026-11-04",
+  "tag": "UPDATE",
+  "title": "A brand-new look + Secretary Moments",
+  "bg": "lobby",
+  "body": "Every menu has a new ornate frame, glossy buttons and rarity card frames.\nLists now scroll like a phone gallery — drag anywhere, even on cards.\nNew HOME button on every screen.\nTap the pulsing heart beside your lobby hero once a day for a Secretary Moment!"
+ },
+ {
+  "id": "n2026-11-04a",
+  "date": "2026-11-04",
+  "tag": "UPDATE",
+  "title": "Arc 7: Ashes of Abaddon",
+  "bg": "abaddon",
+  "body": "Abadonia's lost kingdom awaits. Four new chapters, the ASHEN bosses, and Interlude 7 \"Lion's Onsen\".\nNew Boss Hunt targets: Cinder Witch of Dragonbone (Star Stones) and Outland Leviathan (extra Hunt Cores)."
+ },
+ {
+  "id": "n2026-11-04b",
+  "date": "2026-11-04",
+  "tag": "NEW",
+  "title": "Private Room is open!",
+  "bg": "gameroom",
+  "body": "Invite your favourite hero to the Commander's Room, a cozy bedroom, the onsen and more.\nTalk, give gifts and rest together. Each hero has a favourite room where Bond doubles."
+ },
+ {
+  "id": "n2026-11-03a",
+  "date": "2026-11-03",
+  "tag": "EVENT",
+  "title": "Harvest Lantern Festival",
+  "bg": "forest",
+  "body": "All of November! Earn Lantern Charms from battles, make a free wish every day and trade for Furu & Rumi shards."
+ },
+ {
+  "id": "n2026-11-03b",
+  "date": "2026-11-03",
+  "tag": "NEW",
+  "title": "Starlight Rift & Limit Break",
+  "bg": "space",
+  "body": "Climb the weekly roguelite Rift and choose Blessings after every floor.\n6-star heroes can now Limit Break up to Lv.100 using Hunt Cores."
+ },
+ {
+  "id": "n2026-11-01",
+  "date": "2026-11-01",
+  "tag": "INFO",
+  "title": "Welcome to Euphoria Online",
+  "bg": "lobby",
+  "body": "Thank you for playing! Online features (real players in Arena, Guild and rankings) are coming soon — until then, rivals marked [AI] keep you company."
+ }
+]

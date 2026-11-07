@@ -1,0 +1,434 @@
+extends Screen
+## Bestiary: every enemy type, filled in as you defeat them. Kill milestones give rewards.
+## Each foe shows all her forms (upgrades / evolutions, unlocked by kills or taming bond),
+## can be TAMED after enough kills, and then befriended like a hero (talk, pat, gifts).
+## The art supports pinch-zoom; a tap plays a reaction, rubbing the head pats a tamed foe.
+
+var _sel := ""
+var _grid: GridContainer
+var _detail: VBoxContainer
+var _art: TextureRect
+var _mid: Control
+var _forms: HBoxContainer
+var _form := 0
+var _tab := "info"
+var _zoom := 1.0
+var _pinch: PinchZoom
+var _down := false
+var _start := Vector2.ZERO
+var _rub := 0.0
+var _moved := false
+
+func build() -> void:
+	set_bg("necro", 0.6)
+	ambient(Color(0.8, 0.9, 1.0), 20)
+	header("BESTIARY", ["gold", "gems"])
+	var b := body(76)
+	var lp := UI.panel()
+	lp.anchor_right = 0.42
+	lp.anchor_bottom = 1.0
+	b.add_child(lp)
+	var lv := UI.vbox(8)
+	lp.add_child(lv)
+	var seen := DB.ENEMIES.keys().filter(func(id): return Game.kills_of(id) > 0).size()
+	lv.add_child(UI.label("Discovered %d / %d" % [seen, DB.ENEMIES.size()], 16, UI.GOLD, 3))
+	_grid = GridContainer.new()
+	_grid.columns = 3
+	_grid.add_theme_constant_override("h_separation", 8)
+	_grid.add_theme_constant_override("v_separation", 8)
+	lv.add_child(UI.scroll(_grid))
+	var mid := Control.new()
+	mid.anchor_left = 0.43
+	mid.anchor_right = 0.7
+	mid.anchor_bottom = 1.0
+	mid.clip_contents = true
+	b.add_child(mid)
+	_mid = mid
+	_art = UI.tex_rect(null)
+	_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_art.offset_bottom = -86
+	_art.mouse_filter = Control.MOUSE_FILTER_STOP
+	_art.gui_input.connect(_art_input)
+	_art.resized.connect(func(): _art.pivot_offset = _art.size * 0.5)
+	mid.add_child(_art)
+	UI.live(_art, Color(1.0, 0.85, 0.9))
+	_pinch = PinchZoom.new(func(f: float, _c: Vector2): _set_zoom(_zoom * f))
+	_art.add_child(_pinch)
+	var zh := UI.label("Pinch to zoom • tap to interact", 11, UI.MUTED, 2)
+	zh.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	zh.offset_top = -104
+	zh.offset_bottom = -86
+	zh.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	mid.add_child(zh)
+	_forms = UI.hbox(6)
+	_forms.alignment = BoxContainer.ALIGNMENT_CENTER
+	var fs := ScrollContainer.new()
+	fs.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	fs.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	fs.offset_top = -82
+	fs.add_child(_forms)
+	mid.add_child(fs)
+	var rp := UI.panel()
+	rp.anchor_left = 0.71
+	rp.anchor_right = 1.0
+	rp.anchor_bottom = 1.0
+	b.add_child(rp)
+	_detail = UI.vbox(8)
+	rp.add_child(UI.scroll(_detail))
+	_sel = str(params.get("sel", DB.ENEMIES.keys()[0]))
+	_render()
+
+func _render() -> void:
+	params["sel"] = _sel
+	for c in _grid.get_children():
+		c.queue_free()
+	for id in DB.ENEMIES.keys():
+		var eid: String = id
+		var known := Game.kills_of(eid) > 0
+		var btn := Button.new()
+		btn.theme_type_variation = "FlatButton"
+		btn.focus_mode = Control.FOCUS_NONE
+		btn.custom_minimum_size = Vector2(118, 140)
+		var fr := Panel.new()
+		fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		fr.add_theme_stylebox_override("panel", UI.style(Color(0.06, 0.04, 0.1, 0.95), UI.GOLD if eid == _sel else Color("#4a3a6e"), 10, 2 if eid == _sel else 1, 0))
+		fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+		fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		btn.add_child(fr)
+		var f := UI.tex_rect(DB.face(eid), Vector2.ZERO, true)
+		f.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		f.offset_bottom = -24
+		if not known:
+			f.modulate = Color(0, 0, 0, 0.85)
+		fr.add_child(f)
+		var nl := UI.label(DB.name_of(eid).split(" ")[0] if known else "???", 12, Color.WHITE if known else UI.MUTED, 3)
+		nl.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+		nl.offset_top = -22
+		nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		fr.add_child(nl)
+		for sp in DB.PET_STORY_REQ.size():
+			if Game.pet_story_state(eid, sp) == "ready":
+				var sd := UI.label("♥", 16, Color("#ff8fb8"), 4)
+				sd.position = Vector2(4, 2)
+				fr.add_child(sd)
+				break
+		for t in DB.BESTIARY_TIERS.size():
+			if Game.bestiary_state(eid, t) == "ready":
+				var dot := UI.label("!", 16, UI.GOLD, 4)
+				dot.position = Vector2(98, 2)
+				fr.add_child(dot)
+				break
+		btn.pressed.connect(func():
+			Game.sfx("ui_click")
+			_sel = eid
+			_render())
+		_grid.add_child(btn)
+	_render_detail()
+
+func _render_detail() -> void:
+	for c in _detail.get_children():
+		c.queue_free()
+	var id := _sel
+	var known := Game.kills_of(id) > 0
+	var n_forms := DB.art_list(id).size()
+	_form = clampi(_form, 0, maxi(0, n_forms - 1))
+	if not Game.form_unlocked(id, _form):
+		_form = 0
+	_art.texture = DB.art(id, _form)
+	_art.modulate = Color.WHITE if known else Color(0, 0, 0, 0.9)
+	_set_zoom(1.0)
+	_render_forms()
+	var title := UI.hbox(6)
+	title.add_child(UI.label(DB.name_of(id) if known else "Unknown foe", 22, Color.WHITE, 4))
+	if Game.is_tamed(id):
+		title.add_child(UI.label("♥ TAMED", 13, Color("#ff8fb8"), 3))
+	_detail.add_child(title)
+	if not known:
+		_detail.add_child(UI.wrap_label("Defeat this enemy once to reveal its entry.", 14, UI.MUTED))
+		return
+	var tabs := UI.hbox(6)
+	for tb in [["info", "INFO"], ["tame", "TAMING ♥" if Game.is_tamed(id) else "TAMING"]]:
+		var key: String = tb[0]
+		var bt := UI.button(tb[1], func(): _tab = key; _render_detail(), "TabButton", Vector2(0, 36))
+		bt.toggle_mode = true
+		bt.button_pressed = key == _tab
+		bt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bt.add_theme_font_size_override("font_size", 12)
+		tabs.add_child(bt)
+	_detail.add_child(tabs)
+	if _tab == "tame":
+		_render_tame(id)
+		return
+	_detail.add_child(UI.label(DB.title_of(id), 13, Color("#d4b8ff"), 3))
+	var el := UI.hbox(6)
+	el.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(id), "elem_light")), Vector2(22, 22)))
+	el.add_child(UI.label("%s  •  %s" % [DB.element_of(id), DB.role_of(id)], 14, DB.ELEMENT_COLOR.get(DB.element_of(id), UI.TEXT), 2))
+	_detail.add_child(el)
+	var sk: Dictionary = DB.ENEMIES[id]["skill"]
+	_detail.add_child(UI.label("Skill: " + str(sk["name"]), 14, UI.GOLD, 2))
+	_detail.add_child(UI.label("Defeated: %s" % Game.fmt(Game.kills_of(id)), 16, UI.GREEN, 3))
+	_detail.add_child(UI.label("HUNTER MILESTONES", 14, UI.GOLD, 3))
+	for t in DB.BESTIARY_TIERS.size():
+		var tier: int = t
+		var td: Dictionary = DB.BESTIARY_TIERS[tier]
+		var st := Game.bestiary_state(id, tier)
+		var p := UI.panel("CardPanel")
+		_detail.add_child(p)
+		var h := UI.hbox(6)
+		p.add_child(h)
+		var col := UI.vbox(2)
+		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		col.add_child(UI.label("Defeat %d" % int(td["kills"]), 13, Color.WHITE if st != "claimed" else UI.MUTED, 2))
+		col.add_child(UI.reward_row(td["give"], 24, 11))
+		h.add_child(col)
+		if st == "claimed":
+			h.add_child(UI.label("✓", 16, UI.GREEN, 2))
+		else:
+			var cb := UI.button("CLAIM", func():
+				var g := Game.claim_bestiary(id, tier)
+				if not g.is_empty():
+					main.show_rewards("BESTIARY", g)
+					_render(), "GoldButton" if st == "ready" else "", Vector2(80, 36))
+			cb.add_theme_font_size_override("font_size", 12)
+			cb.disabled = st != "ready"
+			h.add_child(cb)
+
+# ---------------------------------------------------------------- forms (upgrade / evolution arts)
+
+func _render_forms() -> void:
+	for c in _forms.get_children():
+		c.queue_free()
+	var id := _sel
+	var arts := DB.art_list(id)
+	if arts.size() <= 1 or Game.kills_of(id) <= 0:
+		return
+	for k in arts.size():
+		var fk: int = k
+		var open := Game.form_unlocked(id, fk)
+		var b := Button.new()
+		b.theme_type_variation = "FlatButton"
+		b.focus_mode = Control.FOCUS_NONE
+		b.custom_minimum_size = Vector2(58, 76)
+		var fr := Panel.new()
+		fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		fr.add_theme_stylebox_override("panel", UI.style(Color(0.06, 0.04, 0.1, 0.95), UI.GOLD if fk == _form else Color("#4a3a6e"), 8, 2 if fk == _form else 1, 0))
+		fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+		fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(fr)
+		var th := UI.tex_rect(DB.face(id, fk) if open else DB.face(id, 0), Vector2.ZERO, true)
+		th.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		if not open:
+			th.modulate = Color(0.06, 0.05, 0.1)
+		fr.add_child(th)
+		var lb := UI.label(("EVO %d" % (fk - _first_evo(id) + 1)) if fk >= _first_evo(id) else ("LV %d" % (fk + 1)), 10, Color.WHITE if open else UI.MUTED, 3)
+		lb.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+		lb.offset_top = -16
+		lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		fr.add_child(lb)
+		b.pressed.connect(func():
+			if not open:
+				var kk: int = DB.FORM_KILLS[mini(fk, DB.FORM_KILLS.size() - 1)]
+				var bb: int = DB.FORM_BOND[mini(fk, DB.FORM_BOND.size() - 1)]
+				main.toast("Locked — defeat %d (now %d) or reach Tamed Bond Lv.%d." % [kk, Game.kills_of(id), bb], UI.MUTED)
+				return
+			Game.sfx("ui_click")
+			_form = fk
+			_art.texture = DB.art(id, fk)
+			_set_zoom(1.0)
+			UI.fade_in(_art, 0.25, Vector2(0, 10))
+			_render_forms())
+		_forms.add_child(b)
+
+## index of the first "evo" state in the foe's art list (forms before it are level-ups)
+func _first_evo(id: String) -> int:
+	var arts := DB.art_list(id)
+	for i in arts.size():
+		if "_evo" in str(arts[i]).get_file():
+			return i
+	return arts.size()
+
+# ---------------------------------------------------------------- zoom & interaction
+
+func _set_zoom(z: float) -> void:
+	_zoom = clampf(z, 1.0, 3.5)
+	_art.scale = Vector2(_zoom, _zoom)
+	if _zoom <= 1.01:
+		_art.position = Vector2.ZERO
+
+func _art_input(e: InputEvent) -> void:
+	if Game.kills_of(_sel) <= 0:
+		return
+	if e is InputEventMouseButton:
+		if e.button_index == MOUSE_BUTTON_WHEEL_UP and e.pressed:
+			_set_zoom(_zoom * 1.1)
+		elif e.button_index == MOUSE_BUTTON_WHEEL_DOWN and e.pressed:
+			_set_zoom(_zoom / 1.1)
+		elif e.button_index == MOUSE_BUTTON_LEFT:
+			if e.pressed:
+				_down = true
+				_start = e.position
+				_rub = 0.0
+				_moved = false
+				if e.double_click:
+					_set_zoom(1.0 if _zoom > 1.4 else 2.0)
+			elif _down:
+				_down = false
+				if not _moved and not _pinch.active() and _rub < 40.0:
+					_react(e.position.y / maxf(1.0, _art.size.y))
+	elif e is InputEventMouseMotion and _down and not _pinch.active():
+		if (e.position - _start).length() > 12.0:
+			_moved = true
+		if _zoom > 1.01:
+			# pan while zoomed
+			_art.position += e.relative
+		elif Game.is_tamed(_sel) and e.position.y / maxf(1.0, _art.size.y) < 0.35:
+			_rub += (e.relative as Vector2).length()
+			if _rub > 260.0:
+				_rub = 0.0
+				_pat()
+
+## Tap: a reaction animation (hop / shiver / lean) and a line if she is tamed.
+func _react(ry: float) -> void:
+	Game.sfx("ui_click")
+	var tw := _art.create_tween()
+	var y0 := _art.position.y
+	if ry < 0.35:
+		tw.tween_property(_art, "rotation", 0.04, 0.08)
+		tw.tween_property(_art, "rotation", -0.03, 0.1)
+		tw.tween_property(_art, "rotation", 0.0, 0.1)
+	elif ry < 0.7:
+		for i in 3:
+			tw.tween_property(_art, "position:x", _art.position.x + 6, 0.04)
+			tw.tween_property(_art, "position:x", _art.position.x - 6, 0.04)
+		tw.tween_property(_art, "position:x", _art.position.x, 0.04)
+	else:
+		tw.tween_property(_art, "position:y", y0 - 22, 0.12).set_trans(Tween.TRANS_QUAD)
+		tw.tween_property(_art, "position:y", y0, 0.26).set_trans(Tween.TRANS_BOUNCE)
+	var fl := _art.create_tween()
+	fl.tween_property(_art, "self_modulate", Color(1.3, 1.15, 1.2), 0.08)
+	fl.tween_property(_art, "self_modulate", Color.WHITE, 0.3)
+	if Game.is_tamed(_sel):
+		main.toast("%s: \"%s\"" % [DB.name_of(_sel), DB.pet_line(_sel, 1 + randi() % 3)], Color("#ff8fb8"))
+
+func _pat() -> void:
+	if not Game.pet_pat(_sel):
+		main.toast("%s is happy, but that's enough pats for today." % DB.name_of(_sel), UI.MUTED)
+		return
+	Game.sfx("star_up")
+	var h := UI.label("♥", 34, Color("#ff8fb8"), 6)
+	h.position = _art.position + Vector2(_art.size.x * randf_range(0.35, 0.6), _art.size.y * 0.15)
+	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_mid.add_child(h)
+	var ht := h.create_tween().set_parallel(true)
+	ht.tween_property(h, "position:y", h.position.y - 70, 0.9)
+	ht.tween_property(h, "modulate:a", 0.0, 0.5).set_delay(0.4)
+	ht.chain().tween_callback(h.queue_free)
+	main.toast("%s: \"%s\"" % [DB.name_of(_sel), DB.pet_line(_sel, 3)], Color("#ff8fb8"))
+	if _tab == "tame":
+		_render_detail()
+
+# ---------------------------------------------------------------- taming
+
+func _render_tame(id: String) -> void:
+	if not Game.is_tamed(id):
+		_detail.add_child(UI.wrap_label("Defeat her enough times and she starts to respect you. Then you can TAME her and grow a bond — talk, pat and give gifts, just like with your heroes.", 13, UI.MUTED))
+		var k := Game.kills_of(id)
+		_detail.add_child(UI.label("Trust: %d / %d defeats" % [mini(k, DB.TAME_KILLS), DB.TAME_KILLS], 15, UI.GREEN if k >= DB.TAME_KILLS else Color.WHITE, 3))
+		var bar := ProgressBar.new()
+		bar.max_value = DB.TAME_KILLS
+		bar.value = mini(k, DB.TAME_KILLS)
+		bar.show_percentage = false
+		bar.custom_minimum_size = Vector2(0, 12)
+		_detail.add_child(bar)
+		_detail.add_child(UI.label("Cost: %s Gold" % Game.fmt(DB.TAME_GOLD), 14, UI.GOLD, 2))
+		var err := Game.tame_error(id)
+		var tb := UI.button("♥ TAME", func():
+			var e2 := Game.tame(id)
+			if e2 != "":
+				main.toast(e2, UI.RED)
+				return
+			Game.sfx("awakening")
+			main.dialogue([[id, DB.pet_line(id, 0)]], func(): _render_detail(), "", true)
+			_render(), "GoldButton", Vector2(0, 50))
+		tb.disabled = err != ""
+		_detail.add_child(tb)
+		if err != "":
+			_detail.add_child(UI.wrap_label(err, 12, Color("#ff8a9a")))
+		_detail.add_child(UI.wrap_label("Tamed foes unlock their evolved forms through bond and give rewards at Bond Lv.3 / 5 / 7 / 10.", 12, UI.MUTED))
+		return
+	var p := Game.pet(id)
+	var lv := int(p["bond"])
+	_detail.add_child(UI.label("Bond Lv.%d / %d" % [lv, DB.PET_MAX_BOND], 17, Color("#ff8fb8"), 3))
+	var bb := ProgressBar.new()
+	bb.max_value = DB.pet_bond_next(lv)
+	bb.value = int(p["exp"]) if lv < DB.PET_MAX_BOND else bb.max_value
+	bb.show_percentage = false
+	bb.custom_minimum_size = Vector2(0, 12)
+	_detail.add_child(bb)
+	_detail.add_child(UI.label("Tamed on %s" % str(p.get("date", "")), 12, UI.MUTED, 2))
+	var is_comp := Game.companion() == id
+	var cb := UI.button("★ COMPANION  (+%.1f%% team ATK/HP)" % (DB.COMPANION_PER_BOND * lv * 100.0) if is_comp else "SET AS COMPANION", func():
+		Game.set_companion("" if is_comp else id)
+		Game.sfx("star_up")
+		if not is_comp:
+			main.toast("%s: \"%s\"" % [DB.name_of(id), DB.pet_line(id, 0)], Color("#ff8fb8"))
+		_render_detail(), "" if is_comp else "GoldButton", Vector2(0, 40))
+	cb.add_theme_font_size_override("font_size", 12)
+	_detail.add_child(cb)
+	_detail.add_child(UI.wrap_label("Your Companion follows you into battle and the lobby, and gives the whole team +0.5% ATK/HP per Bond level.", 11, UI.MUTED))
+	var talk := UI.button("TALK  (1 / day)" if Game.pet_talk_ready(id) else "TALKED TODAY ✓", func():
+		var line := Game.pet_talk(id)
+		if line == "":
+			return
+		main.dialogue([["commander", "Hey, %s. How are you today?" % DB.name_of(id)], [id, line]], func(): _render_detail(), "", true), "GoldButton" if Game.pet_talk_ready(id) else "", Vector2(0, 44))
+	talk.disabled = not Game.pet_talk_ready(id)
+	_detail.add_child(talk)
+	_detail.add_child(UI.label("Head-pats left today: %d  (rub her head)" % Game.pet_pats_left(id), 12, UI.MUTED, 2))
+	_detail.add_child(UI.label("GIFTS  (favourite ×2: %s)" % DB.ITEMS[DB.fav_gift(id)]["name"], 13, UI.GOLD, 2))
+	var gr := GridContainer.new()
+	gr.columns = 2
+	gr.add_theme_constant_override("h_separation", 6)
+	gr.add_theme_constant_override("v_separation", 6)
+	for g in DB.GIFTS:
+		var gid: String = g
+		var gname: String = str(DB.ITEMS[gid]["name"]).split(" ")[-1]
+		var gb := UI.button("%s ×%d" % [gname, Game.amount(gid)], func():
+			var e3 := Game.pet_gift(id, gid)
+			if e3 != "":
+				main.toast(e3, UI.RED)
+				return
+			main.toast("%s: \"%s\"" % [DB.name_of(id), DB.pet_line(id, 4)], Color("#ff8fb8"))
+			_render_detail(), "", Vector2(0, 36))
+		gb.add_theme_font_size_override("font_size", 11)
+		gb.disabled = Game.amount(gid) <= 0
+		gb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		gr.add_child(gb)
+	_detail.add_child(gr)
+	_detail.add_child(UI.label("BOND STORIES", 13, UI.GOLD, 2))
+	for ep in DB.PET_STORY_REQ.size():
+		var epi: int = ep
+		var st := Game.pet_story_state(id, epi)
+		var row := UI.hbox(6)
+		var info := UI.vbox(0)
+		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		info.add_child(UI.label("%d. %s" % [epi + 1, DB.PET_STORY_TITLES[epi]], 12, Color.WHITE if st != "locked" else UI.MUTED, 2))
+		info.add_child(UI.label("Bond Lv.%d" % DB.PET_STORY_REQ[epi] if st == "locked" else ("✓ read — tap to replay" if st == "read" else "NEW!"), 10, UI.GREEN if st == "ready" else UI.MUTED, 2))
+		row.add_child(info)
+		var rb := UI.button("READ" if st == "ready" else ("REPLAY" if st == "read" else "🔒"), func():
+			main.dialogue(DB.pet_story(id, epi), func():
+				var g := Game.read_pet_story(id, epi)
+				if not g.is_empty():
+					main.show_rewards(DB.PET_STORY_TITLES[epi], g)
+				_render_detail(), "forest"), "GoldButton" if st == "ready" else "", Vector2(76, 32))
+		rb.add_theme_font_size_override("font_size", 11)
+		rb.disabled = st == "locked"
+		row.add_child(rb)
+		_detail.add_child(row)
+	_detail.add_child(UI.label("BOND REWARDS", 13, UI.GOLD, 2))
+	for lvk in DB.PET_REWARDS.keys():
+		var row := UI.hbox(6)
+		row.add_child(UI.label("Lv.%d" % lvk, 13, UI.GREEN if lv >= int(lvk) else Color.WHITE, 2))
+		row.add_child(UI.reward_row(DB.PET_REWARDS[lvk], 22, 11))
+		if lv >= int(lvk):
+			row.add_child(UI.label("✓", 14, UI.GREEN, 2))
+		_detail.add_child(row)
