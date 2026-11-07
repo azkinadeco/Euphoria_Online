@@ -824,6 +824,7 @@ func give_gift(id: String, item_id: String) -> String:
 	sfx("star_up")
 	if up:
 		notify("%s Bond Lv.%d! ♥" % [DB.name_of(id), hero(id)["bond"]], Color("#ff8fb8"))
+	msg_notify(id, "gift")
 	return ""
 
 func tap_hero(id: String) -> String:
@@ -1021,6 +1022,9 @@ func apply_stage_result(index: int, won: bool, stars: int) -> Dictionary:
 		rewards["gear:%s:%s" % [DB.GEAR_SLOTS[randi() % 3], rar]] = 1
 	s["story"]["cleared"][DB.stage_id(index)] = maxi(stars, stage_stars(index))
 	quest_progress("stage")
+	var team: Array = s["formation"].map(func(e): return str(e[0])).filter(func(hid): return owns(hid))
+	if not team.is_empty():
+		msg_notify(team[randi() % team.size()], "win")
 	var g := rewards.duplicate()
 	g.erase("chapter_clear")
 	give(g)
@@ -3732,8 +3736,11 @@ func _msg_state() -> Dictionary:
 
 func _msg_next_key(id: String, m: Dictionary) -> String:
 	var done: Array = m["done"].get(id, [])
-	if DB.MSG_PERSONAL.has(DB.base_id(id)) and not done.has("p") and int(hero(id)["bond"]) >= DB.MSG_BOND:
+	var bond := int(hero(id)["bond"])
+	if DB.MSG_PERSONAL.has(DB.base_id(id)) and not done.has("p") and bond >= DB.MSG_BOND:
 		return "p"
+	if DB.MSG_PERSONAL2.has(DB.base_id(id)) and done.has("p") and not done.has("p2") and bond >= DB.MSG_BOND2:
+		return "p2"
 	return "t%d" % ((day_key() + id.hash()) % DB.MSG_TOPICS.size())
 
 func _msg_deliver(m: Dictionary) -> void:
@@ -3745,14 +3752,30 @@ func _msg_deliver(m: Dictionary) -> void:
 	var day := day_key()
 	# personal chats first, then a daily rotation so every hero gets a turn
 	cands.sort_custom(func(a, b):
-		var pa := _msg_next_key(a, m) == "p"
-		var pb := _msg_next_key(b, m) == "p"
+		var pa := _msg_next_key(a, m).begins_with("p")
+		var pb := _msg_next_key(b, m).begins_with("p")
 		if pa != pb:
 			return pa
 		return (str(a) + str(day)).hash() < (str(b) + str(day)).hash())
 	for id in cands.slice(0, free):
 		pending[id] = _msg_next_key(id, m)
 	mark_dirty()
+
+## A hero reacts to something the Commander did ("gift" or "win"). Once per kind per day.
+## Returns true when a new chat was queued.
+func msg_notify(id: String, kind: String) -> bool:
+	if not feature_unlocked("messenger") or not owns(id) or not DB.MSG_EVENTS.has(kind):
+		return false
+	var m := _msg_state()
+	var ev: Dictionary = m.get("events", {})
+	m["events"] = ev
+	if int(ev.get(kind, -1)) == day_key() or m["pending"].has(id) or m["pending"].size() >= DB.MSG_PER_DAY + 2:
+		return false
+	ev[kind] = day_key()
+	m["pending"][id] = "%s%d" % [kind, day_key() % (DB.MSG_EVENTS[kind] as Array).size()]
+	notify("New message from %s" % DB.name_of(id), Color("#ff8fb8"))
+	mark_dirty()
+	return true
 
 func msg_pending() -> Dictionary:
 	return _msg_state()["pending"]
@@ -3805,7 +3828,7 @@ func msg_reply(id: String, choice: int) -> Dictionary:
 	var best: bool = choice == int(th[3])
 	var bond := DB.MSG_BOND_BEST if best else DB.MSG_BOND_OK
 	add_bond(id, bond)
-	var gems := DB.MSG_PERSONAL_GEMS if key == "p" and first else 0
+	var gems := DB.MSG_PERSONAL_GEMS if key.begins_with("p") and first else 0
 	if gems > 0:
 		give({"gems": gems})
 	quest_progress("bond")

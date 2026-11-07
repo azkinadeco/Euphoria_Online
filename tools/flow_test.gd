@@ -123,6 +123,26 @@ func _run() -> void:
 	check(G.msg_contacts()[0] != "shina" or G.msg_pending().is_empty(), "waiting chats are listed first")
 	G.s["messenger"]["day"] = G.day_key() - 1
 	check(G.msg_pending().size() == DB.MSG_PER_DAY and str(G.msg_pending().get("shina", "t0")).begins_with("t"), "next day refills the inbox with everyday chats")
+	for hid in DB.hero_ids():
+		check(DB.MSG_PERSONAL2.has(hid), "hero %s has a second personal chat" % hid)
+	for th in DB.MSG_PERSONAL2.values() + DB.MSG_EVENTS["gift"] + DB.MSG_EVENTS["win"]:
+		check((th[0] as Array).size() >= 1 and (th[1] as Array).size() == 2 and (th[2] as Array).size() == 2 and int(th[3]) in [0, 1], "chat thread 2 is well formed")
+	G.s["messenger"]["pending"] = {}
+	G.hero("shina")["bond"] = DB.MSG_BOND2
+	G.s["messenger"]["day"] = G.day_key() - 1
+	check(G.msg_pending().get("shina", "") == "p2", "Bond %d unlocks the second personal chat" % DB.MSG_BOND2)
+	mg_gems = G.amount("gems")
+	G.msg_reply("shina", 0)
+	check(G.amount("gems") == mg_gems + DB.MSG_PERSONAL_GEMS, "second personal chat pays Gems")
+	G.s["messenger"]["pending"] = {}
+	G.give({"sweet_cake": 2})
+	check(G.give_gift("furu", "sweet_cake") == "" and str(G.msg_pending().get("furu", "")).begins_with("gift"), "a gift makes the hero text back")
+	check(not DB.msg_thread("furu", str(G.msg_pending()["furu"])).is_empty(), "gift chat has text")
+	G.msg_reply("furu", 0)
+	G.give_gift("furu", "sweet_cake")
+	check(not G.msg_pending().has("furu"), "only one gift chat a day")
+	check(G.msg_notify("valeria", "win") and str(G.msg_pending()["valeria"]).begins_with("win"), "a victory makes a hero text")
+	check(not G.msg_notify("glytta", "win"), "only one victory chat a day")
 	G.s = mg_save
 
 	print("[scout report]")

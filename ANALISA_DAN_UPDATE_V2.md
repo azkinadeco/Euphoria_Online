@@ -585,6 +585,17 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 
 **Bag:** setiap kotak sekarang menampilkan nama item, nama set gear, jenis rune atau nama hero (untuk shard). Hero EXP, Energy dan Arena Coin disembunyikan kalau jumlahnya 0. Gold dan Gems selalu tampil.
 
+## 2bs. Update batch 68 — Messenger: chat pribadi kedua & chat reaksi
+
+- **Chat pribadi kedua** untuk ke-33 hero (`DB.MSG_PERSONAL2`). Terbuka di Bond Lv.6 setelah chat pribadi pertama dibalas, dan dikirim lebih dulu dari chat lain. Balasan pertama memberi +30 Gems.
+- **Chat reaksi** (`DB.MSG_EVENTS`, 3 variasi masing-masing):
+  - Setelah memberi hadiah (`give_gift`), hero yang menerima mengirim chat.
+  - Setelah menang di story (`apply_stage_result`), satu hero acak dari formasi mengirim chat.
+  - Masing-masing maksimal sekali sehari, dan tidak menambah pesan kalau sudah ada 5 chat yang menunggu.
+  - Muncul pemberitahuan "New message from …" dan langsung masuk ke Messenger.
+- Fungsi baru `Game.msg_notify(id, kind)`. Kunci thread: `p`, `p2`, `gift<N>`, `win<N>`, `t<N>`.
+- `flow_test`: cek chat pribadi kedua, Gems, chat hadiah dan kemenangan beserta batas sekali sehari.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

@@ -2758,6 +2758,55 @@ const MSG_PERSONAL := {
 	"spimei": [["Drone 3 took a photo of you yawning.", "For security. I'm not keeping it. ...I'm keeping it."], ["Delete it!", "Send me a copy."], ["Sorry, access denied. Encryption level: crush.", "...Okay. But you have to send me a selfie back. Fair trade."], 1],
 	"luby": [["Nya~ My mecha cat got an upgrade!", "It can give head pats now. ...Please test it. On me. For science."], ["For science, then.", "Why not ask the cat?"], ["Nyaa~ ...The experiment is a success. Repeat daily.", "It's not the same! Only your hands are calibrated right!"], 0],
 }
+const MSG_BOND2 := 6           # second personal chat unlocks at this Bond level
+const MSG_PERSONAL2 := {
+	"shina": [["Commander... can I tell you something embarrassing?", "When I was little, my flame scared everyone away. You're the first person who never flinched."], ["Your flame is warm, not scary.", "I'm just too stubborn to run."], ["W-warm? ...Say that again. No, don't. My face is on fire. Literally.", "Hmph. Then stay stubborn. Forever, preferably."], 0],
+	"xylia": [["I've been redrawing the plans for the whole capital.", "Every version has the same thing in the centre. A house. For two."], ["Who's the second person?", "Show me the plans."], ["Don't make me say it. You're smarter than that, Commander.", "...Here. The study has two desks facing each other. Don't laugh."], 1],
+	"micca": [["Commander, I have a secret.", "My box isn't for treasure. It's where I keep things I'm scared to lose. It's mostly stuff you gave me."], ["Then I'll keep giving you things.", "Can I see inside?"], ["...You'll need a bigger box for me then. Hehe.", "Only you. Close your eyes first. ...Okay, open. Surprise, it's me hugging you!"], 1],
+	"cthollia": [["Do you ever wonder what's at the bottom of the abyss?", "I used to think it was nothing. Now I think it was waiting for someone to look back at it. Like you did."], ["I'll always look back.", "That's a little scary."], ["...Then the abyss will never be lonely again. Neither will I.", "I know. But you stayed anyway. That's why I trust you."], 0],
+	"valeria": [["I visited my old knight order today.", "They asked who I serve now. I said 'the Commander.' Then I said it again, because I liked how it sounded."], ["I'm proud to have you.", "Only twice?"], ["...Proud. Hm. I'll carry that word into every battle.", "Fine. Three times. And once more in my head on the way back."], 0],
+	"eropatra": [["An Empress doesn't apologise.", "But... I was harsh with you yesterday. I hope you're not cross with me."], ["I could never stay mad at you.", "Is this an apology, Your Majesty?"], ["Good. Then I'll allow you to hold my hand in public. A rare honour.", "It's... a royal acknowledgement. ...Yes. It's an apology. Don't tell the court."], 1],
+	"furu": [["I prayed for a long time tonight.", "Not for victory. Just that you'd always come home safe. Is it selfish to pray for one person?"], ["Not selfish at all.", "Then I'll pray for you too."], ["Thank you... I feel lighter now. Like the light itself said yes.", "Then our prayers will meet halfway. I like that."], 1],
+	"glytta": [["I finished my new dance.", "It's called 'Waiting for the Commander.' It's very long and has a lot of spinning."], ["Perform it for me tonight.", "Why is it so long?"], ["Front row seat, just for you! Don't blink.", "...Because you're always busy. But the ending is happy! You come back."], 0],
+	"hyeonxa": [["The nine heads had a vote last night.", "They decided I should tell you something. It was unanimous. ...I like you. A lot. All of me does."], ["I like all nine of you too.", "Even head four?"], ["All nine are blushing. That has never happened in recorded history.", "Head four says especially head four. She's very loud about it."], 0],
+	"scylla": [["The sea took many things from me.", "But it brought me to you. I think we're even now."], ["I'm glad it did.", "What did it take?"], ["So am I. The tide doesn't scare me anymore.", "My home. My crew. ...Ask me again someday. When I'm ready."], 0],
+	"lumeira": [["All the butterflies flew to your window this morning.", "They only do that for people who make someone very, very happy."], ["Who did I make happy?", "That's a lot of butterflies."], ["Ehehe... you know exactly who. She's typing this message.", "It's how happy I am, counted in butterflies!"], 0],
+	"gemora": [["Confession from overwatch.", "I don't actually need to watch your desk. I just like seeing you."], ["I know. I wave at you sometimes.", "Keep watching, then."], ["...Those waves were for ME? Recalibrating everything.", "Copy that. Permanent assignment accepted."], 0],
+	"fidelia": [["I had a nightmare that I wasn't fast enough to protect you.", "I know it's silly. I just needed to hear you're okay."], ["I'm right here. I'm okay.", "You're always fast enough."], ["...Good. I'll sleep better now. Goodnight, Commander.", "Then I'll keep training until that's always true."], 0],
+	"lucidria": [["Ruins remember everything.", "If they could remember one day of my life, I'd want it to be the day I met you."], ["Then let's make better days.", "That's beautiful."], ["Agreed. I'll carve every one of them into stone.", "It's true. Ancient walls don't lie."], 0],
+	"eurnipha": [["I used to think warmth only came from fire.", "Then I met you. Now I don't need fire anymore."], ["You make me warm too.", "Don't freeze without me."], ["Mm... then we'll keep each other warm. Always.", "I won't. I'll stay close, so I never have to."], 0],
+	"rumi": [["Real talk, Commander.", "I tease you about payment, but I'd fight every ghost in the world for free. If it's for you."], ["That's the nicest thing you've ever said.", "Can I get that in writing?"], ["Don't get used to it. ...Okay, get a little used to it.", "Hmph! Fine. Signed, sealed, exorcised. No refunds."], 0],
+	"mora": [["I could rewind time if I wanted to.", "But I'd never undo a single moment with you. Not even the awkward ones."], ["Especially not the awkward ones.", "What would you undo, then?"], ["...Yes. Those are my favourites, secretly.", "Only the time I wasted before I met you."], 1],
+	"abadonia": [["A queen rides alone. That's what I was taught.", "But lately, the saddle feels empty without you behind me."], ["Then I'll ride with you.", "Is that a confession, my Queen?"], ["Then it's settled. My lions approve of you, by the way.", "...A queen doesn't confess. She declares. And yes."], 1],
+	"atalanta": [["I've never let anyone catch me.", "But I've been running slower around you lately. Did you notice?"], ["I noticed.", "I thought I was getting faster."], ["...You weren't supposed to notice! Ugh, I'm too obvious.", "Nope! I was waiting for you. ...Don't tell anyone."], 0],
+	"kali": [["A hundred blades, one heart.", "I've said that many times as a joke. I'm not joking anymore."], ["I know. I feel the same.", "Who does the heart belong to?"], ["...Then all hundred blades are yours to command.", "You. It's always been you. Stop smiling like that."], 0],
+	"zennyo": [["My dragons have a ritual.", "They only sleep next to someone they'd die to protect. Last night they slept on your cloak."], ["Then I'll protect them too.", "They're welcome anytime."], ["You're one of the family now. ...My family.", "Me too? ...I mean, the dragons. The dragons are welcome. And me."], 0],
+	"aqua": [["The chalice reflects what someone truly wants.", "When I looked into it today, it showed your face."], ["What does that mean?", "Then I'm yours."], ["It means... I'd better be honest with my wishes. And with you.", "...Okay. Now I need to sit down. My heart is splashing everywhere."], 1],
+	"rubby": [["My friends here only stay calm around one person.", "It's you. And honestly? I'm the same."], ["You make me calm too.", "Even the explosive ones?"], ["Really? Then let's stay calm together. With occasional fireworks.", "ESPECIALLY the explosive ones. And me. I'm the most explosive one."], 0],
+	"schylua": [["Reapers aren't supposed to want things.", "But I want to stay by your side when the war is over. Is that allowed?"], ["It's more than allowed.", "Let's survive the war first."], ["...Then I'll stop being only a reaper. For you.", "Then I'll reap everything in our way. Quickly."], 0],
+	"vexira": [["Ara~ remember the note I left? 'IOU one kiss'.", "I'm a thief, Commander. Thieves don't usually pay. But I'd like to."], ["I'm collecting.", "Thieves pay their debts?"], ["Close your eyes~ ...Too slow. Already stolen.", "Only to the one who stole their heart first. Unfair, isn't it?"], 0],
+	"siv": [["I made you something.", "It's a hammer-shaped pendant. It took me ten tries. Nine of them exploded."], ["I'll wear it every day.", "Nine exploded?!"], ["Really? Then I'll make a matching one for me!", "Forge accidents! The tenth one is perfect though. Just like... nevermind!"], 0],
+	"sven": [["My sword has wandered for a long time.", "I think I finally found the place it wants to rest. Right here."], ["Then stay.", "What changed?"], ["I will. For as long as you'll have me.", "You did. Simple as that."], 0],
+	"angela": [["I have a confession for a heavenly guardian.", "I wasn't sent here. I asked to come. Because I saw you from above and couldn't look away."], ["I'm glad you chose me.", "Did heaven let you?"], ["So am I. Heaven can wait. You can't.", "Not really. I came anyway. Don't tell them."], 0],
+	"kara": [["Death doesn't get attached.", "That's the rule. I've broken it. Because of you."], ["I'm glad you did.", "What happens now?"], ["...So am I. Don't make me regret it. Stay alive.", "Now I walk beside you as myself. Not as Death. Just Kara."], 1],
+	"mei": [["In my village, touching the ears means a promise.", "...I didn't tell you that before. You've already touched them three times."], ["Then I'll keep the promise.", "What did I promise?"], ["...Good. Then I won't have to draw my sword at you.", "To stay. Forever. ...Don't laugh. It's very serious."], 0],
+	"ninger": [["I stopped flipping my lucky coin.", "I don't need it anymore. My luckiest day was the day you recruited me."], ["Mine too.", "Keep it anyway, for good luck."], ["Ehehe! Then we're both lucky. That's double luck!", "Okay! I'll flip it once a day. For both of us."], 0],
+	"spimei": [["I deleted all the photos.", "...Okay, I deleted most of them. I kept one. You were smiling at me in it."], ["Keep that one forever.", "Show me which one."], ["System update: crush encryption upgraded to 'permanent'.", "...Here. That was the day you said I was the best engineer you've ever met."], 0],
+	"luby": [["Nya... my mecha cat has a new feature.", "It plays a song when you're nearby. I didn't program that. It just... started."], ["Maybe it knows something.", "That's a bug."], ["It knows I'm happy around you. Nya~ Machines don't lie.", "It's NOT a bug! It's a feature! ...A very embarrassing feature."], 0],
+}
+## Chats triggered by what the Commander does. Variant picked by day.
+const MSG_EVENTS := {
+	"gift": [
+		[["Commander! I got your gift!", "You didn't have to... but I'm really happy you did."], ["You deserve it.", "Just a small thing."], ["Hehe... I'll treasure it. Really.", "Small things from you are the biggest things to me."], 0],
+		[["I saw what you left for me.", "...I've been smiling for an hour. My cheeks hurt."], ["Good. Keep smiling.", "Was it the right one?"], ["Only if you promise to smile too.", "It was perfect. You know me well."], 0],
+		[["A gift? For me?", "Now I have to think of something to give you back..."], ["Your smile is enough.", "Surprise me."], ["Th-that's unfair! You can't just say things like that!", "Oh, I will. Get ready, Commander."], 0],
+	],
+	"win": [
+		[["We won! Did you see that?!", "Your orders were perfect today."], ["Your form was flawless.", "Just doing my job."], ["Hehe, I was showing off a little. For you.", "Well, you do it really well. Let's celebrate!"], 0],
+		[["Another victory under your command.", "I don't think we'd win half as often without you."], ["It's teamwork.", "You flatter me."], ["Teamwork... with you leading. I like this team.", "It's not flattery if it's true."], 0],
+		[["Phew, that battle was close!", "...You weren't worried about me, were you?"], ["I'm always worried about you.", "Not at all. I trust you."], ["...Oh. Then I'll be extra careful. For you.", "That's even better. I'll keep earning it."], 1],
+	],
+}
 ## Everyday chats any hero can send (one is picked per hero per day).
 const MSG_TOPICS := [
 	[["Good morning, Commander!", "Did you sleep well?"], ["Like a rock. You?", "Not really. Too much paperwork."], ["Great! I dreamed we won every battle.", "Then take a break with me later. The paperwork can wait."], 1],
@@ -2768,9 +2817,16 @@ const MSG_TOPICS := [
 	[["Hey, Commander.", "Thanks for always looking out for us."], ["That's what I'm here for.", "You all look out for me too."], ["Still. It means a lot. To me especially.", "...Then we'll keep looking out for each other. Deal?"], 1],
 ]
 
-## Thread data for a key: "p" = her personal chat, "t<N>" = everyday topic N.
+## Thread data for a key: "p"/"p2" = personal chats, "gift<N>"/"win<N>" = event chats, "t<N>" = everyday topic N.
 static func msg_thread(id: String, key: String) -> Array:
 	if key == "p":
 		return MSG_PERSONAL.get(base_id(id), [])
+	if key == "p2":
+		return MSG_PERSONAL2.get(base_id(id), [])
+	if key.begins_with("gift") or key.begins_with("win"):
+		var kind := "gift" if key.begins_with("gift") else "win"
+		var vi := int(key.substr(kind.length()))
+		var vs: Array = MSG_EVENTS[kind]
+		return vs[vi] if vi >= 0 and vi < vs.size() else []
 	var i := int(key.substr(1))
 	return MSG_TOPICS[i] if i >= 0 and i < MSG_TOPICS.size() else []
