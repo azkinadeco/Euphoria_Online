@@ -628,6 +628,39 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - Ikon baru: 4 bahan, 5 hidangan dan `icon_kitchen` (dari `tools/gen_item_icons.py`).
 - `flow_test`: blok `[kitchen]` mengecek basket, resep, biaya, level, buff Meal di battle, pengecualian Arena dan drop bahan dari boss.
 
+## 2bv. Update batch 71 — Poles tampilan (Missions, Bag, notifikasi, banner battle)
+
+- **Missions** (`game/screens/quests.gd`): tiap baris kini punya ikon bulat di kiri sesuai layar tujuannya (`ROUTE_ICON`). Urutan baris: yang siap di-CLAIM paling atas, lalu yang masih berjalan, lalu yang sudah diklaim (redup 55%). Baris yang siap diklaim memakai panel bingkai emas dan ikon yang berdenyut. Layar Missions juga menerima parameter `tab` (dipakai oleh Bag untuk membuka COMMANDER ROAD).
+- **Bag → OBTAIN FROM** (`DB.ITEM_SOURCES`, `DB.item_sources()`): detail item menampilkan sampai 4 sumber item, masing-masing dengan tombol GO. Sumber dari toko diambil otomatis dari `DB.SHOP` (Gem/Gold/Arena/Friend/Guild Shop). Layar yang masih terkunci menampilkan level buka, bukan tombol GO.
+- **Notifikasi tergabung** (`main.toast`): notifikasi dengan awalan teks yang sama (misalnya beberapa "PLAYER LEVEL UP! Lv.x" berturut-turut) diganti dengan yang terbaru, jadi tidak lagi menumpuk menutupi lobby. Notifikasi "NEW FEATURE UNLOCKED: X!" digabung menjadi satu daftar.
+- **Banner awal battle** (`battle.gd _intro_banners`) dibuat lebih ramping (font 14, padding 6) dan diturunkan ke bawah strip potret, jadi tidak menutupi hero di baris depan.
+- Berita baru n2026-11-08c "Quality of Life: Missions & Bag".
+
+## 2bw. Update batch 72 — Tampilan baru Tower of Trials & tangga rank Arena
+
+- **Tower of Trials (`game/screens/tower.gd`) didesain ulang:**
+  - Kolom kiri "THE CLIMB" berbentuk jalur vertikal. Garis emas menyala dari lantai yang sudah dilewati sampai lantai sekarang, dan lantai yang sudah selesai diberi tanda centang.
+  - Lantai Guardian (tiap 5 lantai) ditandai merah, lengkap dengan hadiah gem dan Summon Ticket.
+  - Lantai sekarang berdenyut, dan daftar otomatis menggulir ke lantai tersebut.
+  - Bagian atas menampilkan "Best: Floor N" dan "Guardian in N".
+  - Panel kanan punya banner medan pertempuran lantai itu (galaxy/hell/ice/asgard) dan meter THREAT (FAVORED / EVEN FIGHT / RISKY / DEADLY) yang membandingkan power tim dengan musuh.
+  - Kartu musuh sekarang menampilkan nama dan label BOSS.
+  - Kotak FIRST CLEAR juga menampilkan hadiah Guardian berikutnya. Ada tombol TEAM di samping CHALLENGE.
+- **Arena (`game/screens/arena.gd`):**
+  - Panel kiri sekarang punya "SEASON TIERS": bar progres menuju tier berikutnya, dan keenam tier lengkap dengan batas RP serta hadiah gem dan tiket. Tier sekarang berdenyut, dan tooltip-nya menampilkan hadiah lengkap.
+  - Teks yang dobel diringkas: hadiah tier sekarang dan catatan "Practice season" dipindah ke tooltip.
+- **Tools:** `shot_runner.gd` punya step baru `gset:path.key|nilai` untuk mengubah state save saat mengambil screenshot (mis. `gset:tower.floor|10`).
+
+## 2bx. Update batch 73 — Tampilan baru Kitchen
+
+- **Kartu level dapur**: cincin progres berisi "Lv N", gelar koki (Apprentice → Home Cook → Chef → Master Chef), jumlah masakan "14 / 30 dishes", dan isi buka di level berikutnya (resep baru + basket lebih besar).
+- **TODAY'S MEAL**: label ACTIVE, ikon makanan bernapas, dan bulatan (pip) untuk sisa pertempuran buff.
+- **Pantry**: ubin bahan bisa diklik — langsung ke tempat bahan itu jatuh (Story, Garden, Expedition) memakai `DB.item_sources`; tooltip berisi semua sumber; bahan habis diberi bingkai merah.
+- **Dishes on hand**: kartu kecil berwarna (oranye = MEAL, pink = GIFT) dengan tombol SERVE/GIFT.
+- **Kartu resep**: garis warna jenis, piring bercahaya di belakang ikon, tag MEAL/GIFT berbentuk pil + durasi buff, chip bahan "punya/butuh" (hijau ✓ / merah kurang), bingkai hijau berdenyut + "READY xN" jika bisa dimasak, overlay LOCKED + "N more dishes" untuk resep terkunci.
+- **Filter ALL / MEALS / GIFTS** dan penghitung "N ready to cook" di judul.
+- **Efek masak**: kartu yang baru dimasak "pop" dan angka "+N" melayang dari ikon.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

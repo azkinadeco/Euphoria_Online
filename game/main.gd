@@ -323,13 +323,34 @@ func home() -> void:
 
 # ================================================================ overlays
 
+## Toasts with the same lead text (e.g. several "PLAYER LEVEL UP! Lv.x" in a row) merge into one.
+static func _toast_group(text: String) -> String:
+	var rx := RegEx.create_from_string("^[^0-9]*")
+	var m := rx.search(text)
+	return m.get_string() if m else text
+
 func toast(text: String, color: Color = UI.GOLD) -> void:
+	var grp := _toast_group(text)
+	# "NEW FEATURE UNLOCKED: A!" + "...: B!" → one toast listing both
+	var join := grp == text and text.find(": ") > 0
+	if join:
+		grp = text.substr(0, text.find(": ") + 2)
+	if grp.length() >= 8:
+		for old_p in _toast_box.get_children():
+			if old_p.has_meta("grp") and old_p.get_meta("grp") == grp and not old_p.is_queued_for_deletion():
+				if join:
+					var prev: String = old_p.get_meta("text")
+					text = prev.trim_suffix("!") + ", " + text.substr(grp.length())
+				_toast_box.remove_child(old_p)
+				old_p.queue_free()
 	var p := UI.styled_panel(Color(0.05, 0.03, 0.1, 0.94), color, 22, 2, 14)
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var l := UI.label(text, 17, Color.WHITE, 3)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p.add_child(l)
+	p.set_meta("grp", grp)
+	p.set_meta("text", text)
 	_toast_box.add_child(p)
 	while _toast_box.get_child_count() > 3:
 		var old_t := _toast_box.get_child(0)

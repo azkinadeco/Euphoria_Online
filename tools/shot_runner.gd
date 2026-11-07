@@ -56,6 +56,14 @@ func _next() -> void:
 			g.call(parts[0], int(parts[1]) if parts[1].is_valid_int() else parts[1])
 		else:
 			g.call(parts[0])
+	elif v.begins_with("gset:"):
+		# gset:tower.floor|9 -> Game.s["tower"]["floor"] = 9
+		var parts := v.substr(5).split("|")
+		var keys := parts[0].split(".")
+		var d = root.get_node("Game").s
+		for k in keys.slice(0, keys.size() - 1):
+			d = d[k]
+		d[keys[keys.size() - 1]] = int(parts[1]) if parts[1].is_valid_int() else parts[1]
 	elif v.begins_with("cur:"):
 		var parts := v.substr(4).split("|")
 		var args: Array = []

@@ -233,6 +233,7 @@ func _render_detail() -> void:
 		_: desc = str(DB.ITEMS.get(_sel, {}).get("desc", ""))
 	_detail.add_child(UI.wrap_label(desc, 15, UI.TEXT))
 	var it: Dictionary = DB.ITEMS.get(_sel, {})
+	_add_sources(_sel)
 	match str(it.get("kind", "")):
 		"use":
 			var key := _sel
@@ -257,3 +258,26 @@ func _render_detail() -> void:
 			_detail.add_child(UI.button("GO TO KITCHEN", func(): main.go("kitchen"), "GoldButton", Vector2(0, 48)))
 		"currency":
 			_detail.add_child(UI.button("GO TO SUMMON", func(): main.go("gacha"), "GoldButton", Vector2(0, 48)))
+
+## "OBTAIN FROM" list with GO buttons. Locked screens show their unlock level.
+func _add_sources(id: String) -> void:
+	var src := DB.item_sources(id)
+	if src.is_empty():
+		return
+	_detail.add_child(UI.label("OBTAIN FROM", 13, UI.GOLD, 2))
+	for e in src.slice(0, 4):
+		var row := UI.hbox(8)
+		var dot := UI.label("•", 15, Color("#ffb070"))
+		row.add_child(dot)
+		var nl := UI.label(str(e[0]), 14, UI.TEXT)
+		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		nl.custom_minimum_size.x = 60
+		row.add_child(nl)
+		var scr: String = e[1]
+		var prm: Dictionary = e[2]
+		if Game.feature_unlocked(scr):
+			row.add_child(UI.button("GO", func(): main.go(scr, prm), "", Vector2(64, 32)))
+		else:
+			row.add_child(UI.label("Lv.%d" % int(DB.FEATURE_UNLOCK.get(scr, 1)), 13, UI.MUTED, 2))
+		_detail.add_child(row)

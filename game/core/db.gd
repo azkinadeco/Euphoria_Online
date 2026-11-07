@@ -1038,6 +1038,62 @@ const QUEST_ROUTE := {
 	"max_star": "heroes", "oaths": "heroes", "max_skill": "heroes", "memories": "heroes", "pass_level": "pass",
 	"chats": "messenger", "personal_chats": "messenger",
 }
+## Where an item comes from (Bag → OBTAIN FROM). Shop entries are added automatically from SHOP.
+## Each entry: [label, screen, params].
+const ITEM_SOURCES := {
+	"summon_ticket": [["Story chapter rewards", "story", {}], ["Tower floors", "tower", {}], ["Daily Login", "lobby", {}], ["Season Pass", "pass", {}]],
+	"exp_potion": [["AFK Rewards", "lobby", {}], ["Dungeon", "dungeon", {}], ["Boss Hunt", "hunt", {}]],
+	"energy_potion": [["Black Market", "shop", {"tab": "market"}], ["Mail rewards", "mail", {}]],
+	"bouquet": [["Garden visits", "garden", {}]],
+	"celestial_gem": [["Garden visits (rare)", "garden", {}], ["Daily Login", "lobby", {}], ["World Boss milestones", "worldboss", {}]],
+	"oath_ring": [["Starlight Rift milestones", "rift", {}], ["Season Pass", "pass", {}], ["Black Market", "shop", {"tab": "market"}]],
+	"star_stone": [["Boss Hunt", "hunt", {}], ["Black Market", "shop", {"tab": "market"}]],
+	"skill_book": [["Dungeon", "dungeon", {}], ["Daily Login", "lobby", {}], ["Season Pass", "pass", {}]],
+	"rune_chest": [["World Boss milestones", "worldboss", {}], ["Starlight Rift milestones", "rift", {}]],
+	"gear_chest": [["Dungeon", "dungeon", {}], ["Story chapter rewards", "story", {}], ["World Boss milestones", "worldboss", {}]],
+	"gear_chest_ssr": [["Guild Shop", "guild", {}], ["Season Pass", "pass", {}], ["Daily Login", "lobby", {}]],
+	"forge_ember": [["Salvage gear in the Forge", "forge", {}], ["Dungeon", "dungeon", {}]],
+	"skin_ticket": [["Commander Road", "quests", {"tab": "COMMANDER ROAD"}], ["Mail rewards", "mail", {}]],
+	"hunt_core": [["Boss Hunt", "hunt", {}]],
+	"season_token": [["Festival battles", "festival", {}]],
+	"festival_token": [["Event stages", "event", {}]],
+	"ing_flour": [["Story, Hard & Event wins", "story", {}], ["Market Basket", "kitchen", {}]],
+	"ing_berry": [["Garden visits", "garden", {}], ["Market Basket", "kitchen", {}]],
+	"ing_herb": [["Herb Gathering expedition", "expedition", {}], ["Market Basket", "kitchen", {}]],
+	"ing_meat": [["Story, Hard & Event wins", "story", {}], ["Market Basket", "kitchen", {}]],
+	"dish_pancake": [["Cook in the Kitchen", "kitchen", {}]],
+	"dish_tart": [["Cook in the Kitchen", "kitchen", {}]],
+	"dish_stew": [["Cook in the Kitchen", "kitchen", {}]],
+	"dish_salad": [["Cook in the Kitchen", "kitchen", {}]],
+	"dish_pie": [["Cook in the Kitchen", "kitchen", {}]],
+	"gems": [["Missions", "quests", {}], ["Story first clears", "story", {}], ["Arena", "arena", {}]],
+	"gold": [["AFK Rewards", "lobby", {}], ["Dungeon", "dungeon", {}], ["Story stages", "story", {}]],
+	"hero_exp": [["AFK Rewards", "lobby", {}], ["Story stages", "story", {}]],
+	"arena_coin": [["Arena battles", "arena", {}]],
+}
+const _SHOP_TAB_NAME := {"gems": "Gem Shop", "gold": "Gold Shop", "arena_coin": "Arena Shop", "friend_point": "Friend Shop", "guild_coin": "Guild Shop"}
+
+static func item_sources(id: String) -> Array:
+	var out: Array = []
+	var seen := {}
+	for e in SHOP:
+		if not e["give"].has(id):
+			continue
+		var cur: String = e["cur"]
+		var nm: String = _SHOP_TAB_NAME.get(cur, "Shop")
+		if seen.has(nm):
+			continue
+		seen[nm] = true
+		if cur == "guild_coin":
+			out.append([nm, "guild", {}])
+		else:
+			out.append([nm, "shop", {"tab": cur}])
+	for e in ITEM_SOURCES.get(id, []):
+		if not seen.has(e[0]):
+			seen[e[0]] = true
+			out.append(e)
+	return out
+
 ## Redeem codes (Settings → REDEEM CODE). Case and spaces don't matter. Each code works once per save.
 # =================================================================== kitchen
 ## Ingredients drop from battles, the Garden and a daily Market Basket. Cook them into gifts or meals.

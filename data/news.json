@@ -1,5 +1,29 @@
 [
  {
+  "id": "n2026-11-08e",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Kitchen",
+  "bg": "lobby",
+  "body": "The Kitchen has been redecorated! A level ring shows your chef rank and what the next Kitchen level unlocks.\nRecipes glow when you can cook them, show every ingredient you still need, and can be filtered into Meals and Gifts.\nYour active meal shows a pip for each battle it has left, and you can tap a pantry ingredient to go where it drops."
+ },
+ {
+  "id": "n2026-11-08d",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Tower & Arena",
+  "bg": "galaxy",
+  "body": "The Tower of Trials has a new climb view: a glowing path through every floor, Guardian floors marked in red and the gem reward on each floor.\nEach floor now shows its battlefield, a THREAT meter (Favored, Even Fight, Risky, Deadly) and named enemy cards.\nArena now shows every Season Tier, its reward, and how many RP you need for the next one."
+ },
+ {
+  "id": "n2026-11-08c",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "Quality of Life: Missions & Bag",
+  "bg": "lobby",
+  "body": "Missions now show an icon for each task, list ready rewards first and move finished ones to the bottom.\nTap any item in the Bag to see OBTAIN FROM: every place it drops or is sold, with a GO button.\nLevel-up and feature-unlock notices now merge into one message, and battle intro banners are slimmer so they no longer hide your heroes."
+ },
+ {
   "id": "n2026-11-08b",
   "date": "2026-11-08",
   "tag": "NEW",

@@ -1094,13 +1094,15 @@ func _intro_banners() -> void:
 	box.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	box.offset_left = -360
 	box.offset_right = 360
-	box.offset_top = 104
+	box.offset_top = 124
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fx_layer.add_child(box)
 	for l in lines:
-		var p := UI.styled_panel(Color(0.04, 0.02, 0.1, 0.9), l[1], 20, 2, 12)
-		var lab := UI.label(l[0], 16, l[1].lightened(0.2), 4)
+		var p := UI.styled_panel(Color(0.04, 0.02, 0.1, 0.82), l[1], 16, 1, 6)
+		p.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		p.custom_minimum_size.x = 420
+		var lab := UI.label(l[0], 14, l[1].lightened(0.2), 3)
 		lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		p.add_child(lab)
 		box.add_child(p)
