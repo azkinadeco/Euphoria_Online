@@ -23,31 +23,84 @@ func build() -> void:
 	_count.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	bar.add_child(_count)
 	var b := body(76)
+	var root := UI.vbox(8)
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	b.add_child(root)
+	_strip = UI.hbox(10)
+	root.add_child(_strip)
 	_list = UI.vbox(10)
-	var sc := UI.scroll(UI.margin(_list, 4, 4, 4, 4))
-	sc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	b.add_child(sc)
+	_sc = UI.scroll(UI.margin(_list, 4, 4, 4, 4))
+	_sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_child(_sc)
+	_sc.resized.connect(_fit_cols)
+	_build_list()
+
+var _grids: Array = []
+
+func _fit_cols() -> void:
+	for g in _grids:
+		if is_instance_valid(g):
+			g.columns = clampi(int((_sc.size.x - 12) / 176.0), 3, 6)
+
+var _strip: HBoxContainer
+var _sc: ScrollContainer
+var _filter := "ALL"
+
+func _build_list() -> void:
 	var total := 0
 	var open := 0
+	var owned_n := 0
 	for id in DB.hero_ids():
-		var n := DB.art_list(id).size()
-		total += n
+		total += DB.art_list(id).size()
 		open += _unlocked_count(id)
+		if Game.owns(id):
+			owned_n += 1
 	_count.text = "  %d / %d unlocked" % [open, total]
+	# --- top strip: completion + filters
+	for c in _strip.get_children():
+		c.queue_free()
+	var pv := UI.vbox(2)
+	pv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var pl := UI.hbox(8)
+	pl.add_child(UI.label("COLLECTION", 13, UI.GOLD, 2))
+	pl.add_child(UI.label("%d%%  •  %d / %d heroes met" % [roundi(100.0 * open / maxf(1.0, total)), owned_n, DB.hero_ids().size()], 13, UI.TEXT, 2))
+	pv.add_child(pl)
+	pv.add_child(UI.bar(open, total, "GoldBar", 8))
+	_strip.add_child(pv)
+	for f in ["ALL", "OWNED", "LOCKED"]:
+		var fn: String = f
+		var fb := UI.button(fn, func():
+			_filter = fn
+			_build_list(), "GoldButton" if _filter == fn else "", Vector2(92, 36))
+		fb.add_theme_font_size_override("font_size", 13)
+		fb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		_strip.add_child(fb)
+	# --- grids per tier
+	_grids.clear()
+	for c in _list.get_children():
+		c.queue_free()
 	for tier in ["SSR", "SR", "R"]:
-		var ids: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == tier)
+		var all_ids: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == tier)
+		var ids: Array = all_ids.filter(func(h): return _filter == "ALL" or (_filter == "OWNED") == Game.owns(h))
 		if ids.is_empty():
 			continue
+		ids.sort_custom(func(x, y): return int(Game.owns(x)) > int(Game.owns(y)))
+		var have := all_ids.filter(func(h): return Game.owns(h)).size()
 		var hd := UI.hbox(8)
 		hd.add_child(UI.rarity_tag(tier, 18))
-		hd.add_child(UI.label("%s HEROES  •  %d" % [tier, ids.size()], 16, DB.RARITY_COLOR[tier], 3))
+		var hl := UI.label("%s HEROES" % tier, 16, DB.RARITY_COLOR[tier], 3)
+		hl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		hd.add_child(hl)
+		var hc := UI.label("%d / %d" % [have, all_ids.size()], 13, UI.MUTED, 2)
+		hc.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		hd.add_child(hc)
 		_list.add_child(hd)
 		var g := GridContainer.new()
-		g.columns = 6
+		g.columns = clampi(int((_sc.size.x - 12) / 176.0), 3, 6) if _sc.size.x > 0 else 6
 		g.add_theme_constant_override("h_separation", 12)
 		g.add_theme_constant_override("v_separation", 12)
 		_list.add_child(g)
-		sc.resized.connect(func(): g.columns = clampi(int((sc.size.x - 12) / 176.0), 3, 6))
+		_grids.append(g)
 		for id in ids:
 			g.add_child(_hero_card(id))
 	UI.stagger(_list, 0.02, 20)
@@ -80,14 +133,38 @@ func _hero_card(id: String) -> Control:
 	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	t.offset_bottom = -40
 	if not owned:
-		t.modulate = Color(0.08, 0.07, 0.12)
+		t.modulate = Color(0.11, 0.09, 0.17)
 	fr.add_child(t)
+	if owned:
+		var shine := Control.new()
+		shine.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		shine.offset_bottom = -40
+		shine.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		shine.draw.connect(func():
+			var sz := shine.size
+			var clear := Color(0.04, 0.03, 0.08, 0.0)
+			var dark := Color(0.04, 0.03, 0.08, 0.85)
+			shine.draw_polygon(PackedVector2Array([Vector2(0, sz.y * 0.65), Vector2(sz.x, sz.y * 0.65), sz, Vector2(0, sz.y)]), PackedColorArray([clear, clear, dark, dark])))
+		fr.add_child(shine)
+	else:
+		var q := UI.label("?", 54, Color(rc, 0.55), 4)
+		q.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		q.offset_bottom = -40
+		q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		q.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		fr.add_child(q)
+		b.tooltip_text = "Summon this hero to unlock her outfits."
+	if owned and un == n and n > 0:
+		var done := UI.styled_panel(Color(UI.GREEN, 0.2), UI.GREEN, 8, 1, 5.0)
+		done.position = Vector2(6, 6)
+		done.add_child(UI.label("COMPLETE", 10, UI.GREEN, 2))
+		fr.add_child(done)
 	var cap := UI.vbox(0)
 	cap.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	cap.offset_top = -40
 	cap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fr.add_child(cap)
-	var nm := UI.label(DB.name_of(id) if owned else "???", 14, Color.WHITE, 3)
+	var nm := UI.label(DB.name_of(id) if owned else "???", 14, Color.WHITE if owned else UI.MUTED, 3)
 	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	cap.add_child(nm)
 	var cl := UI.label("%d / %d outfits" % [un, n], 11, UI.GREEN if un == n and n > 0 else UI.MUTED, 2)

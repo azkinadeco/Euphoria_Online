@@ -713,7 +713,7 @@ func _run() -> void:
 	check(not ups.is_empty() and ups[0][0] == "lucidria", "bond_up signal fires on level up")
 
 	print("[long-term content]")
-	check(DB.CHAPTERS.size() == 38 and DB.stage_count() == 228, "38 chapters / 228 stages")
+	check(DB.CHAPTERS.size() == 40 and DB.stage_count() == 240, "40 chapters / 240 stages")
 	var bgmiss: Array = []
 	for chd2 in DB.CHAPTERS:
 		if not DB.BG.has(chd2["bg"]):
@@ -1108,10 +1108,14 @@ func _run() -> void:
 	G.s["gear"].clear()
 	var grig: Dictionary = DB.live_rig(DB.art("glytta", 3))
 	check(not grig.is_empty() and ResourceLoader.exists(str(grig["depth"])) and not grig.get("generic", false) and DB.live_rig(DB.art("glytta", 0)).get("generic", false), "Glytta evo2 keeps her hand-made rig; other skins auto")
-	check(DB.HEROES.size() == 33, "33 heroes (%d)" % DB.HEROES.size())
+	check(DB.HEROES.size() == 37, "37 heroes (%d)" % DB.HEROES.size())
 	for ne in ["scomantis", "skelinch", "serpentia", "voodoo", "lizamorph"]:
 		check(DB.ENEMIES.has(ne) and DB.art(ne, 0) != null and DB.sprite(ne, 1) != null, "new enemy %s" % ne) if not (DB.ENEMIES.has(ne) and DB.art(ne, 0) != null) else null
 	check(DB.special_index("luby") > 0 and DB.art_list("luby").size() == 6 and DB.alt_art("luby", 4) != null, "Luby: 5 outfits + special + alt expressions")
+	for nh in ["gala", "morana", "seraph", "tamo"]:
+		check(DB.HEROES.has(nh) and DB.art(nh, 0) != null and DB.sprite(nh) != null, "8 Nov hero %s has stats, art and sprite" % nh)
+	check(DB.special_index("morana") > 0 and DB.special_index("tamo") > 0, "Morana and Tamo special skins")
+	check(DB.ENEMIES.has("octra") and DB.art("octra", 0) != null and DB.PET_LINES.has("octra"), "Octra enemy is fightable and tameable")
 	check(DB.ENEMIES.has("hairly") and DB.ENEMIES.has("svormentis") and DB.ENEMIES.has("ymir") and DB.art("ymir", 0) != null, "3 new enemies with art")
 	check(DB.lobby_art("angela") != null and not DB.art_list("angela").any(func(p): return "lobby" in str(p)), "lobby pose separate from outfits")
 	check(DB.alt_art("spimei", 1) != null, "alternate expression available")

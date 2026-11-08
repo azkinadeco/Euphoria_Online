@@ -249,6 +249,19 @@ const HEROES := {
 	"spimei": {"rarity": "SR", "role": "RANGER", "hp": 1650, "atk": 240, "def": 60,
 		"skill": {"name": "Scarlet Drone Swarm", "aim": "back", "shape": "all", "mult": 0.55, "burn": 0.15,
 		"desc": "Her spider-drones strafe EVERY enemy for 55% ATK and leave them burning (15% ATK)."}},
+	# ---- 8 November 2026 heroes
+	"gala": {"rarity": "SR", "role": "MAGE", "hp": 1700, "atk": 235, "def": 60,
+		"skill": {"name": "Nebula Parasol", "aim": "front", "shape": "all", "mult": 0.6, "burn": 0.2,
+		"desc": "Her lava-octopus parasol erupts over EVERY enemy for 60% ATK and sets them burning (20% ATK)."}},
+	"morana": {"rarity": "SSR", "role": "HEALER", "hp": 2200, "atk": 190, "def": 85,
+		"skill": {"name": "Black Mass Benediction", "aim": "ally_all", "shape": "all", "heal": 0.85, "cleanse": true,
+		"desc": "A forbidden hymn heals every ally for 85% ATK and cleanses their debuffs."}},
+	"seraph": {"rarity": "SSR", "role": "MAGE", "hp": 1800, "atk": 305, "def": 65,
+		"skill": {"name": "Thousand-Eye Judgement", "aim": "back", "shape": "cross", "mult": 1.3, "stun": 0.2,
+		"desc": "The eyes on her wings open and smite the furthest enemy in a cross for 130% ATK (20% Stun)."}},
+	"tamo": {"rarity": "SSR", "role": "WARRIOR", "hp": 2700, "atk": 270, "def": 105,
+		"skill": {"name": "Nine-Tail Greatsword", "aim": "front", "shape": "line", "mult": 1.25, "burn": 0.15, "def_down": 0.2,
+		"desc": "A foxfire greatsword sweep hits the front line for 125% ATK, burns (15% ATK) and lowers DEF by 20%."}},
 }
 
 const ENEMIES := {
@@ -283,6 +296,9 @@ const ENEMIES := {
 		"skill": {"name": "Shadow Crawl", "aim": "front", "shape": "cross", "mult": 0.8, "silence": 0.25}},
 	"ymir": {"hp": 2200, "atk": 165, "def": 100, "role": "WARRIOR",
 		"skill": {"name": "Bone Throne Crush", "aim": "front", "shape": "column", "mult": 1.0, "stun": 0.2}},
+	# ---- 8 November 2026 enemy
+	"octra": {"hp": 2400, "atk": 180, "def": 85, "role": "MAGE",
+		"skill": {"name": "Abyss Beast Maw", "aim": "front", "shape": "cross", "mult": 0.95, "silence": 0.25}},
 }
 
 const VOICE := {
@@ -328,6 +344,10 @@ const HERO_LINES := {
 	"ninger": "Every coin I own says you'll have a lucky day!",
 	"spimei": "Drones online. Wings online. Heart... also online, unfortunately.",
 	"luby": "Nya~! My mecha cat wants head pats. ...Fine, me too.",
+	"gala": "Mind the parasol, darling. The octopus bites. I only nibble.",
+	"morana": "Confess, Commander. ...No, not your sins. Your feelings.",
+	"seraph": "A thousand eyes on my wings, and every one of them is watching you.",
+	"tamo": "The Nine-Tailed Queen greets you. ...You may pet ONE tail. For now.",
 }
 
 const CHAPTERS := [
@@ -858,7 +878,50 @@ const CHAPTERS := [
 			["lizamorph", "...hungry... still hungry... but... ...that hug... it was warm... can I... stay near it?"],
 			["commander", "You can stay. But you only eat dinner. Not bonds."], ["lizamorph", "...dinner. ...yes. ...thank you."],
 			["nar", "That night, for the first time, every beast in the cathedral slept beside someone who loved it."],
-			["nar", "— END OF ARC 9: THE WILD HUNT —   Every bond held. Thank you for playing, Commander."]]},
+			["nar", "— END OF ARC 9: THE WILD HUNT —   Every bond held."]]},
+	# ---- Arc 10: The Abyss Choir (Gala, Morana, Seraph, Tamo; Octra rides out of the Abyss)
+	{"name": "Choir of the Abyss", "bg": "necro", "pool": ["lizamorph", "eroghost", "hairly", "voodoo"], "boss": "octra", "variant": "hollow", "mirror": true, "boss_hp": 4.0, "boss_atk": 1.9,
+		"mod": {"elem": "LIGHT", "atk": 0.3, "name": "Holy Ground: LIGHT units +30% ATK"},
+		"intro": [["nar", "A week after the Hunt, the cathedral bells rang by themselves — thirteen times, at midnight."],
+			["morana", "Don't be alarmed, Commander. I rang them. ...Well. Something rang them THROUGH me."],
+			["commander", "And you are?"],
+			["morana", "Morana. A priestess of the Black Chapel, below the Necropolis. My choir stopped singing three nights ago. Now something else sings in their place."],
+			["seraph", "She's telling the truth. Every eye on my wings is looking down. At the floor. At what's under it."],
+			["?", "morana", ["We'll go down there together.", "Why come to us?", "Is your choir alive?"],
+				["...Thank you. I'll pray we all come back up.", "Because your cathedral is the only light left I trust.", "They're breathing. They just... won't stop singing her song."], [40, 30, 30]]],
+		"mid": [["nar", "The Necropolis stairs went down, and down, and down. Every step, the singing got louder."],
+			["seraph", "Heaven warned me about this place. 'The Abyss sings, and the Abyss eats.' I thought it was a metaphor."]],
+		"mid2": [["octra", "Mm~ visitors. Do you like my choir? My beast hums the melody. I just... conduct."],
+			["octra", "I'm Octra. I was sealed under this chapel for a thousand years. Then your Horn cracked — and so did my seal."],
+			["morana", "You stole my sisters' voices!"], ["octra", "Borrowed. A thousand years is very quiet, priestess."]],
+		"boss_lines": [["hollow:octra", "Sing with me, Commander! The Abyss Beast is SO hungry tonight~"], ["morana", "Black Mass Benediction — sisters, wake up!"],
+			["seraph", "A thousand eyes, open! Judge her!"]],
+		"outro": [["nar", "The beast fell asleep mid-roar, curled up like a giant, many-eyed cat. The singing stopped."],
+			["octra", "...Ow. Okay. Okay! You win. I'll give the voices back. ...It was just so quiet down here."],
+			["morana", "Sisters? ...They're waking up. They're humming a normal hymn. Thank you, Commander."],
+			["octra", "But listen. I didn't break my seal alone. Someone helped. Someone with a sword, and a crown, and a lot of tails."],
+			["nar", "Far above, a column of golden foxfire rose from the Caldera."]]},
+	{"name": "Queen of Foxfire", "bg": "dragonfire", "pool": ["gumi_wolf", "skelinch", "serpentia", "octra"], "boss": "tamo", "variant": "ashen", "mirror": true, "boss_hp": 2.2, "boss_atk": 1.1,
+		"mod": {"elem": "FIRE", "atk": 0.3, "name": "Foxfire Caldera: FIRE units +30% ATK"},
+		"intro": [["nar", "Dragonbone Caldera was burning gold. In the middle of the flames, a woman leaned on a greatsword taller than she was."],
+			["ashen:tamo", "Commander of the cathedral. I am Tamo, Queen of the Nine Tails. I broke the Abyss seal. I would do it again."],
+			["gala", "Oh, darling, she's FURIOUS. I love her already. ...Hi. I'm Gala. I set things on fire too. We should be friends."],
+			["commander", "Why break the seal?"],
+			["ashen:tamo", "The Horn took my people. Every gumi fox in the Caldera ran to the Hunt. I needed an army to bring them back. The Abyss offered one."]],
+		"mid": [["gumi_wolf", "Awoo... My Queen. We came home. We were with the Commander all along."],
+			["ashen:tamo", "...Gumi?"]],
+		"mid2": [["tamo", "...My foxes are safe. Fed. Petted. And I burned half a mountain for nothing."],
+			["?", "tamo", ["Not for nothing. You were protecting them.", "You can come home with us.", "Gala thinks you're cool."],
+				["...A queen protects. Even when she's wrong. ...Thank you for saying it.", "Home. ...With my foxes? ...Very well. Briefly. Permanently.", "...The parasol woman? Hmph. ...She has good taste."], [40, 40, 25]],
+			["ashen:tamo", "But the foxfire doesn't listen to me anymore! It burns on its own — stop me, Commander!"]],
+		"boss_lines": [["ashen:tamo", "Nine tails, one blade! Foxfire Greatsword!"], ["gala", "Nebula Parasol — darling, let's cool her down with MORE fire!"],
+			["seraph", "Gala, that is not how fire works!"], ["commander", "Everyone together — bring the Queen home!"]],
+		"outro": [["nar", "The golden flames folded back into nine tails, and the Queen sat down hard in the ash."],
+			["tamo", "...Hmph. Defeated by a Commander, a priestess, an angel and a pyromaniac. My ancestors are weeping."],
+			["gala", "Your ancestors are welcome to come to the party, darling."],
+			["octra", "So... can I come too? My beast is house-trained. Mostly. ...It ate a door once."],
+			["morana", "Everyone is welcome under the cathedral roof. Even Abyss girls. Even foxes. ...Especially the Commander."],
+			["nar", "— END OF ARC 10: THE ABYSS CHOIR —   Thank you for playing, Commander. More stories are coming."]]},
 ]
 const STAGES_PER_CHAPTER := 6
 
@@ -935,6 +998,15 @@ const INTERLUDES := [
 			["?", "shina", ["Right. Forever.", "As long as you'll have me.", "Only if you stop burning eggs."],
 				["...Forever's a long time. Good.", "Idiot. That's forever, then.", "NEVER. Stay anyway!"], [40, 30, 20]],
 			["nar", "And the Commander stayed."]]},
+	{"id": "i10", "name": "Midnight Choir Practice", "req": 240, "bg": "lobby", "cast": ["morana", "seraph", "gala", "tamo"],
+		"lines": [["nar", "The cathedral was quiet. Too quiet — Morana had decided everyone was joining the choir."],
+			["morana", "Seraph, you're flat. Gala, you're on fire. Literally. Tamo, a queen still has to hold the note."],
+			["seraph", "I'm an archangel. I'm never flat. ...My wing-eyes are just bad at reading sheet music."],
+			["gala", "I'm not on fire, darling. I'm passionate. ...Okay, the hymn book is a little on fire."],
+			["tamo", "A queen does not sing. ...A queen hums. Majestically."],
+			["?", "morana", ["You all sound wonderful.", "Can I just listen?", "Let's sing together."],
+				["...Liar. A very kind liar. I'll forgive you this once.", "...Then sit in the front row. I'll sing toward you.", "...Then hold my hand. So I don't lose the key."], [30, 35, 40]],
+			["nar", "And for one night, the cathedral sang — badly, loudly, and happily."]]},
 ]
 const CHAPTER_REWARD := {"gems": 300, "summon_ticket": 3, "gear_chest": 1}
 
@@ -1164,6 +1236,7 @@ const ACHIEVEMENTS := [
 ]
 
 const MAIL := [
+	{"id": "heroes_nov8", "title": "Four New Heroes & a Beast from the Abyss!", "body": "Gala, Morana, Seraph and Tamo have joined Euphoria — and Octra rides out of the Abyss in the new Arc 10. Tap the new ZOOM button on any hero or foe to view their art full screen. A small welcome gift is attached!", "give": {"gold": 50000, "exp_potion": 5}},
 	{"id": "skins_nov5", "title": "Special Skins Have Arrived!", "body": "Exclusive outfits are now in the WARDROBE: Ning Er, Spimei and Luby. Here is a Skin Ticket on us — pick your favourite!", "give": {"skin_ticket": 1, "gems": 200}},
 	{"id": "nov2026", "title": "10 New Heroes Have Arrived!", "body": "Abadonia, Atalanta, Kali, Zennyo Ryuo, Aqua, Rubby, Schylua, Vexira, Siv and Sven join Euphoria! Meet them at the new rate-up banners. Lulu now runs the Shop (and the Black Market at night).", "give": {"summon_ticket": 2, "gems": 300}},
 	{"id": "welcome", "title": "Welcome to Euphoria Online!", "body": "Commander, thank you for joining us. Please accept these gifts to begin your journey.", "give": {"gems": 900, "summon_ticket": 5, "gold": 50000}},
@@ -1204,6 +1277,9 @@ const TITLES := [
 ]
 
 const BANNERS := [
+	{"id": "nov8_morana", "name": "Black Priestess Rate-Up", "featured": "morana", "desc": "NEW! Morana rate UP! 50% of SSR pulls are Morana.", "bg": "necro"},
+	{"id": "nov8_tamo", "name": "Nine-Tail Queen Rate-Up", "featured": "tamo", "desc": "NEW! Tamo rate UP! 50% of SSR pulls are Tamo.", "bg": "dragonfire"},
+	{"id": "nov8_seraph", "name": "Archangel Rate-Up", "featured": "seraph", "desc": "NEW! Seraph rate UP! 50% of SSR pulls are Seraph.", "bg": "asgard"},
 	{"id": "nov4b_luby", "name": "Mecha Cat Rate-Up", "featured": "luby", "desc": "NEW! Luby rate UP! 50% of SSR pulls are Luby.", "bg": "bigtree"},
 	{"id": "nov4_mei", "name": "Crimson Bunny Rate-Up", "featured": "mei", "desc": "NEW! Mei rate UP! 50% of SSR pulls are Mei. Tap the art!", "bg": "hell",
 		"img": ["res://art/banners_event/banner_bunny_1.png", "res://art/banners_event/banner_bunny_2.png", "res://art/banners_event/banner_bunny_3.png"]},
@@ -1551,6 +1627,7 @@ static func costume_price(idx: int) -> int:
 const SPECIAL_PRICE := 1280
 const SPECIAL_SKINS := {
 	"ninger": "Golden Jackpot", "spimei": "Scarlet Overdrive", "luby": "Plush Panther Purr",
+	"morana": "Moonlit Vigil Veil", "tamo": "White Fox Bride",
 }
 ## Heroes whose special skin was taken out of the game. Saves that bought one get a Skin Ticket back.
 const WITHDRAWN_SKINS := ["lucidria", "hyeonxa", "kali", "abadonia"]
@@ -1830,9 +1907,9 @@ static func _bond_story_template(id: String, ep: int) -> Array:
 # ---------------------------------------------------------------- guild
 const GUILD_MAX_LV := 10
 const GUILDS := [
-	{"name": "Eclipse Vanguard", "desc": "Top raiders. Daily raid attacks expected.", "lv": 6},
-	{"name": "Moonlight Garden", "desc": "Casual & friendly. Bond lovers welcome!", "lv": 3},
-	{"name": "Abyssal Covenant", "desc": "Tower climbers and arena grinders.", "lv": 5},
+	{"name": "Eclipse Vanguard", "desc": "Top raiders. Daily raid attacks expected.", "lv": 6, "color": "#ff7a5c", "tags": ["RAID", "ACTIVE"], "members": 28, "activity": 0.92},
+	{"name": "Moonlight Garden", "desc": "Casual & friendly. Bond lovers welcome!", "lv": 3, "color": "#7fd8ff", "tags": ["CASUAL", "BOND"], "members": 17, "activity": 0.55},
+	{"name": "Abyssal Covenant", "desc": "Tower climbers and arena grinders.", "lv": 5, "color": "#b98cff", "tags": ["TOWER", "ARENA"], "members": 23, "activity": 0.78},
 ]
 const FRIEND_NAMES := ["Hana", "Daichi", "Mei", "Riku", "Sakura", "Yuki", "Haru", "Kaede", "Ayame", "Toma"]
 const MEMBER_NAMES := ["Rinne", "Kaito", "Yuzu", "Hikari", "Aria", "Zero", "Mochi", "Seren", "Kuro", "Akane", "Nova", "Ren", "Luna", "Sora"]
@@ -1879,6 +1956,7 @@ const FORM_BOND := [0, 2, 4, 6, 8, 9, 10, 10]
 const PET_REWARDS := {3: {"gems": 50}, 5: {"gems": 80, "gold": 20000}, 7: {"summon_ticket": 1}, 10: {"gems": 200, "celestial_gem": 1}}
 ## personality per foe: [greeting when tamed, talk lines..., gift thanks, pat reaction]
 const PET_LINES := {
+	"octra": ["Hm. You tamed me — or my beast? ...Both of us bite, Commander.", "My beast has a hundred eyes. All of them sulk when you leave.", "I sat on an abyss for a thousand years. Your lap is... an upgrade.", "Mm... the beast is purring. So am I. Don't tell anyone.", "A gift? The abyss never gave me gifts. Only hunger. ...Thank you."],
 	"eroghost": ["...You see me? Nobody ever sees me. Fine. I'll haunt YOU now.", "I used to rattle chains at travellers. Now I rattle them at your door. Progress.", "Ghosts don't sleep. I just watch you sleep. ...Is that weird?", "Warm hands. Ugh. Do it again.", "Ooh, a gift! I'll keep it forever. Literally forever."],
 	"evy_blood_sage": ["A commander who tames witches... how delightfully reckless.", "My spells drink blood. I prefer tea, honestly. Bitter, like me.", "Stay still. I'm reading your fate in the candle wax. ...You'll spoil me rotten.", "Mm. Your touch is warmer than any blood rite.", "A present? You do know how to court a witch."],
 	"gumi_wolf": ["Awoo! Nine tails, one master. Pet me. Now.", "I can smell the moon from here. And snacks. Mostly snacks.", "If you scratch behind my ears, I'll chase every monster away. Deal?", "Yes— right there— oh, my tails are wagging, don't look!", "Food! You brought food! Best master!"],
@@ -2086,7 +2164,7 @@ static func fav_room(id: String) -> String:
 
 # ------------------------------------------------------------------ Starlight Rift (weekly roguelite climb)
 const RIFT_MAPS := ["space", "alien", "abaddon", "blackhole", "dino", "bigtree", "necro", "galaxy", "dragonfire", "asgard", "outland", "ice", "apocalypse", "hell", "aqua", "forest"]
-const RIFT_POOL := ["slime", "ex_nymph", "gumi_wolf", "slarkoi", "eroghost", "evy_blood_sage", "ygg_naar", "hairly", "svormentis", "ymir", "scomantis", "skelinch", "serpentia", "voodoo", "lizamorph"]
+const RIFT_POOL := ["slime", "ex_nymph", "gumi_wolf", "slarkoi", "eroghost", "evy_blood_sage", "ygg_naar", "hairly", "svormentis", "ymir", "scomantis", "skelinch", "serpentia", "voodoo", "lizamorph", "octra"]
 const RIFT_VARIANTS := ["mirror", "hollow", "astral", "echo", "ashen"]
 ## Blessings: picked 1-of-3 after every win; they stack for the rest of the run.
 const BLESSINGS := {
@@ -2199,6 +2277,8 @@ static func hunt_stage(id: String, diff: int) -> Dictionary:
 # ------------------------------------------------------------------ Story Links
 ## Heroes bound by the story fight better together. Active when every member is deployed.
 const LINKS := [
+	{"id": "halo", "name": "Halo & Veil", "heroes": ["seraph", "morana"], "bonus": {"hp": 0.06, "atk": 0.06}, "line": "One prays to heaven, one argues with it."},
+	{"id": "foxflame", "name": "Foxfire & Lava", "heroes": ["tamo", "gala"], "bonus": {"atk": 0.08}, "line": "Two queens, one bonfire, zero patience."},
 	{"id": "cats", "name": "Mischief & Machines", "heroes": ["luby", "micca"], "bonus": {"atk": 0.08}, "line": "One steals snacks, one steals boxes."},
 	{"id": "wings", "name": "Wings of Dawn", "heroes": ["angela", "furu"], "bonus": {"def": 0.08, "hp": 0.06}, "line": "Heaven's sword and heaven's prayer."},
 	{"id": "phoenix", "name": "Phoenix & Dragon", "heroes": ["kara", "shina"], "bonus": {"atk": 0.08}, "line": "Two flames, one sky."},
@@ -2473,6 +2553,15 @@ static func alt_art(id: String, index: int = 0) -> Texture2D:
 		if ResourceLoader.exists(str(p)):
 			return tex(str(p))
 	return null
+
+## Every alternate expression of an outfit (paths), in order.
+static func alt_arts(id: String, index: int = 0) -> Array:
+	var states: Dictionary = _entry(base_id(id)).get("char_states", {})
+	var keys: Array = states.keys().filter(func(k): return k != "lobby")
+	keys.sort_custom(func(a, b): return _state_sort_key(a) < _state_sort_key(b))
+	if keys.is_empty():
+		return []
+	return states[keys[clampi(index, 0, keys.size() - 1)]].get("interactions", []).filter(func(q): return ResourceLoader.exists(str(q)))
 
 static func art(id: String, index: int = 0) -> Texture2D:
 	id = base_id(id)
@@ -2874,6 +2963,10 @@ const MSG_PERSONAL := {
 	"mei": [["Someone touched my ears at the market today.", "I almost drew my sword. ...You're the only one allowed."], ["I'm honored.", "Can I touch them now?"], ["You should be. It's a very exclusive privilege.", "...Just once. Gently. And you never tell anyone."], 1],
 	"ninger": [["I flipped my lucky coin 10 times today!", "Heads every time. You know what that means? Today is YOUR lucky day!"], ["Then let's summon!", "Are you sure it's a fair coin?"], ["That's the spirit! Pull one for me too!", "It's... mostly fair. Luck is a skill, Commander!"], 0],
 	"spimei": [["Drone 3 took a photo of you yawning.", "For security. I'm not keeping it. ...I'm keeping it."], ["Delete it!", "Send me a copy."], ["Sorry, access denied. Encryption level: crush.", "...Okay. But you have to send me a selfie back. Fair trade."], 1],
+	"gala": [["My parasol octopus ate your paperwork.", "All of it. I'd apologise, but it looked so happy."], ["Good. I hated that paperwork.", "Gala!"], ["See? Everyone wins. Come shade under my parasol, darling~", "Don't 'Gala' me. ...Say it again, actually. I like how you say it."], 0],
+	"morana": [["I heard confessions all morning.", "None of them were yours. I'm... disappointed."], ["I'll come by tonight.", "I have nothing to confess."], ["Tonight, then. I'll light the candles. Only for you.", "Everyone has something. I'll wait. Priestesses are patient."], 0],
+	"seraph": [["One of my wing-eyes winked at you today.", "I didn't tell it to. It just... did."], ["Wink back for me.", "Can you control them?"], ["...All thousand of them just blushed. Thank you. I think.", "Mostly. Except when you're around. Then they do whatever they want."], 0],
+	"tamo": [["A queen does not ask for head pats.", "...But if a Commander OFFERED, a queen would not refuse."], ["I'm offering.", "Ask me nicely."], ["Hmph. Good. All nine tails accept.", "...Please. There. Are you happy? My tails are wagging, don't look!"], 0],
 	"luby": [["Nya~ My mecha cat got an upgrade!", "It can give head pats now. ...Please test it. On me. For science."], ["For science, then.", "Why not ask the cat?"], ["Nyaa~ ...The experiment is a success. Repeat daily.", "It's not the same! Only your hands are calibrated right!"], 0],
 }
 const MSG_BOND2 := 6           # second personal chat unlocks at this Bond level
@@ -2910,6 +3003,10 @@ const MSG_PERSONAL2 := {
 	"mei": [["In my village, touching the ears means a promise.", "...I didn't tell you that before. You've already touched them three times."], ["Then I'll keep the promise.", "What did I promise?"], ["...Good. Then I won't have to draw my sword at you.", "To stay. Forever. ...Don't laugh. It's very serious."], 0],
 	"ninger": [["I stopped flipping my lucky coin.", "I don't need it anymore. My luckiest day was the day you recruited me."], ["Mine too.", "Keep it anyway, for good luck."], ["Ehehe! Then we're both lucky. That's double luck!", "Okay! I'll flip it once a day. For both of us."], 0],
 	"spimei": [["I deleted all the photos.", "...Okay, I deleted most of them. I kept one. You were smiling at me in it."], ["Keep that one forever.", "Show me which one."], ["System update: crush encryption upgraded to 'permanent'.", "...Here. That was the day you said I was the best engineer you've ever met."], 0],
+	"gala": [["I set the sky on fire once, you know.", "Just to see if anyone would notice me. Nobody did. ...You notice me every day."], ["I'll always notice you.", "Please don't set the sky on fire."], ["...Careful, darling. Say that again and my flames turn pink.", "No promises~ But I'll aim for your heart instead."], 0],
+	"morana": [["I've been praying differently lately.", "I used to pray for forgiveness. Now I pray you'll come back safe."], ["I always come back.", "Who answers those prayers?"], ["Then my prayers are already answered. Every evening.", "You do. Every time you walk through that door."], 0],
+	"seraph": [["Heaven sent me down to watch over you.", "I was supposed to go back after the war. I asked to stay. They said no. I stayed anyway."], ["I'm glad you stayed.", "You disobeyed heaven?"], ["...Then it was worth falling a little. For you.", "For you? I'd disobey it twice."], 0],
+	"tamo": [["My crown is heavy today.", "A queen can't show weakness. ...But you're not my subject. You're... you."], ["Then rest here with me.", "Let me carry it for a while."], ["...Only for a moment. ...Maybe two. Stay right there.", "Silly. It's a crown. ...But thank you. Truly."], 0],
 	"luby": [["Nya... my mecha cat has a new feature.", "It plays a song when you're nearby. I didn't program that. It just... started."], ["Maybe it knows something.", "That's a bug."], ["It knows I'm happy around you. Nya~ Machines don't lie.", "It's NOT a bug! It's a feature! ...A very embarrassing feature."], 0],
 }
 ## Chats triggered by what the Commander does. Variant picked by day.

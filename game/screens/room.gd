@@ -115,23 +115,13 @@ func build() -> void:
 	rb.disabled = rested
 	v.add_child(rb)
 	v.add_child(UI.label("GIFTS", 14, UI.GOLD, 3))
-	var gf := HFlowContainer.new()
+	var gf := GridContainer.new()
+	gf.columns = 3
 	gf.add_theme_constant_override("h_separation", 6)
 	gf.add_theme_constant_override("v_separation", 6)
 	v.add_child(gf)
 	for gid in DB.GIFTS + DB.DISH_GIFTS:
-		var g: String = gid
-		var n := Game.amount(g)
-		var gb := UI.button("%s x%d%s" % [DB.ITEMS[g]["name"].split(" ")[-1], n, "  ♥" if DB.fav_gift(hid) == g else ""], func():
-			var err := Game.give_gift(hid, g)
-			if err != "":
-				main.toast(err, UI.RED)
-				return
-			main.toast("%s loved it! %s" % [DB.name_of(hid).split(" ")[0], "(favourite x2)" if DB.fav_gift(hid) == g else ""], Color("#ff8fb8"))
-			main.replace("room", {"loc": _loc}), "", Vector2(0, 38))
-		gb.add_theme_font_size_override("font_size", 12)
-		gb.disabled = n <= 0
-		gf.add_child(gb)
+		gf.add_child(_gift_tile(hid, gid))
 	var row := UI.hbox(8)
 	v.add_child(row)
 	var ch := UI.button("CHANGE HERO", _pick_hero, "", Vector2(0, 42))
@@ -170,3 +160,52 @@ func _pick_hero() -> void:
 			main.close_popup(v)
 			main.replace("room", {"loc": _loc}))
 		g.add_child(card)
+
+
+## Gift tile: icon, count and a heart on her favourite. Tap to give.
+func _gift_tile(hid: String, g: String) -> Control:
+	var n := Game.amount(g)
+	var fav := DB.fav_gift(hid) == g
+	var bt := Button.new()
+	bt.focus_mode = Control.FOCUS_NONE
+	bt.custom_minimum_size = Vector2(0, 56)
+	bt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var border := Color("#ff8fb8") if fav else Color(1, 1, 1, 0.14)
+	var sb := UI.style(Color(0.12, 0.08, 0.18, 0.9) if n > 0 else Color(0.08, 0.06, 0.11, 0.7), border, 10, 2 if fav else 1, 4.0)
+	bt.add_theme_stylebox_override("normal", sb)
+	var hv := sb.duplicate()
+	hv.border_color = UI.GOLD
+	bt.add_theme_stylebox_override("hover", hv)
+	bt.add_theme_stylebox_override("pressed", hv)
+	bt.add_theme_stylebox_override("disabled", sb)
+	var h := UI.hbox(4)
+	h.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	h.offset_left = 6
+	h.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bt.add_child(h)
+	var ic := UI.tex_rect(DB.icon(DB.ITEMS[g]["icon"]), Vector2(38, 38))
+	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if n <= 0:
+		ic.modulate = Color(1, 1, 1, 0.3)
+	h.add_child(ic)
+	var cl := UI.label("x%d" % n, 14, Color.WHITE if n > 0 else UI.MUTED, 2)
+	cl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	cl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	h.add_child(cl)
+	if fav:
+		var hl := UI.label("♥", 14, Color("#ff8fb8"), 3)
+		hl.position = Vector2(4, 0)
+		bt.add_child(hl)
+	bt.tooltip_text = "%s%s\n%s" % [DB.ITEMS[g]["name"], "  (her favourite: Bond x2)" if fav else "", DB.ITEMS[g].get("desc", "")]
+	bt.disabled = n <= 0
+	bt.pressed.connect(func():
+		var err := Game.give_gift(hid, g)
+		if err != "":
+			main.toast(err, UI.RED)
+			return
+		Game.sfx("star_up")
+		main.toast("%s loved it! %s" % [DB.name_of(hid).split(" ")[0], "(favourite x2)" if fav else ""], Color("#ff8fb8"))
+		main.replace("room", {"loc": _loc}))
+	UI.hover_fx(bt, 1.04)
+	return bt

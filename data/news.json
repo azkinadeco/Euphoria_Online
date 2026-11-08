@@ -1,5 +1,157 @@
 [
  {
+  "id": "n2026-11-08x",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Settings",
+  "bg": "lobby",
+  "body": "Settings now has a Commander profile card (partner portrait, level, heroes, stages and team power) next to clean setting cards. Volume sliders show their percentage with a one-tap MUTE, toggles say ON or OFF with a short explanation, and you can test your partner's voice. Save Data and Redeem Code each have their own card."
+ },
+ {
+  "id": "n2026-11-08w",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Bag",
+  "bg": "lobby",
+  "body": "The Bag tabs now show how many things are inside, and Items can be filtered (Currency, Upgrade, Chests, Gifts, Food). Each tile is framed in its own colour with a quantity pill, and a pulsing ! marks items you can use or open right now. Empty tabs tell you where to get gear, runes and shards."
+ },
+ {
+  "id": "n2026-11-08v",
+  "date": "2026-11-08",
+  "tag": "NEW",
+  "title": "Full-Screen Character Viewer",
+  "bg": "asgard",
+  "body": "Tap the magnifier button on any hero page or Bestiary entry to view the art full screen. Pinch or scroll to zoom, drag to pan, double-tap for a close-up, and tap her to hear a line and see a new expression. Browse every outfit or form with the arrows, switch expressions, or hide the interface for a clean screenshot."
+ },
+ {
+  "id": "n2026-11-08u",
+  "date": "2026-11-08",
+  "tag": "EVENT",
+  "title": "4 New Heroes + Arc 10: The Abyss Choir",
+  "bg": "necro",
+  "body": "Morana the Black Priestess, Tamo the Nine-Tailed Sword Queen, Seraph the Archangel of a Thousand Eyes and Gala the Nebula Flame Temptress have joined Euphoria, each with her own rate-up banner. Morana and Tamo also have special Wardrobe skins.\nA new foe, Octra, rides her Abyss Beast out of the Necropolis in Arc 10 (Chapters 39 and 40), with a new interlude, Midnight Choir Practice. Octra can be tamed and also appears in the Rift."
+ },
+ {
+  "id": "n2026-11-08t",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Summon & Wardrobe",
+  "bg": "lobby",
+  "body": "The Summon screen now shows the rates as colour chips, and Pity and Spark as their own progress bars. EXCHANGE glows when your Spark is full, summon buttons show the gem or ticket icon, and the free daily summon pulses.\nThe Wardrobe shows your skin collection progress, the stat bonuses (+10% ATK and HP), and every outfit of the selected hero. If you don't own her yet, it links you to Summon."
+ },
+ {
+  "id": "n2026-11-08s",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Garden & Photo Studio",
+  "bg": "forest",
+  "body": "The Garden has a Residents Today card that shows each resident's Bond taps left as hearts.\nIn the Photo Studio, every setting now shows its current value (outfit, background, filter, frame) and its position in the list, under a hero card with a CHANGE button."
+ },
+ {
+  "id": "n2026-11-08r",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Mailbox",
+  "bg": "lobby",
+  "body": "The Mailbox now works like an inbox: your mail is listed on the left with EVENT / UPDATE / GIFT tags, senders, dates and an unread dot. The selected letter opens on the right as a paper note with its attachments and a CLAIM REWARDS button.\nAfter you claim one, the next unclaimed letter opens automatically."
+ },
+ {
+  "id": "n2026-11-08q",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Dates & Festival Exchange",
+  "bg": "forest",
+  "body": "No date partner yet? The Date screen now shows the four heroes closest to Bond Lv.3, with a progress bar and a GIFT shortcut, plus quick links to every way of raising Bond.\nLocked date spots show your story progress toward unlocking them.\nThe Festival Exchange shows charm prices with the charm icon, stock bars, and a daily charm cap bar."
+ },
+ {
+  "id": "n2026-11-08p",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Boss Hunt",
+  "bg": "hunt",
+  "body": "Difficulty is now picked from coloured tiles showing each level, with a check mark on the ones you've cleared.\nA power comparison shows your team against the target, with a FAVORED / EVEN / RISKY / DEADLY verdict.\nThe target list shows which difficulties you've cleared, and the Hunter's Exchange shows Hunt Core prices and stock bars."
+ },
+ {
+  "id": "n2026-11-08o",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Shop & Black Market",
+  "bg": "blackmarket",
+  "body": "Shop cards got a glow, FREE / POPULAR / LIMITED tags, stock bars, and price buttons with the currency icon. Prices turn red when you can't afford them.\nEach tab opens with an info card showing your balance and when the shop restocks.\nBlack Market deals show the old price next to the discount, and hero shards show her portrait."
+ },
+ {
+  "id": "n2026-11-08n",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Friends",
+  "bg": "forest",
+  "body": "The Friends screen now has a profile card (your ID, friend count, supports left, points) and a Daily Hearts box with a beating heart.\nFriend cards show online status, a heart once you've sent hearts today, and whether their support hero is ready. You can filter by ALL / AVAILABLE / USED TODAY."
+ },
+ {
+  "id": "n2026-11-08m",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: World Boss",
+  "bg": "worldboss",
+  "body": "Damage rewards are now tiers I to V with progress bars, a NEXT tag on the next tier, a summary of how much damage is left, and pulsing CLAIM buttons.\nThe ranking has a top-3 podium and shows this week's reward for your rank.\nFixed: the RANKING tab in World Boss and Starlight Rift now opens properly."
+ },
+ {
+  "id": "n2026-11-08l",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Starlight Rift",
+  "bg": "space",
+  "body": "The Rift now shows a map of the next 10 floors, with Guardian floors as red diamonds and your best floor marked.\nA Next Guardian card previews the variant hero waiting on the next 5th floor: her level, how many foes and their power.\nFloor rewards show your progress toward each one, and the weekly reset countdown is next to your best floor."
+ },
+ {
+  "id": "n2026-11-08k",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Messenger & Room Gifts",
+  "bg": "lobby",
+  "body": "Messenger now feels like a real phone chat: round avatars with an online dot, bubbles that fit their text, timestamps, read ticks and an animated typing indicator.\nIn the Private Room, gifts are now icon tiles showing how many you have. Her favourite gift is marked with a heart and gives double Bond."
+ },
+ {
+  "id": "n2026-11-08j",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "Gallery Filters",
+  "bg": "lobby",
+  "body": "The Gallery now shows your collection progress and how many heroes you have met, with ALL / OWNED / LOCKED filters.\nEach tier shows how many of its heroes you own, owned heroes are listed first, and fully unlocked albums get a COMPLETE badge."
+ },
+ {
+  "id": "n2026-11-08i",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Season Pass",
+  "bg": "galaxy",
+  "body": "The Season Pass track now has a glowing level line that fills up to your Pass level, with diamond markers on every 5th level.\nMilestone rewards are framed in gold, ready rewards pulse, and the track opens at your first unclaimed reward.\nThe Grand Prize at Lv.30 (Oath Ring and 5 Summon Tickets) is now shown on the right, along with how many levels are left."
+ },
+ {
+  "id": "n2026-11-08h",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Dungeons, Forge & Bestiary",
+  "bg": "hell",
+  "body": "Daily Dungeons now show each dungeon's scenery, attempt pips and your best clear. Every level has a medallion and a Favored / Even / Risky / Deadly tag that compares your team's power to the enemy's.\nAn empty Forge now tells you where to find gear, with GO buttons, and explains what each tab does.\nUnknown Bestiary entries now show where to find that foe, her hunting rewards and when she can be tamed."
+ },
+ {
+  "id": "n2026-11-08g",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Guild",
+  "bg": "asgard",
+  "body": "Looking for a guild? Each guild now has its own emblem and colour, tags for its play style, member count, the ATK & HP bonus it gives and how active it is.\nThe left side explains what you get from a guild: the Guild Raid, Guild Coins and a team-wide stat bonus.\nYou can still found your own guild for 300 Gems.\nInside your guild, the hall now shows your guild's emblem, the bonus at the next level, and a TODAY checklist for Check-in, Donations and Raid attempts."
+ },
+ {
+  "id": "n2026-11-08f",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Expeditions",
+  "bg": "forest",
+  "body": "Every expedition now has its own scenery banner, a status tag (Available, In Progress, Complete) and hero slots that fill with the heroes you sent.\\nThe top bar shows how many missions are active or ready, and CLAIM ALL collects every finished expedition at once.\\nMissions your heroes are not strong enough for yet are clearly marked with the level they need."
+ },
+ {
   "id": "n2026-11-08e",
   "date": "2026-11-08",
   "tag": "UPDATE",

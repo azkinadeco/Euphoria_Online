@@ -661,6 +661,190 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - **Filter ALL / MEALS / GIFTS** dan penghitung "N ready to cook" di judul.
 - **Efek masak**: kartu yang baru dimasak "pop" dan angka "+N" melayang dari ikon.
 
+## 2by. Update batch 74 — Tampilan baru Expedition
+
+- **Strip ringkasan** di atas: ACTIVE n/5, READY, HEROES OUT, info Bond, dan tombol **CLAIM ALL** (klaim semua ekspedisi yang selesai sekaligus, hadiah digabung dalam satu popup).
+- **Kartu misi**: banner pemandangan per misi (forest, outland, asgard, dragonfire, blackhole) dengan chip durasi dan status (AVAILABLE / IN PROGRESS / COMPLETE / LOCKED).
+- **Slot hero**: lingkaran "+" kosong sesuai jumlah hero yang dibutuhkan; terisi wajah hero saat berjalan. Label "+10 Bond each".
+- Syarat "Hero Lv.N+" berwarna merah dan tombol SEND nonaktif (dengan tooltip) jika belum ada hero yang memenuhi; banner digelapkan.
+- Saat berjalan: bar progres + timer + hadiah dalam satu baris; selesai: bingkai hijau dan "Ready to claim!".
+
+## 2bz. Update batch 75 — Lobi Guild baru
+
+- Layar "belum masuk guild" sekarang dua kolom.
+- **Kiri — WHY JOIN A GUILD?**: 3 kartu manfaat (Guild Raid, Guild Coins, Team Power +1% ATK & HP per level), catatan guild offline, dan kotak **FOUND YOUR OWN** (nama + CREATE 300 Gems; nonaktif jika gem kurang).
+- **Kanan — RECOMMENDED GUILDS**: kartu per guild dengan lambang perisai berwarna (huruf awal), badge level, tag gaya main (RAID/ACTIVE, CASUAL/BOND, TOWER/ARENA), anggota "28 / 30", bonus "+5% ATK & HP" (sesuai `guild_bonus` = level − 1), dan bar ACTIVITY.
+- `DB.GUILDS` mendapat field baru: `color`, `tags`, `members`, `activity` (opsional, ada default).
+
+## 2ca. Update batch 76 — Panel kiri Guild Hall
+
+- Lambang perisai guild (warna sesuai `DB.GUILDS`, emas untuk guild buatan sendiri) + nama + level.
+- Bar EXP dengan pratinjau "next: +N%", kotak hijau "Guild buff: +N% ATK & HP".
+- **TODAY checklist** (`_task`): Check-in (CLAIM), Donate n/3 (GIVE), Raid n/3 left — baris yang selesai diberi ✔ hijau, tombol aksi berdenyut.
+- Berita "New Look: Guild" digabung dengan update lobi (batch 75).
+
+## 2cb. Update batch 77 — Daily Dungeon
+
+- Pilihan dungeon (kiri) jadi banner pemandangan (`bg` tiap dungeon) dengan gradasi gelap, ikon, nama, jenis hadiah (Gold / Hero EXP & Potions / Gear & Chests), pip percobaan hijau, dan "Best Lv.N" / "Not cleared". Yang dipilih berbingkai emas.
+- Tiap level (kanan) punya medali angka (✔ hijau jika sudah clear), wajah musuh (gelap jika terkunci, tooltip nama), "Enemy Lv / Power", dan tag ancaman FAVORED / EVEN / RISKY / DEADLY (perbandingan `team_power` vs `enemy_power`, tooltip angka).
+
+## 2cc. Update batch 78 — Forge saat kosong
+
+- Belum punya gear: kartu **YOUR ARMORY IS EMPTY** + daftar "WHERE TO GET GEAR" (Armory Ruins, Gear Chests di Bag, ekspedisi Ancient Ruins, boss Story) dengan tombol GO (atau "Lv.N" jika fitur terkunci).
+- Tengah: ikon perlengkapan transparan "THE ANVIL AWAITS".
+- Kanan (`_right_help`): penjelasan tab REFORGE / TEMPER / FUSE + biaya + catatan bahwa Forge Embers didapat dari SALVAGE.
+
+## 2cd. Update batch 79 — Bestiary
+
+- Header "DISCOVERED n / 15" dengan bar progres emas.
+- Entri musuh yang belum ditemui (`_unknown_detail`): petunjuk kelas (TANK/RANGER/…), "WHERE TO FIND HER" (dungeon yang memuat musuh itu + Story, dengan GO), daftar **HUNTING REWARDS** per tier kill, dan info taming setelah 20 kill.
+
+## 2ce. Update batch 80 — Season Pass
+
+- Header: cincin level PASS (progres EXP), chip "Ends in N days", "• N rewards ready", bar EXP, dan sumber Pass EXP sebagai chip. Tombol UNLOCK PREMIUM berdenyut; jika aktif → kotak hijau "PREMIUM ACTIVE ✔".
+- Lajur hadiah: kolom per level = sel FREE, **node level** di garis tengah (garis emas menyala sampai level kamu, lingkaran bernomor, berlian untuk tiap level ke-5), sel PREMIUM.
+- Sel milestone (tiap 5 level) berbingkai emas tebal + ★; sel siap klaim berbingkai hijau berdenyut; premium yang belum dibeli redup + LOCKED; tooltip berisi isi hadiah.
+- Panel **GRAND PRIZE** Lv.30 di kanan (Oath Ring + 5 Summon Ticket, ikon bernapas, "N levels to go", tombol VIEW menggulir ke akhir lajur).
+- Saat dibuka, lajur langsung menggulir ke hadiah pertama yang belum diklaim.
+
+## 2cf. Update batch 81 — Gallery
+
+- Strip atas: "COLLECTION N% • x / 33 heroes met" + bar emas, tombol filter ALL / OWNED / LOCKED (`_build_list` membangun ulang daftar).
+- Judul tier menampilkan jumlah hero yang dimiliki ("1 / 14"); hero yang dimiliki diurutkan di depan.
+- Kartu terkunci: siluet gelap + tanda "?" besar berwarna rarity + tooltip "Summon this hero…"; kartu dimiliki: gradasi bawah, badge COMPLETE jika semua outfit terbuka.
+- Penyesuaian kolom grid lewat satu handler `_fit_cols` (aman saat filter membangun ulang grid).
+
+## 2cg. Update batch 82 — Messenger gaya aplikasi chat
+
+- Avatar bulat (`_avatar`) dengan titik hijau "online"; daftar chat memakai pil merah **NEW** untuk pesan baru dan kartu tips Perfect Reply di bawah.
+- Bar judul chat: avatar, nama, "● Online", badge "♥ Bond Lv.N".
+- Gelembung (`_bubble`) menyesuaikan lebar teks (bungkus hanya jika > ~62% lebar chat), sudut "ekor" di sisi pengirim, cap waktu malam (21:06…), centang ✓✓ untuk balasan kamu, dan indikator mengetik "• • •" yang berkedip.
+
+## 2ch. Update batch 83 — Hadiah Private Room
+
+- Tombol teks hadiah diganti grid 3 kolom ubin ikon (`_gift_tile`): ikon item, jumlah, ♥ + bingkai pink untuk hadiah favorit (Bond x2), redup jika 0, tooltip nama + deskripsi.
+
+## 2ci. Update batch 84 — Starlight Rift
+
+- **Peta lantai** (`_rift_map`): 10 lantai berikutnya di satu garis; lantai Guardian (tiap 5) berupa berlian merah, lantai sekarang bercahaya emas, garis ungu menyala untuk lantai yang sudah dilewati, label "BEST".
+- **Kartu NEXT GUARDIAN** (`_guardian_card`): wajah hero varian, "Ashen/Hollow/Mirror… Nama", Lv, jumlah musuh, power (dari `DB.rift_floor`).
+- Info "Resets in Nd" di samping best floor.
+- **Floor Rewards**: medali berlian bernomor, bar progres (best / target) untuk yang belum tercapai, tombol CLAIM emas berdenyut saat siap, label CLAIMED saat sudah diambil (menggantikan tombol CLAIM nonaktif).
+
+## 2cj. Update batch 85 — World Boss
+
+- **Hadiah damage** jadi tier I–V: medali heksagon (hijau = siap, oranye = target berikutnya + pil **NEXT**, ungu = terkunci, ✓ = sudah diambil), bar progres per tier, persen, CLAIM emas berdenyut, label CLAIMED.
+- Strip ringkasan di atas: "N more damage to Tier X", "a / b tiers claimed • n ready", dan trek tier tersegmentasi (`_tier_track`).
+- Panel kiri: chip statistik (WEEKLY DMG / BEST HIT / RANK) dan pip jatah serangan harian.
+- **Ranking**: podium Top-3 (`UI.podium`, mahkota ♛ untuk #1) dan kotak "You are #N — this week's reward: …".
+- **Bug fix**: tab RANKING di World Boss & Rift sebelumnya selalu kembali ke tab pertama (`_tab` hilang saat `main.replace`). Sekarang tab dikirim lewat `params.tab`.
+
+## 2ck. Update batch 86 — Friends
+
+- Layout dua panel. Kiri: kartu profil (avatar bulat, Lv, ID), chip FRIENDS / SUPPORTS / POINTS, kotak **DAILY HEARTS** (hati berdenyut, tombol SEND TO ALL), dan "HOW FRIENDS HELP" (3 langkah berikon).
+- Kanan: filter ALL / AVAILABLE / USED TODAY, grid 2 kolom kartu teman (status online / "5m ago", ♥ jika hati sudah dikirim, pil SUPPORT READY / HELPED TODAY, kartu yang sudah dipakai diredupkan dan diletakkan di akhir).
+
+## 2cl. Update batch 87 — Shop & Black Market
+
+- Kartu pertama tiap tab adalah kartu info: saldo, deskripsi, "⟳ Restocks in Xh Ym", dan pintasan (EARN POINTS / GO TO ARENA).
+- Kartu item: ikon di atas lingkaran cahaya, tag FREE / POPULAR / LIMITED, bar stok, tombol harga dengan ikon mata uang (teks merah + tooltip jika tidak cukup), cap "SOLD OUT" miring, tombol FREE berdenyut.
+- Black Market: kartu refresh di depan, tag diskon, "was N" (harga asli), potret bulat untuk shard hero (sebelumnya terpotong), ukuran kartu seragam.
+
+## 2cm. Update batch 88 — Boss Hunt
+
+- Pemilih kesulitan diganti ubin berwarna (`_diff_tile`): NORMAL hijau, HARD biru, NIGHTMARE ungu, ABYSS merah; berisi Lv, ✓ jika sudah clear, LOCKED + tooltip "Clear X first".
+- Perbandingan power (`_power_compare`): bar YOU vs FOE dan tag FAVORED / EVEN / RISKY / DEADLY.
+- Pip jatah berburu harian; tombol HUNT berdenyut.
+- Daftar target: pip berlian 4 kesulitan (terisi = sudah clear) dan nama kesulitan terbaik.
+- Hunter's Exchange: tombol dengan ikon Hunt Core (merah jika tidak cukup), bar stok, "a / b left this week".
+
+## 2cn. Update batch 89 — Date (empty state) & Festival Exchange
+
+- Date tanpa partner: panel "NO DATE PARTNER YET" dengan hati berdenyut, 4 hero terdekat ke Bond Lv.3 (bar progres + tombol GIFT ke tab BOND), dan 4 ubin "WAYS TO RAISE BOND" (Gifts, Daily Talks, Private Room, Kitchen).
+- Spot kencan terkunci menampilkan 🔒 dan progres "x / y stages".
+- Festival: chip Lantern Charms dengan bar batas harian; Exchange memakai ikon charm, bar stok, harga merah jika tidak cukup, dan baris redup saat habis.
+
+## 2co. Update batch 90 — Mailbox gaya inbox
+
+- Dua panel. Kiri: daftar surat dengan ikon pengirim, tag (EVENT / UPDATE / GIFT), pengirim, tanggal, titik merah belum dibaca, "🎁 N", dan ✓ jika sudah diklaim (`META` per id surat).
+- Kanan: surat bergaya kertas krem (tag, judul, "From:", garis emas, "Dear Commander,", isi surat, kotak ATTACHMENTS, tombol CLAIM REWARDS berdenyut). Setelah klaim, surat belum diklaim berikutnya terbuka otomatis.
+- Tombol header menjadi "CLAIM ALL (n)" atau "ALL CLAIMED".
+- Catatan teknis: `UI.fade_in` jangan dipakai pada anak Container karena menimpa posisi hasil layout (padding hilang). Gunakan tween `modulate:a` saja.
+
+## 2cp. Update batch 91 — Photo Studio
+
+- Kartu hero (wajah, nama, outfit, tombol CHANGE) menggantikan teks info.
+- Stepper menampilkan judul kecil dan nilai saat ini, misalnya "Outfit 1 (1/11)", "Lobby (1/25)", "Warm (2/8)", "Gold (2/5)".
+
+## 2cq. Update batch 92 — Garden
+
+- Kartu "RESIDENTS TODAY" di kiri atas: wajah, nama, Bond, dan ♥♥♡♡♡ tap harian; jumlah total "N taps left"; diperbarui setiap tap.
+- Hint diubah jadi pil gelap; area jalan chibi digeser ke kanan supaya tidak tertutup kartu.
+
+## 2cr. Update batch 93 — Summon
+
+- Rate jadi 3 chip berwarna (SSR / SR / R).
+- PITY dan SPARK digabung dalam satu kartu meter (`_meter`): bar berwarna dengan angka; tombol EXCHANGE berdenyut saat spark penuh.
+- Tombol summon berikon tiket atau permata (teks merah jika tidak cukup); FREE DAILY berdenyut.
+
+## 2cs. Update batch 94 — Wardrobe
+
+- Header koleksi "a / b owned" dengan bar.
+- Chip bonus (+10% ATK, +10% HP, LIVE ART) dan "OUTFIT LINE-UP" (semua outfit hero, yang spesial berbingkai emas, yang terkunci diredupkan).
+- Jika hero belum dimiliki: kotak merah dengan tombol "FIND HER IN SUMMON".
+- Tombol tiket skin dan harga permata berikon (harga merah jika tidak cukup).
+
+## 2ct. Update 8 Nov — 4 hero baru + enemy Octra + Arc 10
+
+- Import aset (background sudah dihapus manual) lewat `tools/import_nov8.py`. Skrip ini memakai helper `import_nov4.py`, dengan tambahan: file huruf yang tidak punya base (`queengumi_char_evo1a`) dijadikan base; `evo3aa` dihitung sebagai ekspresi alternatif; file `banner` dan `special` dipisah.
+- Hero:
+  - **Gala** (SR, FIRE MAGE, Nebula Parasol)
+  - **Morana** (SSR, DARK HEALER, Black Mass Benediction, skin spesial "Moonlit Vigil Veil")
+  - **Seraph** (SSR, LIGHT MAGE, Thousand-Eye Judgement)
+  - **Tamo** (SSR, EARTH WARRIOR, Nine-Tail Greatsword, skin spesial "White Fox Bride")
+- Enemy: **Octra** (DARK MAGE, Abyss Beast Maw). Bisa dijinakkan (PET_LINES), masuk RIFT_POOL, dan bannernya ada di `art/banners_event/banner_octra_1.png`.
+- Data per hero:
+  - stats dan skill, greet VOICE, profil, voice_lines (JP+EN, sudah digenerate ke `audio/voice`), 3 memori;
+  - MSG_PERSONAL dan MSG_PERSONAL2, 2 Story Link (Halo & Veil, Foxfire & Lava);
+  - 3 banner rate-up, mail "heroes_nov8", depth map 2.5D.
+- Arc 10 "The Abyss Choir":
+  - Chapter 39 "Choir of the Abyss" (boss hollow Octra) dan Chapter 40 "Queen of Foxfire" (boss ashen Tamo). Total jadi 40 chapter / 240 stage.
+  - Interlude i10 "Midnight Choir Practice".
+- Flow test diperbarui: 37 hero, 40 chapter, cek aset hero/enemy baru.
+
+## 2cu. Fitur viewer karakter layar penuh
+
+- `game/ui/art_viewer.gd` (class `ArtViewer`) adalah overlay layar penuh untuk hero dan enemy. Latarnya peta elemen yang digelapkan, ditambah glow warna tema dan partikel.
+- Kontrol:
+  - pinch, scroll, atau pinch trackpad untuk zoom (1x–4x) di sekitar jari; drag untuk geser (pan dibatasi tepi); double-tap untuk close-up 2.4x;
+  - tap untuk interaksi: kata-kata dengan voice, ekspresi alternatif acak, animasi per bagian tubuh, hati; usap kepala untuk pat (bond hero / pat pet).
+- Tombol:
+  - ◀ ▶ untuk outfit atau form yang sudah terbuka, plus titik indikator;
+  - ☺ untuk ganti ekspresi secara permanen saat melihat (`DB.alt_arts`);
+  - ⟲ reset zoom, ◐ sembunyikan UI, ✕ tutup (BACK/ESC juga menutup).
+- Tombol kaca pembesar (`UI.zoom_button`, ikon `art/icons/icon_zoom.png`) dipasang di Hero Detail (pojok kanan atas art) dan Bestiary (pojok kanan atas art; enemy harus sudah pernah dikalahkan).
+- `tools/shot_runner.gd` mendapat langkah `viewer:id|outfit|zoom` dan `detail:screen|id`.
+
+## 2cv. Update batch 95 — Bag
+
+- Tab menampilkan jumlah isinya (ITEMS 5, GEAR 9, …). Tab Items punya filter ALL / CURRENCY / UPGRADE / CHESTS / GIFTS / FOOD.
+- Tile berbingkai warna sesuai jenis atau rarity, dengan glow di belakang ikon, pil jumlah atau tier, dan badge E (dipakai), ! berdenyut (bisa dipakai atau dibuka), L (gear terkunci). Shard hero tampil sebagai wajah bulat dengan bar menuju Star Up atau recruit.
+- Ringkasan di bawah grid ("9 pieces • 0 equipped").
+- Tab kosong menampilkan kartu panduan (ikon, judul, sumber, tombol GO). Panel kanan menampilkan petunjuk "Pick something…".
+- Panel detail item punya medali ikon dengan glow berdenyut, nama, tag grup, dan jumlah yang dimiliki.
+
+## 2cw. Ekspor ikon untuk diedit manual
+
+- `tools/export_icons.py` menyalin semua ikon dan aset UI (art/icons, art/ui, art/vfx, art/brand tanpa backup) ke `Karakter Euphoria Online/icon asset/`. Aset dibagi ke folder buatan artist: Symbol in game, Icon all item in backpack, Icon shop, Weapon, ditambah UI frame & button, VFX, Logo & brand.
+- Hasilnya juga mencakup lembar katalog `SHEET_*.png` dan `ALL_ICONS.png` (ikon dengan nama in-game, nama file, dan ukuran), `icon_manifest.json`, serta README berisi aturan edit dan contoh Gemini CLI.
+- `tools/import_icons.py` (dry run) dan `--apply` menyalin kembali ikon yang berubah ke game. Ukuran otomatis disesuaikan ke ukuran asli, salinan yang terakhir diedit yang dipakai, dan file lama di-backup ke `_recut_backup/icons_*`.
+
+## 2cx. Update batch 96 — Settings
+
+- Dua kolom. Kiri: kartu profil Commander (wajah partner, nama, level, ID, bar EXP, chip HEROES / STAGES / TEAM POWER / PARTNER, rename) dan kartu SAVE DATA (peringatan, backup, restore, replay intro, title screen, tombol reset merah). Kanan: kartu AUDIO, BATTLE & GRAPHICS, DISPLAY, REDEEM CODE.
+- Slider audio menampilkan persen dan punya tombol MUTE/ON; ada tombol tes suara partner.
+- Toggle berupa baris dengan judul, penjelasan, dan status ON/OFF. UI size dan frame rate berupa tombol segmen.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

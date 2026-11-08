@@ -49,6 +49,21 @@ func _next() -> void:
 			main_node.call(parts[0], parts[1])
 		else:
 			main_node.call(parts[0])
+	elif v.begins_with("viewer:"):
+		# viewer:morana|3 -> full-screen ArtViewer on outfit 3 (all outfits browsable)
+		var parts := v.substr(7).split("|")
+		var all: Array = []
+		for i in 30:
+			all.append(i)
+		var dbs = load("res://game/core/db.gd")
+		all = all.slice(0, dbs.art_list(parts[0]).size())
+		var vw = load("res://game/ui/art_viewer.gd").open(main_node, parts[0], int(parts[1]) if parts.size() > 1 else 0, all)
+		if parts.size() > 2:
+			(func(): vw._zoom_to(float(parts[2]), false, Vector2(640, 160)); vw._tap(Vector2(640, 160))).call_deferred()
+	elif v.begins_with("detail:"):
+		# detail:hero_detail|gala -> main.go(screen, {"id"/"sel": arg})
+		var parts := v.substr(7).split("|")
+		main_node.go(parts[0], {"id": parts[1], "sel": parts[1]})
 	elif v.begins_with("game:"):
 		var parts := v.substr(5).split("|")
 		var g = root.get_node("Game")

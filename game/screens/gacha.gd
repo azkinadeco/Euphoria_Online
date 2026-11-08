@@ -122,16 +122,27 @@ func _render() -> void:
 		_info.add_child(UI.label(DB.title_of(fid2), 14, DB.theme_color(fid2).lightened(0.35), 3))
 		_info.add_child(UI.wrap_label(DB.skill_of(fid2)["name"] + ": " + str(DB.skill_of(fid2).get("desc", "")), 13, UI.TEXT))
 	_info.add_child(UI.wrap_label(b["desc"], 14, UI.MUTED))
-	_info.add_child(UI.label("SSR 3%   •   SR 15%   •   R 82%", 14, Color("#9fd0ff"), 3))
+	var rates := UI.hbox(6)
+	_info.add_child(rates)
+	for rt in [["SSR", "3%", Color("#ffc94a")], ["SR", "15%", Color("#c77dff")], ["R", "82%", Color("#5fa8ff")]]:
+		var rp := UI.styled_panel(Color(rt[2], 0.15), Color(rt[2], 0.6), 8, 1, 4.0)
+		rp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var rl := UI.label("%s  %s" % [rt[0], rt[1]], 13, rt[2], 2)
+		rl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		rp.add_child(rl)
+		rates.add_child(rp)
+	var meters := UI.styled_panel(Color(0, 0, 0, 0.35), Color(1, 1, 1, 0.1), 10, 1, 8.0)
+	_info.add_child(meters)
+	var mv := UI.vbox(6)
+	meters.add_child(mv)
 	var pity := int(Game.s["gacha"]["pity"])
-	_info.add_child(UI.label("PITY  %d / %d   (guaranteed SSR)" % [pity, DB.GACHA_PITY], 15, UI.GOLD, 3))
-	_info.add_child(UI.bar(pity, DB.GACHA_PITY, "GoldBar", 10))
+	mv.add_child(_meter("PITY", "SSR guaranteed at %d" % DB.GACHA_PITY, pity, DB.GACHA_PITY, Color("#ffc94a")))
 	if fid2 != "":
 		var spk := Game.spark_points(b["id"])
 		var sr := UI.hbox(8)
-		var sl := UI.label("SPARK  %d / %d   (pick %s)" % [mini(spk, 999), DB.SPARK_COST, DB.name_of(fid2).split(" ")[0]], 15, Color("#ff9ad5"), 3)
-		sl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		sr.add_child(sl)
+		var m := _meter("SPARK", "pick %s at %d" % [DB.name_of(fid2).split(" ")[0], DB.SPARK_COST], mini(spk, DB.SPARK_COST), DB.SPARK_COST, Color("#ff9ad5"))
+		m.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		sr.add_child(m)
 		var bid: String = b["id"]
 		var xb := UI.button("EXCHANGE", func():
 			var r := Game.spark_exchange(bid)
@@ -139,12 +150,16 @@ func _render() -> void:
 				main.toast(r["error"], UI.MUTED)
 				return
 			r["rarity"] = "SSR"
-			_play_reveal([r]), "GoldButton" if spk >= DB.SPARK_COST else "", Vector2(120, 34))
-		xb.add_theme_font_size_override("font_size", 13)
+			_play_reveal([r]), "GoldButton" if spk >= DB.SPARK_COST else "", Vector2(104, 34))
+		xb.add_theme_font_size_override("font_size", 12)
+		xb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		xb.disabled = spk < DB.SPARK_COST
 		sr.add_child(xb)
-		_info.add_child(sr)
-		_info.add_child(UI.bar(mini(spk, DB.SPARK_COST), DB.SPARK_COST, "", 8))
+		if not xb.disabled:
+			var tw := xb.create_tween().set_loops()
+			tw.tween_property(xb, "modulate", Color(1.3, 1.2, 1.3), 0.5)
+			tw.tween_property(xb, "modulate", Color.WHITE, 0.5)
+		mv.add_child(sr)
 	_info.add_child(UI.wrap_label("10x summon guarantees at least one SR. Duplicates turn into hero shards. Each pull on a rate-up banner gives 1 Summon Point — %d points = the featured hero." % DB.SPARK_COST, 12, UI.MUTED))
 	var ir := UI.hbox(8)
 	var rb := UI.button("RATES & HERO LIST", _show_rates, "", Vector2(0, 40))
@@ -175,7 +190,31 @@ func _price(count: int) -> String:
 func _pull_btn(text: String, count: int, pay: String) -> Button:
 	var b := UI.button(text, func(): _pull(count, pay), "GoldButton" if count == 10 or pay == "free" else "", Vector2(230, 92))
 	b.add_theme_font_size_override("font_size", 19)
+	if pay != "free":
+		b.icon = DB.icon("icon_ticket") if Game.amount("summon_ticket") >= count else DB.icon("icon_gem")
+		b.add_theme_constant_override("icon_max_width", 34)
+		if Game.amount("summon_ticket") < count and Game.amount("gems") < DB.GACHA_COST * (count - mini(Game.amount("summon_ticket"), count)):
+			b.add_theme_color_override("font_color", Color("#ff7a7a"))
+	else:
+		var tw := b.create_tween().set_loops()
+		tw.tween_property(b, "modulate", Color(1.2, 1.18, 1.1), 0.6)
+		tw.tween_property(b, "modulate", Color.WHITE, 0.6)
 	return b
+
+## Label + count on one line, a coloured bar under it.
+func _meter(title: String, sub: String, val: int, mx: int, col: Color) -> Control:
+	var v := UI.vbox(3)
+	var h := UI.hbox(6)
+	v.add_child(h)
+	h.add_child(UI.label(title, 13, col, 2))
+	var sl := UI.label(sub, 11, UI.MUTED, 0)
+	sl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(sl)
+	h.add_child(UI.label("%d / %d" % [val, mx], 13, Color.WHITE, 2))
+	var bar := UI.bar(val, mx, "", 8)
+	bar.add_theme_stylebox_override("fill", UI.style(col, Color.TRANSPARENT, 4, 0, 0))
+	v.add_child(bar)
+	return v
 
 func _show_history() -> void:
 	var v: VBoxContainer = main.popup("SUMMON HISTORY", 640)

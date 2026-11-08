@@ -273,7 +273,7 @@
     ],
     [
      "cthollia",
-     "...♪ ...Did it sound scary?"
+     "...\u266a ...Did it sound scary?"
     ],
     [
      "commander",
@@ -2132,6 +2132,218 @@
     [
      "luby",
      "...Nya. Okay. All three. Don't waste them."
+    ]
+   ]
+  }
+ ],
+ "gala": [
+  {
+   "title": "The Parasol",
+   "lines": [
+    [
+     "gala",
+     "Everyone asks about the octopus. Nobody asks about me."
+    ],
+    [
+     "commander",
+     "Then tell me about you."
+    ],
+    [
+     "gala",
+     "...Oh. Oh, darling. Pull up a chair. This will take all night."
+    ]
+   ]
+  },
+  {
+   "title": "Pink Flames",
+   "lines": [
+    [
+     "gala",
+     "My flames turn pink when I'm happy. It's very embarrassing."
+    ],
+    [
+     "commander",
+     "They're pink right now."
+    ],
+    [
+     "gala",
+     "...I KNOW. Stop looking!"
+    ]
+   ]
+  },
+  {
+   "title": "Someone Noticed",
+   "lines": [
+    [
+     "gala",
+     "I burned the sky once so someone would look up and see me."
+    ],
+    [
+     "commander",
+     "I see you every day."
+    ],
+    [
+     "gala",
+     "...Then I never need to burn anything again. Well. Maybe toast."
+    ]
+   ]
+  }
+ ],
+ "morana": [
+  {
+   "title": "The Black Chapel",
+   "lines": [
+    [
+     "morana",
+     "My chapel is underground. No sunlight. Only candles."
+    ],
+    [
+     "commander",
+     "Sounds lonely."
+    ],
+    [
+     "morana",
+     "It was. Now I come up the stairs every morning. To see you."
+    ]
+   ]
+  },
+  {
+   "title": "A Confession",
+   "lines": [
+    [
+     "morana",
+     "Priestesses hear confessions. We never make them."
+    ],
+    [
+     "commander",
+     "You can make one to me."
+    ],
+    [
+     "morana",
+     "...Then hear this. I stopped praying to heaven. I pray to come home to you."
+    ]
+   ]
+  },
+  {
+   "title": "Candlelight",
+   "lines": [
+    [
+     "morana",
+     "One candle for each sister. And one more, for you."
+    ],
+    [
+     "commander",
+     "Why for me?"
+    ],
+    [
+     "morana",
+     "So I always know the way back."
+    ]
+   ]
+  }
+ ],
+ "seraph": [
+  {
+   "title": "Down from Heaven",
+   "lines": [
+    [
+     "seraph",
+     "Heaven sent me to watch you. Officially."
+    ],
+    [
+     "commander",
+     "And unofficially?"
+    ],
+    [
+     "seraph",
+     "...Unofficially, I volunteered. Twice. Don't tell the other angels."
+    ]
+   ]
+  },
+  {
+   "title": "Wing Eyes",
+   "lines": [
+    [
+     "seraph",
+     "Every eye on my wings sees something different. They all agree on one thing."
+    ],
+    [
+     "commander",
+     "What's that?"
+    ],
+    [
+     "seraph",
+     "You. They like you. I... I like you too."
+    ]
+   ]
+  },
+  {
+   "title": "Falling",
+   "lines": [
+    [
+     "seraph",
+     "Angels who love humans are said to fall."
+    ],
+    [
+     "commander",
+     "Are you scared?"
+    ],
+    [
+     "seraph",
+     "No. If I fall, I'll fall toward you."
+    ]
+   ]
+  }
+ ],
+ "tamo": [
+  {
+   "title": "Queen's Pride",
+   "lines": [
+    [
+     "tamo",
+     "A queen does not need help."
+    ],
+    [
+     "commander",
+     "Then why are you holding my sleeve?"
+    ],
+    [
+     "tamo",
+     "...A queen is allowed to hold sleeves. It's in the royal charter."
+    ]
+   ]
+  },
+  {
+   "title": "Nine Tails",
+   "lines": [
+    [
+     "tamo",
+     "Each tail holds a memory of someone I protected."
+    ],
+    [
+     "commander",
+     "Is there room for one more?"
+    ],
+    [
+     "tamo",
+     "...The tenth tail would be for you. I'd grow one. Just for you."
+    ]
+   ]
+  },
+  {
+   "title": "The Greatsword",
+   "lines": [
+    [
+     "tamo",
+     "My sword is heavier than I am. I carry it for my foxes."
+    ],
+    [
+     "commander",
+     "Let me carry it sometimes."
+    ],
+    [
+     "tamo",
+     "...Hmph. You'd drop it. ...But you may walk beside me while I carry it."
     ]
    ]
   }

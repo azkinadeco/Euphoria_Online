@@ -4,35 +4,35 @@
   "rate": 200,
   "lines": {
    "greet": [
-    "ふん、やっと来たのね。べ、別に待ってなんかいないんだから！",
+    "\u3075\u3093\u3001\u3084\u3063\u3068\u6765\u305f\u306e\u306d\u3002\u3079\u3001\u5225\u306b\u5f85\u3063\u3066\u306a\u3093\u304b\u3044\u306a\u3044\u3093\u3060\u304b\u3089\uff01",
     "Hmph, you finally came. I-It's not like I was waiting for you!"
    ],
    "tap": [
-    "ちょっと！気安く触らないでよ、燃やすわよ！",
+    "\u3061\u3087\u3063\u3068\uff01\u6c17\u5b89\u304f\u89e6\u3089\u306a\u3044\u3067\u3088\u3001\u71c3\u3084\u3059\u308f\u3088\uff01",
     "Hey! Don't touch me so casually, or I'll burn you!"
    ],
    "bond": [
-    "あなたの隣なら…この炎も怖くないの。",
+    "\u3042\u306a\u305f\u306e\u96a3\u306a\u3089\u2026\u3053\u306e\u708e\u3082\u6016\u304f\u306a\u3044\u306e\u3002",
     "Next to you... even this flame doesn't scare me."
    ],
    "skill": [
-    "竜の炎よ、焼き尽くせ！",
+    "\u7adc\u306e\u708e\u3088\u3001\u713c\u304d\u5c3d\u304f\u305b\uff01",
     "Dragon flame, burn them all!"
    ],
    "win": [
-    "当然の結果よ。私を誰だと思ってるの？",
+    "\u5f53\u7136\u306e\u7d50\u679c\u3088\u3002\u79c1\u3092\u8ab0\u3060\u3068\u601d\u3063\u3066\u308b\u306e\uff1f",
     "Obviously. Who do you think I am?"
    ],
    "summon": [
-    "竜炎の君主、シーナよ。せいぜい私に相応しい主でいなさい。",
+    "\u7adc\u708e\u306e\u541b\u4e3b\u3001\u30b7\u30fc\u30ca\u3088\u3002\u305b\u3044\u305c\u3044\u79c1\u306b\u76f8\u5fdc\u3057\u3044\u4e3b\u3067\u3044\u306a\u3055\u3044\u3002",
     "I am Shina, the Dragon Flame Monarch. Try to be a master worthy of me."
    ],
    "hurt": [
-    "やったわね！",
+    "\u3084\u3063\u305f\u308f\u306d\uff01",
     "You'll pay for that!"
    ],
    "ko": [
-    "司令官…あとは…",
+    "\u53f8\u4ee4\u5b98\u2026\u3042\u3068\u306f\u2026",
     "Commander... the rest is..."
    ]
   }
@@ -42,35 +42,35 @@
   "rate": 175,
   "lines": {
    "greet": [
-    "おかえりなさい、司令官。今日の設計図も完璧よ。",
+    "\u304a\u304b\u3048\u308a\u306a\u3055\u3044\u3001\u53f8\u4ee4\u5b98\u3002\u4eca\u65e5\u306e\u8a2d\u8a08\u56f3\u3082\u5b8c\u74a7\u3088\u3002",
     "Welcome back, Commander. Today's blueprint is perfect too."
    ],
    "tap": [
-    "ふふ、私の計画に興味があるのかしら？",
+    "\u3075\u3075\u3001\u79c1\u306e\u8a08\u753b\u306b\u8208\u5473\u304c\u3042\u308b\u306e\u304b\u3057\u3089\uff1f",
     "Fufu, are you interested in my plans?"
    ],
    "bond": [
-    "私の帝国の中心には…あなたがいるの。",
+    "\u79c1\u306e\u5e1d\u56fd\u306e\u4e2d\u5fc3\u306b\u306f\u2026\u3042\u306a\u305f\u304c\u3044\u308b\u306e\u3002",
     "At the center of my empire... there is you."
    ],
    "skill": [
-    "魔界の設計図、展開！",
+    "\u9b54\u754c\u306e\u8a2d\u8a08\u56f3\u3001\u5c55\u958b\uff01",
     "Demonic blueprint, deploy!"
    ],
    "win": [
-    "計算通りね。",
+    "\u8a08\u7b97\u901a\u308a\u306d\u3002",
     "Exactly as calculated."
    ],
    "summon": [
-    "大魔設計士シリア。世界を作り直してあげましょう。",
+    "\u5927\u9b54\u8a2d\u8a08\u58eb\u30b7\u30ea\u30a2\u3002\u4e16\u754c\u3092\u4f5c\u308a\u76f4\u3057\u3066\u3042\u3052\u307e\u3057\u3087\u3046\u3002",
     "Xylia, the Arch-Demon Architect. Let me redesign the world for you."
    ],
    "hurt": [
-    "うっ…！",
+    "\u3046\u3063\u2026\uff01",
     "Ugh...!"
    ],
    "ko": [
-    "司令官…あとは…",
+    "\u53f8\u4ee4\u5b98\u2026\u3042\u3068\u306f\u2026",
     "Commander... the rest is..."
    ]
   }
@@ -80,35 +80,35 @@
   "rate": 215,
   "lines": {
    "greet": [
-    "やっほー！今日はどんなイタズラする？",
+    "\u3084\u3063\u307b\u30fc\uff01\u4eca\u65e5\u306f\u3069\u3093\u306a\u30a4\u30bf\u30ba\u30e9\u3059\u308b\uff1f",
     "Yahoo! What kind of mischief are we doing today?"
    ],
    "tap": [
-    "箱の中、見たい？だーめ、ひみつ！",
+    "\u7bb1\u306e\u4e2d\u3001\u898b\u305f\u3044\uff1f\u3060\u30fc\u3081\u3001\u3072\u307f\u3064\uff01",
     "Wanna see inside the box? Nope, it's a secret!"
    ],
    "bond": [
-    "司令官だけ、特別に箱の中を見せてあげる…かも？",
+    "\u53f8\u4ee4\u5b98\u3060\u3051\u3001\u7279\u5225\u306b\u7bb1\u306e\u4e2d\u3092\u898b\u305b\u3066\u3042\u3052\u308b\u2026\u304b\u3082\uff1f",
     "Only for you, I might show what's inside the box... maybe?"
    ],
    "skill": [
-    "パンドラボックス、オープン！",
+    "\u30d1\u30f3\u30c9\u30e9\u30dc\u30c3\u30af\u30b9\u3001\u30aa\u30fc\u30d7\u30f3\uff01",
     "Pandora's box, open!"
    ],
    "win": [
-    "あはは！みんな箱に入っちゃえ！",
+    "\u3042\u306f\u306f\uff01\u307f\u3093\u306a\u7bb1\u306b\u5165\u3063\u3061\u3083\u3048\uff01",
     "Ahaha! Everyone into the box!"
    ],
    "summon": [
-    "ミッカ・パンドラだよ！カオスはお好き？",
+    "\u30df\u30c3\u30ab\u30fb\u30d1\u30f3\u30c9\u30e9\u3060\u3088\uff01\u30ab\u30aa\u30b9\u306f\u304a\u597d\u304d\uff1f",
     "I'm Micca Pandora! Do you like chaos?"
    ],
    "hurt": [
-    "ひゃっ！",
+    "\u3072\u3083\u3063\uff01",
     "Hya!"
    ],
    "ko": [
-    "まだ…戦えるのに…",
+    "\u307e\u3060\u2026\u6226\u3048\u308b\u306e\u306b\u2026",
     "I can... still fight..."
    ]
   }
@@ -118,35 +118,35 @@
   "rate": 160,
   "lines": {
    "greet": [
-    "深淵があなたの名を囁いていたわ。",
+    "\u6df1\u6df5\u304c\u3042\u306a\u305f\u306e\u540d\u3092\u56c1\u3044\u3066\u3044\u305f\u308f\u3002",
     "The abyss was whispering your name."
    ],
    "tap": [
-    "触手が…勝手に動いちゃうの。ごめんなさい。",
+    "\u89e6\u624b\u304c\u2026\u52dd\u624b\u306b\u52d5\u3044\u3061\u3083\u3046\u306e\u3002\u3054\u3081\u3093\u306a\u3055\u3044\u3002",
     "My tentacles... move on their own. Sorry."
    ],
    "bond": [
-    "暗い海の底でも、あなたの光は見えるわ。",
+    "\u6697\u3044\u6d77\u306e\u5e95\u3067\u3082\u3001\u3042\u306a\u305f\u306e\u5149\u306f\u898b\u3048\u308b\u308f\u3002",
     "Even at the bottom of the dark sea, I can see your light."
    ],
    "skill": [
-    "深淵の渦よ、飲み込みなさい！",
+    "\u6df1\u6df5\u306e\u6e26\u3088\u3001\u98f2\u307f\u8fbc\u307f\u306a\u3055\u3044\uff01",
     "Abyssal maelstrom, swallow them!"
    ],
    "win": [
-    "海は、静かになったわ。",
+    "\u6d77\u306f\u3001\u9759\u304b\u306b\u306a\u3063\u305f\u308f\u3002",
     "The sea has grown quiet."
    ],
    "summon": [
-    "深淵の女王、クトリア。あなたを海の底まで守るわ。",
+    "\u6df1\u6df5\u306e\u5973\u738b\u3001\u30af\u30c8\u30ea\u30a2\u3002\u3042\u306a\u305f\u3092\u6d77\u306e\u5e95\u307e\u3067\u5b88\u308b\u308f\u3002",
     "Cthollia, sovereign of the abyss. I'll protect you to the bottom of the sea."
    ],
    "hurt": [
-    "やったわね！",
+    "\u3084\u3063\u305f\u308f\u306d\uff01",
     "You'll pay for that!"
    ],
    "ko": [
-    "そんな…",
+    "\u305d\u3093\u306a\u2026",
     "No way..."
    ]
   }
@@ -156,35 +156,35 @@
   "rate": 170,
   "lines": {
    "greet": [
-    "司令官、凍える前に中へどうぞ。",
+    "\u53f8\u4ee4\u5b98\u3001\u51cd\u3048\u308b\u524d\u306b\u4e2d\u3078\u3069\u3046\u305e\u3002",
     "Commander, come inside before you freeze."
    ],
    "tap": [
-    "…冷たい手でしょう？でも、離さないで。",
+    "\u2026\u51b7\u305f\u3044\u624b\u3067\u3057\u3087\u3046\uff1f\u3067\u3082\u3001\u96e2\u3055\u306a\u3044\u3067\u3002",
     "...My hands are cold, aren't they? But don't let go."
    ],
    "bond": [
-    "氷の心も、あなたの前では溶けてしまうの。",
+    "\u6c37\u306e\u5fc3\u3082\u3001\u3042\u306a\u305f\u306e\u524d\u3067\u306f\u6eb6\u3051\u3066\u3057\u307e\u3046\u306e\u3002",
     "Even a heart of ice melts in front of you."
    ],
    "skill": [
-    "フロストヴェイルの裁きを！",
+    "\u30d5\u30ed\u30b9\u30c8\u30f4\u30a7\u30a4\u30eb\u306e\u88c1\u304d\u3092\uff01",
     "The judgement of Frostvale!"
    ],
    "win": [
-    "吹雪は止んだわ。行きましょう。",
+    "\u5439\u96ea\u306f\u6b62\u3093\u3060\u308f\u3002\u884c\u304d\u307e\u3057\u3087\u3046\u3002",
     "The blizzard has stopped. Let's go."
    ],
    "summon": [
-    "フロストヴェイルの女帝、ヴァレリア。剣はあなたのために。",
+    "\u30d5\u30ed\u30b9\u30c8\u30f4\u30a7\u30a4\u30eb\u306e\u5973\u5e1d\u3001\u30f4\u30a1\u30ec\u30ea\u30a2\u3002\u5263\u306f\u3042\u306a\u305f\u306e\u305f\u3081\u306b\u3002",
     "Valeria, Empress of Frostvale. My sword is yours."
    ],
    "hurt": [
-    "やったわね！",
+    "\u3084\u3063\u305f\u308f\u306d\uff01",
     "You'll pay for that!"
    ],
    "ko": [
-    "まだ…戦えるのに…",
+    "\u307e\u3060\u2026\u6226\u3048\u308b\u306e\u306b\u2026",
     "I can... still fight..."
    ]
   }
@@ -194,35 +194,35 @@
   "rate": 165,
   "lines": {
    "greet": [
-    "あら、女帝を待たせるなんて、いい度胸ね。",
+    "\u3042\u3089\u3001\u5973\u5e1d\u3092\u5f85\u305f\u305b\u308b\u306a\u3093\u3066\u3001\u3044\u3044\u5ea6\u80f8\u306d\u3002",
     "My, keeping an Empress waiting? How bold."
    ],
    "tap": [
-    "跪きなさい…なんて、冗談よ。隣に立って。",
+    "\u8dea\u304d\u306a\u3055\u3044\u2026\u306a\u3093\u3066\u3001\u5197\u8ac7\u3088\u3002\u96a3\u306b\u7acb\u3063\u3066\u3002",
     "Kneel... just kidding. Stand beside me."
    ],
    "bond": [
-    "砂漠の太陽よりも、あなたが眩しいわ。",
+    "\u7802\u6f20\u306e\u592a\u967d\u3088\u308a\u3082\u3001\u3042\u306a\u305f\u304c\u7729\u3057\u3044\u308f\u3002",
     "You shine brighter than the desert sun."
    ],
    "skill": [
-    "蛇の毒牙、受けてみなさい！",
+    "\u86c7\u306e\u6bd2\u7259\u3001\u53d7\u3051\u3066\u307f\u306a\u3055\u3044\uff01",
     "Taste the serpent's fang!"
    ],
    "win": [
-    "女帝に敗北はないの。",
+    "\u5973\u5e1d\u306b\u6557\u5317\u306f\u306a\u3044\u306e\u3002",
     "An Empress knows no defeat."
    ],
    "summon": [
-    "砂漠の蛇女帝、エロパトラ。忠誠を誓いなさい。",
+    "\u7802\u6f20\u306e\u86c7\u5973\u5e1d\u3001\u30a8\u30ed\u30d1\u30c8\u30e9\u3002\u5fe0\u8aa0\u3092\u8a93\u3044\u306a\u3055\u3044\u3002",
     "Eropatra, Serpent Empress of the desert. Swear your loyalty."
    ],
    "hurt": [
-    "ひゃっ！",
+    "\u3072\u3083\u3063\uff01",
     "Hya!"
    ],
    "ko": [
-    "司令官…あとは…",
+    "\u53f8\u4ee4\u5b98\u2026\u3042\u3068\u306f\u2026",
     "Commander... the rest is..."
    ]
   }
@@ -232,35 +232,35 @@
   "rate": 175,
   "lines": {
    "greet": [
-    "司令官、今日も光のご加護がありますように。",
+    "\u53f8\u4ee4\u5b98\u3001\u4eca\u65e5\u3082\u5149\u306e\u3054\u52a0\u8b77\u304c\u3042\u308a\u307e\u3059\u3088\u3046\u306b\u3002",
     "Commander, may the light bless you today too."
    ],
    "tap": [
-    "きゃっ！…も、もう、驚かせないでください。",
+    "\u304d\u3083\u3063\uff01\u2026\u3082\u3001\u3082\u3046\u3001\u9a5a\u304b\u305b\u306a\u3044\u3067\u304f\u3060\u3055\u3044\u3002",
     "Kya! ...P-please don't startle me like that."
    ],
    "bond": [
-    "祈りの言葉に、あなたの名前を加えました。",
+    "\u7948\u308a\u306e\u8a00\u8449\u306b\u3001\u3042\u306a\u305f\u306e\u540d\u524d\u3092\u52a0\u3048\u307e\u3057\u305f\u3002",
     "I've added your name to my prayers."
    ],
    "skill": [
-    "聖なる祝福を、みんなに！",
+    "\u8056\u306a\u308b\u795d\u798f\u3092\u3001\u307f\u3093\u306a\u306b\uff01",
     "Holy blessing, to everyone!"
    ],
    "win": [
-    "誰も傷つかなくて、よかった…。",
+    "\u8ab0\u3082\u50b7\u3064\u304b\u306a\u304f\u3066\u3001\u3088\u304b\u3063\u305f\u2026\u3002",
     "I'm so glad no one was hurt..."
    ],
    "summon": [
-    "天の大司祭、フルです。皆さんを癒やします。",
+    "\u5929\u306e\u5927\u53f8\u796d\u3001\u30d5\u30eb\u3067\u3059\u3002\u7686\u3055\u3093\u3092\u7652\u3084\u3057\u307e\u3059\u3002",
     "I'm Furu, the Celestial Arch-Priestess. I'll heal everyone."
    ],
    "hurt": [
-    "きゃっ！",
+    "\u304d\u3083\u3063\uff01",
     "Kya!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -270,35 +270,35 @@
   "rate": 210,
   "lines": {
    "greet": [
-    "司令官！一緒に踊ろうよ、ワン、ツー！",
+    "\u53f8\u4ee4\u5b98\uff01\u4e00\u7dd2\u306b\u8e0a\u308d\u3046\u3088\u3001\u30ef\u30f3\u3001\u30c4\u30fc\uff01",
     "Commander! Let's dance, one, two!"
    ],
    "tap": [
-    "えへへ、くるっと一回転！見てた？",
+    "\u3048\u3078\u3078\u3001\u304f\u308b\u3063\u3068\u4e00\u56de\u8ee2\uff01\u898b\u3066\u305f\uff1f",
     "Ehehe, a full spin! Did you see?"
    ],
    "bond": [
-    "あなたと踊る時が、一番キラキラしてるの。",
+    "\u3042\u306a\u305f\u3068\u8e0a\u308b\u6642\u304c\u3001\u4e00\u756a\u30ad\u30e9\u30ad\u30e9\u3057\u3066\u308b\u306e\u3002",
     "I sparkle the most when I'm dancing with you."
    ],
    "skill": [
-    "クリスタル・ワルツ！",
+    "\u30af\u30ea\u30b9\u30bf\u30eb\u30fb\u30ef\u30eb\u30c4\uff01",
     "Crystal Waltz!"
    ],
    "win": [
-    "フィナーレ！拍手してー！",
+    "\u30d5\u30a3\u30ca\u30fc\u30ec\uff01\u62cd\u624b\u3057\u3066\u30fc\uff01",
     "Finale! Give me a round of applause!"
    ],
    "summon": [
-    "水晶の舞姫、グリッタだよ！よろしくね！",
+    "\u6c34\u6676\u306e\u821e\u59eb\u3001\u30b0\u30ea\u30c3\u30bf\u3060\u3088\uff01\u3088\u308d\u3057\u304f\u306d\uff01",
     "I'm Glytta, the Crystal Blade Dancer! Nice to meet you!"
    ],
    "hurt": [
-    "ひゃっ！",
+    "\u3072\u3083\u3063\uff01",
     "Hya!"
    ],
    "ko": [
-    "まだ…戦えるのに…",
+    "\u307e\u3060\u2026\u6226\u3048\u308b\u306e\u306b\u2026",
     "I can... still fight..."
    ]
   }
@@ -308,35 +308,35 @@
   "rate": 165,
   "lines": {
    "greet": [
-    "九つの頭、全部があなたを待っていたわ。",
+    "\u4e5d\u3064\u306e\u982d\u3001\u5168\u90e8\u304c\u3042\u306a\u305f\u3092\u5f85\u3063\u3066\u3044\u305f\u308f\u3002",
     "All nine of my heads were waiting for you."
    ],
    "tap": [
-    "毒には気をつけなさい。…あなたには使わないけど。",
+    "\u6bd2\u306b\u306f\u6c17\u3092\u3064\u3051\u306a\u3055\u3044\u3002\u2026\u3042\u306a\u305f\u306b\u306f\u4f7f\u308f\u306a\u3044\u3051\u3069\u3002",
     "Mind the poison. ...Not that I'd use it on you."
    ],
    "bond": [
-    "九つの心が、一つになってあなたを想うの。",
+    "\u4e5d\u3064\u306e\u5fc3\u304c\u3001\u4e00\u3064\u306b\u306a\u3063\u3066\u3042\u306a\u305f\u3092\u60f3\u3046\u306e\u3002",
     "Nine hearts become one, thinking of you."
    ],
    "skill": [
-    "九頭の猛毒、食らいなさい！",
+    "\u4e5d\u982d\u306e\u731b\u6bd2\u3001\u98df\u3089\u3044\u306a\u3055\u3044\uff01",
     "Take the venom of nine fangs!"
    ],
    "win": [
-    "素人の毒とは格が違うのよ。",
+    "\u7d20\u4eba\u306e\u6bd2\u3068\u306f\u683c\u304c\u9055\u3046\u306e\u3088\u3002",
     "My venom is on another level."
    ],
    "summon": [
-    "九頭竜の母、ヒョンシャ。私の毒は芸術よ。",
+    "\u4e5d\u982d\u7adc\u306e\u6bcd\u3001\u30d2\u30e7\u30f3\u30b7\u30e3\u3002\u79c1\u306e\u6bd2\u306f\u82b8\u8853\u3088\u3002",
     "Hyeonxa, matriarch of the hydra. My venom is art."
    ],
    "hurt": [
-    "ひゃっ！",
+    "\u3072\u3083\u3063\uff01",
     "Hya!"
    ],
    "ko": [
-    "司令官…あとは…",
+    "\u53f8\u4ee4\u5b98\u2026\u3042\u3068\u306f\u2026",
     "Commander... the rest is..."
    ]
   }
@@ -346,35 +346,35 @@
   "rate": 160,
   "lines": {
    "greet": [
-    "…潮が、あなたの帰りを知らせてくれた。",
+    "\u2026\u6f6e\u304c\u3001\u3042\u306a\u305f\u306e\u5e30\u308a\u3092\u77e5\u3089\u305b\u3066\u304f\u308c\u305f\u3002",
     "...The tide told me you were back."
    ],
    "tap": [
-    "…何？用がないなら、少しだけそばにいて。",
+    "\u2026\u4f55\uff1f\u7528\u304c\u306a\u3044\u306a\u3089\u3001\u5c11\u3057\u3060\u3051\u305d\u3070\u306b\u3044\u3066\u3002",
     "...What? If you need nothing, just stay by me a while."
    ],
    "bond": [
-    "海に帰る理由が、なくなったわ。",
+    "\u6d77\u306b\u5e30\u308b\u7406\u7531\u304c\u3001\u306a\u304f\u306a\u3063\u305f\u308f\u3002",
     "I no longer have a reason to return to the sea."
    ],
    "skill": [
-    "クラーケンの奇襲。",
+    "\u30af\u30e9\u30fc\u30b1\u30f3\u306e\u5947\u8972\u3002",
     "Kraken ambush."
    ],
    "win": [
-    "…終わり。",
+    "\u2026\u7d42\u308f\u308a\u3002",
     "...It's over."
    ],
    "summon": [
-    "深海の女王、スキュラ。獲物は逃さない。",
+    "\u6df1\u6d77\u306e\u5973\u738b\u3001\u30b9\u30ad\u30e5\u30e9\u3002\u7372\u7269\u306f\u9003\u3055\u306a\u3044\u3002",
     "Scylla, queen of the deep. My prey never escapes."
    ],
    "hurt": [
-    "いたっ！",
+    "\u3044\u305f\u3063\uff01",
     "Ouch!"
    ],
    "ko": [
-    "司令官…あとは…",
+    "\u53f8\u4ee4\u5b98\u2026\u3042\u3068\u306f\u2026",
     "Commander... the rest is..."
    ]
   }
@@ -384,35 +384,35 @@
   "rate": 170,
   "lines": {
    "greet": [
-    "蝶々たちが、今日はいい日だって言ってるよ。",
+    "\u8776\u3005\u305f\u3061\u304c\u3001\u4eca\u65e5\u306f\u3044\u3044\u65e5\u3060\u3063\u3066\u8a00\u3063\u3066\u308b\u3088\u3002",
     "The butterflies say today will be a good day."
    ],
    "tap": [
-    "ふわぁ…あ、司令官。夢を見てたの。",
+    "\u3075\u308f\u3041\u2026\u3042\u3001\u53f8\u4ee4\u5b98\u3002\u5922\u3092\u898b\u3066\u305f\u306e\u3002",
     "Fuwaa... oh, Commander. I was dreaming."
    ],
    "bond": [
-    "夢の中でも、あなたに会いに行くね。",
+    "\u5922\u306e\u4e2d\u3067\u3082\u3001\u3042\u306a\u305f\u306b\u4f1a\u3044\u306b\u884c\u304f\u306d\u3002",
     "I'll come to see you even in my dreams."
    ],
    "skill": [
-    "星の翅よ、みんなに力を！",
+    "\u661f\u306e\u7fc5\u3088\u3001\u307f\u3093\u306a\u306b\u529b\u3092\uff01",
     "Wings of stars, give everyone strength!"
    ],
    "win": [
-    "蝶々たちも喜んでるよ。",
+    "\u8776\u3005\u305f\u3061\u3082\u559c\u3093\u3067\u308b\u3088\u3002",
     "The butterflies are happy too."
    ],
    "summon": [
-    "星蝶の賢者、ルメイラ。夢の導きでここに来たの。",
+    "\u661f\u8776\u306e\u8ce2\u8005\u3001\u30eb\u30e1\u30a4\u30e9\u3002\u5922\u306e\u5c0e\u304d\u3067\u3053\u3053\u306b\u6765\u305f\u306e\u3002",
     "Lumeira, the Astral Butterfly Sage. A dream guided me here."
    ],
    "hurt": [
-    "うっ…！",
+    "\u3046\u3063\u2026\uff01",
     "Ugh...!"
    ],
    "ko": [
-    "司令官…あとは…",
+    "\u53f8\u4ee4\u5b98\u2026\u3042\u3068\u306f\u2026",
     "Commander... the rest is..."
    ]
   }
@@ -422,35 +422,35 @@
   "rate": 185,
   "lines": {
    "greet": [
-    "シグナル確認。司令官、おかえりなさい。",
+    "\u30b7\u30b0\u30ca\u30eb\u78ba\u8a8d\u3002\u53f8\u4ee4\u5b98\u3001\u304a\u304b\u3048\u308a\u306a\u3055\u3044\u3002",
     "Signal confirmed. Welcome back, Commander."
    ],
    "tap": [
-    "接触を検知。…心拍数、上昇中。",
+    "\u63a5\u89e6\u3092\u691c\u77e5\u3002\u2026\u5fc3\u62cd\u6570\u3001\u4e0a\u6607\u4e2d\u3002",
     "Contact detected. ...Heart rate rising."
    ],
    "bond": [
-    "このデータは…愛、と呼ぶのですか？",
+    "\u3053\u306e\u30c7\u30fc\u30bf\u306f\u2026\u611b\u3001\u3068\u547c\u3076\u306e\u3067\u3059\u304b\uff1f",
     "This data... is it called love?"
    ],
    "skill": [
-    "ヴォイド・レールガン、発射！",
+    "\u30f4\u30a9\u30a4\u30c9\u30fb\u30ec\u30fc\u30eb\u30ac\u30f3\u3001\u767a\u5c04\uff01",
     "Void railgun, fire!"
    ],
    "win": [
-    "目標、全て排除しました。",
+    "\u76ee\u6a19\u3001\u5168\u3066\u6392\u9664\u3057\u307e\u3057\u305f\u3002",
     "All targets eliminated."
    ],
    "summon": [
-    "宇宙の使者、ジェモラ。地球の調査に来ました。",
+    "\u5b87\u5b99\u306e\u4f7f\u8005\u3001\u30b8\u30a7\u30e2\u30e9\u3002\u5730\u7403\u306e\u8abf\u67fb\u306b\u6765\u307e\u3057\u305f\u3002",
     "Gemora, envoy of the cosmos. I came to study your world."
    ],
    "hurt": [
-    "くっ…まだよ！",
+    "\u304f\u3063\u2026\u307e\u3060\u3088\uff01",
     "Tch... not yet!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -460,35 +460,35 @@
   "rate": 175,
   "lines": {
    "greet": [
-    "司令官、お守りします。今日もご無事で。",
+    "\u53f8\u4ee4\u5b98\u3001\u304a\u5b88\u308a\u3057\u307e\u3059\u3002\u4eca\u65e5\u3082\u3054\u7121\u4e8b\u3067\u3002",
     "Commander, I'll protect you. Stay safe today too."
    ],
    "tap": [
-    "は、はい！何かご命令でしょうか！",
+    "\u306f\u3001\u306f\u3044\uff01\u4f55\u304b\u3054\u547d\u4ee4\u3067\u3057\u3087\u3046\u304b\uff01",
     "Y-yes! Do you have an order for me?"
    ],
    "bond": [
-    "私の盾は、永遠にあなたのものです。",
+    "\u79c1\u306e\u76fe\u306f\u3001\u6c38\u9060\u306b\u3042\u306a\u305f\u306e\u3082\u306e\u3067\u3059\u3002",
     "My shield is yours, forever."
    ],
    "skill": [
-    "潮の防壁、展開！",
+    "\u6f6e\u306e\u9632\u58c1\u3001\u5c55\u958b\uff01",
     "Tidal bulwark, deploy!"
    ],
    "win": [
-    "守り抜きました！",
+    "\u5b88\u308a\u629c\u304d\u307e\u3057\u305f\uff01",
     "I protected everyone!"
    ],
    "summon": [
-    "戦乙女フィデリア、ここに。あなたの盾となりましょう。",
+    "\u6226\u4e59\u5973\u30d5\u30a3\u30c7\u30ea\u30a2\u3001\u3053\u3053\u306b\u3002\u3042\u306a\u305f\u306e\u76fe\u3068\u306a\u308a\u307e\u3057\u3087\u3046\u3002",
     "Valkyrie Fidelia, at your service. I will be your shield."
    ],
    "hurt": [
-    "いたっ！",
+    "\u3044\u305f\u3063\uff01",
     "Ouch!"
    ],
    "ko": [
-    "そんな…",
+    "\u305d\u3093\u306a\u2026",
     "No way..."
    ]
   }
@@ -498,35 +498,35 @@
   "rate": 150,
   "lines": {
    "greet": [
-    "…来たか。今日も城壁は崩れない。",
+    "\u2026\u6765\u305f\u304b\u3002\u4eca\u65e5\u3082\u57ce\u58c1\u306f\u5d29\u308c\u306a\u3044\u3002",
     "...You came. The walls won't fall today either."
    ],
    "tap": [
-    "…何だ。…いや、嫌ではない。",
+    "\u2026\u4f55\u3060\u3002\u2026\u3044\u3084\u3001\u5acc\u3067\u306f\u306a\u3044\u3002",
     "...What is it. ...No, I don't mind."
    ],
    "bond": [
-    "古い城壁にも、花は咲くものだな。",
+    "\u53e4\u3044\u57ce\u58c1\u306b\u3082\u3001\u82b1\u306f\u54b2\u304f\u3082\u306e\u3060\u306a\u3002",
     "Even old walls can grow flowers, it seems."
    ],
    "skill": [
-    "古代のメイス、砕け！",
+    "\u53e4\u4ee3\u306e\u30e1\u30a4\u30b9\u3001\u7815\u3051\uff01",
     "Ancient mace, crush!"
    ],
    "win": [
-    "守りきった。",
+    "\u5b88\u308a\u304d\u3063\u305f\u3002",
     "We held the line."
    ],
    "summon": [
-    "古代の守護者、ルシドリア。動かぬ壁となろう。",
+    "\u53e4\u4ee3\u306e\u5b88\u8b77\u8005\u3001\u30eb\u30b7\u30c9\u30ea\u30a2\u3002\u52d5\u304b\u306c\u58c1\u3068\u306a\u308d\u3046\u3002",
     "Lucidria, the ancient guardian. I will be an unmoving wall."
    ],
    "hurt": [
-    "うっ…！",
+    "\u3046\u3063\u2026\uff01",
     "Ugh...!"
    ],
    "ko": [
-    "司令官…あとは…",
+    "\u53f8\u4ee4\u5b98\u2026\u3042\u3068\u306f\u2026",
     "Commander... the rest is..."
    ]
   }
@@ -536,35 +536,35 @@
   "rate": 155,
   "lines": {
    "greet": [
-    "あら、いい子ね。こっちにいらっしゃい。",
+    "\u3042\u3089\u3001\u3044\u3044\u5b50\u306d\u3002\u3053\u3063\u3061\u306b\u3044\u3089\u3063\u3057\u3083\u3044\u3002",
     "My, what a good child. Come here."
    ],
    "tap": [
-    "あなたのぬくもり…少し、もらってもいい？",
+    "\u3042\u306a\u305f\u306e\u306c\u304f\u3082\u308a\u2026\u5c11\u3057\u3001\u3082\u3089\u3063\u3066\u3082\u3044\u3044\uff1f",
     "Your warmth... may I take a little?"
    ],
    "bond": [
-    "虚無の中で、あなただけが温かいの。",
+    "\u865a\u7121\u306e\u4e2d\u3067\u3001\u3042\u306a\u305f\u3060\u3051\u304c\u6e29\u304b\u3044\u306e\u3002",
     "In the void, only you are warm."
    ],
    "skill": [
-    "虚無よ、吸い尽くしなさい。",
+    "\u865a\u7121\u3088\u3001\u5438\u3044\u5c3d\u304f\u3057\u306a\u3055\u3044\u3002",
     "Void, drain them dry."
    ],
    "win": [
-    "ごちそうさま。",
+    "\u3054\u3061\u305d\u3046\u3055\u307e\u3002",
     "Thank you for the meal."
    ],
    "summon": [
-    "虚無の母、エウルニファ。抱きしめてあげましょうか？",
+    "\u865a\u7121\u306e\u6bcd\u3001\u30a8\u30a6\u30eb\u30cb\u30d5\u30a1\u3002\u62b1\u304d\u3057\u3081\u3066\u3042\u3052\u307e\u3057\u3087\u3046\u304b\uff1f",
     "Eurnipha, mother of the void. Shall I embrace you?"
    ],
    "hurt": [
-    "きゃっ！",
+    "\u304d\u3083\u3063\uff01",
     "Kya!"
    ],
    "ko": [
-    "くやしい…",
+    "\u304f\u3084\u3057\u3044\u2026",
     "So frustrating..."
    ]
   }
@@ -574,35 +574,35 @@
   "rate": 205,
   "lines": {
    "greet": [
-    "司令官！お祓いの依頼？報酬は前払いでね！",
+    "\u53f8\u4ee4\u5b98\uff01\u304a\u7953\u3044\u306e\u4f9d\u983c\uff1f\u5831\u916c\u306f\u524d\u6255\u3044\u3067\u306d\uff01",
     "Commander! An exorcism job? Payment up front!"
    ],
    "tap": [
-    "ちょっと、角は触っちゃダメ！",
+    "\u3061\u3087\u3063\u3068\u3001\u89d2\u306f\u89e6\u3063\u3061\u3083\u30c0\u30e1\uff01",
     "Hey, no touching the horns!"
    ],
    "bond": [
-    "司令官のためなら…タダで働いてもいいよ。",
+    "\u53f8\u4ee4\u5b98\u306e\u305f\u3081\u306a\u3089\u2026\u30bf\u30c0\u3067\u50cd\u3044\u3066\u3082\u3044\u3044\u3088\u3002",
     "For you... I'd even work for free."
    ],
    "skill": [
-    "紅き祓い、成敗！",
+    "\u7d05\u304d\u7953\u3044\u3001\u6210\u6557\uff01",
     "Crimson exorcism, begone!"
    ],
    "win": [
-    "お祓い完了！ご褒美ちょうだい！",
+    "\u304a\u7953\u3044\u5b8c\u4e86\uff01\u3054\u8912\u7f8e\u3061\u3087\u3046\u3060\u3044\uff01",
     "Exorcism complete! Give me my reward!"
    ],
    "summon": [
-    "紅角の祓い師、ルミだよ！料金表はこちら！",
+    "\u7d05\u89d2\u306e\u7953\u3044\u5e2b\u3001\u30eb\u30df\u3060\u3088\uff01\u6599\u91d1\u8868\u306f\u3053\u3061\u3089\uff01",
     "I'm Rumi, the Crimson Horn Exorcist! Here's my price list!"
    ],
    "hurt": [
-    "やったわね！",
+    "\u3084\u3063\u305f\u308f\u306d\uff01",
     "You'll pay for that!"
    ],
    "ko": [
-    "まだ…戦えるのに…",
+    "\u307e\u3060\u2026\u6226\u3048\u308b\u306e\u306b\u2026",
     "I can... still fight..."
    ]
   }
@@ -612,35 +612,35 @@
   "rate": 160,
   "lines": {
    "greet": [
-    "時は流れても、あなたを待つ時間は好きです。",
+    "\u6642\u306f\u6d41\u308c\u3066\u3082\u3001\u3042\u306a\u305f\u3092\u5f85\u3064\u6642\u9593\u306f\u597d\u304d\u3067\u3059\u3002",
     "Time flows on, but I love the time spent waiting for you."
    ],
    "tap": [
-    "あら、時間が止まったみたい。",
+    "\u3042\u3089\u3001\u6642\u9593\u304c\u6b62\u307e\u3063\u305f\u307f\u305f\u3044\u3002",
     "Oh, it feels like time stopped."
    ],
    "bond": [
-    "永遠の時の中で、この瞬間を一番大切にします。",
+    "\u6c38\u9060\u306e\u6642\u306e\u4e2d\u3067\u3001\u3053\u306e\u77ac\u9593\u3092\u4e00\u756a\u5927\u5207\u306b\u3057\u307e\u3059\u3002",
     "Of all eternity, I treasure this moment most."
    ],
    "skill": [
-    "時の輪よ、巡れ！",
+    "\u6642\u306e\u8f2a\u3088\u3001\u5de1\u308c\uff01",
     "Ring of time, turn!"
    ],
    "win": [
-    "時は、私たちの味方です。",
+    "\u6642\u306f\u3001\u79c1\u305f\u3061\u306e\u5473\u65b9\u3067\u3059\u3002",
     "Time is on our side."
    ],
    "summon": [
-    "時の星の修道女、モラ。あなたの時を見守ります。",
+    "\u6642\u306e\u661f\u306e\u4fee\u9053\u5973\u3001\u30e2\u30e9\u3002\u3042\u306a\u305f\u306e\u6642\u3092\u898b\u5b88\u308a\u307e\u3059\u3002",
     "Mora, sister of the chronos stars. I will watch over your time."
    ],
    "hurt": [
-    "やったわね！",
+    "\u3084\u3063\u305f\u308f\u306d\uff01",
     "You'll pay for that!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -650,35 +650,35 @@
   "rate": 160,
   "lines": {
    "greet": [
-    "獅子の女王が、あなたを待っていたわ。",
+    "\u7345\u5b50\u306e\u5973\u738b\u304c\u3001\u3042\u306a\u305f\u3092\u5f85\u3063\u3066\u3044\u305f\u308f\u3002",
     "The Lion Queen has been waiting for you."
    ],
    "tap": [
-    "無礼者…でも、あなたなら許してあげる。",
+    "\u7121\u793c\u8005\u2026\u3067\u3082\u3001\u3042\u306a\u305f\u306a\u3089\u8a31\u3057\u3066\u3042\u3052\u308b\u3002",
     "How rude... but for you, I'll allow it."
    ],
    "bond": [
-    "この盾は、あなたの心も守るためにあるの。",
+    "\u3053\u306e\u76fe\u306f\u3001\u3042\u306a\u305f\u306e\u5fc3\u3082\u5b88\u308b\u305f\u3081\u306b\u3042\u308b\u306e\u3002",
     "This shield exists to protect your heart as well."
    ],
    "skill": [
-    "獅子王の突撃、受けてみなさい！",
+    "\u7345\u5b50\u738b\u306e\u7a81\u6483\u3001\u53d7\u3051\u3066\u307f\u306a\u3055\u3044\uff01",
     "Face the Lion Sovereign's charge!"
    ],
    "win": [
-    "王の前に、敵はなし。",
+    "\u738b\u306e\u524d\u306b\u3001\u6575\u306f\u306a\u3057\u3002",
     "No enemy stands before a queen."
    ],
    "summon": [
-    "深淵の獅子女王、アバドニア。我が軍門に迎えましょう。",
+    "\u6df1\u6df5\u306e\u7345\u5b50\u5973\u738b\u3001\u30a2\u30d0\u30c9\u30cb\u30a2\u3002\u6211\u304c\u8ecd\u9580\u306b\u8fce\u3048\u307e\u3057\u3087\u3046\u3002",
     "Abadonia, Abyssal Lion Queen. I welcome you to my legion."
    ],
    "hurt": [
-    "うっ…！",
+    "\u3046\u3063\u2026\uff01",
     "Ugh...!"
    ],
    "ko": [
-    "まだ…戦えるのに…",
+    "\u307e\u3060\u2026\u6226\u3048\u308b\u306e\u306b\u2026",
     "I can... still fight..."
    ]
   }
@@ -688,35 +688,35 @@
   "rate": 185,
   "lines": {
    "greet": [
-    "おかえりなさい！聖杯のお水、飲みますか？",
+    "\u304a\u304b\u3048\u308a\u306a\u3055\u3044\uff01\u8056\u676f\u306e\u304a\u6c34\u3001\u98f2\u307f\u307e\u3059\u304b\uff1f",
     "Welcome back! Want a sip from the holy chalice?"
    ],
    "tap": [
-    "ひゃっ！お水がこぼれちゃいます！",
+    "\u3072\u3083\u3063\uff01\u304a\u6c34\u304c\u3053\u307c\u308c\u3061\u3083\u3044\u307e\u3059\uff01",
     "Hya! The water's going to spill!"
    ],
    "bond": [
-    "あなたの喉が渇かないように、ずっとそばにいます。",
+    "\u3042\u306a\u305f\u306e\u5589\u304c\u6e07\u304b\u306a\u3044\u3088\u3046\u306b\u3001\u305a\u3063\u3068\u305d\u3070\u306b\u3044\u307e\u3059\u3002",
     "I'll stay by your side so you'll never go thirsty."
    ],
    "skill": [
-    "潮の聖杯よ、みんなを癒して！",
+    "\u6f6e\u306e\u8056\u676f\u3088\u3001\u307f\u3093\u306a\u3092\u7652\u3057\u3066\uff01",
     "Chalice of the tides, heal everyone!"
    ],
    "win": [
-    "みんな無事でよかったです〜！",
+    "\u307f\u3093\u306a\u7121\u4e8b\u3067\u3088\u304b\u3063\u305f\u3067\u3059\u301c\uff01",
     "I'm so glad everyone's okay~!"
    ],
    "summon": [
-    "潮の聖杯を運ぶ者、アクアです！よろしくお願いします！",
+    "\u6f6e\u306e\u8056\u676f\u3092\u904b\u3076\u8005\u3001\u30a2\u30af\u30a2\u3067\u3059\uff01\u3088\u308d\u3057\u304f\u304a\u9858\u3044\u3057\u307e\u3059\uff01",
     "I'm Aqua, bearer of the tidal chalice! Nice to meet you!"
    ],
    "hurt": [
-    "いたっ！",
+    "\u3044\u305f\u3063\uff01",
     "Ouch!"
    ],
    "ko": [
-    "まだ…戦えるのに…",
+    "\u307e\u3060\u2026\u6226\u3048\u308b\u306e\u306b\u2026",
     "I can... still fight..."
    ]
   }
@@ -726,35 +726,35 @@
   "rate": 215,
   "lines": {
    "greet": [
-    "遅いよ、司令官！私はもう三周走ったんだから！",
+    "\u9045\u3044\u3088\u3001\u53f8\u4ee4\u5b98\uff01\u79c1\u306f\u3082\u3046\u4e09\u5468\u8d70\u3063\u305f\u3093\u3060\u304b\u3089\uff01",
     "You're slow, Commander! I've already run three laps!"
    ],
    "tap": [
-    "捕まえてみなよ！…あ、捕まっちゃった。",
+    "\u6355\u307e\u3048\u3066\u307f\u306a\u3088\uff01\u2026\u3042\u3001\u6355\u307e\u3063\u3061\u3083\u3063\u305f\u3002",
     "Catch me if you can! ...Ah, you caught me."
    ],
    "bond": [
-    "どんなに速く走っても、あなたの所に戻ってくるの。",
+    "\u3069\u3093\u306a\u306b\u901f\u304f\u8d70\u3063\u3066\u3082\u3001\u3042\u306a\u305f\u306e\u6240\u306b\u623b\u3063\u3066\u304f\u308b\u306e\u3002",
     "No matter how fast I run, I always come back to you."
    ],
    "skill": [
-    "雷鳴の一歩！",
+    "\u96f7\u9cf4\u306e\u4e00\u6b69\uff01",
     "Thunderstep!"
    ],
    "win": [
-    "私の勝ち！誰も追いつけないよ！",
+    "\u79c1\u306e\u52dd\u3061\uff01\u8ab0\u3082\u8ffd\u3044\u3064\u3051\u306a\u3044\u3088\uff01",
     "I win! No one can keep up!"
    ],
    "summon": [
-    "雷の狩人アタランテ！最速で駆けつけたよ！",
+    "\u96f7\u306e\u72e9\u4eba\u30a2\u30bf\u30e9\u30f3\u30c6\uff01\u6700\u901f\u3067\u99c6\u3051\u3064\u3051\u305f\u3088\uff01",
     "Atalanta the thunder huntress! I got here at top speed!"
    ],
    "hurt": [
-    "やったわね！",
+    "\u3084\u3063\u305f\u308f\u306d\uff01",
     "You'll pay for that!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -764,35 +764,35 @@
   "rate": 160,
   "lines": {
    "greet": [
-    "百本の刀が、今日もあなたを守ります。",
+    "\u767e\u672c\u306e\u5200\u304c\u3001\u4eca\u65e5\u3082\u3042\u306a\u305f\u3092\u5b88\u308a\u307e\u3059\u3002",
     "A hundred blades will guard you again today."
    ],
    "tap": [
-    "…刀に触れないでください。指が切れますよ。",
+    "\u2026\u5200\u306b\u89e6\u308c\u306a\u3044\u3067\u304f\u3060\u3055\u3044\u3002\u6307\u304c\u5207\u308c\u307e\u3059\u3088\u3002",
     "...Please don't touch the swords. You'll cut your fingers."
    ],
    "bond": [
-    "百本の刀より、あなた一人のほうが重いのです。",
+    "\u767e\u672c\u306e\u5200\u3088\u308a\u3001\u3042\u306a\u305f\u4e00\u4eba\u306e\u307b\u3046\u304c\u91cd\u3044\u306e\u3067\u3059\u3002",
     "You alone weigh more to me than a hundred blades."
    ],
    "skill": [
-    "百刀の雨！",
+    "\u767e\u5200\u306e\u96e8\uff01",
     "Hundred Blade Rain!"
    ],
    "win": [
-    "刃は鞘に。戦いは終わりました。",
+    "\u5203\u306f\u9798\u306b\u3002\u6226\u3044\u306f\u7d42\u308f\u308a\u307e\u3057\u305f\u3002",
     "Blades to their sheaths. The battle is over."
    ],
    "summon": [
-    "百刀の聖女、カーリー。あなたの剣となりましょう。",
+    "\u767e\u5200\u306e\u8056\u5973\u3001\u30ab\u30fc\u30ea\u30fc\u3002\u3042\u306a\u305f\u306e\u5263\u3068\u306a\u308a\u307e\u3057\u3087\u3046\u3002",
     "Kali, Saint of a Hundred Blades. I shall be your sword."
    ],
    "hurt": [
-    "きゃっ！",
+    "\u304d\u3083\u3063\uff01",
     "Kya!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -802,35 +802,35 @@
   "rate": 175,
   "lines": {
    "greet": [
-    "竜王の娘を待たせるなんて…まあ、今日は許します。",
+    "\u7adc\u738b\u306e\u5a18\u3092\u5f85\u305f\u305b\u308b\u306a\u3093\u3066\u2026\u307e\u3042\u3001\u4eca\u65e5\u306f\u8a31\u3057\u307e\u3059\u3002",
     "Keeping the Dragon King's daughter waiting... I'll forgive you today."
    ],
    "tap": [
-    "こら、ちびドラゴンたちが真似しちゃうでしょ。",
+    "\u3053\u3089\u3001\u3061\u3073\u30c9\u30e9\u30b4\u30f3\u305f\u3061\u304c\u771f\u4f3c\u3057\u3061\u3083\u3046\u3067\u3057\u3087\u3002",
     "Hey, the little dragons will copy you!"
    ],
    "bond": [
-    "この子たちも、あなたを家族だと思ってるわ。",
+    "\u3053\u306e\u5b50\u305f\u3061\u3082\u3001\u3042\u306a\u305f\u3092\u5bb6\u65cf\u3060\u3068\u601d\u3063\u3066\u308b\u308f\u3002",
     "These little ones think of you as family too."
    ],
    "skill": [
-    "竜王の行進、焼き尽くせ！",
+    "\u7adc\u738b\u306e\u884c\u9032\u3001\u713c\u304d\u5c3d\u304f\u305b\uff01",
     "Dragon King's parade, burn them!"
    ],
    "win": [
-    "ふふ、竜の炎に敵はいないわ。",
+    "\u3075\u3075\u3001\u7adc\u306e\u708e\u306b\u6575\u306f\u3044\u306a\u3044\u308f\u3002",
     "Fufu, nothing survives dragon fire."
    ],
    "summon": [
-    "竜王の娘、善女竜王。小さな竜たちと一緒にお仕えします。",
+    "\u7adc\u738b\u306e\u5a18\u3001\u5584\u5973\u7adc\u738b\u3002\u5c0f\u3055\u306a\u7adc\u305f\u3061\u3068\u4e00\u7dd2\u306b\u304a\u4ed5\u3048\u3057\u307e\u3059\u3002",
     "Zennyo Ryuo, daughter of the Dragon King. My little dragons and I are at your service."
    ],
    "hurt": [
-    "うっ…！",
+    "\u3046\u3063\u2026\uff01",
     "Ugh...!"
    ],
    "ko": [
-    "そんな…",
+    "\u305d\u3093\u306a\u2026",
     "No way..."
    ]
   }
@@ -840,35 +840,35 @@
   "rate": 170,
   "lines": {
    "greet": [
-    "あら、司令官。今日は何を爆発させましょうか？",
+    "\u3042\u3089\u3001\u53f8\u4ee4\u5b98\u3002\u4eca\u65e5\u306f\u4f55\u3092\u7206\u767a\u3055\u305b\u307e\u3057\u3087\u3046\u304b\uff1f",
     "Oh, Commander. What shall we blow up today?"
    ],
    "tap": [
-    "ふふ、触ると…ドカン、ですよ？",
+    "\u3075\u3075\u3001\u89e6\u308b\u3068\u2026\u30c9\u30ab\u30f3\u3001\u3067\u3059\u3088\uff1f",
     "Fufu, if you touch me... boom, you know?"
    ],
    "bond": [
-    "あなたといると、心臓が爆発しそう。",
+    "\u3042\u306a\u305f\u3068\u3044\u308b\u3068\u3001\u5fc3\u81d3\u304c\u7206\u767a\u3057\u305d\u3046\u3002",
     "Being with you makes my heart want to explode."
    ],
    "skill": [
-    "ビッグバン・バラード！",
+    "\u30d3\u30c3\u30b0\u30d0\u30f3\u30fb\u30d0\u30e9\u30fc\u30c9\uff01",
     "Big Bang Ballad!"
    ],
    "win": [
-    "綺麗な花火だったでしょう？",
+    "\u7dba\u9e97\u306a\u82b1\u706b\u3060\u3063\u305f\u3067\u3057\u3087\u3046\uff1f",
     "Wasn't that a pretty firework?"
    ],
    "summon": [
-    "爆弾令嬢ルビー。素敵な爆発をお届けします。",
+    "\u7206\u5f3e\u4ee4\u5b22\u30eb\u30d3\u30fc\u3002\u7d20\u6575\u306a\u7206\u767a\u3092\u304a\u5c4a\u3051\u3057\u307e\u3059\u3002",
     "Rubby, the Bomb Belle. I deliver lovely explosions."
    ],
    "hurt": [
-    "くっ…まだよ！",
+    "\u304f\u3063\u2026\u307e\u3060\u3088\uff01",
     "Tch... not yet!"
    ],
    "ko": [
-    "そんな…",
+    "\u305d\u3093\u306a\u2026",
     "No way..."
    ]
   }
@@ -878,35 +878,35 @@
   "rate": 165,
   "lines": {
    "greet": [
-    "…凍える風の中、あなたの声だけが温かい。",
+    "\u2026\u51cd\u3048\u308b\u98a8\u306e\u4e2d\u3001\u3042\u306a\u305f\u306e\u58f0\u3060\u3051\u304c\u6e29\u304b\u3044\u3002",
     "...In the freezing wind, only your voice is warm."
    ],
    "tap": [
-    "鎌に近づかないで。凍っちゃうから。",
+    "\u938c\u306b\u8fd1\u3065\u304b\u306a\u3044\u3067\u3002\u51cd\u3063\u3061\u3083\u3046\u304b\u3089\u3002",
     "Don't get near the scythe. You'll freeze."
    ],
    "bond": [
-    "氷の鎌は、あなたを守るためだけに振るう。",
+    "\u6c37\u306e\u938c\u306f\u3001\u3042\u306a\u305f\u3092\u5b88\u308b\u305f\u3081\u3060\u3051\u306b\u632f\u308b\u3046\u3002",
     "I swing this ice scythe only to protect you."
    ],
    "skill": [
-    "氷河の刈り取り。",
+    "\u6c37\u6cb3\u306e\u5208\u308a\u53d6\u308a\u3002",
     "Glacial reap."
    ],
    "win": [
-    "すべて、凍りついた。",
+    "\u3059\u3079\u3066\u3001\u51cd\u308a\u3064\u3044\u305f\u3002",
     "Everything has frozen."
    ],
    "summon": [
-    "氷の死神、シュルア。命を刈る…でも、あなたは別。",
+    "\u6c37\u306e\u6b7b\u795e\u3001\u30b7\u30e5\u30eb\u30a2\u3002\u547d\u3092\u5208\u308b\u2026\u3067\u3082\u3001\u3042\u306a\u305f\u306f\u5225\u3002",
     "Schylua, the Frost Reaper. I reap lives... but not yours."
    ],
    "hurt": [
-    "いたっ！",
+    "\u3044\u305f\u3063\uff01",
     "Ouch!"
    ],
    "ko": [
-    "まだ…戦えるのに…",
+    "\u307e\u3060\u2026\u6226\u3048\u308b\u306e\u306b\u2026",
     "I can... still fight..."
    ]
   }
@@ -916,35 +916,35 @@
   "rate": 170,
   "lines": {
    "greet": [
-    "あら〜、司令官。今夜も私に会いに来たの？",
+    "\u3042\u3089\u301c\u3001\u53f8\u4ee4\u5b98\u3002\u4eca\u591c\u3082\u79c1\u306b\u4f1a\u3044\u306b\u6765\u305f\u306e\uff1f",
     "Ara~ Commander. Did you come to see me again tonight?"
    ],
    "tap": [
-    "ふふっ、くすぐったい。もっと…？",
+    "\u3075\u3075\u3063\u3001\u304f\u3059\u3050\u3063\u305f\u3044\u3002\u3082\u3063\u3068\u2026\uff1f",
     "Fufu, that tickles. More...?"
    ],
    "bond": [
-    "魅了するつもりが…私が魅了されちゃった。",
+    "\u9b45\u4e86\u3059\u308b\u3064\u3082\u308a\u304c\u2026\u79c1\u304c\u9b45\u4e86\u3055\u308c\u3061\u3083\u3063\u305f\u3002",
     "I meant to charm you... but you charmed me instead."
    ],
    "skill": [
-    "破滅の魅惑！",
+    "\u7834\u6ec5\u306e\u9b45\u60d1\uff01",
     "Charm of Ruin!"
    ],
    "win": [
-    "みんな私に夢中ね。",
+    "\u307f\u3093\u306a\u79c1\u306b\u5922\u4e2d\u306d\u3002",
     "Everyone's crazy about me."
    ],
    "summon": [
-    "サキュバスのヴェクシラよ。あなたの夢にお邪魔するわ。",
+    "\u30b5\u30ad\u30e5\u30d0\u30b9\u306e\u30f4\u30a7\u30af\u30b7\u30e9\u3088\u3002\u3042\u306a\u305f\u306e\u5922\u306b\u304a\u90aa\u9b54\u3059\u308b\u308f\u3002",
     "I'm Vexira the succubus. I'll be visiting your dreams."
    ],
    "hurt": [
-    "いたっ！",
+    "\u3044\u305f\u3063\uff01",
     "Ouch!"
    ],
    "ko": [
-    "司令官…あとは…",
+    "\u53f8\u4ee4\u5b98\u2026\u3042\u3068\u306f\u2026",
     "Commander... the rest is..."
    ]
   }
@@ -954,35 +954,35 @@
   "rate": 190,
   "lines": {
    "greet": [
-    "し、司令官！ハンマーの準備はできてます！",
+    "\u3057\u3001\u53f8\u4ee4\u5b98\uff01\u30cf\u30f3\u30de\u30fc\u306e\u6e96\u5099\u306f\u3067\u304d\u3066\u307e\u3059\uff01",
     "C-Commander! My hammer is ready!"
    ],
    "tap": [
-    "わわっ、ハンマー落としちゃう！",
+    "\u308f\u308f\u3063\u3001\u30cf\u30f3\u30de\u30fc\u843d\u3068\u3057\u3061\u3083\u3046\uff01",
     "Wawa, I'm going to drop my hammer!"
    ],
    "bond": [
-    "重いハンマーも、あなたのためなら軽く感じます。",
+    "\u91cd\u3044\u30cf\u30f3\u30de\u30fc\u3082\u3001\u3042\u306a\u305f\u306e\u305f\u3081\u306a\u3089\u8efd\u304f\u611f\u3058\u307e\u3059\u3002",
     "Even this heavy hammer feels light when it's for you."
    ],
    "skill": [
-    "サンダー・タップ！",
+    "\u30b5\u30f3\u30c0\u30fc\u30fb\u30bf\u30c3\u30d7\uff01",
     "Thunder tap!"
    ],
    "win": [
-    "や、やりました！ちゃんと当たりました！",
+    "\u3084\u3001\u3084\u308a\u307e\u3057\u305f\uff01\u3061\u3083\u3093\u3068\u5f53\u305f\u308a\u307e\u3057\u305f\uff01",
     "I-I did it! I actually hit them!"
    ],
    "summon": [
-    "雷槌の乙女、シヴです！が、頑張ります！",
+    "\u96f7\u69cc\u306e\u4e59\u5973\u3001\u30b7\u30f4\u3067\u3059\uff01\u304c\u3001\u9811\u5f35\u308a\u307e\u3059\uff01",
     "I'm Siv, the Thunder Hammer Maiden! I'll do my best!"
    ],
    "hurt": [
-    "くっ…まだよ！",
+    "\u304f\u3063\u2026\u307e\u3060\u3088\uff01",
     "Tch... not yet!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -992,35 +992,35 @@
   "rate": 150,
   "lines": {
    "greet": [
-    "…戻ったか。剣の手入れは済ませておいた。",
+    "\u2026\u623b\u3063\u305f\u304b\u3002\u5263\u306e\u624b\u5165\u308c\u306f\u6e08\u307e\u305b\u3066\u304a\u3044\u305f\u3002",
     "...You're back. I've already polished my sword."
    ],
    "tap": [
-    "何だ。…暇なら、隣に座れ。",
+    "\u4f55\u3060\u3002\u2026\u6687\u306a\u3089\u3001\u96a3\u306b\u5ea7\u308c\u3002",
     "What is it. ...If you're free, sit next to me."
    ],
    "bond": [
-    "旅の終わりを探していた。それは、ここだったのかもしれない。",
+    "\u65c5\u306e\u7d42\u308f\u308a\u3092\u63a2\u3057\u3066\u3044\u305f\u3002\u305d\u308c\u306f\u3001\u3053\u3053\u3060\u3063\u305f\u306e\u304b\u3082\u3057\u308c\u306a\u3044\u3002",
     "I was looking for the end of my journey. Maybe it was here."
    ],
    "skill": [
-    "裂け、大剣よ。",
+    "\u88c2\u3051\u3001\u5927\u5263\u3088\u3002",
     "Cleave, greatsword."
    ],
    "win": [
-    "…悪くない戦いだった。",
+    "\u2026\u60aa\u304f\u306a\u3044\u6226\u3044\u3060\u3063\u305f\u3002",
     "...Not a bad fight."
    ],
    "summon": [
-    "流浪の大剣士、スヴェン。剣を貸そう。",
+    "\u6d41\u6d6a\u306e\u5927\u5263\u58eb\u3001\u30b9\u30f4\u30a7\u30f3\u3002\u5263\u3092\u8cb8\u305d\u3046\u3002",
     "Sven, wandering greatsword. I'll lend you my blade."
    ],
    "hurt": [
-    "ひゃっ！",
+    "\u3072\u3083\u3063\uff01",
     "Hya!"
    ],
    "ko": [
-    "そんな…",
+    "\u305d\u3093\u306a\u2026",
     "No way..."
    ]
   }
@@ -1030,43 +1030,43 @@
   "rate": 190,
   "lines": {
    "greet": [
-    "いらっしゃいませ！今日もいい品物、揃ってますよ！",
+    "\u3044\u3089\u3063\u3057\u3083\u3044\u307e\u305b\uff01\u4eca\u65e5\u3082\u3044\u3044\u54c1\u7269\u3001\u63c3\u3063\u3066\u307e\u3059\u3088\uff01",
     "Welcome! I've got lots of great goods today!"
    ],
    "tap": [
-    "きゃっ！お、お客様、商品はあちらです！",
+    "\u304d\u3083\u3063\uff01\u304a\u3001\u304a\u5ba2\u69d8\u3001\u5546\u54c1\u306f\u3042\u3061\u3089\u3067\u3059\uff01",
     "Kya! C-customer, the goods are over there!"
    ],
    "thanks": [
-    "お買い上げ、ありがとうございます！",
+    "\u304a\u8cb7\u3044\u4e0a\u3052\u3001\u3042\u308a\u304c\u3068\u3046\u3054\u3056\u3044\u307e\u3059\uff01",
     "Thank you for your purchase!"
    ],
    "poor": [
-    "あら、お金が足りないみたいですね…",
+    "\u3042\u3089\u3001\u304a\u91d1\u304c\u8db3\u308a\u306a\u3044\u307f\u305f\u3044\u3067\u3059\u306d\u2026",
     "Oh, looks like you're a little short..."
    ],
    "tap_head": [
-    "えへへ、撫でてくれるんですか？今日はサービスしちゃいます！",
+    "\u3048\u3078\u3078\u3001\u64ab\u3067\u3066\u304f\u308c\u308b\u3093\u3067\u3059\u304b\uff1f\u4eca\u65e5\u306f\u30b5\u30fc\u30d3\u30b9\u3057\u3061\u3083\u3044\u307e\u3059\uff01",
     "Ehehe, a head pat? I'll give you a discount today!"
    ],
    "tap_body": [
-    "きゃっ！お、お客様、商品はあちらです！",
+    "\u304d\u3083\u3063\uff01\u304a\u3001\u304a\u5ba2\u69d8\u3001\u5546\u54c1\u306f\u3042\u3061\u3089\u3067\u3059\uff01",
     "Kya! C-customer, the goods are over there!"
    ],
    "tap_legs": [
-    "もうっ、どこ見てるんですか！",
+    "\u3082\u3046\u3063\u3001\u3069\u3053\u898b\u3066\u308b\u3093\u3067\u3059\u304b\uff01",
     "Geez, where are you looking?!"
    ],
    "idle": [
-    "お悩みですか？おすすめは毎日変わりますよ！",
+    "\u304a\u60a9\u307f\u3067\u3059\u304b\uff1f\u304a\u3059\u3059\u3081\u306f\u6bce\u65e5\u5909\u308f\u308a\u307e\u3059\u3088\uff01",
     "Can't decide? My recommendations change every day!"
    ],
    "browse": [
-    "その棚、今日の新入荷ですよ！",
+    "\u305d\u306e\u68da\u3001\u4eca\u65e5\u306e\u65b0\u5165\u8377\u3067\u3059\u3088\uff01",
     "That shelf just got new stock today!"
    ],
    "bye": [
-    "またのお越しをお待ちしてます！",
+    "\u307e\u305f\u306e\u304a\u8d8a\u3057\u3092\u304a\u5f85\u3061\u3057\u3066\u307e\u3059\uff01",
     "Please come again soon!"
    ]
   }
@@ -1076,43 +1076,43 @@
   "rate": 160,
   "lines": {
    "greet": [
-    "ふふ…闇市へようこそ。珍しい品、ありますよ。",
+    "\u3075\u3075\u2026\u95c7\u5e02\u3078\u3088\u3046\u3053\u305d\u3002\u73cd\u3057\u3044\u54c1\u3001\u3042\u308a\u307e\u3059\u3088\u3002",
     "Fufu... welcome to the black market. I have rare goods."
    ],
    "tap": [
-    "触るなら…代金をいただくわ。",
+    "\u89e6\u308b\u306a\u3089\u2026\u4ee3\u91d1\u3092\u3044\u305f\u3060\u304f\u308f\u3002",
     "If you're going to touch... I'll charge you for it."
    ],
    "thanks": [
-    "いい取引だったわ。またどうぞ。",
+    "\u3044\u3044\u53d6\u5f15\u3060\u3063\u305f\u308f\u3002\u307e\u305f\u3069\u3046\u305e\u3002",
     "A fine deal. Come again."
    ],
    "poor": [
-    "お金がないなら、また今度ね。",
+    "\u304a\u91d1\u304c\u306a\u3044\u306a\u3089\u3001\u307e\u305f\u4eca\u5ea6\u306d\u3002",
     "No money? Then next time."
    ],
    "tap_head": [
-    "あら、頭を撫でるの？…悪くないわね。",
+    "\u3042\u3089\u3001\u982d\u3092\u64ab\u3067\u308b\u306e\uff1f\u2026\u60aa\u304f\u306a\u3044\u308f\u306d\u3002",
     "Oh, patting my head? ...Not bad."
    ],
    "tap_body": [
-    "ふふ…高くつくわよ、それ。",
+    "\u3075\u3075\u2026\u9ad8\u304f\u3064\u304f\u308f\u3088\u3001\u305d\u308c\u3002",
     "Fufu... that's going to cost you."
    ],
    "tap_legs": [
-    "どこ見てるの？商品はこっちよ。",
+    "\u3069\u3053\u898b\u3066\u308b\u306e\uff1f\u5546\u54c1\u306f\u3053\u3063\u3061\u3088\u3002",
     "Where are you looking? The goods are over here."
    ],
    "idle": [
-    "決まった？迷う時間も楽しいでしょう？",
+    "\u6c7a\u307e\u3063\u305f\uff1f\u8ff7\u3046\u6642\u9593\u3082\u697d\u3057\u3044\u3067\u3057\u3087\u3046\uff1f",
     "Decided yet? Choosing is half the fun, isn't it?"
    ],
    "browse": [
-    "その棚は掘り出し物だらけよ。",
+    "\u305d\u306e\u68da\u306f\u6398\u308a\u51fa\u3057\u7269\u3060\u3089\u3051\u3088\u3002",
     "That shelf is full of hidden treasures."
    ],
    "bye": [
-    "またいらっしゃい。待ってるわ。",
+    "\u307e\u305f\u3044\u3089\u3063\u3057\u3083\u3044\u3002\u5f85\u3063\u3066\u308b\u308f\u3002",
     "Come again. I'll be waiting."
    ]
   }
@@ -1122,39 +1122,39 @@
   "rate": 150,
   "lines": {
    "greet": [
-    "…来たのね。あなたの運命、少しだけ覗かせて。",
+    "\u2026\u6765\u305f\u306e\u306d\u3002\u3042\u306a\u305f\u306e\u904b\u547d\u3001\u5c11\u3057\u3060\u3051\u8997\u304b\u305b\u3066\u3002",
     "...You came. Let me peek at your fate, just a little."
    ],
    "tap": [
-    "髪に触れないで…絡まるわよ、あなたの運命ごと。",
+    "\u9aea\u306b\u89e6\u308c\u306a\u3044\u3067\u2026\u7d61\u307e\u308b\u308f\u3088\u3001\u3042\u306a\u305f\u306e\u904b\u547d\u3054\u3068\u3002",
     "Don't touch my hair... your fate will tangle with it."
    ],
    "tap_head": [
-    "冠に触れるなんて…大胆ね。",
+    "\u51a0\u306b\u89e6\u308c\u308b\u306a\u3093\u3066\u2026\u5927\u80c6\u306d\u3002",
     "Touching my crown... how bold."
    ],
    "tap_body": [
-    "ふふ…その手、少し震えているわ。",
+    "\u3075\u3075\u2026\u305d\u306e\u624b\u3001\u5c11\u3057\u9707\u3048\u3066\u3044\u308b\u308f\u3002",
     "Fufu... your hand is trembling a little."
    ],
    "tap_legs": [
-    "見つめすぎよ。占いの代金、上乗せね。",
+    "\u898b\u3064\u3081\u3059\u304e\u3088\u3002\u5360\u3044\u306e\u4ee3\u91d1\u3001\u4e0a\u4e57\u305b\u306d\u3002",
     "You're staring. I'm adding that to the fortune fee."
    ],
    "idle": [
-    "星が囁いているわ…今日は何かが起こる、と。",
+    "\u661f\u304c\u56c1\u3044\u3066\u3044\u308b\u308f\u2026\u4eca\u65e5\u306f\u4f55\u304b\u304c\u8d77\u3053\u308b\u3001\u3068\u3002",
     "The stars are whispering... something will happen today."
    ],
    "browse": [
-    "カードが選ばれたわ。…ほら、これがあなたの今日よ。",
+    "\u30ab\u30fc\u30c9\u304c\u9078\u3070\u308c\u305f\u308f\u3002\u2026\u307b\u3089\u3001\u3053\u308c\u304c\u3042\u306a\u305f\u306e\u4eca\u65e5\u3088\u3002",
     "The card has chosen. ...See, this is your day."
    ],
    "thanks": [
-    "また明日、運命を聞きにいらっしゃい。",
+    "\u307e\u305f\u660e\u65e5\u3001\u904b\u547d\u3092\u805e\u304d\u306b\u3044\u3089\u3063\u3057\u3083\u3044\u3002",
     "Come back tomorrow to hear your fate again."
    ],
    "poor": [
-    "今日の運命はもう告げたわ。また明日ね。",
+    "\u4eca\u65e5\u306e\u904b\u547d\u306f\u3082\u3046\u544a\u3052\u305f\u308f\u3002\u307e\u305f\u660e\u65e5\u306d\u3002",
     "I've already told today's fate. Tomorrow, then."
    ]
   }
@@ -1164,35 +1164,35 @@
   "rate": 165,
   "lines": {
    "greet": [
-    "天はあなたを守れと命じたわ。…志願したのは私だけど。",
+    "\u5929\u306f\u3042\u306a\u305f\u3092\u5b88\u308c\u3068\u547d\u3058\u305f\u308f\u3002\u2026\u5fd7\u9858\u3057\u305f\u306e\u306f\u79c1\u3060\u3051\u3069\u3002",
     "Heaven ordered me to guard you. ...I volunteered, actually."
    ],
    "tap": [
-    "羽に触れないで！…くすぐったいの。",
+    "\u7fbd\u306b\u89e6\u308c\u306a\u3044\u3067\uff01\u2026\u304f\u3059\u3050\u3063\u305f\u3044\u306e\u3002",
     "Don't touch my wings! ...It tickles."
    ],
    "bond": [
-    "この翼は、あなたの空を守るためにあるの。",
+    "\u3053\u306e\u7ffc\u306f\u3001\u3042\u306a\u305f\u306e\u7a7a\u3092\u5b88\u308b\u305f\u3081\u306b\u3042\u308b\u306e\u3002",
     "These wings exist to guard your sky."
    ],
    "skill": [
-    "熾天使の審判を！",
+    "\u71be\u5929\u4f7f\u306e\u5be9\u5224\u3092\uff01",
     "Seraph's Verdict!"
    ],
    "win": [
-    "光は、いつも正しい側に。",
+    "\u5149\u306f\u3001\u3044\u3064\u3082\u6b63\u3057\u3044\u5074\u306b\u3002",
     "The light is always on the right side."
    ],
    "summon": [
-    "熾天のヴァルキリー、アンジェラ。あなたの剣となりましょう。",
+    "\u71be\u5929\u306e\u30f4\u30a1\u30eb\u30ad\u30ea\u30fc\u3001\u30a2\u30f3\u30b8\u30a7\u30e9\u3002\u3042\u306a\u305f\u306e\u5263\u3068\u306a\u308a\u307e\u3057\u3087\u3046\u3002",
     "Angela, Seraphic Valkyrie. I shall be your sword."
    ],
    "hurt": [
-    "くっ…！",
+    "\u304f\u3063\u2026\uff01",
     "Ngh...!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -1202,35 +1202,35 @@
   "rate": 155,
   "lines": {
    "greet": [
-    "死神があなたの隣を歩いているわ。幸運ね、気に入られてるもの。",
-    "Death walks beside you. Lucky you — she likes you."
+    "\u6b7b\u795e\u304c\u3042\u306a\u305f\u306e\u96a3\u3092\u6b69\u3044\u3066\u3044\u308b\u308f\u3002\u5e78\u904b\u306d\u3001\u6c17\u306b\u5165\u3089\u308c\u3066\u308b\u3082\u306e\u3002",
+    "Death walks beside you. Lucky you \u2014 she likes you."
    ],
    "tap": [
-    "鎌に気をつけて。魂ごと刈り取っちゃうわよ。",
+    "\u938c\u306b\u6c17\u3092\u3064\u3051\u3066\u3002\u9b42\u3054\u3068\u5208\u308a\u53d6\u3063\u3061\u3083\u3046\u308f\u3088\u3002",
     "Careful with the scythes. I might reap your soul too."
    ],
    "bond": [
-    "何千の魂を刈ってきたけど、あなたの魂だけは守りたいの。",
+    "\u4f55\u5343\u306e\u9b42\u3092\u5208\u3063\u3066\u304d\u305f\u3051\u3069\u3001\u3042\u306a\u305f\u306e\u9b42\u3060\u3051\u306f\u5b88\u308a\u305f\u3044\u306e\u3002",
     "I've reaped thousands of souls. Yours is the only one I want to protect."
    ],
    "skill": [
-    "不死鳥の収穫！",
+    "\u4e0d\u6b7b\u9ce5\u306e\u53ce\u7a6b\uff01",
     "Phoenix Harvest!"
    ],
    "win": [
-    "灰から蘇るのは、私たちだけ。",
+    "\u7070\u304b\u3089\u8607\u308b\u306e\u306f\u3001\u79c1\u305f\u3061\u3060\u3051\u3002",
     "Only we rise from the ashes."
    ],
    "summon": [
-    "不死鳥の死神、カーラ。あなたの命、預かるわ。",
+    "\u4e0d\u6b7b\u9ce5\u306e\u6b7b\u795e\u3001\u30ab\u30fc\u30e9\u3002\u3042\u306a\u305f\u306e\u547d\u3001\u9810\u304b\u308b\u308f\u3002",
     "Kara, the Phoenix Reaper. I'll take care of your life."
    ],
    "hurt": [
-    "くっ…！",
+    "\u304f\u3063\u2026\uff01",
     "Ngh...!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -1240,35 +1240,35 @@
   "rate": 180,
   "lines": {
    "greet": [
-    "耳を見ないで。剣を見て。そっちの方が鋭いから。",
+    "\u8033\u3092\u898b\u306a\u3044\u3067\u3002\u5263\u3092\u898b\u3066\u3002\u305d\u3063\u3061\u306e\u65b9\u304c\u92ed\u3044\u304b\u3089\u3002",
     "Don't stare at the ears. Stare at the sword. It's sharper."
    ],
    "tap": [
-    "ちょっと！うさ耳は飾りじゃないんだから！",
+    "\u3061\u3087\u3063\u3068\uff01\u3046\u3055\u8033\u306f\u98fe\u308a\u3058\u3083\u306a\u3044\u3093\u3060\u304b\u3089\uff01",
     "Hey! The bunny ears aren't just for show!"
    ],
    "bond": [
-    "百本の剣より、あなた一人を守りたい。",
+    "\u767e\u672c\u306e\u5263\u3088\u308a\u3001\u3042\u306a\u305f\u4e00\u4eba\u3092\u5b88\u308a\u305f\u3044\u3002",
     "I'd rather protect you than a hundred swords."
    ],
    "skill": [
-    "紅月斬！",
+    "\u7d05\u6708\u65ac\uff01",
     "Crimson Moon Slash!"
    ],
    "win": [
-    "ぴょんっと勝利！…今の、忘れて。",
+    "\u3074\u3087\u3093\u3063\u3068\u52dd\u5229\uff01\u2026\u4eca\u306e\u3001\u5fd8\u308c\u3066\u3002",
     "Hop to victory! ...Forget I said that."
    ],
    "summon": [
-    "紅刃のバニー、メイ！剣も耳も、全部あなたのもの！",
+    "\u7d05\u5203\u306e\u30d0\u30cb\u30fc\u3001\u30e1\u30a4\uff01\u5263\u3082\u8033\u3082\u3001\u5168\u90e8\u3042\u306a\u305f\u306e\u3082\u306e\uff01",
     "Mei, the Crimson Blade Bunny! My swords and ears are all yours!"
    ],
    "hurt": [
-    "くっ…！",
+    "\u304f\u3063\u2026\uff01",
     "Ngh...!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -1278,35 +1278,35 @@
   "rate": 190,
   "lines": {
    "greet": [
-    "私のコイン全部が言ってるわ、今日はいい日になるって！",
+    "\u79c1\u306e\u30b3\u30a4\u30f3\u5168\u90e8\u304c\u8a00\u3063\u3066\u308b\u308f\u3001\u4eca\u65e5\u306f\u3044\u3044\u65e5\u306b\u306a\u308b\u3063\u3066\uff01",
     "Every coin I own says you'll have a lucky day!"
    ],
    "tap": [
-    "きゃっ、金貨が落ちちゃう！",
+    "\u304d\u3083\u3063\u3001\u91d1\u8ca8\u304c\u843d\u3061\u3061\u3083\u3046\uff01",
     "Kya, my gold coins will fall!"
    ],
    "bond": [
-    "宝箱いっぱいの金より、あなたの笑顔の方が価値があるわ。",
+    "\u5b9d\u7bb1\u3044\u3063\u3071\u3044\u306e\u91d1\u3088\u308a\u3001\u3042\u306a\u305f\u306e\u7b11\u9854\u306e\u65b9\u304c\u4fa1\u5024\u304c\u3042\u308b\u308f\u3002",
     "Your smile is worth more than a chest full of gold."
    ],
    "skill": [
-    "黄金の幸運の雨！",
+    "\u9ec4\u91d1\u306e\u5e78\u904b\u306e\u96e8\uff01",
     "Rain of Golden Fortune!"
    ],
    "win": [
-    "勝利の配当、山分けね！",
+    "\u52dd\u5229\u306e\u914d\u5f53\u3001\u5c71\u5206\u3051\u306d\uff01",
     "Let's split the victory dividends!"
    ],
    "summon": [
-    "千金の姫、寧兒です！幸運をお届けします！",
+    "\u5343\u91d1\u306e\u59eb\u3001\u5be7\u5152\u3067\u3059\uff01\u5e78\u904b\u3092\u304a\u5c4a\u3051\u3057\u307e\u3059\uff01",
     "Ning Er, Princess of a Thousand Coins! Delivering good luck!"
    ],
    "hurt": [
-    "くっ…！",
+    "\u304f\u3063\u2026\uff01",
     "Ngh...!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -1316,35 +1316,35 @@
   "rate": 175,
   "lines": {
    "greet": [
-    "ドローン起動。翼起動。心も起動…困ったことにね。",
+    "\u30c9\u30ed\u30fc\u30f3\u8d77\u52d5\u3002\u7ffc\u8d77\u52d5\u3002\u5fc3\u3082\u8d77\u52d5\u2026\u56f0\u3063\u305f\u3053\u3068\u306b\u306d\u3002",
     "Drones online. Wings online. Heart... also online, unfortunately."
    ],
    "tap": [
-    "警告：接触を検知。…嫌じゃない、けど。",
+    "\u8b66\u544a\uff1a\u63a5\u89e6\u3092\u691c\u77e5\u3002\u2026\u5acc\u3058\u3083\u306a\u3044\u3001\u3051\u3069\u3002",
     "Warning: contact detected. ...Not unpleasant, though."
    ],
    "bond": [
-    "私の全回路が、あなたのことで熱くなるの。",
+    "\u79c1\u306e\u5168\u56de\u8def\u304c\u3001\u3042\u306a\u305f\u306e\u3053\u3068\u3067\u71b1\u304f\u306a\u308b\u306e\u3002",
     "Every circuit I have heats up because of you."
    ],
    "skill": [
-    "深紅のドローン群、発進！",
+    "\u6df1\u7d05\u306e\u30c9\u30ed\u30fc\u30f3\u7fa4\u3001\u767a\u9032\uff01",
     "Scarlet Drone Swarm, launch!"
    ],
    "win": [
-    "任務完了。損害ゼロ。…褒めて？",
+    "\u4efb\u52d9\u5b8c\u4e86\u3002\u640d\u5bb3\u30bc\u30ed\u3002\u2026\u8912\u3081\u3066\uff1f",
     "Mission complete. Zero damage. ...Praise me?"
    ],
    "summon": [
-    "深紅の蜘蛛機関、スパイメイ。あなたの命令を待ってる。",
+    "\u6df1\u7d05\u306e\u8718\u86db\u6a5f\u95a2\u3001\u30b9\u30d1\u30a4\u30e1\u30a4\u3002\u3042\u306a\u305f\u306e\u547d\u4ee4\u3092\u5f85\u3063\u3066\u308b\u3002",
     "Spimei, Scarlet Spider Engine. Awaiting your orders."
    ],
    "hurt": [
-    "くっ…！",
+    "\u304f\u3063\u2026\uff01",
     "Ngh...!"
    ],
    "ko": [
-    "ごめん…なさい…",
+    "\u3054\u3081\u3093\u2026\u306a\u3055\u3044\u2026",
     "I'm... sorry..."
    ]
   }
@@ -1354,39 +1354,39 @@
   "rate": 185,
   "lines": {
    "greet": [
-    "な、何よ…別に待ってたわけじゃないんだから！",
+    "\u306a\u3001\u4f55\u3088\u2026\u5225\u306b\u5f85\u3063\u3066\u305f\u308f\u3051\u3058\u3083\u306a\u3044\u3093\u3060\u304b\u3089\uff01",
     "W-what? It's not like I was waiting for you!"
    ],
    "tap": [
-    "ひゃっ！い、いきなり触らないでよ！",
+    "\u3072\u3083\u3063\uff01\u3044\u3001\u3044\u304d\u306a\u308a\u89e6\u3089\u306a\u3044\u3067\u3088\uff01",
     "Hya! D-don't touch me so suddenly!"
    ],
    "tap_head": [
-    "頭撫でるとか…こ、子供扱いしないで！…もうちょっとだけなら。",
+    "\u982d\u64ab\u3067\u308b\u3068\u304b\u2026\u3053\u3001\u5b50\u4f9b\u6271\u3044\u3057\u306a\u3044\u3067\uff01\u2026\u3082\u3046\u3061\u3087\u3063\u3068\u3060\u3051\u306a\u3089\u3002",
     "Patting my head? D-don't treat me like a kid! ...Maybe a little longer."
    ],
    "tap_body": [
-    "ば、ばかっ！燃やすわよ！？",
+    "\u3070\u3001\u3070\u304b\u3063\uff01\u71c3\u3084\u3059\u308f\u3088\uff01\uff1f",
     "Y-you idiot! I'll set you on fire!?"
    ],
    "tap_legs": [
-    "どこ見てるのよ、この変態！",
+    "\u3069\u3053\u898b\u3066\u308b\u306e\u3088\u3001\u3053\u306e\u5909\u614b\uff01",
     "Where are you looking, you pervert!"
    ],
    "idle": [
-    "…ずっと黙ってないで、何か買いなさいよ。",
+    "\u2026\u305a\u3063\u3068\u9ed9\u3063\u3066\u306a\u3044\u3067\u3001\u4f55\u304b\u8cb7\u3044\u306a\u3055\u3044\u3088\u3002",
     "...Don't just stand there silently. Buy something already."
    ],
    "browse": [
-    "そ、それ…私のおすすめ。別にあんたのためじゃないけど。",
+    "\u305d\u3001\u305d\u308c\u2026\u79c1\u306e\u304a\u3059\u3059\u3081\u3002\u5225\u306b\u3042\u3093\u305f\u306e\u305f\u3081\u3058\u3083\u306a\u3044\u3051\u3069\u3002",
     "Th-that one's my recommendation. Not that I picked it for you."
    ],
    "thanks": [
-    "…ありがと。また来てもいいわよ。たまにならね！",
+    "\u2026\u3042\u308a\u304c\u3068\u3002\u307e\u305f\u6765\u3066\u3082\u3044\u3044\u308f\u3088\u3002\u305f\u307e\u306b\u306a\u3089\u306d\uff01",
     "...Thanks. You can come again. Sometimes!"
    ],
    "poor": [
-    "お金足りないじゃない！…今回だけ、見なかったことにしてあげる。",
+    "\u304a\u91d1\u8db3\u308a\u306a\u3044\u3058\u3083\u306a\u3044\uff01\u2026\u4eca\u56de\u3060\u3051\u3001\u898b\u306a\u304b\u3063\u305f\u3053\u3068\u306b\u3057\u3066\u3042\u3052\u308b\u3002",
     "You don't have enough! ...I'll pretend I didn't see, just this once."
    ]
   }
@@ -1396,36 +1396,188 @@
   "rate": 200,
   "lines": {
    "greet": [
-    "にゃ〜！メカ猫が撫でてほしいって。…私も、ちょっとだけ。",
+    "\u306b\u3083\u301c\uff01\u30e1\u30ab\u732b\u304c\u64ab\u3067\u3066\u307b\u3057\u3044\u3063\u3066\u3002\u2026\u79c1\u3082\u3001\u3061\u3087\u3063\u3068\u3060\u3051\u3002",
     "Nya~! My mecha cat wants head pats. ...Fine, me too."
    ],
    "tap": [
-    "にゃっ！？しっぽは触っちゃダメ！",
+    "\u306b\u3083\u3063\uff01\uff1f\u3057\u3063\u307d\u306f\u89e6\u3063\u3061\u3083\u30c0\u30e1\uff01",
     "Nya!? Don't touch the tail!"
    ],
    "bond": [
-    "あなたの膝の上、私専用の場所にしてもいい？",
+    "\u3042\u306a\u305f\u306e\u819d\u306e\u4e0a\u3001\u79c1\u5c02\u7528\u306e\u5834\u6240\u306b\u3057\u3066\u3082\u3044\u3044\uff1f",
     "Can your lap be my personal spot? Forever?"
    ],
    "skill": [
-    "メカ猫パウンス！",
+    "\u30e1\u30ab\u732b\u30d1\u30a6\u30f3\u30b9\uff01",
     "Mecha-Cat Pounce!"
    ],
    "win": [
-    "勝ったにゃ！ご褒美はおやつで！",
+    "\u52dd\u3063\u305f\u306b\u3083\uff01\u3054\u8912\u7f8e\u306f\u304a\u3084\u3064\u3067\uff01",
     "We won, nya! Snacks as a reward!"
    ],
    "summon": [
-    "メカ猫いたずら娘、ルビー参上にゃ！",
+    "\u30e1\u30ab\u732b\u3044\u305f\u305a\u3089\u5a18\u3001\u30eb\u30d3\u30fc\u53c2\u4e0a\u306b\u3083\uff01",
     "Luby, the mecha-cat troublemaker, has arrived, nya!"
    ],
    "hurt": [
-    "にゃうっ！",
+    "\u306b\u3083\u3046\u3063\uff01",
     "Nyau!"
    ],
    "ko": [
-    "もう…お昼寝…",
+    "\u3082\u3046\u2026\u304a\u663c\u5bdd\u2026",
     "Just... a nap..."
+   ]
+  }
+ },
+ "gala": {
+  "pitch": 1.08,
+  "rate": 185,
+  "lines": {
+   "greet": [
+    "\u30d1\u30e9\u30bd\u30eb\u306b\u6c17\u3092\u3064\u3051\u3066\u3001\u30c0\u30fc\u30ea\u30f3\u3002\u30bf\u30b3\u306f\u565b\u3080\u306e\u3002\u79c1\u306f\u304b\u3058\u308b\u3060\u3051\u3002",
+    "Mind the parasol, darling. The octopus bites. I only nibble."
+   ],
+   "tap": [
+    "\u3042\u3089\u3001\u71b1\u3044\u306e\u304c\u597d\u304d\u306a\u306e\uff1f",
+    "Oh? You like it hot?"
+   ],
+   "bond": [
+    "\u79c1\u3092\u898b\u3066\u304f\u308c\u308b\u306e\u306f\u3001\u3042\u306a\u305f\u3060\u3051\u306d\u3002",
+    "You're the only one who ever really looks at me."
+   ],
+   "skill": [
+    "\u30cd\u30d3\u30e5\u30e9\u30fb\u30d1\u30e9\u30bd\u30eb\uff01",
+    "Nebula Parasol!"
+   ],
+   "win": [
+    "\u71c3\u3048\u5c3d\u304d\u305f\u308f\u306d\u3002\u7d20\u6575\u3002",
+    "All burnt out. Lovely."
+   ],
+   "summon": [
+    "\u661f\u96f2\u306e\u708e\u3001\u30ac\u30e9\u3088\u3002\u9000\u5c48\u306f\u3055\u305b\u306a\u3044\u308f\u3002",
+    "Gala, flame of the nebula. I promise you won't be bored."
+   ],
+   "hurt": [
+    "\u71b1\u3063\u2026\uff01",
+    "Hot\u2014!"
+   ],
+   "ko": [
+    "\u706b\u304c\u2026\u6d88\u3048\u308b\u2026",
+    "My flame... is going out..."
+   ]
+  }
+ },
+ "morana": {
+  "pitch": 0.96,
+  "rate": 170,
+  "lines": {
+   "greet": [
+    "\u544a\u767d\u306a\u3055\u3044\u3001\u6307\u63ee\u5b98\u3002\u2026\u7f6a\u3058\u3083\u306a\u304f\u3066\u3001\u6c17\u6301\u3061\u3092\u3002",
+    "Confess, Commander. ...No, not your sins. Your feelings."
+   ],
+   "tap": [
+    "\u795e\u306e\u524d\u3067\u3059\u3088\u2026\u3075\u3075\u3002",
+    "In front of the altar? ...Hehe."
+   ],
+   "bond": [
+    "\u79c1\u306e\u7948\u308a\u306f\u3001\u3082\u3046\u3042\u306a\u305f\u306e\u305f\u3081\u3060\u3051\u3002",
+    "My prayers are only for you now."
+   ],
+   "skill": [
+    "\u9ed2\u304d\u30df\u30b5\u306e\u795d\u798f\u3092\uff01",
+    "Black Mass Benediction!"
+   ],
+   "win": [
+    "\u4e3b\u3088\u2026\u3044\u3048\u3001\u6307\u63ee\u5b98\u306b\u611f\u8b1d\u3092\u3002",
+    "Thanks be to... the Commander."
+   ],
+   "summon": [
+    "\u9ed2\u306e\u793c\u62dd\u5802\u306e\u5deb\u5973\u3001\u30e2\u30e9\u30ca\u3002\u3042\u306a\u305f\u306e\u544a\u89e3\u3092\u805e\u304d\u306b\u6765\u307e\u3057\u305f\u3002",
+    "Morana, priestess of the Black Chapel. I came to hear your confession."
+   ],
+   "hurt": [
+    "\u304f\u3063\u2026\uff01",
+    "Ngh\u2014!"
+   ],
+   "ko": [
+    "\u7948\u308a\u304c\u2026\u5c4a\u304b\u306a\u3044\u2026",
+    "My prayer... didn't reach..."
+   ]
+  }
+ },
+ "seraph": {
+  "pitch": 1.14,
+  "rate": 190,
+  "lines": {
+   "greet": [
+    "\u7ffc\u306e\u5343\u306e\u77b3\u304c\u3001\u307f\u3093\u306a\u3042\u306a\u305f\u3092\u898b\u3066\u3044\u308b\u306e\u3002",
+    "A thousand eyes on my wings, and every one of them is watching you."
+   ],
+   "tap": [
+    "\u3072\u3083\u3063\u3001\u7fbd\u306f\u304f\u3059\u3050\u3063\u305f\u3044\u306e\uff01",
+    "Eek, the feathers tickle!"
+   ],
+   "bond": [
+    "\u5929\u306b\u5e30\u3089\u306a\u304f\u3066\u3044\u3044\u7406\u7531\u3001\u898b\u3064\u3051\u3061\u3083\u3063\u305f\u3002",
+    "I found a reason not to go back to heaven."
+   ],
+   "skill": [
+    "\u5343\u773c\u306e\u5be9\u5224\uff01",
+    "Thousand-Eye Judgement!"
+   ],
+   "win": [
+    "\u5929\u306e\u52dd\u5229\u3067\u3059\uff01",
+    "Victory, by heaven's will!"
+   ],
+   "summon": [
+    "\u5927\u5929\u4f7f\u30bb\u30e9\u30d5\u3001\u821e\u3044\u964d\u308a\u307e\u3057\u305f\uff01",
+    "Archangel Seraph, descending!"
+   ],
+   "hurt": [
+    "\u304d\u3083\u3063\uff01",
+    "Kya!"
+   ],
+   "ko": [
+    "\u7ffc\u304c\u2026\u91cd\u3044\u2026",
+    "My wings... so heavy..."
+   ]
+  }
+ },
+ "tamo": {
+  "pitch": 1.0,
+  "rate": 175,
+  "lines": {
+   "greet": [
+    "\u4e5d\u5c3e\u306e\u5973\u738b\u304c\u6328\u62f6\u3059\u308b\u308f\u3002\u2026\u5c3b\u5c3e\u3001\u4e00\u672c\u3060\u3051\u89e6\u3063\u3066\u3082\u3044\u3044\u308f\u3088\u3002",
+    "The Nine-Tailed Queen greets you. ...You may pet ONE tail. For now."
+   ],
+   "tap": [
+    "\u7121\u793c\u8005\uff01\u2026\u3082\u3046\u4e00\u56de\u3060\u3051\u306a\u3089\u8a31\u3059\u3002",
+    "Insolent! ...Once more is allowed."
+   ],
+   "bond": [
+    "\u5973\u738b\u306e\u5fc3\u3092\u5c04\u6b62\u3081\u305f\u306e\u306f\u3001\u3042\u306a\u305f\u304c\u521d\u3081\u3066\u3088\u3002",
+    "You're the first to ever win a queen's heart."
+   ],
+   "skill": [
+    "\u4e5d\u5c3e\u306e\u5927\u5263\uff01",
+    "Nine-Tail Greatsword!"
+   ],
+   "win": [
+    "\u3072\u308c\u4f0f\u3057\u306a\u3055\u3044\uff01",
+    "Kneel before your queen!"
+   ],
+   "summon": [
+    "\u4e5d\u5c3e\u306e\u5263\u306e\u5973\u738b\u3001\u30bf\u30e2\u3002\u6211\u304c\u72d0\u305f\u3061\u3092\u5b88\u308b\u8005\u3088\u3002",
+    "Tamo, sword queen of the nine tails. Protector of my foxes."
+   ],
+   "hurt": [
+    "\u3063\u2026\u3053\u306e\u7a0b\u5ea6\uff01",
+    "Tch... is that all?!"
+   ],
+   "ko": [
+    "\u72d0\u305f\u3061\u2026\u3054\u3081\u3093\u306d\u2026",
+    "My foxes... I'm sorry..."
    ]
   }
  }

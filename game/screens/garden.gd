@@ -7,6 +7,7 @@ var _walkers: Array = []   # {id, node: UnitView, target: Vector2, wait: float, 
 var _bubble: PanelContainer
 var _bubble_l: Label
 var _bubble_owner: Control
+var _hud: PanelContainer
 
 func build() -> void:
 	set_bg("forest", 0.12)
@@ -18,17 +19,21 @@ func build() -> void:
 	_area.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_area.anchor_top = 0.42
 	_area.offset_bottom = -20
-	_area.offset_left = 40
+	_area.offset_left = 285
 	_area.offset_right = -40
 	_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_area)
-	var hint := UI.label("Tap a hero to play with her! (Bond EXP up to %d taps per hero each day)" % DB.GARDEN_TAPS_PER_DAY, 15, Color.WHITE, 5)
-	hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	hint.offset_top = 74
-	hint.offset_left = -400
-	hint.offset_right = 400
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var hint := UI.styled_panel(Color(0, 0, 0, 0.5), Color(1, 1, 1, 0.15), 16, 1, 6.0)
+	hint.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	hint.offset_top = 84
+	hint.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	hint.add_child(UI.label("  ♥  Tap a hero to play with her — up to %d Bond taps each per day  " % DB.GARDEN_TAPS_PER_DAY, 14, Color.WHITE, 2))
+	hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(hint)
+	_hud = UI.styled_panel(Color(0.06, 0.04, 0.1, 0.82), Color(UI.GOLD, 0.5), 12, 1, 10.0)
+	_hud.position = Vector2(16, 88)
+	_hud.custom_minimum_size = Vector2(250, 0)
+	add_child(_hud)
 	_bubble = UI.styled_panel(Color(1, 1, 1, 0.95), UI.GOLD, 14, 2, 10)
 	_bubble.custom_minimum_size = Vector2(280, 0)
 	_bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -40,7 +45,42 @@ func build() -> void:
 	_spawn.call_deferred()
 	tutorial("garden")
 
+func _taps(id: String) -> int:
+	return int(Game.s["quests"]["progress"].get("garden_" + id, 0))
+
+## Left card: each resident's Bond taps used today as heart pips.
+func _render_hud() -> void:
+	for c in _hud.get_children():
+		c.queue_free()
+	var v := UI.vbox(6)
+	_hud.add_child(v)
+	var ids: Array = Game.s["garden"]
+	var left := 0
+	for id in ids:
+		left += maxi(0, DB.GARDEN_TAPS_PER_DAY - _taps(id))
+	var t := UI.hbox(6)
+	v.add_child(t)
+	var tl := UI.label("RESIDENTS TODAY", 13, UI.GOLD, 2)
+	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	t.add_child(tl)
+	t.add_child(UI.label("%d taps left" % left, 11, UI.GREEN if left > 0 else UI.MUTED, 0))
+	for id in ids:
+		var r := UI.hbox(8)
+		v.add_child(r)
+		r.add_child(UI.tex_rect(DB.face(id), Vector2(32, 32), true))
+		var rv := UI.vbox(0)
+		rv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		r.add_child(rv)
+		var nm := UI.label("%s  •  Bond %d" % [DB.name_of(id).split(" ")[0], int(Game.hero(id)["bond"])], 12, Color.WHITE, 0)
+		nm.clip_text = true
+		rv.add_child(nm)
+		var used := _taps(id)
+		rv.add_child(UI.label("♥".repeat(mini(used, DB.GARDEN_TAPS_PER_DAY)) + "♡".repeat(maxi(0, DB.GARDEN_TAPS_PER_DAY - used)), 12, Color("#ff8fb8") if used < DB.GARDEN_TAPS_PER_DAY else UI.MUTED, 0))
+	if ids.is_empty():
+		v.add_child(UI.label("Nobody lives here yet.", 12, UI.MUTED, 0))
+
 func _spawn() -> void:
+	_render_hud()
 	for w in _walkers:
 		w["node"].queue_free()
 	_walkers.clear()
@@ -130,6 +170,7 @@ func _tap(id: String, uv: UnitView) -> void:
 	bt.tween_interval(3.0)
 	bt.tween_callback(func(): _bubble.visible = false)
 	_bubble.set_meta("tw", bt)
+	_render_hud()
 	if int(r["bond"]) > 0:
 		_float(uv, "+%d Bond" % r["bond"], Color("#ff8fb8"))
 	else:

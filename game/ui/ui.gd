@@ -523,3 +523,49 @@ static func breathe(node: Control, amount: float = 0.012, period: float = 3.2) -
 	var tw := node.create_tween().set_loops()
 	tw.tween_property(node, "scale", Vector2(1.0 + amount * 0.4, 1.0 + amount), period * 0.5).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(node, "scale", Vector2.ONE, period * 0.5).set_trans(Tween.TRANS_SINE)
+
+## Top-3 podium card for leaderboards (k = 0 gold, 1 silver, 2 bronze). e: {name, hero, me}.
+## Round "view full screen" button (magnifier icon) that opens ArtViewer.
+static func zoom_button(on_press: Callable) -> Button:
+	var b := Button.new()
+	b.focus_mode = Control.FOCUS_NONE
+	b.custom_minimum_size = Vector2(58, 58)
+	b.icon = DB.icon("icon_zoom")
+	b.expand_icon = true
+	b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.tooltip_text = "View full screen (pinch to zoom, tap to interact)"
+	b.add_theme_constant_override("icon_max_width", 34)
+	b.add_theme_stylebox_override("normal", style(Color(0.08, 0.04, 0.16, 0.86), Color(GOLD, 0.8), 29, 2, 10))
+	b.add_theme_stylebox_override("hover", style(Color(0.2, 0.1, 0.32, 0.95), GOLD, 29, 3, 10))
+	b.add_theme_stylebox_override("pressed", style(Color(0.3, 0.16, 0.42, 0.95), GOLD, 29, 3, 10))
+	b.pressed.connect(func():
+		Game.sfx("ui_click")
+		on_press.call())
+	var tw := b.create_tween().set_loops()
+	tw.tween_property(b, "self_modulate", Color(1.25, 1.15, 0.9), 1.1).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(b, "self_modulate", Color.WHITE, 1.1).set_trans(Tween.TRANS_SINE)
+	return b
+
+static func podium(e: Dictionary, k: int, value: String) -> Control:
+	var cols := [GOLD, Color("#d8d8e8"), Color("#e0a070")]
+	var col: Color = cols[k]
+	var me: bool = e.get("me", false)
+	var p := styled_panel(Color(col, 0.12) if not me else Color(0.25, 0.18, 0.05, 0.95), col, 12, 2 if (k == 0 or me) else 1, 6.0)
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	p.size_flags_vertical = Control.SIZE_SHRINK_END
+	var v := vbox(3)
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	p.add_child(v)
+	if k == 0:
+		var cr := label("♛", 20, col, 3)
+		cr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		v.add_child(cr)
+	var face := tex_rect(DB.face(e["hero"]), Vector2(56, 56) if k == 0 else Vector2(46, 46), true)
+	face.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(face)
+	for t in [["#%d" % (k + 1), 16, col], [str(e["name"]).replace(" [AI]", ""), 12, Color.WHITE], [value, 13, GOLD]]:
+		var l := label(t[0], t[1], t[2], 2)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.clip_text = true
+		v.add_child(l)
+	return p

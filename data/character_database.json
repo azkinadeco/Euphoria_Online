@@ -1333,6 +1333,188 @@
     "res://art/characters/heroes/luby/sprite/luby_sprite_3.png",
     "res://art/characters/heroes/luby/sprite/luby_sprite_4.png"
    ]
+  },
+  "gala": {
+   "id": "gala",
+   "display_name": "Gala",
+   "title": "NEBULA FLAME TEMPTRESS",
+   "element": "FIRE",
+   "class": "MAGE",
+   "type": "AOE",
+   "theme_color": "#ff7a2f",
+   "portrait": "res://art/characters/heroes/gala/char/gala_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/gala/char/gala_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/gala/char/gala_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/gala/char/gala_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/gala/char/gala_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/gala/char/gala_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/gala/sprite/gala_sprite_1.png",
+    "res://art/characters/heroes/gala/sprite/gala_sprite_2.png",
+    "res://art/characters/heroes/gala/sprite/gala_sprite_3.png"
+   ]
+  },
+  "morana": {
+   "id": "morana",
+   "display_name": "Morana",
+   "title": "THE BLACK PRIESTESS",
+   "element": "DARK",
+   "class": "HEALER",
+   "type": "SUPPORT",
+   "theme_color": "#9b7bd6",
+   "portrait": "res://art/characters/heroes/morana/char/morana_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/morana/char/morana_char_stage1.png",
+     "interactions": [
+      "res://art/characters/heroes/morana/char/morana_char_stage1_alt1.png"
+     ]
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/morana/char/morana_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/morana/char/morana_char_stage2_alt1.png",
+      "res://art/characters/heroes/morana/char/morana_char_stage2_alt2.png",
+      "res://art/characters/heroes/morana/char/morana_char_stage2_alt3.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/morana/char/morana_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/morana/char/morana_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/morana/char/morana_char_evo2_alt1.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/morana/char/morana_char_evo3.png",
+     "interactions": [
+      "res://art/characters/heroes/morana/char/morana_char_evo3_alt1.png",
+      "res://art/characters/heroes/morana/char/morana_char_evo3_alt2.png",
+      "res://art/characters/heroes/morana/char/morana_char_evo3_alt3.png",
+      "res://art/characters/heroes/morana/char/morana_char_evo3_alt4.png"
+     ]
+    },
+    "special": {
+     "base": "res://art/characters/heroes/morana/char/morana_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/morana/sprite/morana_sprite_1.png",
+    "res://art/characters/heroes/morana/sprite/morana_sprite_2.png",
+    "res://art/characters/heroes/morana/sprite/morana_sprite_3.png",
+    "res://art/characters/heroes/morana/sprite/morana_sprite_4.png"
+   ]
+  },
+  "seraph": {
+   "id": "seraph",
+   "display_name": "Seraph",
+   "title": "ARCHANGEL OF A THOUSAND EYES",
+   "element": "LIGHT",
+   "class": "MAGE",
+   "type": "BURST",
+   "theme_color": "#ffe7a3",
+   "portrait": "res://art/characters/heroes/seraph/char/seraph_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/seraph/char/seraph_char_stage1.png",
+     "interactions": [
+      "res://art/characters/heroes/seraph/char/seraph_char_stage1_alt1.png"
+     ]
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/seraph/char/seraph_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/seraph/char/seraph_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/seraph/char/seraph_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/seraph/char/seraph_char_evo2_alt1.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/seraph/char/seraph_char_evo3.png",
+     "interactions": [
+      "res://art/characters/heroes/seraph/char/seraph_char_evo3_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/seraph/sprite/seraph_sprite_1.png",
+    "res://art/characters/heroes/seraph/sprite/seraph_sprite_2.png",
+    "res://art/characters/heroes/seraph/sprite/seraph_sprite_3.png"
+   ]
+  },
+  "tamo": {
+   "id": "tamo",
+   "display_name": "Tamo",
+   "title": "NINE-TAILED SWORD QUEEN",
+   "element": "EARTH",
+   "class": "WARRIOR",
+   "type": "DEFENSE",
+   "theme_color": "#f5c542",
+   "portrait": "res://art/characters/heroes/tamo/char/tamo_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/tamo/char/tamo_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/tamo/char/tamo_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/tamo/char/tamo_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/tamo/char/tamo_char_evo1_alt1.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/tamo/char/tamo_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/tamo/char/tamo_char_evo2_alt1.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/tamo/char/tamo_char_evo3.png",
+     "interactions": [
+      "res://art/characters/heroes/tamo/char/tamo_char_evo3_alt1.png"
+     ]
+    },
+    "special": {
+     "base": "res://art/characters/heroes/tamo/char/tamo_char_special.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/tamo/sprite/tamo_sprite_1.png",
+    "res://art/characters/heroes/tamo/sprite/tamo_sprite_2.png",
+    "res://art/characters/heroes/tamo/sprite/tamo_sprite_3.png"
+   ]
   }
  },
  "enemies": {
@@ -1783,6 +1965,50 @@
    },
    "sprites": [
     "res://art/characters/enemies/lizamorph/sprite/lizamorph_sprite_1.png"
+   ]
+  },
+  "octra": {
+   "id": "octra",
+   "display_name": "Octra",
+   "title": "MISTRESS OF THE ABYSS BEAST",
+   "element": "DARK",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/octra/char/octra_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/octra/char/octra_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/octra/char/octra_char_stage2.png",
+     "interactions": [
+      "res://art/characters/enemies/octra/char/octra_char_stage2_alt1.png"
+     ]
+    },
+    "stage3": {
+     "base": "res://art/characters/enemies/octra/char/octra_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/octra/char/octra_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/octra/char/octra_char_evo2.png",
+     "interactions": [
+      "res://art/characters/enemies/octra/char/octra_char_evo2_alt1.png",
+      "res://art/characters/enemies/octra/char/octra_char_evo2_alt2.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/enemies/octra/char/octra_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/octra/sprite/octra_sprite_1.png",
+    "res://art/characters/enemies/octra/sprite/octra_sprite_2.png",
+    "res://art/characters/enemies/octra/sprite/octra_sprite_3.png"
    ]
   }
  }

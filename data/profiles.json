@@ -262,5 +262,37 @@
   "dislikes": "Baths, loud vacuums",
   "hobby": "Upgrading her mecha cat",
   "cv": "TBA"
+ },
+ "gala": {
+  "birthday": "07-17",
+  "height": 168,
+  "likes": "Bonfires, starry skies, being noticed",
+  "dislikes": "Rain, cold tea, being ignored",
+  "hobby": "Feeding her parasol octopus",
+  "cv": "TBA"
+ },
+ "morana": {
+  "birthday": "11-02",
+  "height": 171,
+  "likes": "Candlelight, choir hymns, honest confessions",
+  "dislikes": "Bright noon sun, liars",
+  "hobby": "Embroidering altar cloths",
+  "cv": "TBA"
+ },
+ "seraph": {
+  "birthday": "09-29",
+  "height": 163,
+  "likes": "Clouds, warm milk, quiet mornings",
+  "dislikes": "Heaven's paperwork, loud thunder",
+  "hobby": "Grooming a thousand wing-eyes",
+  "cv": "TBA"
+ },
+ "tamo": {
+  "birthday": "12-24",
+  "height": 174,
+  "likes": "Her foxes, polished steel, being obeyed",
+  "dislikes": "Wet fur, disrespect, ear-tugging",
+  "hobby": "Sharpening her greatsword at dawn",
+  "cv": "TBA"
  }
 }

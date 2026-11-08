@@ -21,7 +21,19 @@ func build() -> void:
 	b.add_child(lp)
 	var lv := UI.vbox(8)
 	lp.add_child(UI.scroll(lv))
-	lv.add_child(UI.label("SPECIAL SKINS", 15, UI.GOLD, 3))
+	var owned_n := 0
+	for id in ids:
+		if Game.skin_unlocked(id, DB.special_index(id)):
+			owned_n += 1
+	var th := UI.hbox(6)
+	lv.add_child(th)
+	var tl := UI.label("SPECIAL SKINS", 15, UI.GOLD, 3)
+	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	th.add_child(tl)
+	th.add_child(UI.label("%d / %d owned" % [owned_n, ids.size()], 12, UI.MUTED, 0))
+	var cb := UI.bar(owned_n, maxi(1, ids.size()), "", 5)
+	cb.add_theme_stylebox_override("fill", UI.style(Color("#ff8fb8"), Color.TRANSPARENT, 3, 0, 0))
+	lv.add_child(cb)
 	for id in ids:
 		var hid: String = id
 		var owned := Game.skin_unlocked(hid, DB.special_index(hid))
@@ -85,10 +97,48 @@ func build() -> void:
 	v.add_child(UI.label("✦ SPECIAL SKIN ✦", 14, UI.GOLD, 3))
 	v.add_child(UI.wrap_label(DB.SPECIAL_SKINS[_sel], 24, Color.WHITE))
 	v.add_child(UI.label(DB.name_of(_sel) + "  •  " + DB.title_of(_sel), 13, Color("#d4b8ff"), 2))
-	v.add_child(UI.wrap_label("Exclusive outfit — not available from Star Up or Bond. Wearing it always grants the top outfit bonus: +10% ATK & HP.", 13, UI.MUTED))
+	v.add_child(UI.wrap_label("Exclusive outfit — not available from Star Up or Bond.", 13, UI.MUTED))
+	var bon := UI.hbox(6)
+	v.add_child(bon)
+	for t in ["+10% ATK", "+10% HP", "LIVE ART"]:
+		var bp := UI.styled_panel(Color(UI.GREEN, 0.14) if t != "LIVE ART" else Color(1, 0.8, 0.4, 0.14), UI.GREEN if t != "LIVE ART" else UI.GOLD, 8, 1, 4.0)
+		bp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var bl := UI.label(t, 12, UI.GREEN if t != "LIVE ART" else UI.GOLD, 2)
+		bl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		bp.add_child(bl)
+		bon.add_child(bp)
+	# outfit line-up: every outfit of this hero, the special one framed in gold
+	v.add_child(UI.label("OUTFIT LINE-UP", 12, UI.GOLD, 2))
+	var lu := HFlowContainer.new()
+	lu.add_theme_constant_override("h_separation", 5)
+	lu.add_theme_constant_override("v_separation", 5)
+	v.add_child(lu)
+	var n_art := DB.art_list(_sel).size()
+	for k in n_art:
+		var sp := k == idx
+		var un := Game.owns(_sel) and Game.skin_unlocked(_sel, k)
+		var cell := Control.new()
+		cell.custom_minimum_size = Vector2(38, 38)
+		var ft := UI.tex_rect(DB.face(_sel, k), Vector2.ZERO, true)
+		ft.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		if not un:
+			ft.modulate = Color(0.35, 0.35, 0.4)
+		cell.add_child(ft)
+		var ring := Panel.new()
+		ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ring.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, UI.GOLD if sp else Color(1, 1, 1, 0.2), 6, 2 if sp else 1, 0))
+		cell.add_child(ring)
+		cell.tooltip_text = DB.SPECIAL_SKINS[_sel] if sp else "Outfit %d" % (k + 1)
+		lu.add_child(cell)
 	var owned2 := Game.skin_unlocked(_sel, idx)
 	if not Game.owns(_sel):
-		v.add_child(UI.label("Recruit %s to wear this skin." % DB.name_of(_sel), 14, Color("#ff8a9a"), 2))
+		var np := UI.styled_panel(Color(1, 0.4, 0.5, 0.1), Color("#ff8a9a", 0.6), 10, 1, 8.0)
+		v.add_child(np)
+		var nv := UI.vbox(6)
+		np.add_child(nv)
+		nv.add_child(UI.wrap_label("Recruit %s to wear this skin." % DB.name_of(_sel), 14, Color("#ff8a9a")))
+		nv.add_child(UI.button("FIND HER IN SUMMON", func(): main.go("gacha"), "", Vector2(0, 42)))
 	elif owned2:
 		var eq := int(Game.hero(_sel).get("skin", 0)) == idx
 		v.add_child(UI.button("EQUIPPED" if eq else "WEAR NOW", func():
@@ -99,9 +149,16 @@ func build() -> void:
 	else:
 		var tickets := Game.amount("skin_ticket")
 		var tb := UI.button("USE SKIN TICKET  (%d)" % tickets, _buy, "GoldButton", Vector2(0, 52))
+		tb.icon = DB.icon("item_skin_ticket")
+		tb.add_theme_constant_override("icon_max_width", 30)
 		tb.disabled = tickets <= 0
 		v.add_child(tb)
-		v.add_child(UI.button("BUY  %s Gems" % Game.fmt(DB.SPECIAL_PRICE), _buy, "", Vector2(0, 48)))
+		var gb := UI.button(Game.fmt(DB.SPECIAL_PRICE), _buy, "", Vector2(0, 48))
+		gb.icon = DB.icon("icon_gem")
+		gb.add_theme_constant_override("icon_max_width", 26)
+		if Game.amount("gems") < DB.SPECIAL_PRICE:
+			gb.add_theme_color_override("font_color", Color("#ff7a7a"))
+		v.add_child(gb)
 		v.add_child(UI.wrap_label("Skin Tickets: Mailbox gifts and Commander Road (Lv.50 & Lv.100).", 12, UI.MUTED))
 	v.add_child(UI.spacer(false))
 	v.add_child(UI.button("VIEW HERO", func(): main.go("hero_detail", {"id": _sel}), "", Vector2(0, 42)))

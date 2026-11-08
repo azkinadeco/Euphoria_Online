@@ -35,6 +35,9 @@ var _cap_edit: LineEdit
 var _panel: Control
 var _hdr: Control
 var _info: Label
+var _name_l: Label
+var _face: TextureRect
+var _vals := {}
 var _drag := false
 var _pinch: PinchZoom
 var _bg_keys: Array = []
@@ -102,10 +105,22 @@ func _build_panel() -> void:
 	add_child(_panel)
 	var v := UI.vbox(7)
 	_panel.add_child(UI.scroll(v))
-	_info = UI.label("", 13, UI.GOLD, 3)
-	_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	v.add_child(_info)
-	v.add_child(UI.button("CHANGE HERO", _pick_hero, "", Vector2(0, 38)))
+	var hr := UI.hbox(8)
+	v.add_child(hr)
+	_face = UI.tex_rect(null, Vector2(46, 46), true)
+	hr.add_child(_face)
+	var hv := UI.vbox(0)
+	hv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hr.add_child(hv)
+	_name_l = UI.label("", 16, Color.WHITE, 2)
+	_name_l.clip_text = true
+	hv.add_child(_name_l)
+	_info = UI.label("", 12, UI.GOLD, 0)
+	_info.clip_text = true
+	hv.add_child(_info)
+	var ch := UI.button("CHANGE", _pick_hero, "", Vector2(78, 36))
+	ch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	hr.add_child(ch)
 	v.add_child(_stepper("OUTFIT", func(d): _cycle_skin(d)))
 	v.add_child(_stepper("BACKGROUND", func(d): _bg_i = posmod(_bg_i + d, _bg_keys.size()); _apply_all()))
 	v.add_child(_stepper("FILTER", func(d): _filter_i = posmod(_filter_i + d, FILTERS.size()); _apply_all()))
@@ -130,16 +145,26 @@ func _build_panel() -> void:
 	v.add_child(UI.button("ALBUM (%d)" % _photo_files().size(), _album, "", Vector2(0, 38)))
 
 func _stepper(title: String, cb: Callable) -> Control:
+	var p := UI.styled_panel(Color(0, 0, 0, 0.35), Color(1, 1, 1, 0.1), 10, 1, 3.0)
 	var h := UI.hbox(4)
-	var l := UI.button("◀", func(): cb.call(-1), "", Vector2(40, 36))
-	var mid := UI.label(title, 12, Color.WHITE, 2)
-	mid.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	p.add_child(h)
+	var l := UI.button("◀", func(): cb.call(-1), "", Vector2(38, 40))
+	var mid := UI.vbox(0)
 	mid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var r := UI.button("▶", func(): cb.call(1), "", Vector2(40, 36))
+	mid.alignment = BoxContainer.ALIGNMENT_CENTER
+	var t := UI.label(title, 10, UI.MUTED, 0)
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	mid.add_child(t)
+	var val := UI.label("", 14, UI.GOLD, 2)
+	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	val.clip_text = true
+	mid.add_child(val)
+	_vals[title] = val
+	var r := UI.button("▶", func(): cb.call(1), "", Vector2(38, 40))
 	h.add_child(l)
 	h.add_child(mid)
 	h.add_child(r)
-	return h
+	return p
 
 func _cycle_skin(d: int) -> void:
 	var n := DB.art_list(_hero).size()
@@ -174,7 +199,14 @@ func _apply_all() -> void:
 		_pet.offset_bottom = -30
 		_stage.add_child(_pet)
 		_stage.move_child(_pet, _art.get_index() + 1)
-	_info.text = "%s  •  %s\n%s  •  %s filter  •  %s frame" % [DB.name_of(_hero), _outfit_name(), _bg_keys[_bg_i].capitalize(), FILTERS[_filter_i][0], FRAMES[_frame_i]]
+	_name_l.text = DB.name_of(_hero)
+	_info.text = _outfit_name()
+	_face.texture = DB.face(_hero)
+	var nsk := DB.art_list(_hero).size()
+	var vt := {"OUTFIT": "%s  (%d/%d)" % [_outfit_name(), _skin + 1, nsk], "BACKGROUND": "%s  (%d/%d)" % [_bg_keys[_bg_i].capitalize(), _bg_i + 1, _bg_keys.size()],
+		"FILTER": "%s  (%d/%d)" % [FILTERS[_filter_i][0], _filter_i + 1, FILTERS.size()], "FRAME": "%s  (%d/%d)" % [FRAMES[_frame_i], _frame_i + 1, FRAMES.size()]}
+	for k in _vals.keys():
+		(_vals[k] as Label).text = vt.get(k, "")
 
 func _outfit_name() -> String:
 	if _skin == DB.special_index(_hero):

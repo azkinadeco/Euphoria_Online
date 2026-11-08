@@ -62,7 +62,7 @@ func _build_go(b: Control) -> void:
 		th.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		th.modulate = Color(0.8, 0.8, 0.85) if open else Color(0.25, 0.25, 0.3)
 		fr.add_child(th)
-		var nl := UI.label(str(sp["name"]) if open else "Clear %d stages" % int(sp["req"]), 13, Color.WHITE if open else UI.MUTED, 4)
+		var nl := UI.label(str(sp["name"]) if open else "🔒  %s  •  %d / %d stages" % [str(sp["name"]).split(" ")[0], mini(Game.stages_cleared(), int(sp["req"])), int(sp["req"])], 13, Color.WHITE if open else UI.MUTED, 4)
 		nl.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 		nl.offset_top = -24
 		nl.offset_left = 8
@@ -75,11 +75,7 @@ func _build_go(b: Control) -> void:
 		lv.add_child(btn)
 	# ---- centre: the hero
 	if _hero == "":
-		var l := UI.wrap_label("Reach Bond Lv.%d with any hero to go on a date. Gifts, Daily Talks and the Private Room raise Bond." % DB.DATE_BOND, 18, Color.WHITE)
-		l.anchor_left = 0.34
-		l.anchor_right = 0.96
-		l.anchor_top = 0.35
-		b.add_child(l)
+		_build_no_partner(b)
 		return
 	var art := UI.tex_rect(DB.art(_hero, int(Game.hero(_hero).get("skin", 0))))
 	art.anchor_left = 0.3
@@ -221,3 +217,104 @@ func _build_album(b: Control) -> void:
 			v.add_child(_photo(entry, 840)))
 		g.add_child(btn)
 	UI.stagger(g, 0.03)
+
+## Empty state: nobody is at Bond 3 yet — show who's closest and how to get there.
+func _build_no_partner(b: Control) -> void:
+	var p := UI.styled_panel(Color(0.1, 0.05, 0.12, 0.9), Color("#ff8fb8", 0.6), 16, 1, 18.0)
+	p.anchor_left = 0.33
+	p.anchor_right = 0.97
+	p.anchor_top = 0.04
+	b.add_child(p)
+	var v := UI.vbox(10)
+	p.add_child(v)
+	var top := UI.hbox(12)
+	v.add_child(top)
+	var heart := UI.label("♥", 44, Color("#ff6fae"), 4)
+	heart.pivot_offset = Vector2(16, 28)
+	top.add_child(heart)
+	var tw := heart.create_tween().set_loops()
+	tw.tween_property(heart, "scale", Vector2(1.15, 1.15), 0.5).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(heart, "scale", Vector2.ONE, 0.5).set_trans(Tween.TRANS_SINE)
+	var tv := UI.vbox(2)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(tv)
+	tv.add_child(UI.label("NO DATE PARTNER YET", 22, Color.WHITE, 4))
+	tv.add_child(UI.wrap_label("Reach Bond Lv.%d with any hero to ask her out. Here's who is closest:" % DB.DATE_BOND, 14, Color("#ffc2dc")))
+	# closest heroes by bond progress
+	var need_total := 0
+	for lv in range(1, DB.DATE_BOND):
+		need_total += DB.bond_to_next(lv)
+	var ids: Array = Game.s["heroes"].keys()
+	var prog := {}
+	for id in ids:
+		var h := Game.hero(id)
+		var have := int(h["bond_exp"])
+		for lv in range(1, int(h["bond"])):
+			have += DB.bond_to_next(lv)
+		prog[id] = have
+	ids.sort_custom(func(a, c): return int(prog[a]) > int(prog[c]))
+	var g := GridContainer.new()
+	g.columns = 2
+	g.add_theme_constant_override("h_separation", 10)
+	g.add_theme_constant_override("v_separation", 10)
+	v.add_child(g)
+	for k in mini(4, ids.size()):
+		var hid: String = ids[k]
+		var h := Game.hero(hid)
+		var row := UI.styled_panel(Color(0, 0, 0, 0.35), Color(DB.theme_color(hid), 0.5), 12, 1, 8.0)
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		g.add_child(row)
+		var rh := UI.hbox(10)
+		row.add_child(rh)
+		rh.add_child(UI.tex_rect(DB.face(hid), Vector2(52, 52), true))
+		var rv := UI.vbox(3)
+		rv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rh.add_child(rv)
+		var nr := UI.hbox(6)
+		rv.add_child(nr)
+		var nl := UI.label(DB.name_of(hid), 15, Color.WHITE, 2)
+		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nl.clip_text = true
+		nr.add_child(nl)
+		nr.add_child(UI.label("Bond Lv.%d" % int(h["bond"]), 12, Color("#ff8fb8"), 2))
+		var bar := UI.bar(mini(int(prog[hid]), need_total), need_total, "", 8)
+		bar.add_theme_stylebox_override("fill", UI.style(Color("#ff6fae"), Color.TRANSPARENT, 4, 0, 0))
+		rv.add_child(bar)
+		rv.add_child(UI.label("%d%% to a date" % int(100.0 * mini(int(prog[hid]), need_total) / maxf(1.0, need_total)), 11, UI.MUTED, 0))
+		var gb := UI.button("GIFT", func(): main.go("hero_detail", {"id": hid, "tab": "BOND"}), "", Vector2(72, 40))
+		gb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		rh.add_child(gb)
+	v.add_child(UI.label("WAYS TO RAISE BOND", 14, UI.GOLD, 3))
+	var ways := UI.hbox(8)
+	v.add_child(ways)
+	for w in [["icon_heart", "Gifts", "Favourite gift = more Bond", "room"], ["icon_messenger", "Daily Talks", "Reply to her messages", "messenger"], ["icon_room", "Private Room", "Spend time together", "room"], ["icon_kitchen", "Kitchen", "Cook gift dishes", "kitchen"]]:
+		var key: String = w[3]
+		var btn := Button.new()
+		btn.theme_type_variation = "FlatButton"
+		btn.focus_mode = Control.FOCUS_NONE
+		btn.custom_minimum_size = Vector2(0, 104)
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var fr := PanelContainer.new()
+		fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fr.add_theme_stylebox_override("panel", UI.style(Color(1, 0.45, 0.7, 0.08), Color("#ff8fb8", 0.4), 12, 1, 6))
+		btn.add_child(fr)
+		var wv := UI.vbox(2)
+		wv.alignment = BoxContainer.ALIGNMENT_CENTER
+		wv.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fr.add_child(wv)
+		var ic := UI.tex_rect(DB.icon(w[0]), Vector2(34, 34))
+		ic.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		wv.add_child(ic)
+		for t in [[w[1], 14, Color.WHITE, 2], [w[2], 10, UI.MUTED, 0]]:
+			var l := UI.label(t[0], t[1], t[2], t[3])
+			l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			wv.add_child(l)
+		btn.pressed.connect(func(): main.go(key))
+		UI.hover_fx(btn, 1.03)
+		ways.add_child(btn)
+	var tip := UI.styled_panel(Color(0, 0, 0, 0.3), Color(1, 1, 1, 0.08), 10, 1, 8.0)
+	tip.add_child(UI.wrap_label("On a date: pick the answer she'd like best. A Perfect Date gives the most Bond and a golden photo for your Date Album.", 12, UI.MUTED))
+	v.add_child(tip)
+	UI.stagger(g, 0.05)

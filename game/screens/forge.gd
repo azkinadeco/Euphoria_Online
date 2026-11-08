@@ -116,8 +116,11 @@ func _render_list() -> void:
 		var msg := "Nothing matches these options." if _tab == "salvage" else "No gear here. Armory Ruins, Gear Chests and story bosses drop equipment."
 		if _tab == "fuse":
 			msg = "Only R and SR pieces can be fused."
-		_grid.add_child(UI.wrap_label(msg, 14, UI.MUTED))
 		_sel = 0
+		if _tab != "salvage" and _filter == "" and Game.s["gear"].is_empty():
+			_grid.add_child(_empty_armory())
+		else:
+			_grid.add_child(UI.wrap_label(msg, 14, UI.MUTED))
 		return
 	_grid.columns = 4
 	if _tab != "salvage" and not items.any(func(g): return int(g["uid"]) == _sel):
@@ -219,6 +222,11 @@ func _render_well() -> void:
 		v.add_child(_center(UI.label("THE FURNACE", 22, UI.GOLD, 4)))
 		return
 	if g.is_empty():
+		var ph := UI.tex_rect(DB.icon("icon_equipment"), Vector2(150, 150))
+		ph.modulate = Color(1, 1, 1, 0.25)
+		v.add_child(_center(ph))
+		v.add_child(_center(UI.label("THE ANVIL AWAITS", 20, Color(UI.GOLD, 0.8), 4)))
+		v.add_child(_center(UI.label("Pick a piece of gear", 13, UI.MUTED, 3)))
 		return
 	var ic := UI.tex_rect(DB.icon(DB.GEAR[g["slot"]]["icon"]), Vector2(170, 170))
 	v.add_child(_center(ic))
@@ -240,6 +248,9 @@ func _center(c: Control) -> Control:
 func _render_right() -> void:
 	for c in _right.get_children():
 		c.queue_free()
+	if _tab != "salvage" and Game.gear_by_uid(_sel).is_empty():
+		_right_help()
+		return
 	match _tab:
 		"fuse": _right_fuse()
 		"temper": _right_temper()
@@ -468,3 +479,55 @@ func _strike(col: Color) -> void:
 	var pop := _well.get_child(_well.get_child_count() - 1) as Control
 	if pop and not Game.reduce_fx():
 		UI.pop(pop, 0.35)
+
+
+const TAB_HELP := {
+	"reforge": ["REFORGE", "Change a piece's set bonus. Rarity, level, substats and owner stay the same.", "Forge Embers (more for higher rarity)"],
+	"temper": ["TEMPER", "Reroll a piece's substats. Lock the ones you like to keep them.", "Forge Embers (more for each kept substat)"],
+	"fuse": ["FUSE", "Combine 3 pieces of the same rarity to raise one of them to the next rarity (R → SR → SSR).", "Gold"],
+}
+
+## Right column when nothing is selected: what this tab does and what it costs.
+func _right_help() -> void:
+	var t: Array = TAB_HELP.get(_tab, TAB_HELP["reforge"])
+	_right.add_child(UI.label(t[0], 18, UI.GOLD, 3))
+	_right.add_child(UI.wrap_label(t[1], 13, UI.TEXT))
+	var cp := UI.styled_panel(Color(1, 0.55, 0.25, 0.08), Color("#ff8a3d", 0.4), 10, 1, 8.0)
+	var ch := UI.hbox(8)
+	cp.add_child(ch)
+	ch.add_child(UI.tex_rect(DB.icon("item_forge_ember"), Vector2(28, 28)))
+	var cl := UI.wrap_label("Cost: " + str(t[2]), 13, Color("#ffb070"))
+	cl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	ch.add_child(cl)
+	_right.add_child(cp)
+	_right.add_child(UI.wrap_label("Forge Embers come from SALVAGE. Melt spare gear you no longer need.", 12, UI.MUTED))
+
+## Big "no gear yet" card with shortcuts to where gear drops.
+func _empty_armory() -> Control:
+	var p := UI.styled_panel(Color(0.1, 0.07, 0.14, 0.85), Color("#ff8a3d", 0.4), 12, 1, 14.0)
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var v := UI.vbox(10)
+	p.add_child(v)
+	var ic := UI.tex_rect(DB.icon("icon_equipment"), Vector2(80, 80))
+	ic.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(ic)
+	var t := UI.label("YOUR ARMORY IS EMPTY", 18, UI.GOLD, 3)
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(t)
+	var d := UI.wrap_label("Gear gives your heroes stats and set bonuses. Bring some here to reforge, temper and fuse it.", 13, UI.MUTED)
+	d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(d)
+	v.add_child(UI.label("WHERE TO GET GEAR", 13, Color("#ffb070"), 2))
+	for e in [["Armory Ruins (Daily Dungeon)", "dungeon", {"dungeon": "gear"}], ["Gear Chests in your Bag", "bag", {}], ["Ancient Ruins expedition", "expedition", {}], ["Story boss stages", "story", {}]]:
+		var scr: String = e[1]
+		var prm: Dictionary = e[2]
+		var row := UI.hbox(8)
+		var nl := UI.label("• " + str(e[0]), 14, UI.TEXT)
+		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(nl)
+		if Game.feature_unlocked(scr):
+			row.add_child(UI.button("GO", func(): main.go(scr, prm), "", Vector2(64, 34)))
+		else:
+			row.add_child(UI.label("Lv.%d" % int(DB.FEATURE_UNLOCK.get(scr, 1)), 13, UI.MUTED, 2))
+		v.add_child(row)
+	return p

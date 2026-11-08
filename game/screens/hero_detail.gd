@@ -46,6 +46,16 @@ func build() -> void:
 	_name_box.position = Vector2(30, 80)
 	add_child(_name_box)
 
+	# full-screen viewer
+	var zb := UI.zoom_button(_open_viewer)
+	zb.anchor_left = 0.55
+	zb.anchor_right = 0.55
+	zb.offset_left = -76
+	zb.offset_right = -18
+	zb.offset_top = 84
+	zb.offset_bottom = 142
+	add_child(zb)
+
 	# prev / next
 	var list: Array = params.get("list", [])
 	_list = list
@@ -429,6 +439,15 @@ func _close_up() -> void:
 	tw.tween_property(_holder, "scale", Vector2(1.6, 1.6), 0.45).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tw.tween_interval(2.2)
 	tw.tween_property(_holder, "scale", Vector2.ONE, 0.5).set_trans(Tween.TRANS_CUBIC)
+
+func _open_viewer() -> void:
+	var allowed: Array = [0]
+	if Game.owns(id):
+		allowed = []
+		for i in DB.art_list(id).size():
+			if Game.skin_unlocked(id, i):
+				allowed.append(i)
+	ArtViewer.open(main, id, int(Game.hero(id).get("skin", 0)) if Game.owns(id) else 0, allowed)
 
 func _ceremony(after: Callable) -> void:
 	var oc := OathCeremony.new(id)

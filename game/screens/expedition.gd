@@ -1,8 +1,11 @@
 extends Screen
 ## Expeditions: send idle heroes on timed missions for rewards + Bond EXP.
 
+const BANNER := {"herb": "forest", "patrol": "outland", "ruins": "asgard", "hunt": "dragonfire", "rift": "blackhole"}
+
 var _list: VBoxContainer
-var _timers: Array = []   # {eid, label, bar}
+var _summary: HBoxContainer
+var _timers: Array = []   # {eid, label, bar, done}
 var _t := 0.0
 
 func build() -> void:
@@ -13,9 +16,12 @@ func build() -> void:
 	var v := UI.vbox(10)
 	v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	b.add_child(v)
-	v.add_child(UI.wrap_label("Send heroes on missions while you're away. They can still fight in battles. Each completed expedition gives +10 Bond EXP to every hero sent.", 14, UI.MUTED))
+	_summary = UI.hbox(10)
+	v.add_child(_summary)
 	_list = UI.vbox(10)
-	v.add_child(UI.scroll(_list))
+	var sc := UI.scroll(_list)
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	v.add_child(sc)
 	_render()
 	tutorial("expedition")
 
@@ -41,58 +47,182 @@ func _fmt_time(s: int) -> String:
 
 func _render() -> void:
 	_timers.clear()
+	_render_summary()
 	for c in _list.get_children():
 		c.queue_free()
 	for d in DB.EXPEDITIONS:
+		_list.add_child(_card(d))
+	UI.stagger(_list, 0.05)
+
+## Top strip: how many missions are running / ready, heroes out, CLAIM ALL.
+func _render_summary() -> void:
+	for c in _summary.get_children():
+		c.queue_free()
+	var running: int = Game.s["expeditions"].size()
+	var ready := Game.expeditions_ready()
+	var out := Game.heroes_on_expedition().size()
+	_summary.add_child(_stat("ACTIVE", "%d / %d" % [running, DB.EXPEDITIONS.size()], Color("#7fd8ff")))
+	_summary.add_child(_stat("READY", str(ready), UI.GREEN if ready > 0 else UI.MUTED))
+	_summary.add_child(_stat("HEROES OUT", str(out), UI.GOLD))
+	var tip := UI.wrap_label("Heroes on expeditions can still fight. Every finished expedition gives +10 Bond EXP to each hero sent.", 12, UI.MUTED)
+	tip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_summary.add_child(tip)
+	if ready > 0:
+		var cb := UI.button("CLAIM ALL (%d)" % ready, _claim_all, "GoldButton", Vector2(170, 48))
+		UI.add_badge(cb, ready)
+		_summary.add_child(cb)
+
+func _stat(title: String, value: String, col: Color) -> Control:
+	var p := UI.styled_panel(Color(0.1, 0.08, 0.16, 0.85), Color(col, 0.4), 10, 1, 10.0)
+	p.custom_minimum_size = Vector2(110, 0)
+	var v := UI.vbox(0)
+	p.add_child(v)
+	v.add_child(UI.label(title, 11, UI.MUTED, 1))
+	v.add_child(UI.label(value, 20, col, 2))
+	return p
+
+func _claim_all() -> void:
+	var total := {}
+	for d in DB.EXPEDITIONS:
 		var eid: String = d["id"]
-		var p := UI.panel("CardPanel")
-		_list.add_child(p)
-		var h := UI.hbox(14)
-		p.add_child(h)
-		var info := UI.vbox(2)
-		info.custom_minimum_size = Vector2(280, 0)
-		info.add_child(UI.label(d["name"], 19, Color.WHITE, 2))
-		info.add_child(UI.label("%dh  •  %d hero(es)  •  Lv.%d+" % [d["hours"], d["heroes"], d["min_level"]], 13, UI.MUTED))
-		info.add_child(UI.reward_row(d["give"], 26, 13))
-		h.add_child(info)
-		var mid := UI.vbox(4)
-		mid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		h.add_child(mid)
-		var left := Game.expedition_left(eid)
-		if left < 0:
-			mid.add_child(UI.label("Available", 15, UI.GREEN))
-			h.add_child(UI.button("SEND", func(): _pick(eid), "GoldButton", Vector2(130, 48)))
+		if Game.expedition_left(eid) == 0:
+			var r := Game.claim_expedition(eid)
+			for k in r.keys():
+				total[k] = int(total.get(k, 0)) + int(r[k])
+	if not total.is_empty():
+		Game.sfx("star_up")
+		main.show_rewards("EXPEDITIONS COMPLETE", total)
+	_render()
+
+func _best_level() -> int:
+	var best := 0
+	for id in Game.s["heroes"].keys():
+		best = maxi(best, int(Game.hero(id)["level"]))
+	return best
+
+func _card(d: Dictionary) -> Control:
+	var eid: String = d["id"]
+	var left := Game.expedition_left(eid)
+	var running := left > 0
+	var done := left == 0
+	var can_lv := _best_level() >= int(d["min_level"])
+	var border := UI.GREEN if done else (Color("#7fd8ff") if running else Color(UI.GOLD, 0.35))
+	var p := UI.styled_panel(Color(0.11, 0.08, 0.17, 0.92), border, 12, 2 if done else 1, 8.0)
+	var h := UI.hbox(14)
+	p.add_child(h)
+
+	# --- banner with the mission's scenery
+	var ban := Control.new()
+	ban.custom_minimum_size = Vector2(210, 104)
+	ban.clip_contents = true
+	var img := UI.tex_rect(DB.bg(BANNER.get(eid, "world")), Vector2.ZERO, true)
+	img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if not can_lv:
+		img.modulate = Color(0.3, 0.3, 0.36)
+	ban.add_child(img)
+	var shade := Control.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shade.draw.connect(func():
+		var sz := shade.size
+		if not can_lv:
+			shade.draw_rect(Rect2(Vector2.ZERO, sz), Color(0.05, 0.03, 0.1, 0.55))
+		for i in 10:
+			var a := 0.07 * i
+			shade.draw_rect(Rect2(0, sz.y * (0.4 + i * 0.06), sz.x, sz.y * 0.06 + 1), Color(0, 0, 0, a)))
+	ban.add_child(shade)
+	var dur := UI.styled_panel(Color(0, 0, 0, 0.6), Color(1, 1, 1, 0.25), 8, 1, 6.0)
+	dur.position = Vector2(6, 6)
+	dur.add_child(UI.label("%dh" % int(d["hours"]), 13, Color.WHITE, 2))
+	ban.add_child(dur)
+	var st_txt := "COMPLETE" if done else ("IN PROGRESS" if running else ("AVAILABLE" if can_lv else "LOCKED"))
+	var st_col := UI.GREEN if done else (Color("#7fd8ff") if running else (UI.GOLD if can_lv else UI.MUTED))
+	var stl := UI.label(st_txt, 12, st_col, 3)
+	stl.position = Vector2(8, 80)
+	ban.add_child(stl)
+	h.add_child(ban)
+
+	# --- info
+	var info := UI.vbox(4)
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(info)
+	var tr := UI.hbox(10)
+	tr.add_child(UI.label(d["name"], 19, Color.WHITE, 2))
+	var req := UI.label("Hero Lv.%d+" % int(d["min_level"]), 12, UI.MUTED if can_lv else UI.RED, 1)
+	req.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	tr.add_child(req)
+	info.add_child(tr)
+
+	# hero slots: faces when running, empty rings otherwise
+	var slots := UI.hbox(6)
+	var sent: Array = Game.s["expeditions"][eid]["heroes"] if Game.s["expeditions"].has(eid) else []
+	for i in int(d["heroes"]):
+		if i < sent.size():
+			var fp := UI.styled_panel(Color.BLACK, UI.GREEN if done else Color("#7fd8ff"), 8, 2, 1)
+			var face := UI.tex_rect(DB.face(sent[i]), Vector2(36, 36), true)
+			fp.add_child(face)
+			fp.tooltip_text = DB.name_of(sent[i])
+			slots.add_child(fp)
 		else:
-			var faces := UI.hbox(4)
-			for hid in Game.s["expeditions"][eid]["heroes"]:
-				var fp := UI.styled_panel(Color.BLACK, UI.GREEN, 6, 2, 1)
-				fp.add_child(UI.tex_rect(DB.face(hid), Vector2(40, 40), true))
-				faces.add_child(fp)
-			mid.add_child(faces)
-			var bar := UI.bar(float(d["hours"]) * 3600.0 - left, float(d["hours"]) * 3600.0, "GoldBar", 10)
-			mid.add_child(bar)
-			var tl := UI.label(_fmt_time(left), 14, Color.WHITE, 2)
-			mid.add_child(tl)
-			_timers.append({"eid": eid, "label": tl, "bar": bar, "done": left == 0})
-			if left == 0:
-				var cb := UI.button("CLAIM", func():
-					var r := Game.claim_expedition(eid)
-					if not r.is_empty():
-						main.show_rewards("EXPEDITION COMPLETE", r)
-					_render(), "GoldButton", Vector2(130, 48))
-				h.add_child(cb)
-				var pt := cb.create_tween().set_loops()
-				pt.tween_property(cb, "modulate", Color(1.25, 1.25, 1.25), 0.5)
-				pt.tween_property(cb, "modulate", Color.WHITE, 0.5)
+			var e := Control.new()
+			e.custom_minimum_size = Vector2(40, 40)
+			e.draw.connect(func():
+				e.draw_arc(Vector2(20, 20), 17.0, 0.0, TAU, 32, Color(1, 1, 1, 0.3), 1.5, true)
+				e.draw_string(ThemeDB.fallback_font, Vector2(0, 26), "+", HORIZONTAL_ALIGNMENT_CENTER, 40, 18, Color(1, 1, 1, 0.35)))
+			slots.add_child(e)
+	var bond := UI.label("+10 Bond each", 12, Color("#ff8fb8"), 1)
+	bond.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	slots.add_child(bond)
+	info.add_child(slots)
+
+	if running or done:
+		var total := float(d["hours"]) * 3600.0
+		var bar := UI.bar(total - left, total, "GoldBar", 10)
+		info.add_child(bar)
+		var row := UI.hbox(8)
+		var tl := UI.label(_fmt_time(left) if running else "Ready to claim!", 13, Color.WHITE if running else UI.GREEN, 2)
+		row.add_child(tl)
+		var rr := UI.reward_row(d["give"], 22, 12)
+		rr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(rr)
+		info.add_child(row)
+		_timers.append({"eid": eid, "label": tl, "bar": bar, "done": done})
+	else:
+		info.add_child(UI.reward_row(d["give"], 26, 13))
+
+	# --- action
+	if done:
+		var cb := UI.button("CLAIM", func():
+			var r := Game.claim_expedition(eid)
+			if not r.is_empty():
+				Game.sfx("star_up")
+				main.show_rewards("EXPEDITION COMPLETE", r)
+			_render(), "GoldButton", Vector2(130, 48))
+		cb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		h.add_child(cb)
+		var pt := cb.create_tween().set_loops()
+		pt.tween_property(cb, "modulate", Color(1.25, 1.25, 1.25), 0.5)
+		pt.tween_property(cb, "modulate", Color.WHITE, 0.5)
+	elif running:
+		var fb := UI.button("FINISH\n%d Gems" % Game.finish_now_cost(eid), func():
+			var r := Game.claim_expedition(eid, true)
+			if r.is_empty():
+				main.toast("Not enough Gems.", UI.RED)
 			else:
-				h.add_child(UI.button("FINISH\n%d Gems" % Game.finish_now_cost(eid), func():
-					var r := Game.claim_expedition(eid, true)
-					if r.is_empty():
-						main.toast("Not enough Gems.", UI.RED)
-					else:
-						main.show_rewards("EXPEDITION COMPLETE", r)
-					_render(), "", Vector2(130, 56)))
-	UI.stagger(_list, 0.06)
+				main.show_rewards("EXPEDITION COMPLETE", r)
+			_render(), "", Vector2(130, 56))
+		fb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		h.add_child(fb)
+	else:
+		var sb := UI.button("SEND", func(): _pick(eid), "GoldButton", Vector2(130, 48))
+		sb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		if not can_lv:
+			sb.disabled = true
+			sb.tooltip_text = "Needs a hero at Lv.%d or higher." % int(d["min_level"])
+		h.add_child(sb)
+	return p
 
 func _pick(eid: String) -> void:
 	var d := Game.expedition_def(eid)

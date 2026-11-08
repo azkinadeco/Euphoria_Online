@@ -31,7 +31,15 @@ func build() -> void:
 	var lv := UI.vbox(8)
 	lp.add_child(lv)
 	var seen := DB.ENEMIES.keys().filter(func(id): return Game.kills_of(id) > 0).size()
-	lv.add_child(UI.label("Discovered %d / %d" % [seen, DB.ENEMIES.size()], 16, UI.GOLD, 3))
+	var dh := UI.hbox(8)
+	var dl := UI.label("DISCOVERED", 14, UI.GOLD, 3)
+	dh.add_child(dl)
+	var dn := UI.label("%d / %d" % [seen, DB.ENEMIES.size()], 14, Color.WHITE, 2)
+	dn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	dn.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	dh.add_child(dn)
+	lv.add_child(dh)
+	lv.add_child(UI.bar(seen, DB.ENEMIES.size(), "GoldBar", 8))
 	_grid = GridContainer.new()
 	_grid.columns = 3
 	_grid.add_theme_constant_override("h_separation", 8)
@@ -54,7 +62,22 @@ func build() -> void:
 	UI.live(_art, Color(1.0, 0.85, 0.9))
 	_pinch = PinchZoom.new(func(f: float, _c: Vector2): _set_zoom(_zoom * f))
 	_art.add_child(_pinch)
-	var zh := UI.label("Pinch to zoom • tap to interact", 11, UI.MUTED, 2)
+	var zb := UI.zoom_button(func():
+		if Game.kills_of(_sel) <= 0:
+			main.toast("Defeat this foe once to view her up close.", UI.MUTED)
+			return
+		var allowed: Array = []
+		for k in DB.art_list(_sel).size():
+			if Game.form_unlocked(_sel, k):
+				allowed.append(k)
+		ArtViewer.open(main, _sel, _form, allowed))
+	zb.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	zb.offset_left = -64
+	zb.offset_right = -6
+	zb.offset_top = 6
+	zb.offset_bottom = 64
+	mid.add_child(zb)
+	var zh := UI.label("Pinch to zoom • tap to interact • lens = full screen", 11, UI.MUTED, 2)
 	zh.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	zh.offset_top = -104
 	zh.offset_bottom = -86
@@ -144,7 +167,7 @@ func _render_detail() -> void:
 		title.add_child(UI.label("♥ TAMED", 13, Color("#ff8fb8"), 3))
 	_detail.add_child(title)
 	if not known:
-		_detail.add_child(UI.wrap_label("Defeat this enemy once to reveal its entry.", 14, UI.MUTED))
+		_unknown_detail(id)
 		return
 	var tabs := UI.hbox(6)
 	for tb in [["info", "INFO"], ["tame", "TAMING ♥" if Game.is_tamed(id) else "TAMING"]]:
@@ -432,3 +455,46 @@ func _render_tame(id: String) -> void:
 		if lv >= int(lvk):
 			row.add_child(UI.label("✓", 14, UI.GREEN, 2))
 		_detail.add_child(row)
+
+
+## Entry for a foe not met yet: where to find her and what hunting her is worth.
+func _unknown_detail(id: String) -> void:
+	_detail.add_child(UI.wrap_label("Defeat this enemy once to reveal her entry, art and forms.", 13, UI.MUTED))
+	var role := str(DB.ENEMIES[id].get("role", ""))
+	if role != "":
+		var rp := UI.styled_panel(Color(1, 1, 1, 0.05), Color(1, 1, 1, 0.2), 8, 1, 6.0)
+		rp.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		rp.add_child(UI.label("Class hint: " + role, 12, UI.TEXT, 1))
+		_detail.add_child(rp)
+	var where: Array = []
+	for d in DB.DUNGEONS:
+		if (d["pool"] as Array).has(id):
+			where.append([str(d["name"]), "dungeon", {"dungeon": d["id"]}])
+	where.append(["Story stages", "story", {}])
+	_detail.add_child(UI.label("WHERE TO FIND HER", 13, Color("#9fd0ff"), 2))
+	for e in where:
+		var scr: String = e[1]
+		var prm: Dictionary = e[2]
+		var row := UI.hbox(6)
+		var nl := UI.label("• " + str(e[0]), 13, UI.TEXT)
+		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(nl)
+		if Game.feature_unlocked(scr):
+			row.add_child(UI.button("GO", func(): main.go(scr, prm), "", Vector2(56, 32)))
+		_detail.add_child(row)
+	_detail.add_child(UI.label("HUNTING REWARDS", 13, UI.GOLD, 2))
+	for t in DB.BESTIARY_TIERS:
+		var tp := UI.styled_panel(Color(0.1, 0.08, 0.16, 0.85), Color(1, 1, 1, 0.12), 10, 1, 6.0)
+		var th := UI.hbox(8)
+		tp.add_child(th)
+		var kl := UI.label("%d kills" % int(t["kills"]), 12, UI.MUTED, 1)
+		kl.custom_minimum_size.x = 62
+		kl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		th.add_child(kl)
+		var rr := UI.reward_row(t["give"], 22, 12)
+		rr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		th.add_child(rr)
+		_detail.add_child(tp)
+	var tm := UI.styled_panel(Color("#ff8fb8", 0.08), Color("#ff8fb8", 0.4), 10, 1, 8.0)
+	tm.add_child(UI.wrap_label("♥ After %d defeats she can be TAMED and befriended like a hero." % DB.TAME_KILLS, 12, Color("#ffc0d8")))
+	_detail.add_child(tm)

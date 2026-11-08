@@ -47,13 +47,24 @@ func build() -> void:
 
 	var bot := UI.vbox(8)
 	bot.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	bot.offset_top = -144
+	bot.offset_top = -164
 	left.add_child(bot)
 	var names := "%s & %s" % [DB.name_of(feat[0]).split(" ")[0], DB.name_of(feat[1]).split(" ")[0]]
 	bot.add_child(UI.wrap_label("Win battles (Story, Hard, Event, Dungeon, Tower) to earn Lantern Charms — +5 extra for each of %s in your team." % names, 14, Color.WHITE))
 	var st: Dictionary = Game._fest_state()
-	_charm_l = UI.label("", 15, UI.GOLD, 3)
-	bot.add_child(_charm_l)
+	var cp := UI.styled_panel(Color(0, 0, 0, 0.5), Color(col, 0.6), 10, 1, 6.0)
+	bot.add_child(cp)
+	var ch := UI.hbox(8)
+	cp.add_child(ch)
+	ch.add_child(UI.tex_rect(DB.icon("item_season_token"), Vector2(28, 28)))
+	var cv := UI.vbox(2)
+	cv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	ch.add_child(cv)
+	_charm_l = UI.label("", 14, UI.GOLD, 3)
+	cv.add_child(_charm_l)
+	var cap := UI.bar(mini(int(st["today"]), DB.FEST_DAILY_CAP), DB.FEST_DAILY_CAP, "", 6)
+	cap.add_theme_stylebox_override("fill", UI.style(col.lightened(0.2), Color.TRANSPARENT, 3, 0, 0))
+	cv.add_child(cap)
 	_update_charms()
 	var row := UI.hbox(10)
 	bot.add_child(row)
@@ -99,17 +110,32 @@ func build() -> void:
 		if nm.begins_with("Featured"):
 			nm = "%s Shard x10" % DB.name_of(str(give.keys()[0]).substr(6)).split(" ")[0]
 		info.add_child(UI.label(nm, 15, Color.WHITE, 2))
-		info.add_child(UI.label("%d left" % left_n, 12, UI.MUTED))
+		info.add_child(UI.label("%d / %d left" % [left_n, int(item["limit"])], 12, UI.MUTED))
+		var sb := UI.bar(left_n, int(item["limit"]), "", 5)
+		sb.custom_minimum_size.x = 120
+		sb.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		sb.add_theme_stylebox_override("fill", UI.style(UI.GREEN if left_n > 0 else UI.MUTED, Color.TRANSPARENT, 3, 0, 0))
+		info.add_child(sb)
 		h.add_child(info)
-		var bb := UI.button("%d ✦" % int(item["price"]), func():
+		var afford := Game.amount("season_token") >= int(item["price"])
+		var bb := UI.button("SOLD OUT" if left_n <= 0 else str(int(item["price"])), func():
 			var err := Game.buy_fest(item)
 			if err != "":
 				main.toast(err, UI.RED)
 				return
 			Game.sfx("ui_click")
 			main.show_rewards("EXCHANGED", give)
-			main.replace("festival"), "GoldButton", Vector2(110, 44))
+			main.replace("festival"), "GoldButton" if (afford and left_n > 0) else "", Vector2(110, 44))
 		bb.disabled = left_n <= 0
+		bb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		if left_n > 0:
+			bb.icon = DB.icon("item_season_token")
+			bb.add_theme_constant_override("icon_max_width", 22)
+			if not afford:
+				bb.add_theme_color_override("font_color", Color("#ff7a7a"))
+				bb.tooltip_text = "Not enough Lantern Charms"
+		else:
+			p.modulate = Color(0.6, 0.6, 0.65)
 		h.add_child(bb)
 	UI.stagger(list, 0.03)
 	tutorial("festival")
