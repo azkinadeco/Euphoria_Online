@@ -914,6 +914,46 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - Footer "YOUR TEAM": formasi, power, tiket hari ini, dan tombol FORMATION (tombol FORMATION di panel kiri dihapus).
 - Tab Ranking: podium Top 3 dan chip tier di setiap baris.
 
+## 2de. Update batch 103 — Private Room: Bond Journey
+
+- Kartu **Bond Journey** di panel kanan Private Room: wajah hero (bulat), Bond Lv + angka EXP (mis. `70 / 220`), bar pink, dan **10 hati** (♥ = sudah tercapai, ♡ emas = level yang membuka sesuatu). Arahkan kursor ke hati untuk melihat isi hadiahnya.
+- Baris **NEXT** menunjukkan milestone terdekat (ruangan baru, Memory story, Date, outfit, Oath). Di Bond 10 berubah jadi "Max Bond — Oath Ceremony in Hero Details".
+- Tombol TALK dan REST menampilkan bond yang didapat (+15/+30, x2 di ruangan favorit). Angka bond disembunyikan saat sudah MAX.
+- Setelah Talk/Rest, angka "+N ♥" dan hati-hati kecil melayang dari hero.
+- Daftar hadiah per level dipindah ke `DB.bond_unlocks()`, dipakai bersama oleh layar Bond Up (`main.gd`) dan Private Room. Layar Bond Up sekarang juga menyebut ruangan baru dan Date.
+
+## 2df. Update batch 104 — Kartu hero baru & 11 ikon semi-3D
+
+**Kartu hero (`game/ui/hero_card.gd`, dipakai di Heroes, Formation, Room, Summon, dll.):**
+- Latar warna polos diganti cahaya radial berwarna elemen di belakang hero (tekstur gradien dibuat sekali lalu dipakai bersama semua kartu).
+- Rarity jadi chip berbingkai, ada garis aksen warna rarity di atas nama.
+- Hero yang belum dimiliki: ikon gembok, atau bar progres shard (`40 / 80`). Kalau shard sudah cukup, muncul label emas **✦ RECRUIT!**.
+
+**Ikon baru dari `semi_3d_icons_v2`:** Gems, Celestial Gem, Crystal (Hero EXP), Energy, Ticket, elemen Fire/Water/Wind, dan gear Armor/Weapon/Helmet. Semuanya diimpor dengan `tools/import_icon_sheet.py --apply`, ikon lama di-backup di `_recut_backup/`.
+- **Perbaikan importer:** sebelumnya file yang kamu taruh setelah sheet dibuat akan ditimpa potongan sheet lama saat `--apply`. Sekarang file yang sudah ada di folder tidak pernah ditimpa (pakai `--recut` untuk memotong ulang sheet). Cukup ganti PNG di folder lalu jalankan ulang.
+- Elemen Earth/Light/Dark dan gear Boots/Gloves/Relic masih memakai ikon versi Batch 101.
+
+
+## 2dg. Update batch 105 — Tower of Trials: Milestone Chests
+- `DB.TOWER_MILESTONES` (8 peti): F10 200 gem + 1 tiket, F20 300 gem + Gear Chest + 50K gold, F30 2 tiket + Rune Chest, F40 500 gem + 2 Celestial Gem, F50 3 tiket + 2 Gear Chest, F60 800 gem + 2 Rune Chest, F80 5 tiket + Special Skin Ticket, F100 1.500 gem + Oath Ring.
+- Save: `s.tower.claimed` (indeks, dinormalisasi ke int di `_sanitize`). Peti "ready" bila lantai itu sudah dilewati (`tower.floor > floor`), jadi pemain lama langsung bisa klaim milestone yang sudah terlewati.
+- `Game.tower_milestone_state / tower_milestones_ready / claim_tower_milestone`; `feature_badge("tower")` menghitung peti siap klaim.
+- `tower.gd`: teks penjelasan diganti panel **MILESTONE CHESTS** — jalur 5 medali (mulai dari peti pertama yang belum diklaim) dengan bar progres antar-medali; medali siap klaim berdenyut + chip hijau "CLAIM Fxx" (ketuk untuk klaim). Penjelasan aturan dipindah ke tooltip tombol TEAM. Banner lantai 112→100 px agar semua muat di 720p.
+- Kartu musuh: 84×100, ikon elemen + level; kartu Guardian berdenyut merah.
+- flow_test: blok `[tower milestones]`.
+
+
+## 2dh. Perbaikan bug — Hasil battle saat Chapter Clear tidak bisa diklik
+- Laporan pemain: setelah menang di stage boss (akhir chapter, mis. 2-6 → 3-1), cerita menumpuk dan layar tidak bisa diklik.
+- Penyebab 1: panel hasil (VICTORY + crest + bintang + hadiah 2 baris + label "CHAPTER X CLEAR!") lebih tinggi dari layar 720p, jadi tombol NEXT STAGE / CONTINUE terdorong ke luar layar.
+- Penyebab 2: epilog chapter diputar lewat timer 1,6 detik, sehingga bisa muncul di atas layar story/prolog chapter berikutnya dan menumpuk dua VN.
+- Perbaikan `battle.gd`: `_fit_result(v)` mengukur terhadap tinggi layar dan mengecilkan bertahap (crest disembunyikan, judul 84→60→48, bintang 64→46→36, jarak dirapatkan). Epilog kini disimpan di `_pending_outro` dan diputar oleh `_leave_with_outro` saat pemain menekan tombol apa pun selain STATS; aksi tombol dijalankan setelah epilog selesai (atau jika VN ditutup dengan cara lain, lewat `tree_exiting`).
+- `story.gd _battle()`: tidak memulai dialog baru selama VN masih aktif (cegah tumpukan dari ketukan cepat).
+- Diuji dengan skenario 2-6 → NEXT STAGE → epilog → story → prolog 3-1 → formation; smoke & flow PASS.
+
+## 2di. Update batch 106 — Kartu judul chapter
+- `story.gd _chapter_card()`: saat pertama kali membuka chapter baru (stage pertama = progres saat ini, bukan Hard), pita gelap membuka dari tengah, garis emas melebar, lalu "✦ CHAPTER N ✦", nama chapter besar meluncur masuk, dan nama Arc. Memudar setelah ~2,5 dtk. Tidak menghalangi klik (mouse IGNORE). Disimpan sekali per chapter di `story.seen` (`card<N>`).
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

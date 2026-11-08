@@ -3,6 +3,8 @@
   2. those cut-outs, plus any single PNG the artist dropped into semi_3d_icons_v2/<folder>/ by hand, are resized
      to the icon's game size and copied into art/ (originals backed up to _recut_backup/icons_semi3d_<time>/).
 Cells whose picture does not match the icon (Gemini drew something else) are listed in SKIP and keep the old icon.
+Existing files in semi_3d_icons_v2/<folder>/ are never overwritten (pass --recut to cut the sheet again), so an
+artist can simply replace any PNG there and re-run.
 Run: python3 tools/import_icon_sheet.py            (dry run)
      python3 tools/import_icon_sheet.py --apply"""
 import json, os, shutil, sys, time
@@ -67,7 +69,7 @@ for i, e in enumerate(order[:LAST_ICON + 1]):
     if i in SKIP:
         continue
     out = os.path.join(V2, e['file'].split('/')[0], os.path.basename(e['game_path']))
-    if apply or not os.path.exists(out):
+    if not os.path.exists(out) or '--recut' in sys.argv:  # never overwrite a file the artist replaced
         os.makedirs(os.path.dirname(out), exist_ok=True)
         cut(sheet, i).save(out)
     todo[e['game_path']] = (out, e)
@@ -75,7 +77,7 @@ for i, e in enumerate(order[:LAST_ICON + 1]):
 for e in order:
     for cat in ORDER:
         p = os.path.join(V2, cat, os.path.basename(e['game_path']))
-        if os.path.exists(p) and os.path.getmtime(p) < os.path.getmtime(SHEET) - 1:
+        if os.path.exists(p):
             todo[e['game_path']] = (p, e)
 
 bak = os.path.join(ROOT, '_recut_backup', 'icons_semi3d_%s' % time.strftime('%Y%m%d_%H%M%S'))

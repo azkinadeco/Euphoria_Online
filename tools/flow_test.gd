@@ -1332,6 +1332,17 @@ func _run() -> void:
 	check(G.fest_greet() and not G.fest_greet(), "festival greeting bond once")
 	check(G.amount("season_token") > c0, "charms accumulate")
 
+	print("[tower milestones]")
+	var tf0: int = int(G.s["tower"]["floor"])
+	G.s["tower"]["floor"] = 10
+	check(G.tower_milestone_state(0) == "locked" and G.claim_tower_milestone(0).is_empty(), "milestone locked until floor 10 is cleared")
+	G.s["tower"]["floor"] = 11
+	var tg0: int = G.amount("gems")
+	check(G.feature_badge("tower") >= 1 or not G.feature_unlocked("tower"), "tower badge counts ready milestones")
+	check(not G.claim_tower_milestone(0).is_empty() and G.amount("gems") == tg0 + 200, "claim F10 milestone")
+	check(G.tower_milestone_state(0) == "claimed" and G.claim_tower_milestone(0).is_empty(), "milestone claims once")
+	G.s["tower"]["floor"] = tf0
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

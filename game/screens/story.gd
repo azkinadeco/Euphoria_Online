@@ -76,6 +76,73 @@ func build() -> void:
 	col.add_child(_actions)
 	_render()
 	tutorial("story")
+	_chapter_card()
+
+## First visit to a newly opened chapter: a cinematic title band sweeps across the map.
+## Purely visual (ignores the mouse) and shown once per chapter.
+func _chapter_card() -> void:
+	if _hard or _chapter == 0 or _sel % DB.STAGES_PER_CHAPTER != 0 or _sel != _prog():
+		return
+	var seen: Array = Game.s["story"].get("seen", [])
+	var key := "card%d" % _chapter
+	if seen.has(key):
+		return
+	seen.append(key)
+	Game.s["story"]["seen"] = seen
+	Game.mark_dirty()
+	var chd: Dictionary = DB.CHAPTERS[_chapter]
+	var layer := Control.new()
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(layer)
+	var band := ColorRect.new()
+	band.color = Color(0.02, 0.01, 0.05, 0.78)
+	band.set_anchors_and_offsets_preset(Control.PRESET_HCENTER_WIDE)
+	band.offset_top = -78
+	band.offset_bottom = 78
+	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	band.pivot_offset = Vector2(get_viewport_rect().size.x * 0.5, 78)
+	band.scale = Vector2(1, 0.0)
+	layer.add_child(band)
+	var lines: Array = []
+	for y in [-78.0, 76.0]:
+		var ln := ColorRect.new()
+		ln.color = UI.GOLD
+		ln.set_anchors_and_offsets_preset(Control.PRESET_HCENTER_WIDE)
+		ln.offset_top = y
+		ln.offset_bottom = y + 2
+		ln.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ln.pivot_offset = Vector2(get_viewport_rect().size.x * 0.5, 1)
+		ln.scale = Vector2(0, 1)
+		layer.add_child(ln)
+		lines.append(ln)
+	var v := UI.vbox(2)
+	v.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	v.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	v.grow_vertical = Control.GROW_DIRECTION_BOTH
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(v)
+	var top := UI.label("✦  CHAPTER %d  ✦" % (_chapter + 1), 18, UI.GOLD, 3)
+	var name_l := UI.label(str(chd["name"]).to_upper(), 46, Color.WHITE, 8)
+	var sub := UI.label(_arc_name(_chapter), 14, Color("#c9b8ff"), 3)
+	for l in [top, name_l, sub]:
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.modulate.a = 0.0
+		v.add_child(l)
+	name_l.add_theme_color_override("font_outline_color", DB.ELEMENT_COLOR.get(str(chd.get("element", "")), Color("#3a1d6e")).darkened(0.4))
+	Game.sfx("star_up")
+	var tw := layer.create_tween()
+	tw.tween_property(band, "scale:y", 1.0, 0.28).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	for ln in lines:
+		tw.parallel().tween_property(ln, "scale:x", 1.0, 0.45).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(top, "modulate:a", 1.0, 0.2)
+	tw.tween_property(name_l, "modulate:a", 1.0, 0.35)
+	tw.parallel().tween_property(name_l, "position:x", 0.0, 0.5).from(-60.0).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(sub, "modulate:a", 1.0, 0.25)
+	tw.tween_interval(1.6)
+	tw.tween_property(layer, "modulate:a", 0.0, 0.45)
+	tw.tween_callback(layer.queue_free)
 
 func refresh() -> void:
 	super.refresh()
@@ -433,6 +500,8 @@ func _sweep(times: int) -> void:
 	main.show_rewards("SWEEP x%d" % times, r)
 
 func _battle() -> void:
+	if main._vn_active():
+		return   # a story scene is already playing: don't stack another one on top
 	if _hard and not Game.hard_unlocked(_sel):
 		main.toast("Clear this chapter's boss on NORMAL (and the previous Hard stage) first.", UI.MUTED)
 		return

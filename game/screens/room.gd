@@ -85,33 +85,29 @@ func build() -> void:
 	rp.add_child(UI.scroll(v))
 	var rd2 := DB.room_def(_loc)
 	v.add_child(UI.label(str(rd2["name"]).to_upper(), 13, Color("#ffb8d6"), 3))
-	var hrow := UI.hbox(8)
-	hrow.add_child(UI.tex_rect(DB.face(hid), Vector2(44, 44), true))
-	var hv := UI.vbox(0)
-	hv.add_child(UI.label(DB.name_of(hid), 20, Color.WHITE, 4))
 	var h := Game.hero(hid)
-	hv.add_child(UI.label("Bond Lv.%d" % int(h["bond"]), 13, Color("#ff8fb8"), 3))
-	hrow.add_child(hv)
-	v.add_child(hrow)
-	v.add_child(UI.bar(int(h["bond_exp"]), DB.bond_to_next(int(h["bond"])), "GoldBar", 8))
 	var fav := DB.fav_room(hid) == _loc
+	v.add_child(_bond_card(hid, h))
 	v.add_child(UI.label("♥ Her favourite room — Bond x2!" if fav else "Favourite room: " + str(DB.room_def(DB.fav_room(hid))["name"]), 13, Color("#ff8fb8") if fav else UI.MUTED, 2))
 	var left := Game.room_visits_left()
-	var tb := UI.button("♥ TALK  (%d / %d today)" % [left, DB.ROOM_VISITS], func():
+	var maxb := int(h["bond"]) >= DB.MAX_BOND
+	var talk_gain := 0 if maxb else (30 if fav else 15)
+	var tb := UI.button(("♥ TALK  (%d / %d)" % [left, DB.ROOM_VISITS]) + ("   +%d ♥" % talk_gain if talk_gain > 0 else ""), func():
 		var lines := Game.room_talk(_loc)
 		if lines.is_empty():
 			main.toast("No visits left today.", UI.MUTED)
 			return
-		main.dialogue(lines, func(): main.replace("room", {"loc": _loc}), _loc), "GoldButton", Vector2(0, 52))
+		main.dialogue(lines, func(): main.replace("room", {"loc": _loc, "gain": talk_gain}), _loc), "GoldButton", Vector2(0, 52))
 	tb.disabled = left <= 0
 	v.add_child(tb)
 	var rested: bool = (Game._room()["rested"] as Array).has(_loc)
-	var rb := UI.button("REST TOGETHER  (+20 Energy)" if not rested else "RESTED HERE TODAY", func():
+	var rest_gain := 0 if maxb else (60 if fav else 30)
+	var rb := UI.button(("REST TOGETHER  +20 ⚡" + ("  +%d ♥" % rest_gain if rest_gain > 0 else "")) if not rested else "RESTED HERE TODAY", func():
 		var r := Game.room_rest(_loc)
 		if r.is_empty():
 			return
 		Game.sfx("star_up")
-		main.show_rewards("A QUIET MOMENT", r, func(): main.replace("room", {"loc": _loc})), "" , Vector2(0, 46))
+		main.show_rewards("A QUIET MOMENT", r, func(): main.replace("room", {"loc": _loc, "gain": rest_gain})), "" , Vector2(0, 46))
 	rb.disabled = rested
 	v.add_child(rb)
 	v.add_child(UI.label("GIFTS", 14, UI.GOLD, 3))
@@ -135,6 +131,96 @@ func build() -> void:
 	row.add_child(sl)
 
 	tutorial("room")
+	if int(params.get("gain", 0)) > 0:
+		_float_hearts(int(params["gain"]))
+	params.erase("gain")
+
+const PINK := Color("#ff8fb8")
+
+## Bond Journey: face + level, EXP numbers, 10 heart pips (milestones marked) and what the next level unlocks.
+func _bond_card(hid: String, h: Dictionary) -> Control:
+	var lv := int(h["bond"])
+	var maxed := lv >= DB.MAX_BOND
+	var card := UI.styled_panel(Color(0.16, 0.06, 0.14, 0.75), Color(PINK, 0.45), 12, 1, 8)
+	var v := UI.vbox(6)
+	card.add_child(v)
+	var hrow := UI.hbox(8)
+	v.add_child(hrow)
+	var fp := UI.styled_panel(Color.BLACK, PINK, 22, 2, 0)
+	fp.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	fp.add_child(UI.tex_rect(DB.face(hid, int(h.get("skin", 0))), Vector2(44, 44), true))
+	hrow.add_child(fp)
+	var hv := UI.vbox(0)
+	hv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hrow.add_child(hv)
+	hv.add_child(UI.label(DB.name_of(hid), 19, Color.WHITE, 4))
+	var need := DB.bond_to_next(lv)
+	var sub := "♥ Bond Lv.%d" % lv + ("  •  MAX" if maxed else "   %d / %d" % [int(h["bond_exp"]), need])
+	hv.add_child(UI.label(sub, 13, PINK, 3))
+	if bool(h.get("oath", false)):
+		hrow.add_child(UI.label("💍", 20, UI.GOLD, 0))
+	var bar := UI.bar(need if maxed else int(h["bond_exp"]), need, "", 8)
+	bar.add_theme_stylebox_override("fill", UI.style(PINK, Color.TRANSPARENT, 4, 0, 0))
+	bar.add_theme_stylebox_override("background", UI.style(Color(1, 1, 1, 0.08), Color.TRANSPARENT, 4, 0, 0))
+	v.add_child(bar)
+	# heart track: one pip per level; milestone levels get a gold ring and a tooltip
+	var track := UI.hbox(2)
+	track.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(track)
+	for i in range(1, DB.MAX_BOND + 1):
+		var un := DB.bond_unlocks(hid, i)
+		var reached := i <= lv
+		var pl := UI.label("♥" if reached else "♡", 17 if un.is_empty() else 20, PINK if reached else (UI.GOLD if not un.is_empty() else Color(1, 1, 1, 0.4)), 2)
+		pl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		pl.custom_minimum_size = Vector2(26, 24)
+		pl.mouse_filter = Control.MOUSE_FILTER_PASS
+		pl.tooltip_text = "Bond %d: +2%% all stats%s" % [i, "" if un.is_empty() else "\n• " + "\n• ".join(un)]
+		track.add_child(pl)
+	# next reward
+	if maxed:
+		v.add_child(UI.label("✦ Max Bond — Oath Ceremony in Hero Details" if not bool(h.get("oath", false)) else "✦ Sworn forever", 12, UI.GOLD, 2))
+	else:
+		var nxt := lv + 1
+		var goal := nxt
+		while goal < DB.MAX_BOND and DB.bond_unlocks(hid, goal).is_empty():
+			goal += 1
+		var un := DB.bond_unlocks(hid, goal)
+		var nl := UI.label(("NEXT  Lv.%d" % goal) + ("" if un.is_empty() else ":  " + str(un[0])), 12, UI.GOLD, 2)
+		nl.clip_text = true
+		nl.custom_minimum_size.x = 0
+		nl.tooltip_text = "\n".join(un)
+		nl.mouse_filter = Control.MOUSE_FILTER_PASS
+		v.add_child(nl)
+	return card
+
+## Little hearts that rise from the hero after a talk / rest, with the Bond gained.
+func _float_hearts(gain: int) -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not is_instance_valid(_art):
+		return
+	var c := _art.get_parent() as Control
+	var base := Vector2(c.size.x * 0.41, c.size.y * 0.42)
+	var big := UI.label("+%d ♥" % gain, 34, PINK, 6)
+	big.position = base - Vector2(40, 0)
+	big.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	c.add_child(big)
+	var tw := big.create_tween()
+	tw.tween_property(big, "position:y", base.y - 90, 1.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(big, "modulate:a", 0.0, 0.6).set_delay(0.9)
+	tw.tween_callback(big.queue_free)
+	for i in 7:
+		var hl := UI.label("♥", randi_range(18, 30), PINK.lightened(randf() * 0.4), 3)
+		hl.position = base + Vector2(randf_range(-110, 110), randf_range(-20, 60))
+		hl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hl.modulate.a = 0.0
+		c.add_child(hl)
+		var t2 := hl.create_tween()
+		t2.tween_interval(i * 0.08)
+		t2.tween_property(hl, "modulate:a", 1.0, 0.15)
+		t2.parallel().tween_property(hl, "position:y", hl.position.y - randf_range(120, 200), 1.3).set_trans(Tween.TRANS_SINE)
+		t2.tween_property(hl, "modulate:a", 0.0, 0.3)
+		t2.tween_callback(hl.queue_free)
 
 func _pick_hero() -> void:
 	var v: VBoxContainer = main.popup("INVITE A HERO", 820)

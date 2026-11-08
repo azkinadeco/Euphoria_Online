@@ -1,5 +1,37 @@
 [
  {
+  "id": "n2026-11-09d",
+  "date": "2026-11-09",
+  "tag": "FIX",
+  "title": "Chapter Clear Fix & Chapter Title Cards",
+  "bg": "hell",
+  "body": "Fixed: after clearing a chapter boss, the result screen could push the NEXT STAGE and CONTINUE buttons off the screen, and the chapter epilogue could stack on top of the next chapter's prologue so nothing could be tapped. The epilogue now plays right after you tap NEXT STAGE or CONTINUE, and the result screen shrinks to fit. New: when you enter a new chapter for the first time, a cinematic title card announces it."
+ },
+ {
+  "id": "n2026-11-09c",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Tower Milestone Chests",
+  "bg": "galaxy",
+  "body": "The Tower of Trials now rewards the long climb. Clear Floor 10, 20, 30, 40, 50, 60, 80 and 100 to open Milestone Chests with Gems, Summon Tickets, Gear and Rune Chests, a Special Skin Ticket at Floor 80 and an Oath Ring at Floor 100. Already past a milestone? Your chest is waiting: tap it to claim. Rival cards now show each foe's element and level, and Guardians pulse red."
+ },
+ {
+  "id": "n2026-11-09b",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "New Hero Cards & Icons",
+  "bg": "lobby",
+  "body": "Hero cards now glow in their element's color, carry a rarity badge and an accent line over the name plate. Heroes you don't own yet show your shard progress, and a gold RECRUIT! tag when you have enough shards. Eleven icons got new 3D art too: Gems, Celestial Gem, Crystal, Energy, Summon Ticket, the Fire, Water and Wind elements, and the Armor, Weapon and Helmet gear slots."
+ },
+ {
+  "id": "n2026-11-09a",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Private Room: Bond Journey",
+  "bg": "gameroom",
+  "body": "The Private Room now shows a Bond Journey card: Bond EXP numbers, a heart track for all 10 levels (hover a heart to see what it unlocks) and the next reward ahead, such as a new room, a Memory story, dates or the Oath Ceremony. Talk and Rest buttons show how much Bond they give, and hearts float up from your hero when you gain Bond."
+ },
+ {
   "id": "n2026-11-08zzd",
   "date": "2026-11-08",
   "tag": "UPDATE",

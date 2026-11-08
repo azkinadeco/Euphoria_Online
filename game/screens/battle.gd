@@ -1261,6 +1261,57 @@ func _finish(e: Dictionary) -> void:
 			return
 	_show_result(won, stars, rewards, str(e.get("reason", "")))
 
+var _pending_outro: Array = []
+
+## Plays the chapter epilogue (once), then runs the button's own action.
+func _leave_with_outro(then: Callable) -> void:
+	if _pending_outro.is_empty() or main._vn_active():
+		if then.is_valid():
+			then.call()
+		return
+	var po := _pending_outro
+	_pending_outro = []
+	var done := [false]
+	var go_on := func():
+		if done[0]:
+			return
+		done[0] = true
+		if then.is_valid():
+			then.call()
+	var vn: VNDialogue = main.dialogue(po[0], go_on, po[1])
+	# closed any other way (e.g. a popup sweep): still carry on, never leave the player on the result
+	vn.tree_exiting.connect(func(): go_on.call_deferred())
+
+## The result column must fit the screen (chapter clears add a line, big drops wrap to 2 rows):
+## shrink the title, stars and crest until the buttons are visible.
+func _fit_result(v: VBoxContainer) -> void:
+	if not is_instance_valid(v):
+		return
+	await get_tree().process_frame
+	if not is_instance_valid(v):
+		return
+	# a VBox grows to fit its children, so measure against the screen, not v.size
+	var room := get_viewport_rect().size.y - v.offset_top + v.offset_bottom
+	var steps := 0
+	while v.get_combined_minimum_size().y > room and steps < 4:
+		steps += 1
+		for c in v.get_children():
+			if c is TextureRect and steps == 1:
+				c.visible = false   # crest
+			elif c is Label and c.get_theme_font_size("font_size") >= 60:
+				c.add_theme_font_size_override("font_size", 60 if steps == 1 else 48)
+			elif c is HBoxContainer:
+				for st in c.get_children():
+					if st is Label and st.text == "★":
+						st.add_theme_font_size_override("font_size", 46 if steps == 1 else 36)
+		v.add_theme_constant_override("separation", 6 if steps >= 2 else 9)
+		if steps >= 3:
+			v.offset_top = 30
+			room = get_viewport_rect().size.y - v.offset_top + v.offset_bottom
+		await get_tree().process_frame
+		if not is_instance_valid(v):
+			return
+
 ## Enemies still standing on screen, ignoring `except` (views not yet dissolved).
 func _enemies_left_after(except: int) -> int:
 	var n := 0
@@ -1591,9 +1642,9 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 		v.add_child(cc)
 		v.move_child(cc, btns.get_index())
 		var ch := _chapter_clear - 1
-		# bound to the persistent router (not this screen) so the chapter epilogue still plays
-		# even if the player taps CONTINUE before it appears
-		get_tree().create_timer(1.6).timeout.connect(Callable(main, "dialogue").bind(DB.CHAPTERS[ch]["outro"], Callable(), str(DB.CHAPTERS[ch]["bg"])))
+		# the chapter epilogue plays when the player leaves the result (NEXT STAGE / CONTINUE / ...),
+		# never on a timer, so it can't stack with the next chapter's prologue or hide the buttons
+		_pending_outro = [DB.CHAPTERS[ch]["outro"], str(DB.CHAPTERS[ch]["bg"])]
 	var mode := str(params.get("mode", ""))
 	if won and mode == "story" and int(params["stage"]) + 1 < DB.stage_count():
 		btns.add_child(UI.button("NEXT STAGE ▶", func(): main.replace("story", {"select": int(params["stage"]) + 1}), "GoldButton", Vector2(200, 54)))
@@ -1610,3 +1661,12 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 		btns.add_child(UI.button("UPGRADE HEROES", func(): main.replace("heroes"), "", Vector2(200, 54)))
 	btns.add_child(UI.button("STATS", _show_stats, "", Vector2(110, 54)))
 	btns.add_child(UI.button("CONTINUE", func(): main.back(), "", Vector2(160, 54)))
+	if not _pending_outro.is_empty():
+		for b in btns.get_children():
+			if b is Button and b.text != "STATS":
+				var cbs: Array = b.pressed.get_connections()
+				for cn in cbs:
+					b.pressed.disconnect(cn["callable"])
+				var orig: Callable = cbs[0]["callable"] if not cbs.is_empty() else Callable()
+				b.pressed.connect(func(): _leave_with_outro(orig))
+	_fit_result.call_deferred(v)

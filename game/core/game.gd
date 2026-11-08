@@ -66,7 +66,7 @@ func new_state() -> Dictionary:
 		"formation": [],
 		"lobby_hero": "shina",
 		"story": {"cleared": {}, "hard": {}},
-		"tower": {"floor": 1},
+		"tower": {"floor": 1, "claimed": []},
 		"arena": {"rp": 1000, "wins": 0, "losses": 0, "tickets": ARENA_TICKETS, "refresh": 0, "season": -1, "pending": {}, "last_tier": ""},
 		"gacha": {"pity": 0, "total": 0, "free_day": -1},
 		"quests": {"day": -1, "progress": {}, "claimed": {}},
@@ -194,6 +194,8 @@ func _sanitize() -> void:
 			l.append(int(x))
 		s["pass"][k] = l
 	s["pass"]["exp"] = int(s["pass"]["exp"])
+	s["tower"]["floor"] = int(s["tower"]["floor"])
+	s["tower"]["claimed"] = (s["tower"].get("claimed", []) as Array).map(func(x): return int(x))
 	var pres: Array = []
 	for pr in s["presets"]:
 		var cl: Array = []
@@ -1594,6 +1596,27 @@ func pay_battle(params: Dictionary) -> String:
 			mark_dirty()
 	return ""
 
+## "claimed" | "ready" | "locked" for TOWER_MILESTONES[i].
+func tower_milestone_state(i: int) -> String:
+	if (s["tower"]["claimed"] as Array).has(i):
+		return "claimed"
+	return "ready" if int(s["tower"]["floor"]) > int(DB.TOWER_MILESTONES[i]["floor"]) else "locked"
+
+func tower_milestones_ready() -> int:
+	var n := 0
+	for i in DB.TOWER_MILESTONES.size():
+		if tower_milestone_state(i) == "ready":
+			n += 1
+	return n
+
+func claim_tower_milestone(i: int) -> Dictionary:
+	if tower_milestone_state(i) != "ready":
+		return {}
+	s["tower"]["claimed"].append(i)
+	var g: Dictionary = DB.TOWER_MILESTONES[i]["give"]
+	give(g)
+	return g
+
 func apply_tower_result(floor_no: int, won: bool) -> Dictionary:
 	if not won or floor_no != int(s["tower"]["floor"]):
 		return {}
@@ -2644,6 +2667,7 @@ func feature_badge(route: String) -> int:
 		"expedition": n = expeditions_ready()
 		"hunt": n = hunt_tries() + hunt_shop_ready()
 		"bestiary": n = bestiary_ready()
+		"tower": n = tower_milestones_ready()
 		"wardrobe": n = amount("skin_ticket")
 		"rift":
 			for i in DB.RIFT_MILESTONES.size():

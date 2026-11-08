@@ -1854,6 +1854,25 @@ static func _memories(id: String) -> Array:
 		_mem_json = _load_json("res://data/memories.json")
 	return _mem_json.get(id, [])
 
+## What reaching Bond `lv` unlocks for hero `id` (besides the +2% stats every level).
+static func bond_unlocks(id: String, lv: int) -> Array:
+	var out: Array = []
+	for k in BOND_STORY_REQ.size():
+		if int(BOND_STORY_REQ[k]) == lv:
+			out.append("Memory: \"%s\"" % bond_story_title(id, k))
+	if lv == DATE_BOND:
+		out.append("Dates unlocked")
+	for rd in ROOMS:
+		if int(rd["bond"]) == lv and lv > 1:
+			out.append("Room: " + str(rd["name"]))
+	if lv == 5:
+		out.append("Affection voice line")
+	if lv in [4, 7, 10]:
+		out.append("New outfit may be unlocked")
+	if lv == MAX_BOND:
+		out.append("Oath Ceremony")
+	return out
+
 static func bond_story_title(id: String, ep: int) -> String:
 	var m := _memories(id)
 	if ep < m.size():
@@ -2936,6 +2955,18 @@ static func hard_stage(index: int) -> Dictionary:
 	st["shard_id"] = ssr[ch % ssr.size()] if st["boss"] else low[(index * 7) % low.size()]
 	st["shards"] = 5 if st["boss"] else 4
 	return st
+
+## Tower of Trials milestone chests: claimable once the floor is cleared.
+const TOWER_MILESTONES := [
+	{"floor": 10, "give": {"gems": 200, "summon_ticket": 1}},
+	{"floor": 20, "give": {"gems": 300, "gear_chest": 1, "gold": 50000}},
+	{"floor": 30, "give": {"summon_ticket": 2, "rune_chest": 1}},
+	{"floor": 40, "give": {"gems": 500, "celestial_gem": 2}},
+	{"floor": 50, "give": {"summon_ticket": 3, "gear_chest": 2}},
+	{"floor": 60, "give": {"gems": 800, "rune_chest": 2}},
+	{"floor": 80, "give": {"summon_ticket": 5, "skin_ticket": 1}},
+	{"floor": 100, "give": {"gems": 1500, "oath_ring": 1}},
+]
 
 static func tower_floor(floor_no: int) -> Dictionary:
 	var rng := RandomNumberGenerator.new()

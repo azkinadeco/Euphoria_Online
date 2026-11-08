@@ -625,16 +625,7 @@ func _next_bond_celebration() -> void:
 	var t2 := UI.label("%s  Lv.%d" % [DB.name_of(id), lv], 50, Color.WHITE, 10)
 	v.add_child(t2)
 	UI.pop(t2, 0.5)
-	var unlocks: Array = ["+2% all stats"]
-	for k in DB.BOND_STORY_REQ.size():
-		if int(DB.BOND_STORY_REQ[k]) == lv:
-			unlocks.append("New Memory: \"%s\"" % DB.bond_story_title(id, k))
-	if lv == 5:
-		unlocks.append("Affection voice line")
-	if lv in [4, 7, 10]:
-		unlocks.append("New outfit may be unlocked")
-	if lv == DB.MAX_BOND:
-		unlocks.append("Oath Ceremony available!")
+	var unlocks: Array = ["+2% all stats"] + DB.bond_unlocks(id, lv)
 	for u in unlocks:
 		v.add_child(UI.label("✦ " + str(u), 18, UI.GOLD, 4))
 	var q := UI.wrap_label("\"%s\"" % Game.voice(id, "bond"), 18, Color("#ffe6a3"))

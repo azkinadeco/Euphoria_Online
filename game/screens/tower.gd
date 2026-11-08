@@ -57,7 +57,7 @@ func build() -> void:
 
 	# scene banner: the floor's battlefield behind the title
 	var ban := Control.new()
-	ban.custom_minimum_size = Vector2(0, 112)
+	ban.custom_minimum_size = Vector2(0, 100)
 	ban.clip_contents = true
 	v.add_child(ban)
 	var bt := UI.tex_rect(DB.bg(str(t["bg"])), Vector2.ZERO, true)
@@ -141,11 +141,12 @@ func build() -> void:
 		gv.add_child(gh)
 		rv.add_child(gv)
 
-	v.add_child(UI.wrap_label("No energy cost. Each floor can only be cleared once. Every 5th floor has a Guardian and a bonus Summon Ticket.", 13, UI.MUTED))
+	v.add_child(_milestones(cur))
 	v.add_child(UI.spacer(false))
 	var btns := UI.hbox(10)
 	v.add_child(btns)
 	btns.add_child(UI.button("TEAM", func(): main.go("formation"), "", Vector2(130, 60)))
+	btns.get_child(0).tooltip_text = "No energy cost. Each floor can only be cleared once.\nEvery 5th floor has a Guardian and a bonus Summon Ticket."
 	var cb := UI.button("⚔ CHALLENGE FLOOR %d" % cur, func(): main.go("formation", {"mode": "tower", "floor": cur}), "GoldButton", Vector2(0, 60))
 	cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btns.add_child(cb)
@@ -219,7 +220,7 @@ func _enemy_card(e: Dictionary) -> Control:
 	var boss: bool = e.get("boss", false)
 	var fp := UI.styled_panel(Color.BLACK, Color("#ff5c6c") if boss else Color("#6b4a7e"), 8, 2, 1)
 	var c := Control.new()
-	c.custom_minimum_size = Vector2(78, 92)
+	c.custom_minimum_size = Vector2(84, 100)
 	c.clip_contents = true
 	fp.add_child(c)
 	var face := UI.tex_rect(DB.face(e["id"]), Vector2.ZERO, true)
@@ -236,10 +237,20 @@ func _enemy_card(e: Dictionary) -> Control:
 	nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	c.add_child(nl)
+	var el := UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(str(e["id"])), "elem_light")), Vector2(22, 22))
+	el.position = Vector2(60, 2)
+	el.size = Vector2(22, 22)
+	c.add_child(el)
+	var lvl := UI.label("Lv.%d" % int(e.get("level", 1)), 11, Color.WHITE, 3)
+	lvl.position = Vector2(4, 62)
+	c.add_child(lvl)
 	if boss:
 		var bl := UI.label("BOSS", 11, Color("#ff7a8a"), 3)
 		bl.position = Vector2(4, 2)
 		c.add_child(bl)
+		var tw := fp.create_tween().set_loops()
+		tw.tween_property(fp, "self_modulate", Color(1.4, 0.8, 0.85), 0.7).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(fp, "self_modulate", Color.WHITE, 0.7).set_trans(Tween.TRANS_SINE)
 	fp.tooltip_text = "%s  Lv.%d  %s" % [DB.name_of(str(e["id"])), int(e.get("level", 1)), "★".repeat(int(e.get("star", 1)))]
 	return fp
 
@@ -248,3 +259,102 @@ func _scroll_to_current() -> void:
 		return
 	await get_tree().process_frame
 	_scroll.scroll_vertical = maxi(0, int(_cur_row.position.y) - int(_scroll.size.y * 0.5) + ROW_H / 2)
+
+## Milestone chests: a road of 5 nodes (from the first unclaimed one), lit up to the current floor.
+func _milestones(cur: int) -> Control:
+	var ms: Array = DB.TOWER_MILESTONES
+	var first := ms.size() - 1
+	for i in ms.size():
+		if Game.tower_milestone_state(i) != "claimed":
+			first = i
+			break
+	var start := clampi(first, 0, maxi(0, ms.size() - 5))
+	var p := UI.styled_panel(Color(0.08, 0.05, 0.15, 0.9), Color("#6b4a9e"), 12, 1, 10)
+	var v := UI.vbox(6)
+	p.add_child(v)
+	var hh := UI.hbox(8)
+	v.add_child(hh)
+	hh.add_child(UI.label("MILESTONE CHESTS", 13, UI.GOLD, 2))
+	hh.add_child(UI.spacer())
+	var ready := Game.tower_milestones_ready()
+	hh.add_child(UI.label(("%d READY TO CLAIM" % ready) if ready > 0 else "Floors cleared: %d" % (cur - 1), 12, UI.GREEN if ready > 0 else UI.MUTED, 2))
+	var road := UI.hbox(0)
+	v.add_child(road)
+	var prev := 0 if start == 0 else int(ms[start - 1]["floor"])
+	for i in range(start, mini(ms.size(), start + 5)):
+		var need := int(ms[i]["floor"])
+		var seg := UI.bar(clampi(cur - 1 - prev, 0, need - prev), need - prev, "", 6)
+		seg.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		seg.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		seg.add_theme_stylebox_override("fill", UI.style(Color("#ffd27a"), Color.TRANSPARENT, 3, 0, 0))
+		seg.add_theme_stylebox_override("background", UI.style(Color(1, 1, 1, 0.08), Color.TRANSPARENT, 3, 0, 0))
+		seg.custom_minimum_size = Vector2(16, 6)
+		seg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		road.add_child(seg)
+		road.add_child(_milestone_node(i, need, cur))
+		prev = need
+	return p
+
+func _milestone_node(i: int, need: int, cur: int) -> Control:
+	var give: Dictionary = DB.TOWER_MILESTONES[i]["give"]
+	var stt := Game.tower_milestone_state(i)
+	var key := "gems"
+	for k in ["oath_ring", "skin_ticket", "summon_ticket", "gear_chest", "rune_chest", "celestial_gem"]:
+		if give.has(k):
+			key = k
+			break
+	var col: Color = UI.GREEN if stt == "ready" else (Color("#ffd27a") if stt == "claimed" else Color("#8a78b8"))
+	var nv := UI.vbox(2)
+	nv.custom_minimum_size = Vector2(70, 0)
+	nv.tooltip_text = "Clear Floor %d:\n%s" % [need, Game.reward_text(give)]
+	nv.mouse_filter = Control.MOUSE_FILTER_PASS
+	var med := Control.new()
+	med.custom_minimum_size = Vector2(70, 56)
+	med.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	nv.add_child(med)
+	var big := need % 50 == 0
+	med.draw.connect(func():
+		var c := Vector2(35, 28)
+		var r := 25.0 if big else 22.0
+		if stt == "ready":
+			med.draw_circle(c, r + 6, Color(UI.GREEN, 0.22))
+		med.draw_circle(c, r, Color(0.12, 0.08, 0.2) if stt != "claimed" else Color(0.18, 0.13, 0.06))
+		med.draw_arc(c, r, 0, TAU, 40, col, 3.0 if big else 2.0, true))
+	var ic := UI.tex_rect(Game.reward_icon(key), Vector2(34, 34))
+	ic.position = Vector2(18, 11)
+	ic.size = Vector2(34, 34)
+	if stt == "locked":
+		ic.modulate = Color(0.55, 0.5, 0.65)
+	elif stt == "claimed":
+		ic.modulate = Color(1, 1, 1, 0.45)
+	med.add_child(ic)
+	if stt == "claimed":
+		var ck := UI.label("✓", 20, UI.GREEN, 3)
+		ck.position = Vector2(46, 26)
+		med.add_child(ck)
+	if stt == "ready":
+		var chip := UI.styled_panel(Color(0.1, 0.45, 0.25, 0.95), UI.GREEN, 9, 1, 0)
+		chip.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		var cl := UI.label("CLAIM F%d" % need, 11, Color.WHITE, 2)
+		chip.add_child(UI.margin(cl, 6, 1, 6, 1))
+		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		cl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		nv.add_child(chip)
+		nv.mouse_filter = Control.MOUSE_FILTER_STOP
+		nv.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		nv.gui_input.connect(func(ev: InputEvent):
+			if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) or (ev is InputEventScreenTouch and ev.pressed):
+				var g := Game.claim_tower_milestone(i)
+				if not g.is_empty():
+					main.show_rewards("TOWER MILESTONE", g)
+					main.replace("tower"))
+	else:
+		var fl := UI.label("F%d" % need, 12, col if stt != "locked" else UI.MUTED, 2)
+		fl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		nv.add_child(fl)
+	if stt == "ready":
+		var tw := med.create_tween().set_loops()
+		tw.tween_property(med, "scale", Vector2(1.08, 1.08), 0.6).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(med, "scale", Vector2.ONE, 0.6).set_trans(Tween.TRANS_SINE)
+		med.pivot_offset = Vector2(35, 28)
+	return nv
