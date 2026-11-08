@@ -146,6 +146,17 @@ func build() -> void:
 			Game.sfx("star_up")
 			main.toast("%s is wearing %s!" % [DB.name_of(_sel).split(" ")[0], DB.SPECIAL_SKINS[_sel]], Color("#ff8fb8"))
 			main.replace("wardrobe", {"hero": _sel}), "" if eq else "GoldButton", Vector2(0, 52)))
+	elif DB.EVENT_SKINS.has(_sel):
+		var live := str(DB.EVENT.get("skin", "")) == _sel
+		var ep := UI.styled_panel(Color(1, 0.35, 0.43, 0.14), Color("#ff5a6e"), 12, 1, 10)
+		var ev := UI.vbox(2)
+		ep.add_child(ev)
+		ev.add_child(UI.label("EVENT EXCLUSIVE", 13, Color("#ff9aa8"), 2))
+		ev.add_child(UI.wrap_label("Earn it in the %s event exchange." % DB.EVENT_SKINS[_sel], 14, Color.WHITE))
+		v.add_child(ep)
+		var gb := UI.button("GO TO EVENT ▶" if live else "EVENT ENDED", func(): main.go("event"), "GoldButton", Vector2(0, 52))
+		gb.disabled = not live
+		v.add_child(gb)
 	else:
 		var tickets := Game.amount("skin_ticket")
 		var tb := UI.button("USE SKIN TICKET  (%d)" % tickets, _buy, "GoldButton", Vector2(0, 52))

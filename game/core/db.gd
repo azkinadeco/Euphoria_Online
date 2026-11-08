@@ -1236,6 +1236,7 @@ const ACHIEVEMENTS := [
 ]
 
 const MAIL := [
+	{"id": "xmas_hyeonxa", "title": "Starfall Christmas: Hyeonxa's Limited Skin!", "body": "The Starfall Christmas event is live until January 1st! Clear the snowbound event stages, collect Event Tokens and exchange 1,800 of them for Hyeonxa's limited skin SCARLET MISTLETOE — with its own battle sprite. Here are some tokens to get you started.", "give": {"festival_token": 200}},
 	{"id": "heroes_nov8", "title": "Four New Heroes & a Beast from the Abyss!", "body": "Gala, Morana, Seraph and Tamo have joined Euphoria — and Octra rides out of the Abyss in the new Arc 10. Tap the new ZOOM button on any hero or foe to view their art full screen. A small welcome gift is attached!", "give": {"gold": 50000, "exp_potion": 5}},
 	{"id": "skins_nov5", "title": "Special Skins Have Arrived!", "body": "Exclusive outfits are now in the WARDROBE: Ning Er, Spimei and Luby. Here is a Skin Ticket on us — pick your favourite!", "give": {"skin_ticket": 1, "gems": 200}},
 	{"id": "nov2026", "title": "10 New Heroes Have Arrived!", "body": "Abadonia, Atalanta, Kali, Zennyo Ryuo, Aqua, Rubby, Schylua, Vexira, Siv and Sven join Euphoria! Meet them at the new rate-up banners. Lulu now runs the Shop (and the Black Market at night).", "give": {"summon_ticket": 2, "gems": 300}},
@@ -1457,6 +1458,20 @@ const SHOP_ZENNYO := [
 		{"id": "ev_gems", "name": "300 Gems", "price": 250, "cur": "festival_token", "give": {"gems": 300}, "limit": 5},
 		{"id": "ev_stone", "name": "Universal Shard x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
 	]
+const SHOP_HYEONXA := [
+		{"id": "ev_skin", "name": "Skin: Scarlet Mistletoe", "price": 1800, "cur": "festival_token", "give": {"skin:hyeonxa": 1}, "limit": 1},
+		{"id": "ev_shard", "name": "Hyeonxa Shard x10", "price": 300, "cur": "festival_token", "give": {"shard:hyeonxa": 10}, "limit": 8},
+		{"id": "ev_ticket", "name": "Summon Ticket", "price": 150, "cur": "festival_token", "give": {"summon_ticket": 1}, "limit": 10},
+		{"id": "ev_chest", "name": "Royal Gear Chest", "price": 500, "cur": "festival_token", "give": {"gear_chest_ssr": 1}, "limit": 2},
+		{"id": "ev_cake", "name": "Sweet Cake x3", "price": 90, "cur": "festival_token", "give": {"sweet_cake": 3}, "limit": 5},
+		{"id": "ev_gems", "name": "300 Gems", "price": 250, "cur": "festival_token", "give": {"gems": 300}, "limit": 5},
+		{"id": "ev_stone", "name": "Universal Shard x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
+	]
+## Event-only special skins: hero -> the event that awards them (not sold in the Wardrobe).
+const EVENT_SKINS := {"hyeonxa": "Starfall Christmas"}
+## Events pinned to a calendar window (day_key range, 00:00 WIB) instead of the 14-day rotation.
+## 20765 = 8 Nov 2026, 20819 = 1 Jan 2027.
+const EVENT_PINS := [{"event": 5, "from": 20765, "to": 20819}]
 const EVENTS := [
 	{"name": "Moonlit Festival", "featured": "lumeira", "bg": "aqua",
 		"desc": "The butterflies of the reef dance under the full moon. Clear festival stages to earn Event Tokens and trade them for Lumeira shards!",
@@ -1518,11 +1533,29 @@ const EVENTS := [
 			{"name": "The Cinder Warden", "level": 52, "pool": ["evy_blood_sage", "gumi_wolf", "slarkoi"], "count": 5, "tokens": 200, "boss": "evy_blood_sage"},
 		],
 		"shop": SHOP_ZENNYO},
+	{"name": "Starfall Christmas", "featured": "hyeonxa", "bg": "ice", "fx": "snow", "color": "#ff5a6e",
+		"art": "res://art/banners_event/banner_hyeonxa_xmas_1.png", "skin": "hyeonxa",
+		"desc": "Hyeonxa traded her hydra robes for red lace and mistletoe. Clear the snowbound stages, earn Event Tokens and claim her limited skin SCARLET MISTLETOE.",
+		"intro": [["hyeonxa", "Snow on the shrine, candles in the windows... and you, Commander, right on time."], ["hyeonxa", "I wore something festive. The hydras disapprove. Ignore them — they're jealous."], ["valeria", "Someone stole the Starfall tree star! Again! Hyeonxa, your snakes swear they didn't eat it."]],
+		"outro": [["hyeonxa", "The star is back on the tree. The hydras are asleep. It's just us now."], ["hyeonxa", "Stand under the mistletoe with me, Commander. ...That's an order from your Matriarch. Merry Christmas."]],
+		"stages": [
+			{"name": "Snowbell Lane", "level": 10, "pool": ["slime", "ex_nymph"], "count": 3, "tokens": 30},
+			{"name": "Candlelit Market", "level": 18, "pool": ["voodoo", "eroghost", "slime"], "count": 4, "tokens": 50},
+			{"name": "Frozen Shrine Steps", "level": 28, "pool": ["lizamorph", "eroghost", "hairly"], "count": 4, "tokens": 80},
+			{"name": "Gift Thief's Hideout", "level": 40, "pool": ["voodoo", "scomantis", "octra"], "count": 5, "tokens": 120},
+			{"name": "The Grinch Hydra", "level": 52, "pool": ["octra", "lizamorph", "hairly"], "count": 5, "tokens": 200, "boss": "octra"},
+		],
+		"shop": SHOP_HYEONXA},
 ]
 static var EVENT: Dictionary = EVENTS[0]
 
+## Negative periods are pinned events (-1 - index into EVENT_PINS); the rest rotate the regular events.
 static func set_event_period(period: int) -> void:
-	EVENT = EVENTS[posmod(period, EVENTS.size())]
+	if period < 0:
+		EVENT = EVENTS[int(EVENT_PINS[-1 - period]["event"])]
+		return
+	var regular: Array = EVENTS.filter(func(e): return not e.has("skin"))
+	EVENT = regular[posmod(period, regular.size())]
 
 static func event_stage(i: int) -> Dictionary:
 	var e: Dictionary = EVENT["stages"][i]
@@ -1627,10 +1660,10 @@ static func costume_price(idx: int) -> int:
 const SPECIAL_PRICE := 1280
 const SPECIAL_SKINS := {
 	"ninger": "Golden Jackpot", "spimei": "Scarlet Overdrive", "luby": "Plush Panther Purr",
-	"morana": "Moonlit Vigil Veil", "tamo": "White Fox Bride",
+	"morana": "Moonlit Vigil Veil", "tamo": "White Fox Bride", "hyeonxa": "Scarlet Mistletoe",
 }
 ## Heroes whose special skin was taken out of the game. Saves that bought one get a Skin Ticket back.
-const WITHDRAWN_SKINS := ["lucidria", "hyeonxa", "kali", "abadonia"]
+const WITHDRAWN_SKINS := ["lucidria", "kali", "abadonia"]
 
 ## Outfit index of a hero's special skin (-1 if none).
 static func special_index(id: String) -> int:
@@ -2628,7 +2661,11 @@ static func cutin(id: String) -> Texture2D:
 	return at
 
 ## Chibi battle sprite. Evolved sprite unlocks at 5★.
-static func sprite(id: String, star: int = 1) -> Texture2D:
+static func sprite(id: String, star: int = 1, skin: int = -1) -> Texture2D:
+	if skin >= 0 and skin == special_index(id):
+		var sp := str(_entry(id).get("special_sprite", ""))
+		if sp != "" and ResourceLoader.exists(sp):
+			return tex(sp)
 	var sprites: Array = _entry(id).get("sprites", [])
 	var base_list: Array = []
 	var evo_list: Array = []

@@ -9,6 +9,7 @@ var _count_l: Label
 
 ## Per-mail flavour: [tag, tag colour, sender, icon, date]
 const META := {
+	"xmas_hyeonxa": ["EVENT", "#ff5a6e", "Euphoria Team", "icon_live_ops", "Nov 8"],
 	"heroes_nov8": ["UPDATE", "#5fb8ff", "Euphoria Team", "icon_gacha", "Nov 8"],
 	"skins_nov5": ["EVENT", "#ff6fae", "Lulu • Wardrobe", "item_skin_ticket", "Nov 5"],
 	"nov2026": ["UPDATE", "#5fb8ff", "Euphoria Team", "icon_gacha", "Nov 1"],

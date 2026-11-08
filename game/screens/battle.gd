@@ -213,7 +213,7 @@ func _place_units() -> void:
 		var uid: int = u["uid"]
 		var v: UnitView = _views.get(uid)
 		if v == null:
-			var tex := DB.boss_sprite(u["id"]) if big else DB.sprite(u["id"], int(u["star"]))
+			var tex := DB.boss_sprite(u["id"]) if big else DB.sprite(u["id"], int(u["star"]), int(Game.hero(u["id"]).get("skin", -1)) if u["side"] == 0 else -1)
 			v = UnitView.new(u["id"], u["side"] == 1, tex, sz, u["order"], true, big)
 			board.add_child(v)
 			if not u.get("elite", false):

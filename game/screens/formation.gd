@@ -8,6 +8,7 @@ var _roster: HBoxContainer
 var _info: HBoxContainer
 var _power: Label
 var _sel := ""
+var _tips: VBoxContainer
 var _enemies: Array = []
 var _scout: Dictionary = {}
 var _mode := ""
@@ -190,36 +191,141 @@ func build() -> void:
 			if is_instance_valid(_board):
 				_board.highlights = {})
 
+const ALL_TIPS := [
+	"Units attack the enemy standing in their SAME ROW.",
+	"Column 1 (front) takes the first hits — put Tanks there.",
+	"Order #1 acts first. Sides alternate: Ally#1 → Enemy#1 → Ally#2 ...",
+	"Healers late in the order heal after damage lands.",
+	"Elements: Fire > Wind > Earth > Water > Fire, Light ⇄ Dark (+30%).",
+	"Win in ≤3 rounds with no losses for 3★.",
+	"Synergy: 2/3/4/5 heroes of the same element → +5/10/15/20% ATK & HP for them.",
+	"Passives: Tanks guard, Warriors rage, Assassins crit, Mages pierce DEF, Rangers snipe, Healers mend.",
+	"Bosses ENRAGE below 50% HP (+30% ATK) — burst them down fast!",
+	"TAUNT pulls single-target attacks onto the tank. SILENCE turns a skill into a weak attack. HEAL ▼ blocks healing — bring Furu/Aqua to Cleanse.",
+]
+const FRONT_ROLES := ["TANK", "PALADIN", "KNIGHT"]
+const SUPPORT_ROLES := ["HEALER", "BUFFER"]
+
+## Free formation (no enemies): a live TEAM CHECK of the current lineup instead of a wall of text.
 func _build_tips(area: Control) -> void:
 	var p := UI.panel()
 	p.anchor_left = 0.53
 	p.anchor_right = 1.0
 	p.anchor_bottom = 1.0
 	area.add_child(p)
-	var v := UI.vbox(6)
-	p.add_child(UI.scroll(v))
-	v.add_child(UI.label("TACTICS GUIDE", 20, UI.GOLD, 3))
-	for t in [
-		"• Units attack the enemy standing in their SAME ROW.",
-		"• Column 1 (front) takes the first hits — put Tanks there.",
-		"• Order #1 acts first. Sides alternate: Ally#1 → Enemy#1 → Ally#2 ...",
-		"• Healers late in the order heal after damage lands.",
-		"• Elements: Fire > Wind > Earth > Water > Fire, Light ⇄ Dark (+30%).",
-		"• Win in ≤3 rounds with no losses for 3★.",
-		"• Synergy: 2/3/4/5 heroes of the same element → +5/10/15/20% ATK & HP for them.",
-		"• Passives: Tanks guard, Warriors rage, Assassins crit, Mages pierce DEF, Rangers snipe, Healers mend.",
-		"• Bosses ENRAGE below 50% HP (+30% ATK) — burst them down fast!",
-		"• TAUNT pulls single-target attacks onto the tank. SILENCE turns a skill into a weak attack. HEAL ▼ blocks healing — bring Furu/Aqua to Cleanse.",
-	]:
-		v.add_child(UI.wrap_label(t, 14, UI.TEXT))
-	var counts := {}
-	for e in Game.formation():
-		var el: String = DB.ELEMENT_GROUP.get(DB.element_of(e[0]), "LIGHT")
-		counts[el] = int(counts.get(el, 0)) + 1
-	var parts: Array = []
-	for k in counts.keys():
-		parts.append("%s ×%d" % [k, counts[k]])
-	v.add_child(UI.label("Team elements: " + (", ".join(parts) if not parts.is_empty() else "-"), 14, Color("#9fd0ff")))
+	_tips = UI.vbox(7)
+	p.add_child(UI.scroll(_tips))
+	_render_tips()
+
+func _render_tips() -> void:
+	if not is_instance_valid(_tips):
+		return
+	for c in _tips.get_children():
+		c.queue_free()
+	var team: Array = Game.formation()
+	var ids: Array = team.map(func(e): return e[0])
+	var head := UI.hbox(8)
+	_tips.add_child(head)
+	var tt := UI.label("TEAM CHECK", 20, UI.GOLD, 3)
+	tt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(tt)
+	head.add_child(UI.button("ALL TIPS", _show_all_tips, "", Vector2(104, 32)))
+	# --- checklist
+	var front := team.filter(func(e): return int(e[1]) == 0)
+	var tanks_front := front.filter(func(e): return DB.role_of(e[0]) in FRONT_ROLES).size()
+	var any_tank := ids.filter(func(i): return DB.role_of(i) in FRONT_ROLES).size() > 0
+	var healers := ids.filter(func(i): return DB.role_of(i) in SUPPORT_ROLES).size()
+	var rows := {}
+	for e in team:
+		rows[int(e[2])] = true
+	var syn := DB.synergy(ids)
+	var checks: Array = []
+	checks.append([team.size() >= DB.MAX_DEPLOY, "Full team  %d / %d" % [team.size(), DB.MAX_DEPLOY], "Empty slots are free power — tap a hero below to deploy."])
+	if tanks_front > 0:
+		checks.append([true, "Tank on the front line", "Column 1 takes the first hits."])
+	elif any_tank:
+		checks.append([false, "Tank is not in front", "Move your Tank / Paladin / Knight to column 1 (the right-most column)."])
+	else:
+		checks.append([false, "No tank", "Column 1 takes the first hits — a Tank, Paladin or Knight soaks them."])
+	checks.append([healers > 0, "Healer / support ×%d" % healers if healers > 0 else "No healer", "Healers act late in the order and mend after damage lands." if healers > 0 else "A Healer keeps long fights (bosses, Tower) alive."])
+	checks.append([rows.size() >= 3, "Rows covered  %d / 3" % rows.size(), "Units hit the enemy in their SAME row — cover every row."])
+	var syn_txt := "No synergy yet"
+	var syn_tip := "2+ heroes of the same element get +5% ATK & HP (up to +20% at 5)."
+	if int(syn["count"]) >= 2:
+		syn_txt = "%s synergy ×%d  +%d%%" % [syn["element"], int(syn["count"]), int(float(syn["bonus"]) * 100)]
+		syn_tip = ("1 more %s hero → +%d%%" % [syn["element"], int(float(syn["bonus"]) * 100) + 5]) if int(syn["count"]) < 5 else "Maximum synergy!"
+	checks.append([int(syn["count"]) >= 2, syn_txt, syn_tip])
+	var ok_n: int = checks.filter(func(c): return c[0]).size()
+	var grade: String = ["NEEDS WORK", "NEEDS WORK", "NEEDS WORK", "DECENT", "STRONG", "PERFECT"][ok_n]
+	var gc: Color = [Color("#ff8a9a"), Color("#ff8a9a"), Color("#ff8a9a"), UI.GOLD, UI.GREEN, Color("#7fffd4")][ok_n]
+	var gp := UI.styled_panel(Color(gc, 0.12), Color(gc, 0.6), 10, 1, 6)
+	var gh := UI.hbox(8)
+	gp.add_child(gh)
+	var gl := UI.label("%d / %d checks" % [ok_n, checks.size()], 14, UI.TEXT, 2)
+	gl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	gh.add_child(gl)
+	gh.add_child(UI.label(grade, 16, gc, 3))
+	_tips.add_child(gp)
+	# problems first, so they are visible without scrolling
+	var ordered: Array = checks.filter(func(c): return not c[0]) + checks.filter(func(c): return c[0])
+	for c in ordered:
+		var ok: bool = c[0]
+		var col: Color = UI.GREEN if ok else Color("#ffb04a")
+		var row := UI.hbox(10)
+		_tips.add_child(row)
+		var badge := UI.styled_panel(Color(col, 0.18), col, 13, 1, 0)
+		badge.custom_minimum_size = Vector2(26, 26)
+		badge.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		var bl := UI.label("✓" if ok else "!", 15, Color.WHITE, 2)
+		bl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		bl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		badge.add_child(bl)
+		row.add_child(badge)
+		var tv := UI.vbox(0)
+		tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(tv)
+		tv.add_child(UI.label(str(c[1]), 15, Color.WHITE if ok else col.lightened(0.2), 2))
+		tv.add_child(UI.wrap_label(str(c[2]), 12, UI.MUTED))
+	# --- element wheel as icons
+	var sep := ColorRect.new()
+	sep.color = Color(1, 1, 1, 0.1)
+	sep.custom_minimum_size = Vector2(0, 1)
+	_tips.add_child(sep)
+	_tips.add_child(UI.label("ELEMENT ADVANTAGE  (+30% damage)", 13, UI.GOLD, 2))
+	var wheel := UI.hbox(4)
+	_tips.add_child(wheel)
+	var chain := ["FIRE", "WIND", "EARTH", "WATER", "FIRE"]
+	for i in chain.size():
+		var el: String = chain[i]
+		var ic := UI.tex_rect(DB.icon(DB.ELEMENT_ICON[el]), Vector2(26, 26))
+		ic.tooltip_text = el.capitalize()
+		ic.mouse_filter = Control.MOUSE_FILTER_PASS
+		wheel.add_child(ic)
+		if i < chain.size() - 1:
+			wheel.add_child(UI.label("›", 18, UI.MUTED, 2))
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(14, 0)
+	wheel.add_child(gap)
+	wheel.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON["LIGHT"]), Vector2(26, 26)))
+	wheel.add_child(UI.label("⇄", 16, UI.MUTED, 2))
+	wheel.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON["DARK"]), Vector2(26, 26)))
+
+func _show_all_tips() -> void:
+	var v: VBoxContainer = main.popup("TACTICS GUIDE", 720)
+	var lv := UI.vbox(8)
+	var sc := UI.scroll(lv)
+	sc.custom_minimum_size = Vector2(0, 380)
+	v.add_child(sc)
+	for i in ALL_TIPS.size():
+		var row := UI.hbox(10)
+		lv.add_child(row)
+		var n := UI.label("%d" % (i + 1), 15, UI.GOLD, 3)
+		n.custom_minimum_size = Vector2(24, 0)
+		n.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		row.add_child(n)
+		var t := UI.wrap_label(str(ALL_TIPS[i]), 15, UI.TEXT)
+		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(t)
 
 func refresh() -> void:
 	super.refresh()
@@ -234,6 +340,7 @@ func _render() -> void:
 	if float(syn["bonus"]) > 0.0:
 		_power.text += "   •   SYNERGY %s x%d +%d%%" % [syn["element"], syn["count"], int(float(syn["bonus"]) * 100)]
 	_render_info()
+	_render_tips()
 	_render_roster()
 	_layout_units()
 	_layout_enemies()
@@ -317,7 +424,7 @@ func _render_roster() -> void:
 		_roster.add_child(card)
 
 func _make_drag(hid: String, from_board: bool) -> Dictionary:
-	var prev := UI.tex_rect(DB.sprite(hid, int(Game.hero(hid)["star"])), Vector2(110, 110))
+	var prev := UI.tex_rect(DB.sprite(hid, int(Game.hero(hid)["star"]), int(Game.hero(hid).get("skin", 0))), Vector2(110, 110))
 	prev.size = Vector2(110, 110)
 	prev.modulate.a = 0.85
 	var holder := Control.new()
@@ -434,7 +541,7 @@ func _layout_units() -> void:
 	for i in order_list:
 		var e: Array = f[i]
 		var hid: String = e[0]
-		var uv := UnitView.new(hid, false, DB.sprite(hid, int(Game.hero(hid)["star"])), sz, i, false)
+		var uv := UnitView.new(hid, false, DB.sprite(hid, int(Game.hero(hid)["star"]), int(Game.hero(hid).get("skin", 0))), sz, i, false)
 		var foot := _board.cell_foot(Vector2i(e[1], e[2]))
 		uv.position = foot - Vector2(sz.x * 0.5, sz.y)
 		_board.add_child(uv)

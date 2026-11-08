@@ -92,7 +92,7 @@ func _spawn() -> void:
 		return
 	for id in ids:
 		var sz := Vector2(150, 150)
-		var uv := UnitView.new(id, false, DB.sprite(id, int(Game.hero(id).get("star", 1))), sz, -1, false)
+		var uv := UnitView.new(id, false, DB.sprite(id, int(Game.hero(id).get("star", 1)), int(Game.hero(id).get("skin", 0))), sz, -1, false)
 		uv.mouse_filter = Control.MOUSE_FILTER_STOP
 		uv.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		uv.position = _rand_point(sz)

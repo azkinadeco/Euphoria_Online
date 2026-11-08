@@ -845,6 +845,38 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - Slider audio menampilkan persen dan punya tombol MUTE/ON; ada tombol tes suara partner.
 - Toggle berupa baris dengan judul, penjelasan, dan status ON/OFF. UI size dan frame rate berupa tombol segmen.
 
+## 2cy. Update batch 97 — Heart Catch
+
+- Layar mulai minigame bukan popup lagi. Kiri: art hero besar (bergerak hidup) dengan glow pink, hati melayang, dan plat nama (elemen, nama, Bond). Kanan: kartu berisi judul, sisa reward play sebagai 3 ikon hati, 3 kotak item (Heart +1, Gold Star +5, Bomb -3 & stun), penjelasan combo, jalur hadiah (skor berapa pun → Gold, 40+ → Flower Bouquet, 70+ → 30 Gems) yang menyala sesuai skor terbaik, dan info Bond EXP.
+- Pilih hero langsung dari deretan wajah di kartu (diurutkan dari Bond tertinggi), tanpa popup.
+- Kalau reward play habis, tombolnya jadi PLAY FOR FUN dengan keterangan.
+- Popup hasil: skor besar, lencana NEW BEST, sisa poin ke hadiah berikutnya, dan tombol MENU untuk kembali ke layar mulai (ganti dari EXIT).
+
+## 2cz. Update batch 98 — Formation: Team Check
+
+- Panel "Tactics Guide" yang dulu berupa tembok teks diganti TEAM CHECK yang membaca tim saat ini dan ikut berubah setiap kali tim diubah: tim penuh (x/5), Tank di kolom depan, Healer/support, 3 baris terisi, dan sinergi elemen (beserta "1 hero lagi → +x%").
+- Cek yang gagal muncul paling atas (ikon ! oranye) dengan saran perbaikan; ada nilai keseluruhan NEEDS WORK / DECENT / STRONG / PERFECT.
+- Roda elemen ditampilkan sebagai ikon (Fire › Wind › Earth › Water › Fire, Light ⇄ Dark).
+- Tombol ALL TIPS membuka popup Tactics Guide lengkap (10 tips bernomor).
+
+## 2da. Update batch 99 — Event Starfall Christmas + skin Hyeonxa "Scarlet Mistletoe"
+
+- Aset dari `Special Event/Hyeonxa Skin Christmash` diimpor dengan `tools/import_xmas.py`: outfit spesial (`hyeonxa_char_special.png`), ekspresi alternatif (hydra merah), sprite battle chibi (`hyeonxa_sprite_special.png`) dan banner (`art/banners_event/banner_hyeonxa_xmas_1.png`, dipakai sebagai art di layar Event).
+- Event baru "Starfall Christmas" (bg ice, efek salju, warna merah): 5 stage (Snowbell Lane → The Grinch Hydra, boss Octra), prolog dan epilog Hyeonxa + Valeria, exchange: **Skin Scarlet Mistletoe 1.800 token (limit 1)**, Hyeonxa Shard, Summon Ticket, Royal Gear Chest, Sweet Cake, Gems, Universal Shard.
+- Event ini **dipin di kalender**: aktif 8 Nov 2026 – 1 Jan 2027 (`DB.EVENT_PINS`, pakai day_key WIB). Selama itu rotasi 14 hari ditahan; setelahnya rotasi 5 event lama jalan lagi (event berskin tidak ikut rotasi). Progress event tidak di-reset tiap 14 hari selama pin.
+- Skin ini **eksklusif event** (`DB.EVENT_SKINS`): tidak bisa dibeli di Wardrobe (ditampilkan kartu "EVENT EXCLUSIVE" + tombol GO TO EVENT), label kunci di Hero Detail "EVENT • STARFALL CHRISTMAS" dengan tombol EVENT ▶.
+- Hadiah baru `skin:<hero>` di sistem reward (nama, ikon wajah skin). Bisa diklaim sebelum hero direkrut; baru bisa dipakai setelah hero dimiliki.
+- Sprite battle mengikuti skin: `DB.sprite(id, star, skin)` memakai `special_sprite` kalau skin spesial dipakai (battle, formation, garden, Heart Catch).
+- Hyeonxa dikeluarkan dari daftar skin yang ditarik (`WITHDRAWN_SKINS`).
+- Mail "Starfall Christmas" dengan 200 Event Token.
+- **Layar Event baru**: kartu judul (tag LIMITED EVENT, timer, progres stage dan bintang), art dengan glow warna event, kartu "LIMITED SKIN" di kiri bawah (bar token menuju 1.800, tombol CLAIM / WEAR NOW / status OWNED), tab STAGES (kartu bernomor, tag BOSS), EXCHANGE (skin disorot paling atas, harga merah kalau token kurang) dan STORY (putar ulang prolog; epilog terbuka setelah boss dikalahkan). Setelah klaim skin langsung dipakai dan viewer layar penuh terbuka.
+
+## 2db. Update batch 100 — Missions
+
+- Dua kolom. Kiri: 4 kartu tab (Daily, Weekly, Achievements, Commander Road) dengan ikon, bar progres (selesai/total) dan pil emas berdenyut berisi jumlah hadiah siap diklaim.
+- Di bawahnya kartu ringkasan tab aktif: penjelasan, hitung mundur reset (harian 00:00 UTC+7 / mingguan), total hadiah yang siap diklaim, tombol CLAIM ALL (abu-abu kalau tidak ada yang bisa diklaim).
+- Kanan: daftar misi dikelompokkan dengan judul bagian READY TO CLAIM / IN PROGRESS / COMPLETED beserta jumlahnya.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

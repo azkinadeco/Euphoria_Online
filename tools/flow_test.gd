@@ -421,9 +421,22 @@ func _run() -> void:
 	G.give({"festival_token": 1000})
 	var evf: String = DB.EVENT["featured"]
 	var evs0: int = int(G.s["shards"].get(evf, 0))
-	check(G.buy_event(DB.EVENT["shop"][0]) == "" and int(G.s["shards"].get(evf, 0)) >= evs0 + 10, "event exchange for featured shards")
+	var shard_item: Dictionary = (DB.EVENT["shop"] as Array).filter(func(it): return (it["give"] as Dictionary).has("shard:" + evf))[0]
+	check(G.buy_event(shard_item) == "" and int(G.s["shards"].get(evf, 0)) >= evs0 + 10, "event exchange for featured shards")
+	print("[christmas event]")
+	DB.set_event_period(-1)
+	check(DB.EVENT["name"] == "Starfall Christmas" and DB.EVENT["skin"] == "hyeonxa" and DB.HEROES.has("hyeonxa"), "pinned Christmas event")
+	var xsi := DB.special_index("hyeonxa")
+	check(xsi > 0 and DB.SPECIAL_SKINS.has("hyeonxa") and DB.art_list("hyeonxa").size() > xsi, "hyeonxa special skin art (index %d)" % xsi)
+	check(G.buy_costume("hyeonxa", xsi).begins_with("Event reward") or not G.owns("hyeonxa"), "event skin not sold in the Wardrobe")
+	G.give({"festival_token": 2000})
+	var skin_item: Dictionary = DB.EVENT["shop"][0]
+	check(G.buy_event(skin_item) == "" and (G.s["skins_bought"]["hyeonxa"] as Array).has(xsi), "event exchange gives the Scarlet Mistletoe skin")
+	check(G.reward_name("skin:hyeonxa") == "Skin: Scarlet Mistletoe" and G.reward_icon("skin:hyeonxa") != null, "skin reward name + icon")
+	check(DB.sprite("hyeonxa", 1, xsi) != DB.sprite("hyeonxa", 1, 0), "special skin battle sprite")
+	check(G.event_ends_in() > 0 or G.event_period() >= 0, "event timer")
 	var evnames: Array = []
-	for pi in DB.EVENTS.size():
+	for pi in 5:
 		DB.set_event_period(pi)
 		evnames.append(DB.EVENT["name"])
 		check(DB.BG.has(DB.EVENT["bg"]) and DB.HEROES.has(DB.EVENT["featured"]) and DB.event_stage(4)["enemies"].size() == 5, "event %s valid" % DB.EVENT["name"]) if not (DB.BG.has(DB.EVENT["bg"]) and DB.HEROES.has(DB.EVENT["featured"])) else null

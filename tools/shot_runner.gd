@@ -68,7 +68,10 @@ func _next() -> void:
 		var parts := v.substr(5).split("|")
 		var g = root.get_node("Game")
 		if parts.size() > 1:
-			g.call(parts[0], int(parts[1]) if parts[1].is_valid_int() else parts[1])
+			var arg: Variant = int(parts[1]) if parts[1].is_valid_int() else parts[1]
+			if parts[1].begins_with("{"):
+				arg = JSON.parse_string(parts[1])
+			g.call(parts[0], arg)
 		else:
 			g.call(parts[0])
 	elif v.begins_with("gset:"):

@@ -995,7 +995,8 @@ func _render_outfits() -> void:
 			t.modulate = Color(0.15, 0.15, 0.2)
 			cap.text = "LOCKED • " + Game.skin_lock_label(id, i)
 			if i == DB.special_index(id):
-				var wb := UI.button("WARDROBE ▶", func(): main.go("wardrobe", {"hero": id}), "GoldButton", Vector2(0, 30))
+				var is_ev := DB.EVENT_SKINS.has(id) and str(DB.EVENT.get("skin", "")) == id
+				var wb := UI.button("EVENT ▶" if is_ev else "WARDROBE ▶", func(): main.go("event" if is_ev else "wardrobe", {"hero": id}), "GoldButton", Vector2(0, 30))
 				wb.add_theme_font_size_override("font_size", 12)
 				wb.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 				wb.offset_left = -52

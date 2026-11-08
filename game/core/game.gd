@@ -93,7 +93,7 @@ func new_state() -> Dictionary:
 		"preset_idx": 0,
 		"garden": ["shina", "furu", "fidelia", "rumi", "lucidria"],
 		"expeditions": {},
-		"event": {"period": -1, "cleared": {}, "bought": {}},
+		"event": {"period": -9999, "cleared": {}, "bought": {}},
 		"tactics": {"eq": "", "lv": {}},
 		"kitchen": {"meal": "", "left": 0, "basket_day": -1, "cooked": 0},
 		"room": {"day": -1, "visits": 0, "rested": [], "hero": "", "loc": "gameroom"},
@@ -433,6 +433,14 @@ func give(rewards: Dictionary) -> void:
 		elif k.begins_with("shard:"):
 			var hid: String = k.substr(6)
 			s["shards"][hid] = int(s["shards"].get(hid, 0)) + n
+		elif k.begins_with("skin:"):
+			# special skin (event reward); usable once the hero is recruited
+			var sid: String = k.substr(5)
+			var si := DB.special_index(sid)
+			var have: Array = s["skins_bought"].get(sid, [])
+			if si > 0 and not have.has(si):
+				have.append(si)
+				s["skins_bought"][sid] = have
 		elif k.begins_with("rune:"):
 			var rp: PackedStringArray = str(k).split(":")
 			for i in n:
@@ -463,6 +471,8 @@ func reward_text(rewards: Dictionary) -> String:
 	return ", ".join(parts)
 
 func reward_name(k: String) -> String:
+	if k.begins_with("skin:"):
+		return "Skin: %s" % str(DB.SPECIAL_SKINS.get(k.substr(5), "Special"))
 	match k:
 		"gold": return "Gold"
 		"gems": return "Gems"
@@ -496,6 +506,8 @@ func reward_icon(k: String) -> Texture2D:
 		"friend_point": return DB.icon("icon_heart")
 	if k.begins_with("shard:"):
 		return DB.face(k.substr(6))
+	if k.begins_with("skin:"):
+		return DB.face(k.substr(5), DB.special_index(k.substr(5)))
 	if k.begins_with("gear:"):
 		var gs: String = k.split(":")[1]
 		return DB.icon(DB.GEAR[gs]["icon"] if DB.GEAR.has(gs) else "icon_equipment")
@@ -805,7 +817,7 @@ func skin_unlocked(id: String, i: int) -> bool:
 
 func skin_lock_label(id: String, i: int) -> String:
 	if i == DB.special_index(id):
-		return "SPECIAL • WARDROBE"
+		return ("EVENT • " + str(DB.EVENT_SKINS[id]).to_upper()) if DB.EVENT_SKINS.has(id) else "SPECIAL • WARDROBE"
 	var ms := skin_milestones(id)
 	return str(ms[clampi(skin_requirement(id, i), 0, ms.size() - 1)]["label"])
 
@@ -1841,11 +1853,17 @@ func claim_login() -> Dictionary:
 
 # =================================================================== event
 
+## Pinned (calendar) events return -1 - pin index; otherwise the 14-day rotation period.
 func event_period() -> int:
-	return day_key() / DB.EVENT_DAYS
+	var d := day_key()
+	for i in DB.EVENT_PINS.size():
+		if d >= int(DB.EVENT_PINS[i]["from"]) and d < int(DB.EVENT_PINS[i]["to"]):
+			return -1 - i
+	return d / DB.EVENT_DAYS
 
 func event_ends_in() -> int:
-	var end_day: int = (event_period() + 1) * DB.EVENT_DAYS
+	var p := event_period()
+	var end_day: int = int(DB.EVENT_PINS[-1 - p]["to"]) if p < 0 else (p + 1) * DB.EVENT_DAYS
 	return end_day * 86400 - 7 * 3600 - now()
 
 func event_stars(i: int) -> int:
@@ -2408,6 +2426,8 @@ func buy_costume(id: String, idx: int) -> String:
 	if not owns(id):
 		return "Recruit this hero first."
 	if idx == DB.special_index(id):
+		if DB.EVENT_SKINS.has(id):
+			return "Event reward: earn it in %s." % DB.EVENT_SKINS[id]
 		if not spend("skin_ticket", 1) and not spend("gems", DB.SPECIAL_PRICE):
 			return "Need a Special Skin Ticket or %d Gems." % DB.SPECIAL_PRICE
 	else:

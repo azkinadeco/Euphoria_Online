@@ -1,5 +1,37 @@
 [
  {
+  "id": "n2026-11-08xm",
+  "date": "2026-11-08",
+  "tag": "EVENT",
+  "title": "Starfall Christmas: Hyeonxa's Limited Skin",
+  "bg": "ice",
+  "body": "Snow has reached the shrine! The Starfall Christmas event runs until January 1st. Clear five snowbound stages, from Snowbell Lane to the Grinch Hydra, collect Event Tokens and exchange 1,800 of them for Hyeonxa's limited skin SCARLET MISTLETOE, complete with a new battle sprite and +10% ATK & HP while worn. The Event screen has also been redone: a limited-skin card that tracks your tokens, stage cards with BOSS tags, and a STORY tab to replay the prologue and epilogue."
+ },
+ {
+  "id": "n2026-11-08zz",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Missions",
+  "bg": "lobby",
+  "body": "Missions now has tab cards on the left showing how many missions you've finished, with a gold pill when rewards are waiting. The summary card counts down to the next reset, totals every reward ready to claim and holds CLAIM ALL. The list is grouped into Ready to Claim, In Progress and Completed."
+ },
+ {
+  "id": "n2026-11-08z",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "Formation: Team Check",
+  "bg": "battle",
+  "body": "The Formation screen now checks your lineup live: full team, a tank on the front line, a healer, every row covered and element synergy. Problems show first with a tip on how to fix them, plus a grade from NEEDS WORK to PERFECT. The element wheel is shown as icons, and the full Tactics Guide is one tap away under ALL TIPS."
+ },
+ {
+  "id": "n2026-11-08y",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Heart Catch",
+  "bg": "forest",
+  "body": "Heart Catch has a new start screen: your hero stands front and center while a card shows the three falling items, the reward track (any score, 40+ and 70+) with your best score, and your daily reward plays as hearts. Pick who to play as from the face strip without leaving the screen, and after a run you'll see NEW BEST and how many points you need for the next reward."
+ },
+ {
   "id": "n2026-11-08x",
   "date": "2026-11-08",
   "tag": "UPDATE",

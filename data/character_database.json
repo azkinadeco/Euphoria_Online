@@ -285,12 +285,19 @@
       "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo3_a.png",
       "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_evo3_b.png"
      ]
+    },
+    "special": {
+     "base": "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_special.png",
+     "interactions": [
+      "res://art/characters/heroes/hyeonxa/char/hyeonxa_char_special_alt1.png"
+     ]
     }
    },
    "sprites": [
     "res://art/characters/heroes/hyeonxa/sprite/hyeonxa_sprite_stage1.png",
     "res://art/characters/heroes/hyeonxa/sprite/hyeonxa_sprite_evo1.png"
-   ]
+   ],
+   "special_sprite": "res://art/characters/heroes/hyeonxa/sprite/hyeonxa_sprite_special.png"
   },
   "lucidria": {
    "id": "lucidria",
