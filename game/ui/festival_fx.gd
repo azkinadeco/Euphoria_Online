@@ -64,10 +64,7 @@ func _draw() -> void:
 		var c := Color(color.r, color.g, color.b, p["a"])
 		match kind:
 			"lantern":
-				var fl := 0.8 + 0.2 * sin(p["ph"] * 3.0)
-				draw_circle(pos, r * 4.0, Color(c.r, c.g, c.b, 0.10 * fl))
-				draw_rect(Rect2(pos - Vector2(r, r * 1.3), Vector2(r * 2, r * 2.6)), Color(c.r, c.g, c.b, c.a * fl))
-				draw_rect(Rect2(pos - Vector2(r * 0.5, r * 0.8), Vector2(r, r * 1.6)), Color(1, 0.95, 0.75, 0.7 * fl))
+				_lantern(pos, r * 1.15, c, p["ph"])
 			"snow":
 				draw_circle(pos, r * 0.7, c)
 				draw_circle(pos, r * 1.5, Color(c.r, c.g, c.b, c.a * 0.15))
@@ -85,3 +82,40 @@ func _draw() -> void:
 				var tw := 0.5 + 0.5 * sin(p["ph"] * 2.3)
 				draw_circle(pos, r * 2.2, Color(c.r, c.g, c.b, 0.12 * tw))
 				draw_circle(pos, r * 0.5, Color(c.r, c.g, c.b, c.a * tw))
+
+
+## Paper sky lantern: soft halo, barrel-shaped glowing body with ribs, bright flame core and a tassel.
+## Drawn additively, so shading comes from brightness (no dark fills). A plain white color gets a warm tint.
+func _lantern(pos: Vector2, r: float, c: Color, ph: float) -> void:
+	var base := c
+	if c.s < 0.15:
+		base = Color(1.0, 0.62, 0.3, c.a)
+	var fl := 0.82 + 0.18 * sin(ph * 3.0) * sin(ph * 1.3 + 1.0)
+	draw_set_transform(pos, sin(ph * 0.8) * 0.12, Vector2.ONE)
+	draw_circle(Vector2.ZERO, r * 4.2, Color(base.r, base.g, base.b, 0.05 * fl))
+	draw_circle(Vector2.ZERO, r * 2.4, Color(base.r, base.g, base.b, 0.09 * fl))
+	# barrel body: wider in the middle, flat top and bottom
+	var body := PackedVector2Array()
+	var w := r * 1.05
+	var h := r * 1.45
+	for k in 13:
+		var t := k / 12.0
+		body.append(Vector2(-w * (0.72 + 0.28 * sin(t * PI)), lerpf(-h, h, t)))
+	for k in 13:
+		var t := 1.0 - k / 12.0
+		body.append(Vector2(w * (0.72 + 0.28 * sin(t * PI)), lerpf(-h, h, t)))
+	draw_colored_polygon(body, Color(base.r * 0.75, base.g * 0.55, base.b * 0.45, 0.55 * base.a * fl))
+	# ribs
+	for x in [-0.45, 0.0, 0.45]:
+		draw_line(Vector2(w * x * 0.8, -h + 1), Vector2(w * x, h - 1), Color(base.r, base.g * 0.8, base.b * 0.6, 0.22 * fl), 1.0, true)
+	# glowing core: brighter towards the flame near the bottom
+	draw_set_transform(pos, sin(ph * 0.8) * 0.12, Vector2(1.0, 1.35))
+	draw_circle(Vector2(0, h * 0.12), r * 0.75, Color(base.r, base.g, base.b, 0.45 * fl))
+	draw_circle(Vector2(0, h * 0.2), r * 0.42, Color(1, 0.92, 0.65, 0.75 * fl))
+	draw_set_transform(pos, sin(ph * 0.8) * 0.12, Vector2.ONE)
+	draw_circle(Vector2(0, h * 0.42), r * 0.22, Color(1, 1, 0.9, 0.9 * fl))
+	# rims + tassel
+	draw_line(Vector2(-w * 0.72, -h), Vector2(w * 0.72, -h), Color(1, 0.8, 0.5, 0.5 * fl), 1.6, true)
+	draw_line(Vector2(-w * 0.72, h), Vector2(w * 0.72, h), Color(1, 0.8, 0.5, 0.5 * fl), 1.6, true)
+	draw_line(Vector2(0, h), Vector2(sin(ph * 2.0) * 1.5, h + r * 0.9), Color(base.r, base.g, base.b, 0.35 * fl), 1.0, true)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

@@ -1,5 +1,29 @@
 [
  {
+  "id": "n2026-11-09g",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Cleaner Stage Briefing",
+  "bg": "world",
+  "body": "The stage panel on the Story map is tidier: a BOSS/STAGE tag with the enemy level, a power bar comparing your team with the enemy (SAFE, EVEN or TOO STRONG), enemy portraits with their element, and the clear rewards and first-clear bonus side by side, so everything fits above the BATTLE button."
+ },
+ {
+  "id": "n2026-11-09f",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Story Star Chests",
+  "bg": "aqua",
+  "body": "Every chapter now has three Star Chests. Collect 6, 12 and 18 stars in a chapter to open them for Gold, EXP Potions, Skill Books, Gems and a Summon Ticket. Hard Mode chapters have their own chests with bigger rewards, including a Gear Chest. Find the chest bar at the bottom of the Story map; the Story button shows a badge when a chest is waiting. Also: festival sky lanterns in the lobby are now real glowing paper lanterns."
+ },
+ {
+  "id": "n2026-11-09e",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "A New Look for the Story Map",
+  "bg": "forest",
+  "body": "Stages on the Story map are now glowing medallions showing the enemy that waits there. A golden road lights up as you clear stages, a bouncing NEXT flag marks the stage to play next, boss stages wear a red BOSS badge, and locked stages show a padlock."
+ },
+ {
   "id": "n2026-11-09d",
   "date": "2026-11-09",
   "tag": "FIX",

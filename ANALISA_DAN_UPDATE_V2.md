@@ -954,6 +954,25 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 ## 2di. Update batch 106 — Kartu judul chapter
 - `story.gd _chapter_card()`: saat pertama kali membuka chapter baru (stage pertama = progres saat ini, bukan Hard), pita gelap membuka dari tengah, garis emas melebar, lalu "✦ CHAPTER N ✦", nama chapter besar meluncur masuk, dan nama Arc. Memudar setelah ~2,5 dtk. Tidak menghalangi klik (mouse IGNORE). Disimpan sekali per chapter di `story.seen` (`card<N>`).
 
+## 2dj. Update batch 107 — Peta Story: medali stage & jalan emas
+- `story.gd`: node stage sekarang medali (`class StageNode`): bayangan, cahaya lembut, bingkai logam berlapis, dan cincin putus-putus berputar untuk stage terpilih/berikutnya. Di dalamnya potret musuh pertama (`class CircleTex`, tekstur dipotong lingkaran; varian mirror tetap pakai shader corrupt), dengan gradasi gelap supaya nomor stage terbaca (`class StageShade`). Stage terkunci: gelap + gembok.
+- Bintang di pil gelap di bawah medali, chip merah "BOSS" di stage boss, dan flag "NEXT" yang memantul pada stage berikutnya (di bawah node bila node ada di bagian atas peta, supaya tidak menabrak tombol Story Archive/Interludes).
+- Jalur antar stage sekarang melengkung (bezier). Yang sudah dilewati berupa jalan emas bercahaya dengan percikan mengalir, yang belum berupa titik-titik jejak.
+- Node boss digeser sedikit ke bawah (`NODE_POS[5].y` 0,30 → 0,35).
+
+## 2dk. Update batch 108 — Story Star Chests + lentera festival
+- **Star Chests** per chapter (Normal dan Hard terpisah). `DB.STAR_CHEST_NEED = [6, 12, 18]` bintang dari 18 per chapter. `DB.star_chest_reward(ch, tier, hard)`: 6★ = gold (3000+1500×ch) + 2 EXP Potion; 12★ = 40 gems + Skill Book; 18★ = 80 gems + Summon Ticket. Hard: gold, potion, dan gems ×2; 18★ Hard = 160 gems + Gear Chest + Summon Ticket.
+- `game.gd`: `chapter_stars`, `star_chest_state` (locked/ready/claimed), `star_chests_ready`, dan `claim_star_chest`. Klaim disimpan di `story.chests` dengan key `n<ch>_<tier>` / `h<ch>_<tier>`. `feature_badge("story")` menghitung peti yang siap diklaim.
+- `story.gd _star_bar()`: bar di kanan bawah peta, berisi "★ x / 18", jalur emas, dan 3 peti (perunggu/perak/emas) di posisi ambangnya. Peti yang siap bergoyang, dan tap untuk klaim → `show_rewards` → render ulang. Tooltip menampilkan isi hadiah.
+- `festival_fx.gd _lantern()`: lentera langit festival tadinya dua kotak polos (tampak seperti kotak putih di lobby). Sekarang digambar sebagai lentera kertas: badan tong dengan rusuk, inti api bercahaya, bingkai atas/bawah, rumbai, dan ayunan pelan. Warna putih otomatis diberi tint hangat.
+- `flow_test.gd`: blok `[story star chests]`.
+
+## 2dl. Update batch 109 — Panel briefing stage yang ringkas
+- `story.gd _render_detail()`: chip "STAGE x-y" / "BOSS x-y" (merah) + Lv musuh + bintang di satu baris (aturan 3★ dipindah ke tooltip bintang). Nama stage tanpa awalan "BOSS •".
+- Power: bar biru (tim kamu) vs merah (musuh) dengan label SAFE (≥120%), EVEN, atau TOO STRONG. Peringatan "too weak" pindah ke tooltip bar.
+- Potret musuh 48 px dengan ikon elemen. Hadiah per clear dan bonus 1ST CLEAR dalam satu kotak, masing-masing satu baris. Sekarang semua muat di atas tombol BATTLE tanpa scroll; Field Effect masih di bawahnya.
+- Parameter `hard` di layar story diterima juga sebagai string "true".
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

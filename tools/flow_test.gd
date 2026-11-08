@@ -1343,6 +1343,26 @@ func _run() -> void:
 	check(G.tower_milestone_state(0) == "claimed" and G.claim_tower_milestone(0).is_empty(), "milestone claims once")
 	G.s["tower"]["floor"] = tf0
 
+	print("[story star chests]")
+	var sc_clear: Dictionary = (G.s["story"]["cleared"] as Dictionary).duplicate()
+	var sc_chests: Array = (G.s["story"].get("chests", []) as Array).duplicate()
+	var sch := 3
+	for k in DB.STAGES_PER_CHAPTER:
+		G.s["story"]["cleared"].erase(DB.stage_id(sch * DB.STAGES_PER_CHAPTER + k))
+	check(G.chapter_stars(sch, false) == 0 and G.star_chest_state(sch, 0, false) == "locked", "star chest locked at 0 stars")
+	for k in 3:
+		G.s["story"]["cleared"][DB.stage_id(sch * DB.STAGES_PER_CHAPTER + k)] = 3
+	check(G.chapter_stars(sch, false) == 9, "chapter stars counted")
+	check(G.star_chest_state(sch, 0, false) == "ready" and G.star_chest_state(sch, 1, false) == "locked", "6-star chest ready, 12-star locked")
+	check(G.star_chests_ready() >= 1, "star chest badge counts")
+	var scg0: int = G.amount("gold")
+	var scr: Dictionary = G.claim_star_chest(sch, 0, false)
+	check(not scr.is_empty() and G.amount("gold") == scg0 + int(scr["gold"]), "claim 6-star chest")
+	check(G.star_chest_state(sch, 0, false) == "claimed" and G.claim_star_chest(sch, 0, false).is_empty(), "star chest claims once")
+	check(G.claim_star_chest(sch, 0, true).is_empty(), "hard chest separate and still locked")
+	G.s["story"]["cleared"] = sc_clear
+	G.s["story"]["chests"] = sc_chests
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

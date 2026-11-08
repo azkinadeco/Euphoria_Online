@@ -2957,6 +2957,16 @@ static func hard_stage(index: int) -> Dictionary:
 	return st
 
 ## Tower of Trials milestone chests: claimable once the floor is cleared.
+## Star Chests: collect stars in one chapter (6 stages x 3 = 18) to open three chests.
+const STAR_CHEST_NEED := [6, 12, 18]
+
+static func star_chest_reward(ch: int, tier: int, hard: bool) -> Dictionary:
+	var m := 2 if hard else 1
+	match tier:
+		0: return {"gold": (3000 + 1500 * ch) * m, "exp_potion": 2 * m}
+		1: return {"gems": 40 * m, "skill_book": 1}
+		_: return {"gems": 80 * m, "summon_ticket": 1} if not hard else {"gems": 160, "gear_chest": 1, "summon_ticket": 1}
+
 const TOWER_MILESTONES := [
 	{"floor": 10, "give": {"gems": 200, "summon_ticket": 1}},
 	{"floor": 20, "give": {"gems": 300, "gear_chest": 1, "gold": 50000}},

@@ -1,7 +1,7 @@
 extends Screen
 ## Campaign map: chapters, stage nodes, stage briefing, sweep & story dialogue.
 
-const NODE_POS := [Vector2(0.09, 0.72), Vector2(0.25, 0.38), Vector2(0.42, 0.66), Vector2(0.58, 0.32), Vector2(0.74, 0.62), Vector2(0.9, 0.3)]
+const NODE_POS := [Vector2(0.09, 0.72), Vector2(0.25, 0.38), Vector2(0.42, 0.66), Vector2(0.58, 0.32), Vector2(0.74, 0.62), Vector2(0.9, 0.35)]
 
 var _chapter := 0
 var _sel := 0
@@ -23,7 +23,7 @@ func _prog() -> int:
 	return Game.hard_progress() if _hard else Game.story_progress()
 
 func build() -> void:
-	_hard = bool(params.get("hard", false))
+	_hard = str(params.get("hard", false)).to_lower() == "true"
 	_sel = int(params.get("select", _prog()))
 	_sel = clampi(_sel, 0, _prog())
 	_chapter = _sel / DB.STAGES_PER_CHAPTER
@@ -243,6 +243,7 @@ func _render_map() -> void:
 	ib.offset_top = 58
 	ib.offset_bottom = 98
 	_map_layer.add_child(ib)
+	_map_layer.add_child(_star_bar())
 	_map_layer.draw.connect(_draw_path)
 	_map_layer.resized.connect(_place_nodes)
 	_place_nodes.call_deferred()
@@ -254,21 +255,123 @@ func _process(delta: float) -> void:
 	if is_instance_valid(_map_layer):
 		_map_layer.queue_redraw()
 
+## Star Chests bar along the bottom of the map: stars collected in this chapter + three chests to open.
+func _star_bar() -> Control:
+	var got := Game.chapter_stars(_chapter, _hard)
+	var total := DB.STAGES_PER_CHAPTER * 3
+	var bar := UI.styled_panel(Color(0.04, 0.02, 0.09, 0.82), Color(UI.GOLD, 0.45), 14, 1, 0)
+	bar.set_meta("keep", true)
+	bar.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	bar.offset_left = -470
+	bar.offset_right = -14
+	bar.offset_top = -74
+	bar.offset_bottom = -12
+	var h := UI.hbox(10)
+	bar.add_child(UI.margin(h, 12, 2, 10, 2))
+	var lv := UI.vbox(0)
+	lv.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_child(lv)
+	lv.add_child(UI.label("STAR CHESTS", 11, Color("#d4b8ff"), 2))
+	lv.add_child(UI.label("★ %d / %d" % [got, total], 17, UI.GOLD, 3))
+	# track with the three chests sitting on their thresholds
+	var track := Control.new()
+	track.custom_minimum_size = Vector2(300, 50)
+	track.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	track.mouse_filter = Control.MOUSE_FILTER_PASS
+	h.add_child(track)
+	track.draw.connect(func():
+		var y := 25.0
+		var w := track.size.x - 26.0
+		track.draw_line(Vector2(4, y), Vector2(4 + w, y), Color(0, 0, 0, 0.6), 8.0, true)
+		track.draw_line(Vector2(4, y), Vector2(4 + w, y), Color(1, 1, 1, 0.12), 6.0, true)
+		var f := clampf(float(got) / total, 0.0, 1.0)
+		if f > 0.0:
+			track.draw_line(Vector2(4, y), Vector2(4 + w * f, y), Color(1, 0.78, 0.3), 6.0, true)
+			track.draw_line(Vector2(4, y - 1.5), Vector2(4 + w * f, y - 1.5), Color(1, 0.95, 0.7, 0.8), 1.5, true))
+	for t in DB.STAR_CHEST_NEED.size():
+		track.add_child(_star_chest(t, got))
+	track.resized.connect(func():
+		for c in track.get_children():
+			c.position = Vector2(4 + (track.size.x - 26.0) * float(c.get_meta("need")) / total - 23, -2))
+	return bar
+
+func _star_chest(t: int, got: int) -> Control:
+	var need: int = DB.STAR_CHEST_NEED[t]
+	var stt := Game.star_chest_state(_chapter, t, _hard)
+	var give := DB.star_chest_reward(_chapter, t, _hard)
+	var tint: Color = [Color("#e0a070"), Color("#cfe0ff"), Color("#ffd479")][t]
+	var box := Control.new()
+	box.size = Vector2(46, 50)
+	box.pivot_offset = Vector2(23, 30)
+	box.tooltip_text = "%d★ chest:\n%s" % [need, Game.reward_text(give)]
+	box.mouse_filter = Control.MOUSE_FILTER_PASS
+	box.set_meta("need", need)
+	box.draw.connect(func():
+		if stt == "ready":
+			box.draw_circle(Vector2(23, 25), 24, Color(UI.GOLD, 0.22))
+		box.draw_circle(Vector2(23, 25), 18, Color(0.08, 0.05, 0.14, 0.95))
+		box.draw_arc(Vector2(23, 25), 18, 0, TAU, 32, tint if stt != "locked" else Color(0.45, 0.42, 0.55), 2.0, true))
+	var ic := UI.tex_rect(DB.icon("item_royal_chest"), Vector2(30, 30))
+	ic.position = Vector2(8, 10)
+	ic.size = Vector2(30, 30)
+	ic.modulate = tint if stt == "ready" else (Color(0.5, 0.48, 0.6) if stt == "locked" else Color(1, 1, 1, 0.4))
+	ic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(ic)
+	var nl := UI.label("✓" if stt == "claimed" else "%d★" % need, 11, UI.GREEN if stt == "claimed" else (UI.GOLD if stt == "ready" else UI.MUTED), 3)
+	nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	nl.position = Vector2(0, 40)
+	nl.size = Vector2(46, 16)
+	nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(nl)
+	if stt == "ready":
+		var tw := box.create_tween().set_loops()
+		tw.tween_property(box, "rotation", 0.12, 0.12)
+		tw.tween_property(box, "rotation", -0.12, 0.12)
+		tw.tween_property(box, "rotation", 0.0, 0.12)
+		tw.tween_interval(0.9)
+		box.mouse_filter = Control.MOUSE_FILTER_STOP
+		box.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		box.gui_input.connect(func(ev: InputEvent):
+			if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) or (ev is InputEventScreenTouch and ev.pressed):
+				var g := Game.claim_star_chest(_chapter, t, _hard)
+				if not g.is_empty():
+					Game.sfx("ui_click")
+					main.show_rewards("%d★ CHEST OPENED" % need, g, func(): _render()))
+	return box
+
+## Points of the curved road between stage i and i+1 (quadratic bezier, bowing alternately).
+func _curve(i: int, sz: Vector2) -> PackedVector2Array:
+	var a: Vector2 = NODE_POS[i] * sz
+	var b: Vector2 = NODE_POS[i + 1] * sz
+	var n := (b - a).orthogonal().normalized()
+	var c := (a + b) * 0.5 + n * (b - a).length() * (0.22 if i % 2 == 0 else -0.22)
+	var pts := PackedVector2Array()
+	for k in 25:
+		var t := k / 24.0
+		pts.append(a.lerp(c, t).lerp(c.lerp(b, t), t))
+	return pts
+
 func _draw_path() -> void:
 	var s := _map_layer.size
 	for i in NODE_POS.size() - 1:
-		var a: Vector2 = NODE_POS[i] * s
-		var b: Vector2 = NODE_POS[i + 1] * s
 		var idx := _chapter * DB.STAGES_PER_CHAPTER + i
-		var col := Color(1, 0.85, 0.45, 0.9) if _stars(idx) > 0 else Color(1, 1, 1, 0.35)
-		_map_layer.draw_line(a, b, Color(0, 0, 0, 0.6), 9.0, true)
-		_map_layer.draw_dashed_line(a, b, col, 4.0, 12.0, true)
-		if _stars(idx) > 0:
-			for k in 3:
-				var f := fmod(_flow_t * 0.5 + k / 3.0, 1.0)
-				var p := a.lerp(b, f)
-				_map_layer.draw_circle(p, 7.0, Color(1, 0.9, 0.5, 0.25))
-				_map_layer.draw_circle(p, 3.5, Color(1, 0.95, 0.7, 0.95))
+		var done := _stars(idx) > 0
+		var pts := _curve(i, s)
+		# road bed + edge
+		_map_layer.draw_polyline(pts, Color(0, 0, 0, 0.5), 16.0, true)
+		_map_layer.draw_polyline(pts, Color(0.18, 0.12, 0.26, 0.85) if not done else Color(0.35, 0.24, 0.08, 0.9), 10.0, true)
+		if done:
+			_map_layer.draw_polyline(pts, Color(1, 0.8, 0.35, 0.35), 7.0, true)
+			_map_layer.draw_polyline(pts, Color(1, 0.92, 0.6, 0.95), 2.5, true)
+			for k in 4:
+				var f := fmod(_flow_t * 0.45 + k / 4.0, 1.0)
+				var p: Vector2 = pts[int(f * (pts.size() - 1))]
+				_map_layer.draw_circle(p, 8.0, Color(1, 0.88, 0.45, 0.22))
+				_map_layer.draw_circle(p, 3.5, Color(1, 0.97, 0.75, 0.95))
+		else:
+			# footstep dots on a road not walked yet
+			for k in range(2, pts.size() - 2, 3):
+				_map_layer.draw_circle(pts[k], 2.2, Color(1, 1, 1, 0.38))
 
 func _place_nodes() -> void:
 	if not is_instance_valid(_map_layer):
@@ -289,45 +392,72 @@ func _place_nodes() -> void:
 		b.size = Vector2(d, d + 26)
 		b.position = NODE_POS[i] * s - Vector2(d * 0.5, d * 0.5)
 		b.disabled = idx > prog
-		var ring := Panel.new()
 		var stars := _stars(idx)
 		var col: Color = Color("#ff5c6c") if boss else (UI.GOLD if stars > 0 else Color("#8fb4ff"))
-		if idx > prog:
-			col = Color(0.4, 0.4, 0.45)
-		ring.add_theme_stylebox_override("panel", UI.style(Color(0.05, 0.03, 0.1, 0.9), col, int(d / 2), 4 if idx == _sel else 2, 0, 6))
-		ring.size = Vector2(d, d)
-		ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		b.add_child(ring)
-		if boss:
-			var bf := UI.tex_rect(DB.face(st["enemies"][0]["id"]), Vector2(d - 12, d - 12), true)
-			bf.position = Vector2(6, 6)
-			bf.size = Vector2(d - 12, d - 12)
-			if idx > prog:
-				bf.modulate = Color(0.3, 0.3, 0.3)
-			if st["enemies"][0].get("mirror", false):
-				UI.corrupt(bf, str(st["enemies"][0].get("variant", "")))
-			ring.add_child(bf)
-		var l := UI.label(st["id"], 22 if not boss else 18, Color.WHITE, 6)
+		var state := "locked" if idx > prog else ("current" if idx == prog and stars == 0 else ("cleared" if stars > 0 else "open"))
+		var med := StageNode.new()
+		med.d = d
+		med.col = col if state != "locked" else Color(0.42, 0.42, 0.48)
+		med.state = state
+		med.selected = idx == _sel
+		med.size = Vector2(d, d)
+		med.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(med)
+		# enemy portrait inside the medallion (boss = the boss, normal stage = its first enemy)
+		var e0: Dictionary = st["enemies"][0]
+		var face := CircleTex.new()
+		face.tex = DB.face(e0["id"])
+		face.inset = 7.0
+		face.size = Vector2(d, d)
+		face.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		face.modulate = Color(0.22, 0.22, 0.26) if state == "locked" else (Color.WHITE if boss else Color(0.62, 0.6, 0.7))
+		if e0.get("mirror", false) and state != "locked":
+			UI.corrupt(face, str(e0.get("variant", "")))
+		med.add_child(face)
+		var shade := StageShade.new()
+		shade.d = d
+		shade.locked = state == "locked"
+		shade.size = Vector2(d, d)
+		shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		med.add_child(shade)
+		var l := UI.label(st["id"], (22 if not boss else 18) if state != "locked" else 13, Color.WHITE if state != "locked" else Color(0.75, 0.75, 0.8), 6)
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		l.size = Vector2(d, d)
-		ring.add_child(l)
-		var sl := UI.label("★".repeat(stars) + "☆".repeat(3 - stars) if idx <= prog else "LOCKED", 16 if idx <= prog else 11, UI.GOLD if idx <= prog else UI.MUTED, 4)
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER if state != "locked" else VERTICAL_ALIGNMENT_BOTTOM
+		l.size = Vector2(d, d - (0 if state != "locked" else 12))
+		l.position = Vector2(0, 8 if boss and state != "locked" else 0)
+		med.add_child(l)
+		if boss:
+			var bc := UI.styled_panel(Color("#7a0f1e"), Color("#ffb0b8"), 6, 1, 0)
+			bc.add_child(UI.margin(UI.label("BOSS", 11, Color.WHITE, 3), 7, 0, 7, 0))
+			bc.position = Vector2(d * 0.5 - 24, -9)
+			bc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			med.add_child(bc)
+		# stars on a little dark pill
+		var pill := UI.styled_panel(Color(0, 0, 0, 0.62), Color(col, 0.5) if state != "locked" else Color(1, 1, 1, 0.12), 9, 1, 0)
+		pill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var sl := UI.label("★".repeat(stars) + "☆".repeat(3 - stars) if state != "locked" else "LOCKED", 14 if state != "locked" else 10, UI.GOLD if state != "locked" else UI.MUTED, 3)
 		sl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		sl.position = Vector2(0, d - 2)
-		sl.size = Vector2(d, 22)
-		b.add_child(sl)
+		pill.add_child(UI.margin(sl, 6, 0, 6, 0))
+		pill.position = Vector2(d * 0.5 - 34, d - 6)
+		pill.custom_minimum_size = Vector2(68, 0)
+		b.add_child(pill)
 		var sel_idx: int = idx
 		b.pressed.connect(func():
 			Game.sfx("ui_click")
 			_sel = sel_idx
 			_render())
 		_map_layer.add_child(b)
-		if idx == prog and stars == 0:
-			ring.pivot_offset = Vector2(d, d) * 0.5
-			var tw := ring.create_tween().set_loops()
-			tw.tween_property(ring, "scale", Vector2(1.1, 1.1), 0.6).set_trans(Tween.TRANS_SINE)
-			tw.tween_property(ring, "scale", Vector2.ONE, 0.6).set_trans(Tween.TRANS_SINE)
+		if state == "current":
+			# bouncing "NEXT" flag above the stage to play next
+			var flag := UI.styled_panel(UI.GOLD, Color.WHITE, 8, 1, 0)
+			var up: bool = NODE_POS[i].y > 0.45 # top-right nodes sit under the map buttons: flag goes below
+			flag.add_child(UI.margin(UI.label("▼ NEXT" if up else "▲ NEXT", 12, Color("#3a1d05"), 0), 8, 1, 8, 1))
+			flag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			flag.position = Vector2(d * 0.5 - 34, (-34 if not boss else -44) if up else d + 22)
+			b.add_child(flag)
+			var tw := flag.create_tween().set_loops()
+			tw.tween_property(flag, "position:y", flag.position.y - 7, 0.5).set_trans(Tween.TRANS_SINE)
+			tw.tween_property(flag, "position:y", flag.position.y, 0.5).set_trans(Tween.TRANS_SINE)
 	_map_layer.queue_redraw()
 	var k := 0
 	for c in _map_layer.get_children():
@@ -425,54 +555,103 @@ func _render_detail() -> void:
 		c.queue_free()
 	var st := _st(_sel)
 	var stars := _stars(_sel)
-	_detail.add_child(UI.label("STAGE %s" % st["id"], 15, Color("#9fb4ff"), 3))
-	_detail.add_child(UI.label(st["name"], 24, Color.WHITE, 5))
-	var sr := UI.hbox(8)
-	sr.add_child(UI.stars(stars, 22, 3))
-	sr.add_child(UI.label("Lv.%d enemies" % st["level"], 15, UI.MUTED))
-	_detail.add_child(sr)
+	var boss: bool = st["boss"]
+	# title: stage id + level on one line, name below, stars with the 3-star rule as tooltip
+	var th := UI.hbox(8)
+	_detail.add_child(th)
+	var idc := UI.styled_panel(Color("#7a0f1e") if boss else Color(0.12, 0.16, 0.35), Color("#ffb0b8") if boss else Color("#9fb4ff"), 7, 1, 0)
+	idc.add_child(UI.margin(UI.label(("BOSS  " if boss else "STAGE ") + str(st["id"]), 13, Color.WHITE, 2), 8, 1, 8, 1))
+	th.add_child(idc)
+	th.add_child(UI.label("Lv.%d" % st["level"], 14, UI.MUTED, 1))
+	th.add_child(UI.spacer())
+	var stl := UI.stars(stars, 20, 3)
+	stl.tooltip_text = "3★: win • no hero lost • within 3 rounds"
+	stl.mouse_filter = Control.MOUSE_FILTER_PASS
+	th.add_child(stl)
+	var nm := UI.label(str(st["name"]).trim_prefix("BOSS • "), 22, Color.WHITE, 5)
+	nm.clip_text = true
+	_detail.add_child(nm)
+	# power: your team vs the enemy on one bar
 	var ep := Game.enemy_power(st["enemies"])
 	var tp := Game.team_power()
-	var pw := UI.label("Enemy Power %s   •   Your Team %s" % [Game.fmt(ep), Game.fmt(tp)], 15, UI.GREEN if tp >= ep else Color("#ff8a9a"), 3)
-	_detail.add_child(pw)
-	if tp < ep:
-		_detail.add_child(UI.label("⚠ Your team may be too weak!", 14, Color("#ff8a9a")))
+	var ok := tp >= ep
+	var ph := UI.hbox(6)
+	_detail.add_child(ph)
+	ph.add_child(UI.label("⚔ " + Game.fmt(tp), 14, Color("#6fd3ff"), 2))
+	ph.add_child(UI.spacer())
+	ph.add_child(UI.label(("SAFE" if tp >= ep * 1.2 else "EVEN") if ok else "TOO STRONG", 12, UI.GREEN if ok else Color("#ff8a9a"), 2))
+	ph.add_child(UI.spacer())
+	ph.add_child(UI.label(Game.fmt(ep) + " ☠", 14, Color("#ff8a9a"), 2))
+	var cmp := UI.bar(tp, tp + ep, "", 7)
+	cmp.add_theme_stylebox_override("fill", UI.style(Color("#6fd3ff"), Color.TRANSPARENT, 3, 0, 0))
+	cmp.add_theme_stylebox_override("background", UI.style(Color("#c8475a"), Color.TRANSPARENT, 3, 0, 0))
+	cmp.tooltip_text = "Blue = your team power, red = enemy power" + ("" if ok else "\nYour team may be too weak!")
+	cmp.mouse_filter = Control.MOUSE_FILTER_PASS
+	_detail.add_child(cmp)
 
 	var sc := Game.scout(st["enemies"])
-	_detail.add_child(UI.label("ENEMIES" + ("  •  mostly %s" % sc["main"] if not sc.is_empty() else ""), 15, UI.GOLD, 3))
+	_detail.add_child(UI.label("ENEMIES" + ("  •  mostly %s" % sc["main"] if not sc.is_empty() else ""), 14, UI.GOLD, 3))
 	var ef := HFlowContainer.new()
-	ef.add_theme_constant_override("h_separation", 6)
+	ef.add_theme_constant_override("h_separation", 5)
+	ef.add_theme_constant_override("v_separation", 5)
 	for e in st["enemies"]:
 		var p := UI.styled_panel(Color.BLACK, Color("#ff5c6c") if e.get("boss", false) else Color("#6b4a7e"), 8, 2, 1)
-		var ft := UI.tex_rect(DB.face(e["id"]), Vector2(58, 58), true)
+		var fc := Control.new()
+		fc.custom_minimum_size = Vector2(48, 48)
+		fc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		p.add_child(fc)
+		var ft := UI.tex_rect(DB.face(e["id"]), Vector2(48, 48), true)
+		ft.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		if e.get("mirror", false):
 			UI.corrupt(ft, str(e.get("variant", "")))
-		p.add_child(ft)
+		fc.add_child(ft)
+		var el := UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(e["id"]), "elem_light")), Vector2(16, 16))
+		el.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+		el.offset_left = -16
+		el.offset_top = -16
+		fc.add_child(el)
 		p.tooltip_text = (str(e.get("variant", "")).capitalize() + " " if e.get("mirror", false) else "") + DB.name_of(e["id"])
+		p.mouse_filter = Control.MOUSE_FILTER_PASS
 		ef.add_child(p)
 	_detail.add_child(ef)
 	if not sc.is_empty():
 		var sh := UI.hbox(6)
-		sh.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON[sc["counter"]]), Vector2(24, 24)))
+		sh.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON[sc["counter"]]), Vector2(22, 22)))
 		var owned := (sc["heroes"] as Array).size()
-		var note := "%d in your team" % int(sc["deployed"]) if owned > 0 else "none owned yet"
-		sh.add_child(UI.label("Bring %s: +30%% ATK  •  %s" % [sc["counter"], note], 14, Color("#9fe3c0"), 2))
+		var note := "%d in team" % int(sc["deployed"]) if owned > 0 else "none owned"
+		sh.add_child(UI.label("Bring %s: +30%% ATK  •  %s" % [sc["counter"], note], 13, Color("#9fe3c0"), 2))
 		_detail.add_child(sh)
 
-	_detail.add_child(UI.label("REWARDS", 15, UI.GOLD, 3))
+	# rewards: per clear + first clear bonus in one framed block
+	var rp := UI.styled_panel(Color(0, 0, 0, 0.35), Color(UI.GOLD, 0.3), 10, 1, 6)
+	_detail.add_child(rp)
+	var rv := UI.vbox(4)
+	rp.add_child(rv)
 	var rw := {"gold": st["gold"], "hero_exp": st["hero_exp"]}
 	if _hard:
 		rw["shard:" + str(st["shard_id"])] = st["shards"]
-	_detail.add_child(UI.reward_row(rw, 30, 14))
+	var r1 := UI.hbox(8)
+	rv.add_child(r1)
+	var rl := UI.label("REWARDS", 12, UI.GOLD, 2)
+	rl.custom_minimum_size.x = 74
+	r1.add_child(rl)
+	var rr1 := UI.reward_row(rw, 26, 13)
+	rr1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	r1.add_child(rr1)
 	if _hard:
-		_detail.add_child(UI.label("Guaranteed %s shards every clear!" % DB.name_of(st["shard_id"]), 13, Color("#ff9ad5"), 2))
+		rv.add_child(UI.label("Guaranteed %s shards every clear!" % DB.name_of(st["shard_id"]), 12, Color("#ff9ad5"), 2))
 	if stars == 0:
 		var fr := {"gems": st["first_gems"]}
 		for k in st["first_items"].keys():
 			fr[k] = st["first_items"][k]
-		_detail.add_child(UI.label("First clear bonus:", 13, UI.MUTED))
-		_detail.add_child(UI.reward_row(fr, 30, 14))
-	_detail.add_child(UI.label("3★: win • no hero lost • within 3 rounds", 13, UI.MUTED))
+		var r2 := UI.hbox(8)
+		rv.add_child(r2)
+		var fl := UI.label("1ST CLEAR", 12, Color("#9fe3c0"), 2)
+		fl.custom_minimum_size.x = 74
+		r2.add_child(fl)
+		var rr2 := UI.reward_row(fr, 26, 13)
+		rr2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		r2.add_child(rr2)
 	var md: Dictionary = st.get("mod", {})
 	if not md.is_empty():
 		var mp := UI.styled_panel(Color(0.05, 0.1, 0.2, 0.9), Color("#5fb8ff"), 8, 1, 8)
@@ -535,3 +714,74 @@ func _battle() -> void:
 		main.dialogue(lines, go_prep, str(chd["bg"]))
 	else:
 		go_prep.call()
+
+
+## Stage medallion: soft glow, layered metal rim, rotating ring on the stage to play next.
+class StageNode extends Control:
+	var d := 74.0
+	var col := Color.WHITE
+	var state := "open"
+	var selected := false
+	var _t := 0.0
+
+	func _process(delta: float) -> void:
+		if state == "current" or selected:
+			_t += delta
+			queue_redraw()
+
+	func _draw() -> void:
+		var c := Vector2(d, d) * 0.5
+		var r := d * 0.5
+		draw_circle(c + Vector2(0, 6), r, Color(0, 0, 0, 0.45))
+		if state != "locked":
+			var pulse := 0.5 + 0.5 * sin(_t * 3.0)
+			draw_circle(c, r + 9 + pulse * 3.0, Color(col, 0.10 + 0.08 * pulse))
+			draw_circle(c, r + 4, Color(col, 0.22))
+		draw_circle(c, r, col.darkened(0.55))
+		draw_circle(c, r - 2, col)
+		draw_circle(c, r - 4.5, col.darkened(0.35))
+		draw_circle(c, r - 6.5, Color(0.05, 0.03, 0.1))
+		draw_arc(c, r - 1.2, PI * 1.1, PI * 1.9, 24, Color(1, 1, 1, 0.55), 1.5, true)
+		if state == "current" or selected:
+			var a0 := _t * 1.4
+			var rc := r + 8.0
+			for k in 10:
+				var s0 := a0 + k * TAU / 10.0
+				draw_arc(c, rc, s0, s0 + 0.32, 6, Color(col.lightened(0.3), 0.95), 3.0, true)
+
+## Texture drawn inside a circle (the enemy portrait).
+class CircleTex extends Control:
+	var tex: Texture2D
+	var inset := 7.0
+
+	func _draw() -> void:
+		if tex == null:
+			return
+		var c := size * 0.5
+		var r := size.x * 0.5 - inset
+		var pts := PackedVector2Array()
+		var uvs := PackedVector2Array()
+		for k in 40:
+			var a := k * TAU / 40.0
+			var v := Vector2(cos(a), sin(a))
+			pts.append(c + v * r)
+			uvs.append(Vector2(0.5, 0.45) + v * 0.5)
+		draw_polygon(pts, PackedColorArray([Color.WHITE]), uvs, tex)
+
+## Dark bottom gradient over the portrait (so the stage id reads) + a padlock on locked stages.
+class StageShade extends Control:
+	var d := 74.0
+	var locked := false
+
+	func _draw() -> void:
+		var c := Vector2(d, d) * 0.5
+		var r := d * 0.5 - 7.0
+		for k in 6:
+			draw_arc(c, r - 2 - k * 2.0, PI * 0.15, PI * 0.85, 20, Color(0, 0, 0, 0.16), 4.0, true)
+		draw_circle(c, r, Color(0, 0, 0, 0.18))
+		if locked:
+			var lc := Color(0.82, 0.82, 0.88, 0.9)
+			var o := c + Vector2(0, -6)
+			draw_arc(o + Vector2(0, -6), 7.0, PI, TAU, 16, lc, 3.0, true)
+			draw_rect(Rect2(o + Vector2(-10, -6), Vector2(20, 15)), lc)
+			draw_circle(o + Vector2(0, 1), 2.5, Color(0.1, 0.08, 0.14))

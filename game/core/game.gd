@@ -1597,6 +1597,45 @@ func pay_battle(params: Dictionary) -> String:
 	return ""
 
 ## "claimed" | "ready" | "locked" for TOWER_MILESTONES[i].
+# =================================================================== story star chests
+
+func chapter_stars(ch: int, hard: bool) -> int:
+	var n := 0
+	for i in DB.STAGES_PER_CHAPTER:
+		var idx := ch * DB.STAGES_PER_CHAPTER + i
+		if idx < DB.stage_count():
+			n += hard_stars(idx) if hard else stage_stars(idx)
+	return n
+
+func _star_chest_key(ch: int, tier: int, hard: bool) -> String:
+	return "%s%d_%d" % ["h" if hard else "n", ch, tier]
+
+func star_chest_state(ch: int, tier: int, hard: bool) -> String:
+	if (s["story"].get("chests", []) as Array).has(_star_chest_key(ch, tier, hard)):
+		return "claimed"
+	return "ready" if chapter_stars(ch, hard) >= int(DB.STAR_CHEST_NEED[tier]) else "locked"
+
+func star_chests_ready() -> int:
+	var n := 0
+	for ch in DB.CHAPTERS.size():
+		for hard in [false, true]:
+			if chapter_stars(ch, hard) == 0:
+				continue
+			for t in DB.STAR_CHEST_NEED.size():
+				if star_chest_state(ch, t, hard) == "ready":
+					n += 1
+	return n
+
+func claim_star_chest(ch: int, tier: int, hard: bool) -> Dictionary:
+	if star_chest_state(ch, tier, hard) != "ready":
+		return {}
+	if not s["story"].has("chests"):
+		s["story"]["chests"] = []
+	s["story"]["chests"].append(_star_chest_key(ch, tier, hard))
+	var g := DB.star_chest_reward(ch, tier, hard)
+	give(g)
+	return g
+
 func tower_milestone_state(i: int) -> String:
 	if (s["tower"]["claimed"] as Array).has(i):
 		return "claimed"
@@ -2668,6 +2707,7 @@ func feature_badge(route: String) -> int:
 		"hunt": n = hunt_tries() + hunt_shop_ready()
 		"bestiary": n = bestiary_ready()
 		"tower": n = tower_milestones_ready()
+		"story": n = star_chests_ready()
 		"wardrobe": n = amount("skin_ticket")
 		"rift":
 			for i in DB.RIFT_MILESTONES.size():
