@@ -2813,6 +2813,19 @@ func codex_claimable() -> int:
 				n += 1
 	return n
 
+## Claim one codex step for one hero; returns the rewards (empty if not ready).
+func claim_codex(id: String, step: String) -> Dictionary:
+	if not codex_reached(id, step) or codex_claimed(id, step):
+		return {}
+	for st in DB.CODEX_STEPS:
+		if st["id"] == step:
+			s["codex"]["%s:%s" % [id, step]] = true
+			var r: Dictionary = st["give"].duplicate()
+			give(r)
+			save_game()
+			return r
+	return {}
+
 func claim_codex_all() -> Dictionary:
 	var total := {}
 	for id in s["heroes"].keys():

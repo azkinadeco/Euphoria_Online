@@ -150,6 +150,19 @@ body {
 	text-align: center;
 }
 
+#status-retry {
+	display: block;
+	margin: 0.8rem auto 0.2rem;
+	padding: 0.6rem 1.6rem;
+	border: 1px solid #ffd479;
+	border-radius: 2rem;
+	background: linear-gradient(#ffcf6b, #e09a2c);
+	color: #3a1d05;
+	font-weight: bold;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
 #status-notice {
 	background-color: rgba(91, 57, 67, 0.95);
 	border-radius: 0.5rem;
@@ -191,6 +204,23 @@ body {
 		</div>
 
 		<script>
+// Tombol "Coba Lagi": muat ulang halaman (unduhan yang sudah selesai diambil lagi dari cache browser).
+function addRetryButton() {
+	const errDiv = document.getElementById('status-notice');
+	if (!errDiv || document.getElementById('status-retry')) {
+		return;
+	}
+	const b = document.createElement('button');
+	b.id = 'status-retry';
+	b.textContent = '↻ Coba Lagi';
+	b.onclick = function () {
+		const u = new URL(window.location.href);
+		u.searchParams.set('r', Date.now().toString(36));
+		window.location.replace(u.toString());
+	};
+	errDiv.appendChild(b);
+}
+
 // Tangkap semua console.error agar tampil di layar iPhone
 const origConsoleError = console.error;
 console.error = function() {
@@ -245,6 +275,7 @@ window.addEventListener('unhandledrejection', function(event) {
 		errDiv.style.display = 'block';
 		const reason = event.reason ? (event.reason.stack || event.reason.message || event.reason) : 'Promise Rejection';
 		errDiv.innerHTML = '<strong>⚠️ Web Engine Rejection:</strong><br><pre style="font-size:10px; max-height:100px; overflow:auto;">' + reason + '</pre>';
+		addRetryButton();
 	}
 	if (statusOverlay) {
 		statusOverlay.style.visibility = 'visible';
@@ -315,6 +346,7 @@ const engine = new Engine(GODOT_CONFIG);
 			setStatusNotice('An unknown error occurred.');
 		}
 		setStatusMode('notice');
+		addRetryButton();
 		initializing = false;
 	}
 
@@ -351,6 +383,17 @@ const engine = new Engine(GODOT_CONFIG);
 		nextTip();
 		const tipTimer = setInterval(nextTip, 4000);
 		const pctEl = document.getElementById('status-pct');
+		let reconnecting = false;
+		if (window.__euphoriaNet) {
+			window.__euphoriaNet.onRetry = function (hidden, fails) {
+				reconnecting = true;
+				statusText.textContent = hidden ? 'Unduhan dijeda (tab di latar belakang)' : 'Koneksi terputus — menyambung ulang... (' + fails + ')';
+				statusDetail.textContent = 'Tenang, unduhan lanjut dari posisi terakhir, tidak mulai dari awal.';
+			};
+			window.__euphoriaNet.onResume = function () {
+				statusText.textContent = 'Melanjutkan unduhan...';
+			};
+		}
 
 		engine.startGame({
 			'onProgress': function (current, total) {
@@ -362,6 +405,7 @@ const engine = new Engine(GODOT_CONFIG);
 					const totMB = (total / (1024 * 1024)).toFixed(1);
 					pctEl.textContent = pct + '%';
 					statusText.textContent = 'Mengunduh aset: ' + curMB + ' MB / ' + totMB + ' MB';
+					reconnecting = false;
 					if (pct < 100) {
 						statusDetail.textContent = 'Mengunduh data grafik karakter & cutscene HD...';
 					} else {

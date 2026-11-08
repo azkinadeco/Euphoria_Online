@@ -1,5 +1,21 @@
 [
  {
+  "id": "n2026-11-08zzd",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "Arena Refresh & Smoother Web Loading",
+  "bg": "lobby",
+  "body": "Arena challengers now show their strongest hero, tier, power next to yours, a difficulty tag (EASY / EVEN / HARD) and the win rewards. Your team and tickets sit at the bottom, and the Ranking tab gets a top-3 podium. On the web version, downloads cut off by switching tabs or apps now continue from where they stopped instead of failing, and an error screen has a Try Again button."
+ },
+ {
+  "id": "n2026-11-08zzc",
+  "date": "2026-11-08",
+  "tag": "UPDATE",
+  "title": "New Look: Icons & Hero Codex",
+  "bg": "lobby",
+  "body": "Over 60 icons have been redrawn in a richer, semi-3D medallion style: elements, menus, battle buttons, skills, currencies, food, gifts and gear. The Hero Codex now shows your overall progress and what every step pays, lists heroes with rewards waiting at the top, shows progress on each step (stars, Bond, Awakening) and lets you claim each reward with a single tap."
+ },
+ {
   "id": "n2026-11-08xm",
   "date": "2026-11-08",
   "tag": "EVENT",

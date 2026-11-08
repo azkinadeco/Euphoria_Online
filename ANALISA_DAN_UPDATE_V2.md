@@ -877,6 +877,43 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - Di bawahnya kartu ringkasan tab aktif: penjelasan, hitung mundur reset (harian 00:00 UTC+7 / mingguan), total hadiah yang siap diklaim, tombol CLAIM ALL (abu-abu kalau tidak ada yang bisa diklaim).
 - Kanan: daftar misi dikelompokkan dengan judul bagian READY TO CLAIM / IN PROGRESS / COMPLETED beserta jumlahnya.
 
+## 2dc. Update batch 101 — Ikon semi-3D (Gemini) & Hero Codex
+
+- **Ikon baru dari sheet Gemini** (`Karakter Euphoria Online/icon asset/semi_3d_icons_v2/ALL_ICONS_BETA.png`):
+  - `tools/import_icon_sheet.py` memotong tiap sel sheet (layout 12 kolom sama dengan `ALL_ICONS.png`) dan menghapus background gelap. Hasil potongan disimpan di `semi_3d_icons_v2/<folder>/<file>.png`.
+  - Setelah itu ikon diperkecil ke ukuran aslinya di game. File lama di-backup ke `_recut_backup/icons_semi3d_<waktu>/`.
+  - File PNG yang ditaruh manual di `semi_3d_icons_v2/<folder>/` menang atas sel sheet. Saat ini itu `icon_gold.png` dan `item_oath_ring.png`.
+  - Total **64 ikon** diganti: 62 dari sheet + 2 file manual.
+  - 19 sel **dilewati** (daftar `SKIP` di script) karena Gemini menggambar benda lain:
+    - Bag jadi lambang, Date jadi portal, Friends jadi lambang bersayap;
+    - Gear Chest jadi koin perak, Gems jadi koin emas, Event jadi kristal, Hero Shards jadi permata;
+    - Hunter's Stew jadi buah, Starberry Tart jadi ramuan, Hero EXP Potion jadi arang, Forge Ember jadi koin;
+    - Starberry, Moonwheat Flour, Dewleaf Herb dan Wild Game jadi kristal/buku/bijih;
+    - Royal Gear Chest dan Grand Rune Chest jadi lambang.
+  - Sel UI frame/tombol 9-slice dan logo **tidak** diambil dari sheet, karena bentuknya berubah (tombol jadi permata segi delapan) dan akan merusak tombol di game.
+  - Cara pakai ulang: `python3 tools/import_icon_sheet.py` (cek dulu), lalu `--apply`, lalu `Godot --headless --import`.
+- **Hero Codex** (popup dari layar Heroes):
+  - Kartu progres total (x / 148) dan 4 kartu tahap (Recruited, 5★, Bond 10, A5), masing-masing dengan ikon hadiah dan jumlah yang sudah diklaim.
+  - Hero yang punya hadiah siap klaim tampil paling atas, lalu hero yang dimiliki, lalu yang belum.
+  - Tiap tahap berupa chip:
+    - sudah diklaim → hijau ✓;
+    - siap → emas berdenyut "CLAIM ▸", bisa diklaim satu per satu (`Game.claim_codex(id, step)` baru);
+    - belum → bar progres + teks (mis. `3 / 5★`, `Bond 1 / 10`, `A0 / A5`).
+  - Footer: total hadiah siap klaim + CLAIM ALL.
+- Tes: flow test baru untuk klaim satuan dan penolakan tahap yang sudah diklaim / belum tercapai.
+
+## 2dd. Update batch 102 — Perbaikan unduhan web di HP & Arena baru
+
+**Bug: unduhan gagal saat pindah tab di HP.** Browser HP memutus unduhan saat tab ditinggal. Loader bawaan Godot hanya mencoba ulang 4× dengan jeda 1 detik dan selalu mulai dari 0, jadi semua percobaan habis selagi tab masih di belakang. Setelah itu tidak ada tombol untuk mencoba lagi.
+- Loader baru `tools/web_loader.js` (disisipkan ke `web/index.html` oleh `tools/publish_web.sh`) mengunduh `.pck` (3 part) dan `.wasm` dengan **resume**. Kalau koneksi putus, macet 20 detik, atau isi file terpotong, loader menunggu tab aktif lagi lalu melanjutkan dari byte terakhir dengan HTTP Range. Percobaan ulang memakai `cache: no-store`, jadi salinan rusak di cache browser tidak bisa memblokir.
+- Layar loading menampilkan "Unduhan dijeda" / "menyambung ulang", dan layar error punya tombol **↻ Coba Lagi**.
+- Diuji dengan server lokal yang memutus koneksi di tengah file, mengabaikan Range, dan macet. Hasil `.pck` dan `.wasm` identik byte-per-byte (MD5).
+
+**Arena:**
+- Kartu lawan menampilkan potret hero terkuat, chip tier berwarna, power lawan vs power kamu (bar), wajah tim dengan ikon elemen, label **EASY / EVEN / HARD**, hadiah menang (+24 RP, 60 Arena Coin, 3K Gold), dan tombol BATTLE.
+- Footer "YOUR TEAM": formasi, power, tiket hari ini, dan tombol FORMATION (tombol FORMATION di panel kiri dihapus).
+- Tab Ranking: podium Top 3 dan chip tier di setiap baris.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

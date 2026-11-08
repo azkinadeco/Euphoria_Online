@@ -768,6 +768,11 @@ func _run() -> void:
 	G.claim_quest(DB.DAILY_QUESTS[4])
 	check(int(G.s["pass"]["exp"]) - pe1 <= 80, "daily claim grants pass exp only once")
 	check(G.codex_claimable() > 0, "codex has rewards for owned heroes")
+	var cx_id: String = G.s["heroes"].keys()[0]
+	var cx_before: int = G.codex_claimable()
+	var cx1: Dictionary = G.claim_codex(cx_id, "own")
+	check(int(cx1.get("gems", 0)) == 50 and G.codex_claimed(cx_id, "own") and G.codex_claimable() == cx_before - 1, "codex single claim")
+	check(G.claim_codex(cx_id, "own").is_empty() and G.claim_codex(cx_id, "awaken5").is_empty(), "codex single claim rejects claimed / unreached steps")
 	var cxr: Dictionary = G.claim_codex_all()
 	check(cxr.has("gems") and G.codex_claimable() == 0, "codex claim all")
 
