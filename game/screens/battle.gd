@@ -109,7 +109,7 @@ func build() -> void:
 	top.add_child(_pause_btn)
 	top.add_child(UI.button("SKIP ▶▶", func(): _skip = true; _set_paused(false), "", Vector2(110, 46)))
 
-	_order_strip = UI.hbox(4)
+	_order_strip = UI.hbox(5)
 	_order_strip.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	_order_strip.offset_top = 64
 	_order_strip.offset_left = -300
@@ -260,17 +260,61 @@ func _update_order_strip(active_uid: int) -> void:
 	for i in maxi(a.size(), e.size()):
 		for lst in [a, e]:
 			if i < lst.size():
-				var u: Dictionary = lst[i]
-				var v: UnitView = _views.get(u["uid"])
-				var alive := v != null and v.modulate.a > 0.5
-				var col: Color = UI.GOLD if u["side"] == 0 else Color("#ff5c6c")
-				var p := UI.styled_panel(Color.BLACK, col if u["uid"] == active_uid else col.darkened(0.5), 6, 3 if u["uid"] == active_uid else 1, 1)
-				p.custom_minimum_size = Vector2(38, 38)
-				var t := UI.tex_rect(DB.face(u["id"]), Vector2(34, 34), true)
-				if not alive:
-					t.modulate = Color(0.25, 0.25, 0.25)
-				p.add_child(t)
-				_order_strip.add_child(p)
+				_order_strip.add_child(_order_slot(lst[i], lst[i]["uid"] == active_uid))
+
+## One turn-order slot: face card with a team stripe; the acting unit is bigger, lifted and glowing,
+## defeated units are greyed out with a red cross.
+func _order_slot(u: Dictionary, active: bool) -> Control:
+	var v: UnitView = _views.get(u["uid"])
+	var alive := v != null and not v.has_meta("dead") and v.modulate.a > 0.5
+	var col: Color = Color("#7fd0ff") if u["side"] == 0 else Color("#ff5c6c")
+	var sz := Vector2(50, 56) if active else Vector2(38, 44)
+	var holder := Control.new()
+	holder.custom_minimum_size = Vector2(sz.x, 60)
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var card := Control.new()
+	card.size = sz
+	card.position = Vector2(0, 0 if active else 8)
+	card.clip_contents = true
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.add_child(card)
+	var bg := ColorRect.new()
+	bg.color = Color(col.darkened(0.75), 0.95)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.add_child(bg)
+	var t := UI.tex_rect(DB.face(u["id"]), Vector2.ZERO, true)
+	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	t.offset_bottom = -5
+	if not alive:
+		t.modulate = Color(0.28, 0.26, 0.3)
+	card.add_child(t)
+	var deco := Control.new()
+	deco.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	deco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	deco.draw.connect(func():
+		var s := deco.size
+		deco.draw_rect(Rect2(0, s.y - 5, s.x, 5), col if alive else Color(0.3, 0.3, 0.35))
+		deco.draw_rect(Rect2(Vector2.ZERO, s), UI.GOLD if active else Color(col, 0.55 if alive else 0.2), false, 2.0 if active else 1.0)
+		if not alive:
+			deco.draw_line(Vector2(8, 8), Vector2(s.x - 8, s.y - 12), Color("#ff4d63"), 3.0, true)
+			deco.draw_line(Vector2(s.x - 8, 8), Vector2(8, s.y - 12), Color("#ff4d63"), 3.0, true))
+	card.add_child(deco)
+	if active:
+		var glow := Control.new()
+		glow.size = sz + Vector2(12, 12)
+		glow.position = Vector2(-6, -6)
+		glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		glow.show_behind_parent = true
+		glow.draw.connect(func():
+			for k in 3:
+				glow.draw_rect(Rect2(Vector2(k * 2, k * 2), glow.size - Vector2(k * 4, k * 4)), Color(UI.GOLD, 0.12 + k * 0.08), false, 2.0))
+		holder.add_child(glow)
+		holder.move_child(glow, 0)
+		var pt := card.create_tween().set_loops()
+		pt.tween_property(card, "position:y", -2.0, 0.4).set_trans(Tween.TRANS_SINE)
+		pt.tween_property(card, "position:y", 0.0, 0.4).set_trans(Tween.TRANS_SINE)
+	return holder
 
 # ---------------------------------------------------------------- playback
 
@@ -628,16 +672,17 @@ func _apply_hit(g: Dictionary, color: Color, show_em: bool) -> void:
 		var txt := Game.fmt(g["dmg"])
 		var c := color
 		var sz := 24
+		var tags: Array = []
 		if crit:
 			txt = txt + "!"
 			c = Color("#ffcf4a")
 			sz = 38
-			_float_text(g["uid"], "CRITICAL", Color("#ff9f43"), 14, Vector2(0, -28))
-		_float_text(g["uid"], txt, c, sz)
+			tags.append(["CRITICAL", Color("#ff9f43"), true])
 		if show_em and float(g.get("em", 1.0)) > 1.0:
-			_float_text(g["uid"], "WEAK!", Color("#ff9f43"), 16, Vector2(0, 30))
+			tags.append(["WEAK!", Color("#ff9f43"), false])
 		elif show_em and float(g.get("em", 1.0)) < 1.0:
-			_float_text(g["uid"], "RESIST", Color("#8aa2c8"), 14, Vector2(0, 30))
+			tags.append(["RESIST", Color("#8aa2c8"), false])
+		_float_text(g["uid"], txt, c, sz, Vector2.ZERO, tags)
 		var sq := v.sprite.create_tween()
 		sq.tween_property(v.sprite, "scale", Vector2(1.12, 0.86) if crit else Vector2(1.06, 0.93), 0.05)
 		sq.tween_property(v.sprite, "scale", Vector2.ONE, 0.16).set_trans(Tween.TRANS_BACK)
@@ -740,9 +785,14 @@ func _ultimate(u: Dictionary) -> float:
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.z_index = 30
 	_fx_layer.add_child(root)
-	var sky := ColorRect.new()
-	sky.color = Color(ec.darkened(0.82), 0.94)
+	var sky := Control.new()
 	sky.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sky.draw.connect(func():
+		var s := sky.size
+		var a := Color(ec.darkened(0.88), 0.96)
+		var b := Color(ec.darkened(0.6), 0.94)
+		sky.draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(s.x, 0), s, Vector2(0, s.y)]), PackedColorArray([b, a, a, b])))
 	root.add_child(sky)
 	# diagonal speed lines rushing right → left
 	var lines := Control.new()
@@ -762,10 +812,86 @@ func _ultimate(u: Dictionary) -> float:
 			var c := ec.lightened(0.55)
 			c.a = 0.18 + 0.32 * sd.y / 1.6
 			lines.draw_line(Vector2(x, y), Vector2(x + ln, y - ln * 0.18), c, 2.0 + sd.y * 2.0))
+	# magic circle, halftone, light rays and a huge watermark of the skill name
+	var deco := Control.new()
+	deco.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	deco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(deco)
+	root.move_child(deco, lines.get_index())
+	var wm := str(u["skill"]["name"]).to_upper()
+	deco.draw.connect(func():
+		var s := deco.size
+		var t: float = phase[0] * 1.6
+		# radial glow behind the hero
+		var gc := Vector2(s.x * 0.26, s.y * 0.46)
+		for k in 10:
+			deco.draw_circle(gc, s.y * (0.75 - k * 0.06), Color(ec, 0.035))
+		# god rays
+		for k in 14:
+			var a := t * 0.25 + k * TAU / 14.0
+			var a2 := a + 0.07
+			var R := s.x
+			deco.draw_polygon(PackedVector2Array([gc, gc + Vector2(cos(a), sin(a)) * R, gc + Vector2(cos(a2), sin(a2)) * R]),
+				PackedColorArray([Color(ec.lightened(0.5), 0.16), Color(ec, 0.0), Color(ec, 0.0)]))
+		# magic circle: two rings, rotating ticks and an inscribed hexagram
+		var r1 := s.y * 0.42
+		var mc := Color(ec.lightened(0.45), 0.55)
+		deco.draw_arc(gc, r1, 0, TAU, 96, mc, 2.5, true)
+		deco.draw_arc(gc, r1 * 0.86, 0, TAU, 96, Color(mc, 0.35), 1.5, true)
+		deco.draw_arc(gc, r1 * 1.08, t * 0.8, t * 0.8 + PI * 1.3, 64, Color(mc, 0.5), 3.0, true)
+		for k in 36:
+			var a3 := -t * 0.6 + k * TAU / 36.0
+			var d := Vector2(cos(a3), sin(a3))
+			deco.draw_line(gc + d * r1 * 0.88, gc + d * r1 * (0.97 if k % 3 == 0 else 0.93), Color(mc, 0.6), 1.5, true)
+		for tri in 2:
+			var pts := PackedVector2Array()
+			for k in 4:
+				var a4 := t * 0.4 + tri * PI / 3.0 + k * TAU / 3.0 - PI / 2.0
+				pts.append(gc + Vector2(cos(a4), sin(a4)) * r1 * 0.84)
+			deco.draw_polyline(pts, Color(mc, 0.3), 1.5, true)
+		# halftone dots fading toward the right side
+		var step := 22.0
+		var y := s.y * 0.55
+		while y < s.y:
+			var x := s.x * 0.45
+			while x < s.x:
+				var f := clampf((y - s.y * 0.55) / (s.y * 0.45), 0.0, 1.0) * clampf((x - s.x * 0.45) / (s.x * 0.4), 0.0, 1.0)
+				if f > 0.05:
+					deco.draw_circle(Vector2(x + fmod(y, step * 2.0) * 0.5, y), 1.0 + 4.0 * f, Color(ec.lightened(0.3), 0.12))
+				x += step
+			y += step
+		# giant watermark, drifting left
+		var fnt := ThemeDB.fallback_font
+		deco.draw_string(fnt, Vector2(s.x * 0.15 - t * 80.0, s.y * 0.97), wm, HORIZONTAL_ALIGNMENT_LEFT, -1, 150, Color(ec.lightened(0.6), 0.07)))
 	var lt := lines.create_tween()
 	lt.tween_method(func(p: float):
 		phase[0] = p
-		lines.queue_redraw(), 0.0, 1.0, 1.6)
+		lines.queue_redraw()
+		deco.queue_redraw(), 0.0, 1.0, 1.6)
+	# cinematic letterbox bars
+	for top in [true, false]:
+		var bar := ColorRect.new()
+		bar.color = Color(0, 0, 0, 0.92)
+		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE if top else Control.PRESET_BOTTOM_WIDE)
+		bar.offset_top = -64 if top else 0
+		bar.offset_bottom = 0 if top else 64
+		bar.z_index = 2
+		root.add_child(bar)
+		var edge := ColorRect.new()
+		edge.color = Color(ec.lightened(0.4), 0.8)
+		edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		edge.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE if top else Control.PRESET_TOP_WIDE)
+		edge.offset_top = -2 if top else 0
+		edge.offset_bottom = 0 if top else 2
+		bar.add_child(edge)
+		var bt := bar.create_tween()
+		if top:
+			bt.tween_property(bar, "offset_bottom", 64.0, 0.18).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+			bt.parallel().tween_property(bar, "offset_top", 0.0, 0.18).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+		else:
+			bt.tween_property(bar, "offset_top", -64.0, 0.18).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+			bt.parallel().tween_property(bar, "offset_bottom", 0.0, 0.18).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
 	# a bright slanted band behind the hero
 	var band := Polygon2D.new()
 	var vs := get_viewport_rect().size
@@ -796,7 +922,12 @@ func _ultimate(u: Dictionary) -> float:
 	tv.alignment = BoxContainer.ALIGNMENT_CENTER
 	root.add_child(tv)
 	tv.add_child(UI.label("✦ ULTIMATE ✦", 18, ec.lightened(0.5), 4))
-	var nm := UI.label(str(u["skill"]["name"]).to_upper(), 54, UI.GOLD, 10)
+	var nm := UI.label(str(u["skill"]["name"]).to_upper(), 54, UI.GOLD, 0)
+	nm.add_theme_color_override("font_outline_color", ec.darkened(0.75))
+	nm.add_theme_constant_override("outline_size", 14)
+	nm.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
+	nm.add_theme_constant_override("shadow_offset_x", 4)
+	nm.add_theme_constant_override("shadow_offset_y", 6)
 	nm.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	tv.add_child(nm)
 	tv.add_child(UI.label(DB.name_of(hid) + "  •  " + DB.title_of(hid), 18, Color.WHITE, 5))
@@ -871,7 +1002,8 @@ func _cut_in(u: Dictionary) -> bool:
 	tw.tween_callback(band.queue_free)
 	return true
 
-func _float_text(uid: int, text: String, color: Color, size: int, offset: Vector2 = Vector2.ZERO) -> void:
+## tags: [[text, color, above?], ...] small labels that travel with the number (CRITICAL above, WEAK!/RESIST below).
+func _float_text(uid: int, text: String, color: Color, size: int, offset: Vector2 = Vector2.ZERO, tags: Array = []) -> void:
 	if _skip:
 		return
 	var v: UnitView = _views.get(uid)
@@ -880,9 +1012,41 @@ func _float_text(uid: int, text: String, color: Color, size: int, offset: Vector
 	# stack texts on the same unit so they never overlap
 	var k: int = int(_stack.get(uid, 0))
 	_stack[uid] = k + 1
-	var l := UI.label(text, size + 4, color, 7)
+	var l := UI.label(text, size + 4, color, 0)
+	# tinted thick outline + drop shadow so numbers read on any background
+	l.add_theme_color_override("font_outline_color", Color(color.darkened(0.8), 0.95))
+	l.add_theme_constant_override("outline_size", 6 + size / 5)
+	l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.55))
+	l.add_theme_constant_override("shadow_offset_x", 2)
+	l.add_theme_constant_override("shadow_offset_y", 3)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.size = Vector2(240, 48)
+	if size >= 34 and text.length() > 0 and text[0].is_valid_int():
+		# critical: a spiky starburst flashes behind the number
+		var burst := Control.new()
+		burst.size = Vector2(240, 48)
+		burst.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		burst.show_behind_parent = true
+		burst.draw.connect(func():
+			var c := Vector2(120, 26)
+			var pts := PackedVector2Array()
+			for j in 24:
+				var a := j * TAU / 24.0
+				var r := (62.0 if j % 2 == 0 else 26.0) * (1.0 if j % 4 == 0 else 0.8)
+				pts.append(c + Vector2(cos(a) * r, sin(a) * r * 0.6))
+			burst.draw_colored_polygon(pts, Color(color, 0.32))
+			burst.draw_circle(c, 22.0, Color(1, 1, 1, 0.18)))
+		l.add_child(burst)
+	var font_h := float(size + 4)
+	for tg in tags:
+		var tl := UI.label(str(tg[0]), 13, tg[1], 0)
+		tl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+		tl.add_theme_constant_override("outline_size", 5)
+		tl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		tl.size = Vector2(240, 18)
+		tl.position = Vector2(0, 24 - font_h * 0.5 - 16) if tg[2] else Vector2(0, 24 + font_h * 0.5 - 2)
+		tl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		l.add_child(tl)
 	var gp := v.get_global_rect().position - _fx_layer.get_global_rect().position
 	l.position = gp + Vector2(v.size.x * 0.5 - 120, v.size.y * 0.18 - k * (size + 6)) + offset + Vector2(randf_range(-10, 10), 0)
 	_fx_layer.add_child(l)
@@ -934,23 +1098,69 @@ func _total_popup(total: int, hits: int, col: Color, ally: bool) -> void:
 	tw.tween_callback(p.queue_free)
 
 func _big_text(text: String, color: Color) -> void:
-	var l := UI.label(text, 64, color, 10)
+	# a slanted dark ribbon across the screen, coloured edge lines, a light sweep and the word on top
+	var root := Control.new()
+	root.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	root.offset_left = -640
+	root.offset_right = 640
+	root.offset_top = -70
+	root.offset_bottom = 30
+	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fx_layer.add_child(root)
+	var band := Control.new()
+	band.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	band.pivot_offset = Vector2(640, 50)
+	var sweep := {"x": -0.2}
+	band.draw.connect(func():
+		var w := band.size.x
+		var h := band.size.y
+		var sk := 26.0
+		var dk := Color(0.03, 0.01, 0.07, 0.78)
+		var cl := Color(0.03, 0.01, 0.07, 0.0)
+		# body fades out toward both screen edges
+		var xs := [0.0, w * 0.22, w * 0.78, w]
+		var cs := [cl, dk, dk, cl]
+		for k in 3:
+			var x0: float = xs[k]
+			var x1: float = xs[k + 1]
+			band.draw_polygon(PackedVector2Array([Vector2(x0 + sk, 10), Vector2(x1 + sk, 10), Vector2(x1 - sk, h - 10), Vector2(x0 - sk, h - 10)]),
+				PackedColorArray([cs[k], cs[k + 1], cs[k + 1], cs[k]]))
+		for y in [10.0, h - 10.0]:
+			band.draw_line(Vector2(w * 0.12, y), Vector2(w * 0.88, y), Color(color, 0.85), 2.0, true)
+			band.draw_line(Vector2(w * 0.12, y), Vector2(w * 0.88, y), Color(color, 0.25), 6.0, true)
+		# light sweep
+		var sx: float = float(sweep["x"]) * w
+		band.draw_polygon(PackedVector2Array([Vector2(sx + 30, 10), Vector2(sx + 90, 10), Vector2(sx + 40, h - 10), Vector2(sx - 20, h - 10)]),
+			PackedColorArray([Color(1, 1, 1, 0.0), Color(1, 1, 1, 0.22), Color(1, 1, 1, 0.22), Color(1, 1, 1, 0.0)])))
+	root.add_child(band)
+	var l := UI.label(text, 60, color, 0)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	l.offset_left = -400
-	l.offset_right = 400
-	l.offset_top = -60
-	l.offset_bottom = 20
-	_fx_layer.add_child(l)
-	l.pivot_offset = Vector2(400, 40)
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	l.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	l.add_theme_color_override("font_outline_color", color.darkened(0.78))
+	l.add_theme_constant_override("outline_size", 14)
+	l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
+	l.add_theme_constant_override("shadow_offset_x", 3)
+	l.add_theme_constant_override("shadow_offset_y", 5)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.pivot_offset = Vector2(640, 50)
+	root.add_child(l)
+	band.scale = Vector2(0.0, 1.0)
 	l.modulate.a = 0.0
-	l.scale = Vector2(1.6, 1.6)
-	var tw := l.create_tween()
-	tw.tween_property(l, "modulate:a", 1.0, 0.15 / _speed)
-	tw.parallel().tween_property(l, "scale", Vector2.ONE, 0.2 / _speed).set_trans(Tween.TRANS_BACK)
-	tw.tween_interval(0.3 / _speed)
-	tw.tween_property(l, "modulate:a", 0.0, 0.2 / _speed)
-	tw.tween_callback(l.queue_free)
+	l.scale = Vector2(1.5, 1.5)
+	var sp := _speed
+	var tw := root.create_tween()
+	tw.tween_property(band, "scale:x", 1.0, 0.16 / sp).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(l, "modulate:a", 1.0, 0.14 / sp)
+	tw.parallel().tween_property(l, "scale", Vector2.ONE, 0.22 / sp).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_method(func(x: float):
+		sweep["x"] = x
+		band.queue_redraw(), -0.2, 1.1, 0.5 / sp)
+	tw.tween_interval(0.12 / sp)
+	tw.tween_property(root, "modulate:a", 0.0, 0.2 / sp)
+	tw.parallel().tween_property(band, "scale:y", 0.0, 0.2 / sp)
+	tw.tween_callback(root.queue_free)
 
 func _screen_flash(c: Color) -> void:
 	if Game.reduce_fx():
@@ -1090,29 +1300,49 @@ func _intro_banners() -> void:
 		lines.append(["Your team fights on its own. Your Formation decides the battle!", UI.GOLD])
 	if lines.is_empty():
 		return
-	var box := UI.vbox(4)
-	box.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	box.offset_left = -360
-	box.offset_right = 360
-	box.offset_top = 124
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	# compact chips down the top-left corner (clear of the board), each sliding in from the left
+	var box := UI.vbox(5)
+	box.position = Vector2(16, 70)
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_fx_layer.add_child(box)
+	var i := 0
 	for l in lines:
-		var p := UI.styled_panel(Color(0.04, 0.02, 0.1, 0.82), l[1], 16, 1, 6)
-		p.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		p.custom_minimum_size.x = 420
-		var lab := UI.label(l[0], 14, l[1].lightened(0.2), 3)
-		lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		p.add_child(lab)
+		var col: Color = l[1]
+		var p := UI.styled_panel(Color(0.04, 0.02, 0.1, 0.86), Color(col, 0.7), 14, 1, 0)
+		p.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		var h := UI.hbox(7)
+		p.add_child(UI.margin(h, 10, 4, 14, 4))
+		var dot := Control.new()
+		dot.custom_minimum_size = Vector2(10, 10)
+		dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		dot.draw.connect(func():
+			dot.draw_circle(Vector2(5, 5), 5.0, Color(col, 0.35))
+			dot.draw_circle(Vector2(5, 5), 3.0, col))
+		h.add_child(dot)
+		var txt: String = l[0]
+		var lab := UI.label(txt, 13, col.lightened(0.25), 2)
+		if ": " in txt and not txt.begins_with("Your team"):
+			# "SYNERGY: WIND x3" -> bold tag + value
+			var k := txt.find(": ")
+			lab.text = txt.substr(k + 2)
+			var tag := UI.label(txt.substr(0, k), 11, col, 2)
+			tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			h.add_child(tag)
+			lab.add_theme_color_override("font_color", Color(1, 1, 1, 0.92))
+		h.add_child(lab)
 		box.add_child(p)
-	UI.stagger(box, 0.08)
+		p.modulate.a = 0.0
+		var tw := p.create_tween()
+		tw.tween_interval(0.07 * i)
+		tw.tween_property(p, "modulate:a", 1.0, 0.2)
+		tw.parallel().tween_property(p, "position:x", 0.0, 0.25).from(-40.0).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		i += 1
 	_bsfx("buff")
-	await _wait(2.8 if first_fight else 1.1)
+	await _wait(2.8 if first_fight else 1.6)
 	if is_instance_valid(box):
-		var tw := box.create_tween()
-		tw.tween_property(box, "modulate:a", 0.0, 0.25)
-		tw.tween_callback(box.queue_free)
+		var tw2 := box.create_tween()
+		tw2.tween_property(box, "modulate:a", 0.0, 0.3)
+		tw2.tween_callback(box.queue_free)
 
 func _toggle_pause() -> void:
 	_set_paused(not _paused)

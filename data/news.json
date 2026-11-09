@@ -1,5 +1,29 @@
 [
  {
+  "id": "n2026-11-09m",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Battle Visual Overhaul",
+  "bg": "battle",
+  "body": "Battles look sharper: the grid tiles are lit stone slabs with corner accents and a slowly turning rune, skill target areas glow with a sweeping light, and every unit stands on a team-colored ring with an element gem on its segmented HP bar. ROUND, FINISH! and other callouts now sweep in on a cinematic ribbon, Ultimate cut-ins get letterbox bars, a spinning magic circle, light rays and a giant skill-name watermark, and damage numbers have colored outlines, a starburst on criticals, and CRITICAL/WEAK!/RESIST tags that no longer overlap. The turn order bar at the top now shows who is acting with a bigger, glowing card, team-colored stripes, and a red cross on defeated units."
+ },
+ {
+  "id": "n2026-11-09l",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Clearer Battle Start",
+  "bg": "battle",
+  "body": "The synergy, field effect, links, companion and tactic notes at the start of a battle are now small chips in the top-left corner that slide in and fade away, so they no longer cover your units on the board."
+ },
+ {
+  "id": "n2026-11-09k",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Tower of Trials: Stone Floors",
+  "bg": "galaxy",
+  "body": "The Tower climb now looks like a tower: every floor is a stone plaque, guardian floors show the guardian's face, and your team leader stands on the floor you are about to challenge."
+ },
+ {
   "id": "n2026-11-09j",
   "date": "2026-11-09",
   "tag": "UPDATE",

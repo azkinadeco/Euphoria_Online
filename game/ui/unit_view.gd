@@ -44,12 +44,46 @@ func _init(id: String = "", is_enemy: bool = false, tex: Texture2D = null, sz: V
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pivot_offset = Vector2(sz.x * 0.5, sz.y)
 
+	# team-coloured base ring on the ground (squashed ellipse, slowly turning dashes)
+	var ring := Control.new()
+	ring.size = Vector2(sz.x * 0.86, sz.y * 0.2)
+	ring.position = Vector2(sz.x * 0.07, sz.y * 0.84)
+	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var rcol := Color("#ff5c6c") if is_enemy else Color("#7fd0ff")
+	if boss:
+		rcol = Color("#ffb347")
+	var rt0 := randf() * TAU
+	ring.draw.connect(func():
+		var c := ring.size * 0.5
+		var rx := ring.size.x * 0.5
+		var ry := ring.size.y * 0.5
+		var t := float(Time.get_ticks_msec()) / 1000.0
+		var ell := func(sc: float, a0: float, a1: float) -> PackedVector2Array:
+			var pts := PackedVector2Array()
+			for k in 25:
+				var a := lerpf(a0, a1, k / 24.0)
+				pts.append(c + Vector2(cos(a) * rx * sc, sin(a) * ry * sc))
+			return pts
+		ring.draw_polyline(ell.call(1.0, 0.0, TAU), Color(rcol, 0.22), 4.0, true)
+		ring.draw_polyline(ell.call(1.0, 0.0, TAU), Color(rcol, 0.55), 1.4, true)
+		var rot := rt0 + t * (0.8 if not is_enemy else -0.8)
+		for k in 3:
+			var a0 := rot + k * TAU / 3.0
+			ring.draw_polyline(ell.call(0.8, a0, a0 + 0.9), Color(rcol.lightened(0.3), 0.6), 1.6, true))
+	var rtk := Timer.new()
+	rtk.wait_time = 1.0 / 20.0
+	rtk.autostart = true
+	rtk.timeout.connect(ring.queue_redraw)
+	ring.add_child(rtk)
+	add_child(ring)
+
 	# soft radial contact shadow (darker core, feathered edge)
 	var shadow := TextureRect.new()
 	shadow.texture = _shadow_tex()
 	shadow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	shadow.size = Vector2(sz.x * 0.78, sz.y * 0.16)
-	shadow.position = Vector2(sz.x * 0.11, sz.y * 0.86)
+	shadow.size = Vector2(sz.x * 0.7, sz.y * 0.15)
+	shadow.position = Vector2(sz.x * 0.15, sz.y * 0.865)
+	shadow.modulate = Color(1, 1, 1, 1.0)
 	shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(shadow)
 	_shadow = shadow
@@ -78,6 +112,27 @@ func _init(id: String = "", is_enemy: bool = false, tex: Texture2D = null, sz: V
 		hp_bar.position = Vector2(sz.x * 0.15, sz.y + 2)
 		hp_bar.add_theme_stylebox_override("background", StyleBoxEmpty.new())
 		add_child(hp_bar)
+		# frame + quarter ticks over the bar, element gem on its left end
+		var hpf := Control.new()
+		hpf.size = Vector2(sz.x * 0.7, 9)
+		hpf.position = hp_bar.position
+		hpf.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hpf.draw.connect(func():
+			var w := hpf.size.x
+			for k in [0.25, 0.5, 0.75]:
+				hpf.draw_line(Vector2(w * k, 1), Vector2(w * k, 8), Color(0, 0, 0, 0.45), 1.0)
+			hpf.draw_line(Vector2(3, 1.5), Vector2(w - 3, 1.5), Color(1, 1, 1, 0.22), 1.0))
+		add_child(hpf)
+		var el := DB.element_of(id) if id != "" else ""
+		if el != "":
+			var gem := TextureRect.new()
+			gem.texture = DB.icon(DB.ELEMENT_ICON.get(el, "elem_light"))
+			gem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			gem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			gem.size = Vector2(16, 16)
+			gem.position = Vector2(sz.x * 0.15 - 13, sz.y - 1.5)
+			gem.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			add_child(gem)
 		status_row = HBoxContainer.new()
 		status_row.add_theme_constant_override("separation", 2)
 		status_row.position = Vector2(sz.x * 0.15, sz.y + 13)
@@ -126,10 +181,10 @@ func set_hp(v: int, mx: int) -> void:
 		trail.max_value = mx
 		var tw := hp_bar.create_tween()
 		tw.tween_property(hp_bar, "value", float(v), 0.2)
-		var tt := trail.create_tween()
 		if float(v) >= trail.value:
 			trail.value = v
 		else:
+			var tt := trail.create_tween()
 			tt.tween_interval(0.35)
 			tt.tween_property(trail, "value", float(v), 0.45).set_trans(Tween.TRANS_QUAD)
 

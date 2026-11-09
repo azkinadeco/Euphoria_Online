@@ -189,11 +189,56 @@ func _floor_row(f: int, cur: int, is_top: bool, is_bottom: bool) -> Control:
 	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(p)
+	# stone masonry behind the plaque (PanelContainer stacks it under the content)
+	var bricks := Control.new()
+	bricks.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bricks.clip_contents = true
+	var mortar := Color(1, 0.85, 0.6, 0.07) if now else (Color(1, 0.4, 0.5, 0.07) if boss and not done else Color(1, 1, 1, 0.045))
+	bricks.draw.connect(func():
+		var sz := bricks.size
+		var bh := 12.0
+		var bw := 34.0
+		var rows := int(ceil((sz.y + 16.0) / bh))
+		for r in rows:
+			var y := -8.0 + r * bh
+			bricks.draw_line(Vector2(-8, y), Vector2(sz.x + 8, y), mortar, 1.0)
+			var off := 0.0 if r % 2 == 0 else bw * 0.5
+			var x := -8.0 + off
+			while x < sz.x + 8:
+				bricks.draw_line(Vector2(x, y), Vector2(x, y + bh), mortar, 1.0)
+				x += bw)
+	p.add_child(bricks)
 	var h := UI.hbox(8)
 	p.add_child(h)
-	var ic := UI.tex_rect(DB.icon("icon_boss" if boss else "icon_tower"), Vector2(32, 32))
-	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	h.add_child(ic)
+	if boss and not done:
+		# the guardian's face in a red ring
+		var gid: String = DB.tower_floor(f)["enemies"][0]["id"]
+		var gp := UI.styled_panel(Color.BLACK, Color("#ff6b7d"), 16, 2, 1)
+		gp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		gp.add_child(UI.tex_rect(DB.face(gid), Vector2(32, 32), true))
+		gp.tooltip_text = "Guardian: " + DB.name_of(gid)
+		gp.mouse_filter = Control.MOUSE_FILTER_PASS
+		h.add_child(gp)
+	elif now and not Game.formation().is_empty():
+		# your leader stands on the current floor
+		var lid: String = Game.formation()[0][0]
+		var hd: Dictionary = Game.hero(lid)
+		var holder := Control.new()
+		holder.custom_minimum_size = Vector2(36, 36)
+		holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var spr := UI.tex_rect(DB.sprite(lid, int(hd.get("star", 1)), int(hd.get("skin", -1))), Vector2(48, 48), true)
+		spr.size = Vector2(48, 48)
+		spr.position = Vector2(-6, -12)
+		spr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		holder.add_child(spr)
+		var bob := spr.create_tween().set_loops()
+		bob.tween_property(spr, "position:y", -16.0, 0.5).set_trans(Tween.TRANS_SINE)
+		bob.tween_property(spr, "position:y", -12.0, 0.5).set_trans(Tween.TRANS_SINE)
+		h.add_child(holder)
+	else:
+		var ic := UI.tex_rect(DB.icon("icon_boss" if boss else "icon_tower"), Vector2(32, 32))
+		ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		h.add_child(ic)
 	var nv := UI.vbox(0)
 	nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.add_child(nv)

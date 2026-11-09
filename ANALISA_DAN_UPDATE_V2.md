@@ -987,6 +987,25 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - `expedition.gd`: tombol SEND ALL (N) di strip atas; kartu kosong menampilkan wajah tim saran (pudar, tooltip level) + tombol QUICK SEND; saat berjalan, chibi hero berjalan-bobbing di banner sesuai progres waktu.
 - `flow_test.gd`: cek send-all tidak mengirim hero dua kali.
 
+## 2dp. Update batch 113 — Tower of Trials: lantai batu
+- `tower.gd _floor_row()`: pola bata (mortar tipis, warna emas di lantai sekarang, merah di lantai guardian) di belakang tiap plakat lantai.
+- Lantai guardian yang belum dikalahkan menampilkan wajah guardian (musuh pertama `DB.tower_floor(f)`) di bingkai merah + tooltip nama.
+- Lantai sekarang menampilkan chibi leader formasi (skin & bintang ikut) yang bergoyang.
+
+## 2dq. Update batch 114 — Pembuka battle yang tidak menutupi papan
+- `battle.gd _intro_banners()`: info SYNERGY / FIELD / LINKS / COMPANION / TACTIC / tip pertama jadi chip kecil di pojok kiri atas (titik warna + tag + isi), meluncur masuk satu per satu lalu memudar (1,6 dtk; 2,8 dtk di battle pertama). Sebelumnya bertumpuk di tengah dan menutupi unit.
+- `unit_view.gd`: tween trail HP hanya dibuat saat HP turun (menghilangkan error "Tween started with no Tweeners").
+
+## 2dr. Update batch 115 — Grafik battle (papan, unit, teks, cut-in)
+- `grid_board.gd`: petak bergradasi (gelap di belakang, terang ke depan), glow luar + garis bevel, aksen sudut, rune putus-putus berputar pelan (redraw ±20 fps). Area target skill: isi glow bergradasi, bingkai dalam terang, dan garis cahaya yang menyapu.
+- `unit_view.gd`: cincin dasar elips berwarna tim (biru = kita, merah = musuh, oranye = boss) dengan 3 busur berputar; bayangan lebih tegas; HP bar diberi garis segmen 25% + highlight + permata elemen di ujung kiri.
+- `battle.gd _big_text()`: ROUND / FINISH! / BOSS ENRAGED! / TACTIC / ASSIST tampil di pita miring gelap dengan garis tepi berwarna, kilau yang menyapu, outline tebal + bayangan; pita membuka lalu menutup.
+- `_ultimate()`: latar gradasi elemen, letterbox hitam dengan garis tepi warna elemen, lingkaran sihir berputar + heksagram + sinar cahaya di belakang hero, halftone, watermark nama skill raksasa yang bergeser; nama skill pakai outline warna elemen + bayangan.
+- `_float_text()`: angka damage pakai outline berwarna (gelap dari warna angka) + bayangan; critical dapat starburst di belakang. Tag CRITICAL (atas) dan WEAK!/RESIST (bawah) kini menempel di angka (sebelumnya label terpisah yang saling tumpuk).
+
+## 2ds. Update batch 116 — Strip urutan giliran battle
+- `battle.gd _order_slot()`: tiap slot kartu wajah dengan strip warna tim (biru/merah) di bawah; unit yang sedang beraksi lebih besar (50×56), naik-turun pelan, bingkai emas + glow; unit tewas digelapkan dengan tanda X merah.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).
