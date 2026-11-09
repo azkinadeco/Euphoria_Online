@@ -2365,6 +2365,44 @@ func expedition_left(eid: String) -> int:
 	var ex: Dictionary = s["expeditions"][eid]
 	return maxi(0, int(ex["start"]) + int(expedition_def(eid)["hours"]) * 3600 - now())
 
+## Idle heroes for one expedition: the lowest-level ones that still meet the requirement,
+## so stronger heroes stay free for the longer missions. `taken` = heroes already planned elsewhere.
+func auto_expedition_team(eid: String, taken: Array = []) -> Array:
+	var d := expedition_def(eid)
+	var busy := heroes_on_expedition()
+	var ids: Array = []
+	for id in s["heroes"].keys():
+		if busy.has(id) or taken.has(id) or int(hero(id)["level"]) < int(d["min_level"]):
+			continue
+		ids.append(id)
+	ids.sort_custom(func(a, b): return int(hero(a)["level"]) < int(hero(b)["level"]))
+	return ids.slice(0, int(d["heroes"])) if ids.size() >= int(d["heroes"]) else []
+
+## One plan for every idle expedition (hardest requirement first, no hero used twice): {eid: [ids]}.
+func expedition_plan() -> Dictionary:
+	var order: Array = DB.EXPEDITIONS.duplicate()
+	order.sort_custom(func(a, b): return int(a["min_level"]) > int(b["min_level"]))
+	var plan := {}
+	var taken: Array = []
+	for d in order:
+		var eid: String = d["id"]
+		if s["expeditions"].has(eid):
+			continue
+		var team := auto_expedition_team(eid, taken)
+		if not team.is_empty():
+			plan[eid] = team
+			taken.append_array(team)
+	return plan
+
+## Send every idle expedition at once following expedition_plan(). Returns how many started.
+func send_all_expeditions() -> int:
+	var plan := expedition_plan()
+	var n := 0
+	for eid in plan.keys():
+		if start_expedition(eid, plan[eid]) == "":
+			n += 1
+	return n
+
 func start_expedition(eid: String, ids: Array) -> String:
 	var d := expedition_def(eid)
 	if s["expeditions"].has(eid):

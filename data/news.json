@@ -1,5 +1,29 @@
 [
  {
+  "id": "n2026-11-09j",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Expeditions: Send All",
+  "bg": "world",
+  "body": "Dispatch every open expedition with one tap: SEND ALL picks the lowest-level heroes that qualify, keeping your strongest free for the long missions, and never sends the same hero twice. Each card previews its suggested team with a QUICK SEND button, and heroes on a mission now march across its banner."
+ },
+ {
+  "id": "n2026-11-09i",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Starlight Rift: Constellation Path",
+  "bg": "galaxy",
+  "body": "The Rift floor path is now a living constellation: cleared floors glow with travelling sparks, guardian floors are red stars, and your current floor pulses gold. The Next Guardian card now shows the guardian's full art in its variant colors (Mirror, Hollow, Astral, Echo or Ashen) and how many floors away it is."
+ },
+ {
+  "id": "n2026-11-09h",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Daily Dungeon Makeover",
+  "bg": "asgard",
+  "body": "Each Daily Dungeon now opens with a banner of its guardian, your attempts left today and your best clear. The level you should play next glows gold, and every unlocked level shows a power bar comparing your team with the enemy."
+ },
+ {
   "id": "n2026-11-09g",
   "date": "2026-11-09",
   "tag": "UPDATE",

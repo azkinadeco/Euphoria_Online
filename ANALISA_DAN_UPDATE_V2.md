@@ -973,6 +973,20 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - Potret musuh 48 px dengan ikon elemen. Hadiah per clear dan bonus 1ST CLEAR dalam satu kotak, masing-masing satu baris. Sekarang semua muat di atas tombol BATTLE tanpa scroll; Field Effect masih di bawahnya.
 - Parameter `hard` di layar story diterima juga sebagai string "true".
 
+## 2dm. Update batch 110 — Daily Dungeon: banner guardian
+- `dungeon.gd _banner()`: banner 150 px dengan latar dungeon, art guardian (musuh terakhir di `pool`, bergoyang pelan) di kanan, nama + ikon berwarna aksen (emas/biru/oranye), deskripsi, pip ATTEMPTS, dan chip BEST. Set Armory hari ini tampil di banner.
+- Level yang disarankan (tertinggi yang terbuka) diberi border emas berdenyut dan cincin emas di medali angkanya.
+- Tiap level yang terbuka punya bar power (biru = tim kamu, warna = musuh). Teks "Power" diganti ikon ⚔, reward row melebar (tidak menumpuk), scroll horizontal dimatikan.
+
+## 2dn. Update batch 111 — Starlight Rift: jalur rasi bintang & kartu guardian
+- `rift.gd _rift_map()`: lantai jadi bintang 4 sudut di garis bergelombang; link yang sudah dilewati bercahaya dengan percikan berjalan, link berikutnya putus-putus; lantai guardian = bintang merah; lantai sekarang berdenyut emas dengan busur berputar; bintang latar berkelip (redraw 30 fps lewat Timer).
+- `_guardian_card()`: banner 128 px dengan art guardian memakai shader varian (`UI.corrupt`), glow merah, nama besar, dan chip "N floors away" / "THIS FLOOR!".
+
+## 2do. Update batch 112 — Expedition: SEND ALL, QUICK SEND & chibi berbaris
+- `game.gd`: `auto_expedition_team(eid, taken)` (hero menganggur level terendah yang memenuhi syarat), `expedition_plan()` (rencana semua ekspedisi kosong, syarat tertinggi dulu, tanpa hero ganda), `send_all_expeditions()`.
+- `expedition.gd`: tombol SEND ALL (N) di strip atas; kartu kosong menampilkan wajah tim saran (pudar, tooltip level) + tombol QUICK SEND; saat berjalan, chibi hero berjalan-bobbing di banner sesuai progres waktu.
+- `flow_test.gd`: cek send-all tidak mengirim hero dua kali.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

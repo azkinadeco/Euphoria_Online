@@ -7,6 +7,7 @@ var _list: VBoxContainer
 var _summary: HBoxContainer
 var _timers: Array = []   # {eid, label, bar, done}
 var _t := 0.0
+var _plan := {}
 
 func build() -> void:
 	set_bg("world", 0.55)
@@ -47,6 +48,7 @@ func _fmt_time(s: int) -> String:
 
 func _render() -> void:
 	_timers.clear()
+	_plan = Game.expedition_plan()
 	_render_summary()
 	for c in _list.get_children():
 		c.queue_free()
@@ -68,6 +70,16 @@ func _render_summary() -> void:
 	tip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_summary.add_child(tip)
+	var idle := _plan.size()
+	if idle > 0:
+		var sa := UI.button("SEND ALL (%d)" % idle, func():
+			var n := Game.send_all_expeditions()
+			if n > 0:
+				Game.sfx("battle/dash")
+				main.toast("%d expedition%s started!" % [n, "" if n == 1 else "s"], UI.GREEN)
+			_render(), "" if ready > 0 else "GoldButton", Vector2(160, 48))
+		sa.tooltip_text = "Send idle heroes on every open expedition (lowest levels that qualify first)."
+		_summary.add_child(sa)
 	if ready > 0:
 		var cb := UI.button("CLAIM ALL (%d)" % ready, _claim_all, "GoldButton", Vector2(170, 48))
 		UI.add_badge(cb, ready)
@@ -136,6 +148,9 @@ func _card(d: Dictionary) -> Control:
 	dur.position = Vector2(6, 6)
 	dur.add_child(UI.label("%dh" % int(d["hours"]), 13, Color.WHITE, 2))
 	ban.add_child(dur)
+	var sent0: Array = Game.s["expeditions"][eid]["heroes"] if Game.s["expeditions"].has(eid) else []
+	if running and not sent0.is_empty():
+		ban.add_child(_marchers(sent0, float(d["hours"]) * 3600.0, left))
 	var st_txt := "COMPLETE" if done else ("IN PROGRESS" if running else ("AVAILABLE" if can_lv else "LOCKED"))
 	var st_col := UI.GREEN if done else (Color("#7fd8ff") if running else (UI.GOLD if can_lv else UI.MUTED))
 	var stl := UI.label(st_txt, 12, st_col, 3)
@@ -157,9 +172,18 @@ func _card(d: Dictionary) -> Control:
 
 	# hero slots: faces when running, empty rings otherwise
 	var slots := UI.hbox(6)
-	var sent: Array = Game.s["expeditions"][eid]["heroes"] if Game.s["expeditions"].has(eid) else []
+	var sent: Array = sent0
+	var plan: Array = [] if running or done else _plan.get(eid, [])
 	for i in int(d["heroes"]):
-		if i < sent.size():
+		if i < plan.size():
+			var pp := UI.styled_panel(Color.BLACK, Color(UI.GOLD, 0.45), 8, 1, 1)
+			var pf := UI.tex_rect(DB.face(plan[i]), Vector2(36, 36), true)
+			pf.modulate = Color(1, 1, 1, 0.55)
+			pp.add_child(pf)
+			pp.tooltip_text = "Suggested: %s (Lv.%d)" % [DB.name_of(plan[i]), int(Game.hero(plan[i])["level"])]
+			pp.mouse_filter = Control.MOUSE_FILTER_PASS
+			slots.add_child(pp)
+		elif i < sent.size():
 			var fp := UI.styled_panel(Color.BLACK, UI.GREEN if done else Color("#7fd8ff"), 8, 2, 1)
 			var face := UI.tex_rect(DB.face(sent[i]), Vector2(36, 36), true)
 			fp.add_child(face)
@@ -216,12 +240,22 @@ func _card(d: Dictionary) -> Control:
 		fb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		h.add_child(fb)
 	else:
+		var av := UI.vbox(4)
+		av.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		h.add_child(av)
 		var sb := UI.button("SEND", func(): _pick(eid), "GoldButton", Vector2(130, 48))
-		sb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		if not plan.is_empty():
+			var qb := UI.button("QUICK SEND", func():
+				if Game.start_expedition(eid, plan) == "":
+					Game.sfx("battle/dash")
+				_render(), "", Vector2(130, 34))
+			qb.add_theme_font_size_override("font_size", 13)
+			qb.tooltip_text = "Send the suggested heroes"
+			av.add_child(qb)
 		if not can_lv:
 			sb.disabled = true
 			sb.tooltip_text = "Needs a hero at Lv.%d or higher." % int(d["min_level"])
-		h.add_child(sb)
+		av.add_child(sb)
 	return p
 
 func _pick(eid: String) -> void:
@@ -276,3 +310,25 @@ func _pick(eid: String) -> void:
 	row.add_child(ab)
 	row.add_child(go)
 	v.add_child(row)
+
+
+## The sent heroes' chibis walking across the mission banner; their progress follows the timer.
+func _marchers(ids: Array, total: float, left: int) -> Control:
+	var layer := Control.new()
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var prog := clampf((total - left) / maxf(1.0, total), 0.0, 1.0)
+	for i in ids.size():
+		var hid: String = ids[i]
+		var spr := UI.tex_rect(DB.sprite(hid, int(Game.hero(hid).get("star", 1)), int(Game.hero(hid).get("skin", -1))), Vector2(46, 46), true)
+		spr.size = Vector2(46, 46)
+		spr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var x0 := 8.0 + prog * 110.0 + (ids.size() - 1 - i) * 30.0
+		spr.position = Vector2(x0, 34.0)
+		layer.add_child(spr)
+		# little walking bob, offset per hero
+		var tw := spr.create_tween().set_loops()
+		tw.tween_interval(0.12 * i)
+		tw.tween_property(spr, "position:y", 30.0, 0.25).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(spr, "position:y", 34.0, 0.25).set_trans(Tween.TRANS_SINE)
+	return layer

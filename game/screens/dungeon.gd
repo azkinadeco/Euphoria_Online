@@ -22,7 +22,9 @@ func build() -> void:
 	rp.anchor_bottom = 1.0
 	b.add_child(rp)
 	_right = UI.vbox(8)
-	rp.add_child(UI.scroll(_right))
+	var sc := UI.scroll(_right)
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	rp.add_child(sc)
 	_render()
 	tutorial("dungeon")
 
@@ -41,11 +43,9 @@ func _render() -> void:
 	for c in _right.get_children():
 		c.queue_free()
 	var d: Dictionary = DB.dungeon_def(_sel)
-	_right.add_child(UI.label(d["name"].to_upper(), 24, UI.GOLD, 4))
-	_right.add_child(UI.wrap_label(d["desc"] + " No energy needed. Failed attempts are refunded.", 14, UI.MUTED))
-	if _sel == "gear":
-		var ts: Dictionary = DB.GEAR_SETS[DB.armory_set(Game.day_key())]
-		_right.add_child(UI.label("TODAY'S SET  ◆ %s  —  every clear drops one guaranteed piece" % ts["name"], 14, Color(str(ts["color"])), 2))
+	_right.add_child(_banner(d))
+	# the tier to play next: the highest unlocked one, or the best cleared one when all are done
+	var rec := mini(Game.dungeon_cleared(_sel) + 1, DB.DUNGEON_LEVELS.size() - 1)
 	for diff in DB.DUNGEON_LEVELS.size():
 		var di: int = diff
 		var st := DB.dungeon_stage(_sel, diff)
@@ -55,19 +55,27 @@ func _render() -> void:
 		var ratio := float(Game.team_power()) / maxf(1.0, float(ep))
 		var verdict := "FAVORED" if ratio >= 1.15 else ("EVEN" if ratio >= 0.9 else ("RISKY" if ratio >= 0.7 else "DEADLY"))
 		var vcol: Color = UI.GREEN if ratio >= 1.15 else (UI.GOLD if ratio >= 0.9 else (Color("#ffa04a") if ratio >= 0.7 else UI.RED))
-		var bc := Color(UI.GREEN, 0.5) if cleared else (Color(UI.GOLD, 0.6) if unlocked else Color(1, 1, 1, 0.1))
-		var p := UI.styled_panel(Color(0.11, 0.08, 0.17, 0.92) if unlocked else Color(0.08, 0.07, 0.11, 0.85), bc, 12, 1, 8.0)
+		var is_rec := diff == rec and unlocked
+		var bc := Color(UI.GOLD, 0.95) if is_rec else (Color(UI.GREEN, 0.5) if cleared else (Color(UI.GOLD, 0.6) if unlocked else Color(1, 1, 1, 0.1)))
+		var p := UI.styled_panel(Color(0.16, 0.11, 0.2, 0.95) if is_rec else (Color(0.11, 0.08, 0.17, 0.92) if unlocked else Color(0.08, 0.07, 0.11, 0.85)), bc, 12, 2 if is_rec else 1, 8.0)
 		_right.add_child(p)
+		if is_rec:
+			var pulse := p.create_tween().set_loops()
+			pulse.tween_property(p, "self_modulate", Color(1.15, 1.08, 0.9), 0.8).set_trans(Tween.TRANS_SINE)
+			pulse.tween_property(p, "self_modulate", Color.WHITE, 0.8).set_trans(Tween.TRANS_SINE)
 		var h := UI.hbox(12)
 		p.add_child(h)
 		# difficulty medallion
 		var med := Control.new()
 		med.custom_minimum_size = Vector2(52, 52)
 		med.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		var mcol: Color = UI.GREEN if cleared else (UI.GOLD if unlocked else UI.MUTED)
+		var mcol: Color = UI.GOLD if is_rec else (UI.GREEN if cleared else (UI.GOLD if unlocked else UI.MUTED))
 		med.draw.connect(func():
 			var c := Vector2(26, 26)
 			med.draw_circle(c, 24.0, Color(0.06, 0.04, 0.1))
+			if is_rec:
+				med.draw_circle(c, 24.0, Color(UI.GOLD, 0.22))
+				med.draw_arc(c, 25.5, 0.0, TAU, 40, Color(UI.GOLD, 0.45), 1.5, true)
 			med.draw_arc(c, 23.0, 0.0, TAU, 40, mcol, 2.0, true)
 			med.draw_string(ThemeDB.fallback_font, Vector2(0, 33), "✔" if cleared else str(di + 1), HORIZONTAL_ALIGNMENT_CENTER, 52, 20, mcol))
 		h.add_child(med)
@@ -87,7 +95,7 @@ func _render() -> void:
 		v.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		var tr := UI.hbox(8)
 		tr.add_child(UI.label("Enemy Lv.%d" % st["level"], 15, Color.WHITE if unlocked else UI.MUTED, 2))
-		tr.add_child(UI.label("Power %s" % Game.fmt(ep), 13, UI.MUTED))
+		tr.add_child(UI.label("⚔ %s" % Game.fmt(ep), 13, UI.MUTED))
 		if unlocked:
 			var vp := UI.styled_panel(Color(vcol, 0.15), Color(vcol, 0.6), 8, 1, 5.0)
 			vp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -95,7 +103,21 @@ func _render() -> void:
 			vp.tooltip_text = "Your team power %s vs %s" % [Game.fmt(Game.team_power()), Game.fmt(ep)]
 			tr.add_child(vp)
 		v.add_child(tr)
-		v.add_child(UI.reward_row(st["rewards"], 24, 13))
+		var rr := UI.hbox(10)
+		var rw := UI.reward_row(st["rewards"], 24, 13)
+		rw.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rr.add_child(rw)
+		if unlocked:
+			var mine := Game.team_power()
+			var cmp := UI.bar(mine, mine + ep, "", 6)
+			cmp.custom_minimum_size = Vector2(90, 6)
+			cmp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			cmp.add_theme_stylebox_override("fill", UI.style(Color("#6fd3ff"), Color.TRANSPARENT, 3, 0, 0))
+			cmp.add_theme_stylebox_override("background", UI.style(Color(vcol, 0.55), Color.TRANSPARENT, 3, 0, 0))
+			cmp.tooltip_text = "Blue = your team power %s, colored = enemy power %s" % [Game.fmt(mine), Game.fmt(ep)]
+			cmp.mouse_filter = Control.MOUSE_FILTER_PASS
+			rr.add_child(cmp)
+		v.add_child(rr)
 		h.add_child(v)
 		if not unlocked:
 			var ll := UI.label("Clear Lv.%d first" % diff, 13, UI.MUTED)
@@ -179,3 +201,103 @@ func _tile(d: Dictionary) -> Control:
 	h.add_child(v)
 	btn.add_child(frame)
 	return btn
+
+
+## Header banner: the dungeon's guardian (its boss) on the right, name, blurb, attempts and best clear.
+func _banner(d: Dictionary) -> Control:
+	var did: String = d["id"]
+	var boss: String = d["pool"][-1]
+	var acc: Color = {"gold": Color("#ffd479"), "exp": Color("#8fd8ff"), "gear": Color("#ff8a5c")}.get(did, UI.GOLD)
+	var box := Control.new()
+	box.custom_minimum_size = Vector2(0, 150)
+	box.clip_contents = true
+	var bg := UI.tex_rect(DB.bg(d["bg"]), Vector2.ZERO, true)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.modulate = Color(0.55, 0.5, 0.6)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(bg)
+	# guardian art, anchored right, cut at the waist
+	var gclip := Control.new()
+	gclip.clip_contents = true
+	gclip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	gclip.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+	gclip.offset_left = -260
+	box.add_child(gclip)
+	var glow := Control.new()
+	glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow.draw.connect(func():
+		var c := Vector2(glow.size.x * 0.55, glow.size.y * 0.55)
+		for i in 6:
+			glow.draw_circle(c, 120.0 - i * 18.0, Color(acc, 0.05)))
+	gclip.add_child(glow)
+	var art := UI.tex_rect(DB.art(boss), Vector2.ZERO, true)
+	art.position = Vector2(20, -6)
+	art.size = Vector2(240, 330)
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	gclip.add_child(art)
+	var bob := art.create_tween().set_loops()
+	bob.tween_property(art, "position:y", 2.0, 1.6).set_trans(Tween.TRANS_SINE)
+	bob.tween_property(art, "position:y", -6.0, 1.6).set_trans(Tween.TRANS_SINE)
+	# left-to-right shade so the text stays readable
+	var shade := Control.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shade.draw.connect(func():
+		var sz := shade.size
+		var dk := Color(0.05, 0.02, 0.09, 0.95)
+		var mid := Color(0.05, 0.02, 0.09, 0.55)
+		var cl := Color(0.05, 0.02, 0.09, 0.0)
+		var x1 := sz.x * 0.42
+		var x2 := sz.x - 200.0
+		shade.draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(x1, 0), Vector2(x1, sz.y), Vector2(0, sz.y)]), PackedColorArray([dk, mid, mid, dk]))
+		shade.draw_polygon(PackedVector2Array([Vector2(x1, 0), Vector2(x2, 0), Vector2(x2, sz.y), Vector2(x1, sz.y)]), PackedColorArray([mid, cl, cl, mid]))
+		shade.draw_rect(Rect2(0, sz.y - 3, sz.x, 3), Color(acc, 0.8)))
+	box.add_child(shade)
+	var frame := Panel.new()
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, Color(acc, 0.6), 12, 1, 0))
+	box.add_child(frame)
+	var v := UI.vbox(4)
+	v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	v.offset_left = 18
+	v.offset_right = -230
+	v.offset_top = 12
+	v.offset_bottom = -12
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(v)
+	var th := UI.hbox(8)
+	th.add_child(UI.tex_rect(DB.icon(d["icon"]), Vector2(30, 30)))
+	th.add_child(UI.label(str(d["name"]).to_upper(), 24, acc, 4))
+	v.add_child(th)
+	v.add_child(UI.wrap_label(str(d["desc"]) + " No energy needed. Failed attempts are refunded.", 13, UI.TEXT))
+	if did == "gear":
+		var ts: Dictionary = DB.GEAR_SETS[DB.armory_set(Game.day_key())]
+		v.add_child(UI.label("TODAY'S SET  ◆ %s  —  every clear drops one piece" % ts["name"], 13, Color(str(ts["color"])), 2))
+	var info := UI.hbox(14)
+	v.add_child(info)
+	var tries := Game.dungeon_tries(did)
+	var tchip := UI.styled_panel(Color(0, 0, 0, 0.45), Color(UI.GREEN if tries > 0 else UI.RED, 0.6), 10, 1, 0)
+	var tl := UI.hbox(6)
+	tchip.add_child(UI.margin(tl, 10, 3, 10, 3))
+	tl.add_child(UI.label("ATTEMPTS", 11, UI.MUTED, 1))
+	for i in DB.DUNGEON_TRIES:
+		var pip := UI.styled_panel(UI.GREEN if i < tries else Color(1, 1, 1, 0.08), Color(UI.GREEN, 0.7), 4, 1, 0)
+		pip.custom_minimum_size = Vector2(14, 14)
+		pip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		tl.add_child(pip)
+	info.add_child(tchip)
+	var best := Game.dungeon_cleared(did)
+	var bchip := UI.styled_panel(Color(0, 0, 0, 0.45), Color(acc, 0.5), 10, 1, 0)
+	bchip.add_child(UI.margin(UI.label(("BEST  Lv.%d / %d" % [best + 1, DB.DUNGEON_LEVELS.size()]) if best >= 0 else "BEST  —", 12, acc, 2), 10, 3, 10, 3))
+	info.add_child(bchip)
+	var gname := UI.label("GUARDIAN  •  " + DB.name_of(boss), 11, Color(1, 1, 1, 0.75), 2)
+	gname.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	gname.offset_left = -240
+	gname.offset_top = -26
+	gname.offset_right = -12
+	gname.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	box.add_child(gname)
+	return box

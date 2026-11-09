@@ -226,55 +226,145 @@ func _offer() -> void:
 func _rift_map(start: int, best: int, alive: bool) -> Control:
 	var first := maxi(1, start - 1)
 	var m := Control.new()
-	m.custom_minimum_size = Vector2(0, 74)
+	m.custom_minimum_size = Vector2(0, 92)
+	var t0 := Time.get_ticks_msec()
+	var lilac := Color("#d4b8ff")
 	m.draw.connect(func():
+		var t := float(Time.get_ticks_msec() - t0) / 1000.0
 		var w := m.size.x
 		var n := 10
 		var step := (w - 40.0) / float(n - 1)
-		var y := 30.0
 		var f := ThemeDB.fallback_font
+		# a gently waving constellation line
+		var pos: Array = []
+		for i in n:
+			pos.append(Vector2(20 + i * step, 40.0 + sin(i * 1.3) * 9.0))
+		# faint background stars
+		for k in 26:
+			var sx := fmod(k * 97.31, w)
+			var sy := fmod(k * 41.7, 20.0) + 2.0
+			var tw := 0.25 + 0.25 * sin(t * 2.0 + k)
+			m.draw_circle(Vector2(sx, sy), 1.1, Color(1, 1, 1, tw))
 		for i in n - 1:
+			var a: Vector2 = pos[i]
+			var b: Vector2 = pos[i + 1]
 			var lit := first + i < start
-			m.draw_line(Vector2(20 + i * step, y), Vector2(20 + (i + 1) * step, y), Color("#d4b8ff") if lit else Color(1, 1, 1, 0.15), 3.0)
+			if lit:
+				m.draw_line(a, b, Color(lilac, 0.25), 7.0, true)
+				m.draw_line(a, b, lilac, 2.5, true)
+				# a spark travelling along cleared links
+				var q := fmod(t * 0.6 + i * 0.37, 1.0)
+				m.draw_circle(a.lerp(b, q), 2.5, Color(1, 1, 1, 0.9))
+			else:
+				var segs := 7
+				for k in segs:
+					if k % 2 == 0:
+						m.draw_line(a.lerp(b, float(k) / segs), a.lerp(b, float(k + 1) / segs), Color(1, 1, 1, 0.18), 2.0, true)
 		for i in n:
 			var fl := first + i
-			var c := Vector2(20 + i * step, y)
+			var c: Vector2 = pos[i]
 			var boss := fl % 5 == 0
 			var cur := alive and fl == start
 			var past := fl < start
-			var col := Color("#ff5c6c") if boss else Color("#d4b8ff")
+			var col := Color("#ff5c6c") if boss else lilac
 			if cur:
-				m.draw_circle(c, 16.0, Color(UI.GOLD, 0.25))
+				var pr := 18.0 + 3.0 * sin(t * 4.0)
+				m.draw_circle(c, pr, Color(UI.GOLD, 0.18))
+				m.draw_arc(c, pr + 2.0, t * 1.5, t * 1.5 + PI * 1.4, 24, Color(UI.GOLD, 0.8), 2.0, true)
 			if boss:
-				var r := 11.0
-				var pts := PackedVector2Array([c + Vector2(0, -r), c + Vector2(r, 0), c + Vector2(0, r), c + Vector2(-r, 0)])
-				m.draw_colored_polygon(pts, col if past else Color(0.15, 0.05, 0.08))
+				var r := 12.0
+				var pts := PackedVector2Array()
+				for k in 8:
+					var ang := -PI / 2 + k * PI / 4
+					pts.append(c + Vector2(cos(ang), sin(ang)) * (r if k % 2 == 0 else r * 0.45))
+				if past or cur:
+					m.draw_circle(c, 15.0, Color(col, 0.2))
+				m.draw_colored_polygon(pts, col if past else Color(0.18, 0.05, 0.1))
 				pts.append(pts[0])
-				m.draw_polyline(pts, UI.GOLD if cur else col, 2.0, true)
+				m.draw_polyline(pts, UI.GOLD if cur else col, 1.8, true)
 			else:
-				m.draw_circle(c, 8.0, col if past else Color(0.1, 0.07, 0.17))
-				m.draw_arc(c, 8.0, 0.0, TAU, 20, UI.GOLD if cur else col, 2.0, true)
-			m.draw_string(f, Vector2(c.x - 20, y + 30), str(fl), HORIZONTAL_ALIGNMENT_CENTER, 40, 12, UI.GOLD if cur else (col if boss else UI.MUTED))
+				var r2 := 7.0
+				var pts2 := PackedVector2Array()
+				for k in 8:
+					var ang2 := -PI / 2 + k * PI / 4
+					pts2.append(c + Vector2(cos(ang2), sin(ang2)) * (r2 if k % 2 == 0 else r2 * 0.5))
+				if past:
+					m.draw_circle(c, 10.0, Color(lilac, 0.18))
+				m.draw_colored_polygon(pts2, Color.WHITE if past else (UI.GOLD if cur else Color(0.14, 0.1, 0.22)))
+				pts2.append(pts2[0])
+				m.draw_polyline(pts2, UI.GOLD if cur else col, 1.5, true)
+			m.draw_string(f, Vector2(c.x - 20, c.y + 32), str(fl), HORIZONTAL_ALIGNMENT_CENTER, 40, 12, UI.GOLD if cur else (col if boss else UI.MUTED))
 			if fl == best and best > 0:
-				m.draw_string(f, Vector2(c.x - 20, y - 16), "BEST", HORIZONTAL_ALIGNMENT_CENTER, 40, 10, UI.GREEN))
+				m.draw_string(f, Vector2(c.x - 20, c.y - 20), "BEST", HORIZONTAL_ALIGNMENT_CENTER, 40, 10, UI.GREEN))
+	var tk := Timer.new()
+	tk.wait_time = 1.0 / 30.0
+	tk.autostart = true
+	tk.timeout.connect(m.queue_redraw)
+	m.add_child(tk)
 	return m
 
-## Preview of the next guardian (variant hero) floor.
+## Preview of the next guardian (variant hero) floor: its art in the variant's colors, fading into the card.
 func _guardian_card(start: int) -> Control:
 	var gf := start if start % 5 == 0 else start + (5 - start % 5)
 	var fl := DB.rift_floor(gf, Game.day_key() / 7)
 	var e: Dictionary = fl["enemies"][0]
-	var p := UI.styled_panel(Color("#ff5c6c", 0.08), Color("#ff5c6c", 0.45), 12, 1, 8.0)
-	var h := UI.hbox(10)
-	p.add_child(h)
-	var fp := UI.styled_panel(Color.BLACK, Color("#ff5c6c"), 8, 2, 1)
-	fp.add_child(UI.tex_rect(DB.face(e["id"]), Vector2(52, 52), true))
-	h.add_child(fp)
-	var v := UI.vbox(1)
-	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	v.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var variant := str(e.get("variant", ""))
+	var red := Color("#ff5c6c")
+	var box := Control.new()
+	box.custom_minimum_size = Vector2(0, 128)
+	box.clip_contents = true
+	var bg := Panel.new()
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bg.add_theme_stylebox_override("panel", UI.style(Color(0.12, 0.03, 0.07, 0.92), Color.TRANSPARENT, 12, 0, 0))
+	box.add_child(bg)
+	var glow := Control.new()
+	glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow.draw.connect(func():
+		var c := Vector2(glow.size.x - 90, glow.size.y * 0.5)
+		for i in 7:
+			glow.draw_circle(c, 110.0 - i * 15.0, Color(red, 0.05)))
+	box.add_child(glow)
+	var art := UI.tex_rect(DB.art(e["id"]), Vector2.ZERO, true)
+	art.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	art.offset_left = -200
+	art.offset_right = 0
+	art.offset_top = -4
+	art.offset_bottom = 270
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	UI.corrupt(art, variant)
+	box.add_child(art)
+	var shade := Control.new()
+	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shade.draw.connect(func():
+		var sz := shade.size
+		var dk := Color(0.12, 0.03, 0.07, 0.97)
+		var cl := Color(0.12, 0.03, 0.07, 0.0)
+		var x1 := sz.x - 260.0
+		var x2 := sz.x - 120.0
+		shade.draw_rect(Rect2(0, 0, x1, sz.y), dk)
+		shade.draw_polygon(PackedVector2Array([Vector2(x1, 0), Vector2(x2, 0), Vector2(x2, sz.y), Vector2(x1, sz.y)]), PackedColorArray([dk, cl, cl, dk])))
+	box.add_child(shade)
+	var frame := Panel.new()
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, Color(red, 0.55), 12, 1, 0))
+	box.add_child(frame)
+	var v := UI.vbox(3)
+	v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	v.offset_left = 16
+	v.offset_right = -170
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(v)
+	var away := gf - start
 	v.add_child(UI.label("NEXT GUARDIAN  •  FLOOR %d" % gf, 12, Color("#ff8a9a"), 2))
-	v.add_child(UI.label("%s %s" % [str(e.get("variant", "")).capitalize(), DB.name_of(e["id"])], 16, Color.WHITE, 2))
-	v.add_child(UI.label("Lv.%d  •  %d foes  •  Power %s" % [int(fl["level"]) + 2, (fl["enemies"] as Array).size(), Game.fmt(Game.enemy_power(fl["enemies"]))], 12, UI.MUTED))
-	h.add_child(v)
-	return p
+	v.add_child(UI.label("%s %s" % [variant.capitalize(), DB.name_of(e["id"])], 20, Color.WHITE, 4))
+	v.add_child(UI.label("Lv.%d  •  %d foes  •  Power %s" % [int(fl["level"]) + 2, (fl["enemies"] as Array).size(), Game.fmt(Game.enemy_power(fl["enemies"]))], 12, UI.TEXT, 2))
+	var chip := UI.styled_panel(Color(red, 0.18), Color(red, 0.7), 8, 1, 0)
+	chip.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	chip.add_child(UI.margin(UI.label("THIS FLOOR!" if away == 0 else ("%d floor%s away" % [away, "" if away == 1 else "s"]), 11, Color("#ffb0b8"), 2), 8, 1, 8, 1))
+	v.add_child(chip)
+	return box

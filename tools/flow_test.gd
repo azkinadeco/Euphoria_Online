@@ -570,6 +570,16 @@ func _run() -> void:
 	G.start_expedition("herb", ["shina"])
 	G.give({"gems": 500})
 	check(G.claim_expedition("herb", true).has("gold"), "finish expedition instantly with gems")
+	var ex_keep: Dictionary = G.s["expeditions"].duplicate(true)
+	G.s["expeditions"].clear()
+	var sent_n: int = G.send_all_expeditions()
+	var all_ids: Array = G.heroes_on_expedition()
+	var uniq := {}
+	for hid in all_ids:
+		uniq[hid] = true
+	check(sent_n > 0 and uniq.size() == all_ids.size(), "send all expeditions: no hero sent twice")
+	check(G.auto_expedition_team("herb").is_empty() or G.s["expeditions"].has("herb"), "auto team skips busy heroes")
+	G.s["expeditions"] = ex_keep
 
 	print("[battle systems]")
 	check(DB.passive_of("lucidria") == "GUARD" and DB.passive_of("furu") == "GRACE" and DB.passive_of("rumi") == "ARCANE", "role passives mapped")
