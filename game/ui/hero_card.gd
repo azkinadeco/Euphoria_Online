@@ -52,12 +52,13 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.add_child(glow)
 
-	var face := UI.tex_rect(DB.bust(id, int(h.get("skin", 0)) if opts.get("skin", false) else -1), Vector2.ZERO, true)
+	# full-body art, whole figure visible at its own proportions (no crop, no stretch)
+	var face := UI.tex_rect(DB.art(id, int(h.get("skin", 0)) if opts.get("skin", false) else 0), Vector2.ZERO, false)
 	face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	face.offset_left = 3
-	face.offset_top = 3
-	face.offset_right = -3
-	face.offset_bottom = -3
+	face.offset_left = 2
+	face.offset_top = 4
+	face.offset_right = -2
+	face.offset_bottom = -int(card_size.y * 0.1)
 	frame.add_child(face)
 
 	var shade := TextureRect.new()
@@ -113,6 +114,20 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	rchip.add_child(UI.margin(rtag, 5, 0, 5, 0))
 	rchip.position = Vector2(card_size.x - (40 if rarity == "SSR" else 32), 6)
 	frame.add_child(rchip)
+
+	# battle role tag under the element icon (TANK / DPS / MAGE / SUP)
+	if card_size.x >= 100:
+		var ri := DB.role_info(id)
+		var short := str(ri[0]).split(" ")[0]
+		if short == "SUPPORT":
+			short = "SUP"
+		var rcol := Color(str(ri[1]))
+		var role_chip := PanelContainer.new()
+		role_chip.add_theme_stylebox_override("panel", UI.style(Color(0, 0, 0, 0.6), Color(rcol, 0.8), 5, 1, 0))
+		role_chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		role_chip.add_child(UI.margin(UI.label(short, 9, rcol.lightened(0.25), 2), 4, 0, 4, 0))
+		role_chip.position = Vector2(5, 32)
+		frame.add_child(role_chip)
 
 	# rarity accent line above the name plate
 	var accent := ColorRect.new()

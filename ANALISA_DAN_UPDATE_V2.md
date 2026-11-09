@@ -1040,6 +1040,10 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - **Bug formasi**: tap hero lain di papan sekarang hanya memilih hero itu (dulu langsung bertukar posisi). Hero terpilih pindah hanya ke petak kosong; tukar posisi lewat drag (gaya Brown Dust). Teks petunjuk diperbarui.
 - **Web PC vs HP**: skala UI otomatis disamakan ke 1.15 di semua perangkat (dulu PC 1.0 → semua tampak lebih kecil dan menu samping berdesakan). Opsi manual di Settings tetap ada.
 
+## 2eb. Update batch 124 — Kartu hero badan penuh + tag role
+- `hero_card.gd`: kartu memakai art badan penuh `DB.art(id, skin)` dengan `STRETCH_KEEP_ASPECT_CENTERED` (seluruh tubuh terlihat, proporsi asli, tanpa crop/stretch) menggantikan crop wajah/bust. Tag role (TANK/DPS/MAGE/SUP, warna dari `DB.ROLE_INFO`) di bawah ikon elemen pada kartu ≥100 px.
+- `export_presets.cfg`: preset Android/iOS ikut mengecualikan `_recut_backup/`, logo di root, dan favicon `web_shell/`.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

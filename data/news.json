@@ -1,5 +1,13 @@
 [
  {
+  "id": "n2026-11-09r",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Full-Body Hero Cards",
+  "bg": "lobby",
+  "body": "Hero cards in the Heroes list, Formation and Summon results now show each hero's full-body artwork at its true proportions, plus a role tag (TANK, DPS, MAGE, SUP) under the element icon."
+ },
+ {
   "id": "n2026-11-09q",
   "date": "2026-11-09",
   "tag": "UPDATE",
