@@ -1006,6 +1006,24 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 ## 2ds. Update batch 116 — Strip urutan giliran battle
 - `battle.gd _order_slot()`: tiap slot kartu wajah dengan strip warna tim (biru/merah) di bawah; unit yang sedang beraksi lebih besar (50×56), naik-turun pelan, bingkai emas + glow; unit tewas digelapkan dengan tanda X merah.
 
+## 2dt. Update batch 117 — Panel stat hero (INFO)
+- `hero_detail.gd`: header POWER besar + pill "Lv.x / cap" dengan bar level; HP/ATK/DEF memakai ikon vektor (hati, pedang, perisai) dan bar pembanding terhadap hero terkuat di level & bintang yang sama, plus nilai S/A/B/C dan tooltip persentase. Baris Bond dengan ikon hati (+ tanda OATH).
+- `gacha.gd`: tombol summon yang tidak terjangkau diredupkan, teks merah tua di tombol emas (sebelumnya merah muda di atas emas, sulit dibaca) + tooltip.
+
+## 2du. Update batch 118 — Layar hasil battle
+- Judul VICTORY/DEFEAT diberi outline tebal (warna gelap dari warnanya) + bayangan.
+- DEFEAT: tip pindah ke kotak sendiri dengan label TIP; tombol jadi RETRY / UPGRADE / STATS / CONTINUE dengan lebar lebih kecil — sebelumnya tombol CONTINUE dan teks tip terpotong di kanan layar.
+
+## 2dv. Update batch 119 — Crop wajah yang tepat
+- `tools/gen_face_crops.py` (baru): memindai alpha art badan penuh (rasio tinggi/lebar ≥ 1,25, plus angela, svormentis, evy_blood_sage) untuk mencari kepala → `data/face_crops.json` (237 gambar, termasuk semua outfit). `MANUAL` untuk kasus khusus (ygg_naar). Jalankan ulang setelah menambah art.
+- `DB.face()`: memakai crop dari JSON berdasarkan `resource_path`; portrait setengah badan (16 hero awal) tetap memakai crop tengah-atas lama. Memperbaiki wajah yang tampil sebagai badan/kaki di strip giliran, banner Summon, hadiah shard, chat, dll.
+
+## 2dw. Update batch 120 — Plat nama skill di battle
+- `battle.gd`: plat meluncur dari sisi pelaku (kiri = kita, kanan = musuh) + kilau yang menyapu (`_banner_sheen`), nama skill pakai outline warna elemen gelap. Plat diturunkan ke y=128 (tidak menimpa strip giliran), dipersempit ke 540 px, dan diletakkan di bawah `_fx_layer` sehingga angka damage selalu terlihat di atasnya. Posisi asal dihitung ulang dari anchor tiap kali (aman saat layar di-resize).
+
+## 2dx. Update batch 121 — Banner lobby
+- `lobby.gd _show_slide()`: tepi kiri art hero diberi gradasi gelap + garis tipis warna tag, menggantikan potongan vertikal yang keras.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

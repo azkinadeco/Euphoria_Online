@@ -194,7 +194,12 @@ func _pull_btn(text: String, count: int, pay: String) -> Button:
 		b.icon = DB.icon("icon_ticket") if Game.amount("summon_ticket") >= count else DB.icon("icon_gem")
 		b.add_theme_constant_override("icon_max_width", 34)
 		if Game.amount("summon_ticket") < count and Game.amount("gems") < DB.GACHA_COST * (count - mini(Game.amount("summon_ticket"), count)):
-			b.add_theme_color_override("font_color", Color("#ff7a7a"))
+			# can't afford: dim the button and use a red that reads on both gold and purple buttons
+			var short_col := Color("#8c1d1d") if count == 10 else Color("#ff8a8a")
+			for k in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+				b.add_theme_color_override(k, short_col)
+			b.modulate = Color(0.82, 0.8, 0.85)
+			b.tooltip_text = "Not enough Gems or Summon Tickets"
 	else:
 		var tw := b.create_tween().set_loops()
 		tw.tween_property(b, "modulate", Color(1.2, 1.18, 1.1), 0.6)

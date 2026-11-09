@@ -1,5 +1,21 @@
 [
  {
+  "id": "n2026-11-09o",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Sharper Portraits Everywhere",
+  "bg": "lobby",
+  "body": "Hero and enemy portraits in the turn order, summon banners, rewards, chats and lists now frame the face instead of the body for every full-body artwork, including all the newest heroes and enemies. In battle, the skill name plate now slides in from the side of the hero who acts, with a light sheen, and sits below damage numbers so it never hides them; lobby banner art gets a soft framed edge."
+ },
+ {
+  "id": "n2026-11-09n",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Hero Stats & Result Screen Polish",
+  "bg": "lobby",
+  "body": "The hero INFO tab now shows a big Power number, a level bar, and HP / ATK / DEF with icons and bars that compare each stat with the strongest hero at the same level and star, graded S, A, B or C. VICTORY and DEFEAT titles have a bold outline, the defeat tip sits in its own box, and the defeat buttons no longer run off the screen. Summon buttons you can't afford are dimmed with readable text."
+ },
+ {
   "id": "n2026-11-09m",
   "date": "2026-11-09",
   "tag": "UPDATE",

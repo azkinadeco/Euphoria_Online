@@ -2639,12 +2639,29 @@ static func face(id: String, skin: int = -1) -> Texture2D:
 		return null
 	var w := float(base.get_width())
 	var h := float(base.get_height())
-	var side := minf(w * 0.78, h * 0.62)
 	var at := AtlasTexture.new()
 	at.atlas = base
-	at.region = Rect2((w - side) * 0.5, h * 0.03, side, side * 1.15)
+	# full-body art: precomputed head crop (tools/gen_face_crops.py); chest-up portraits: top-centre crop
+	var fc: Array = _face_crops().get(base.resource_path, [])
+	if fc.size() == 4:
+		at.region = Rect2(float(fc[0]) * w, float(fc[1]) * h, float(fc[2]) * w, float(fc[3]) * h)
+	else:
+		var side := minf(w * 0.78, h * 0.62)
+		at.region = Rect2((w - side) * 0.5, h * 0.03, side, side * 1.15)
 	_tex_cache[key] = at
 	return at
+
+static var _face_crop_json: Dictionary = {}
+static var _face_crop_loaded := false
+
+static func _face_crops() -> Dictionary:
+	if not _face_crop_loaded:
+		_face_crop_loaded = true
+		if FileAccess.file_exists("res://data/face_crops.json"):
+			var d = JSON.parse_string(FileAccess.get_file_as_string("res://data/face_crops.json"))
+			if d is Dictionary:
+				_face_crop_json = d
+	return _face_crop_json
 
 ## Wide head-and-shoulders crop for battle cut-ins. Finds the top of the
 ## visible figure from the image alpha so tall/short art both frame the face.

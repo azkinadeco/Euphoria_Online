@@ -638,6 +638,20 @@ func _show_slide(i: int) -> void:
 			root.add_child(hint)
 	bhero.modulate.a = 0.0
 	bhero.create_tween().tween_property(bhero, "modulate:a", 1.0, 0.4)
+	# soften the art's hard left edge: a fade into the banner plus a thin light seam
+	var seam := Control.new()
+	seam.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+	seam.offset_left = -236
+	seam.offset_right = -150
+	seam.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var tcol: Color = sd["tag_col"]
+	seam.draw.connect(func():
+		var sz := seam.size
+		var dk := Color(0.06, 0.02, 0.1, 0.85)
+		var cl := Color(0.06, 0.02, 0.1, 0.0)
+		seam.draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(sz.x, 0), sz, Vector2(0, sz.y)]), PackedColorArray([dk, cl, cl, dk]))
+		seam.draw_line(Vector2(6, 0), Vector2(6, sz.y), Color(tcol, 0.25), 2.0))
+	root.add_child(seam)
 	var bv := UI.vbox(4)
 	bv.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bv.offset_left = 16

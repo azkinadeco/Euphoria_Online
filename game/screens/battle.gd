@@ -27,6 +27,7 @@ var _enter_list: Array = []
 var _banner_face: TextureRect
 var _banner_elem: TextureRect
 var _banner_who: Label
+var _banner_sheen: Control
 var _stack: Dictionary = {}       # uid -> floating-text stack index (prevents overlap)
 var _ult_seen: Dictionary = {}
 var _cameo: CompanionCameo    # hero id -> true once their ultimate cinematic played this battle
@@ -162,10 +163,10 @@ func build() -> void:
 
 	_banner = UI.styled_panel(Color(0.05, 0.02, 0.1, 0.92), UI.GOLD, 30, 2, 0)
 	_banner.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-	_banner.offset_top = 108
-	_banner.offset_left = -300
-	_banner.offset_right = 300
-	_banner.offset_bottom = 164
+	_banner.offset_top = 128
+	_banner.offset_left = -270
+	_banner.offset_right = 270
+	_banner.offset_bottom = 184
 	_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var bh := UI.hbox(12)
 	_banner.add_child(UI.margin(bh, 6, 4, 22, 4))
@@ -182,8 +183,26 @@ func build() -> void:
 	bv.add_child(_banner_who)
 	_banner_label = UI.label("", 22, Color.WHITE, 4)
 	bv.add_child(_banner_label)
+	# a light sheen that sweeps across the plate each time it appears
+	_banner_sheen = Control.new()
+	_banner_sheen.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_banner_sheen.set_meta("x", -1.0)
+	_banner_sheen.draw.connect(func():
+		var q := float(_banner_sheen.get_meta("x"))
+		if q < 0.0 or q > 1.2:
+			return
+		var w := _banner_sheen.size.x
+		var h := _banner_sheen.size.y
+		var x := q * w
+		_banner_sheen.draw_polygon(PackedVector2Array([Vector2(x + 30, 3), Vector2(x + 70, 3), Vector2(x + 40, h - 3), Vector2(x, h - 3)]),
+			PackedColorArray([Color(1, 1, 1, 0.0), Color(1, 1, 1, 0.28), Color(1, 1, 1, 0.28), Color(1, 1, 1, 0.0)])))
+	_banner.add_child(_banner_sheen)
+	_banner_label.add_theme_constant_override("outline_size", 6)
 	_banner.modulate.a = 0.0
 	add_child(_banner)
+	# under the FX layer so damage numbers and callouts always draw on top of the plate
+	if is_instance_valid(_fx_layer) and _fx_layer.get_parent() == self:
+		move_child(_banner, _fx_layer.get_index())
 
 	resized.connect(_place_units)
 	_place_units.call_deferred()
@@ -451,11 +470,19 @@ func _play_action(e: Dictionary, group: Array) -> void:
 		_banner_face.texture = DB.face(u["id"])
 		_banner_elem.texture = DB.icon(DB.ELEMENT_ICON.get(elem, "elem_light"))
 		_banner.add_theme_stylebox_override("panel", UI.style(Color(ec.r * 0.18, ec.g * 0.12, ec.b * 0.2 + 0.04, 0.94), ec.lightened(0.2) if u["side"] == 0 else Color("#ff6b7d"), 30, 2, 0))
-		_banner.pivot_offset = Vector2(300, 28)
+		_banner_label.add_theme_color_override("font_outline_color", ec.darkened(0.8))
+		_banner.pivot_offset = Vector2(270, 28)
 		var bt := _banner.create_tween().set_parallel(true)
-		_banner.scale = Vector2(0.85, 0.85)
+		_banner.scale = Vector2(0.9, 0.9)
+		# slide in from the acting side (allies from the left, enemies from the right)
+		var bx := size.x * 0.5 + _banner.offset_left   # anchored centre-top: recomputed so screen resizes stay correct
+		_banner.position.x = bx + (-70.0 if u["side"] == 0 else 70.0)
 		bt.tween_property(_banner, "modulate:a", 1.0, 0.1)
+		bt.tween_property(_banner, "position:x", bx, 0.2).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
 		bt.tween_property(_banner, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		bt.tween_method(func(q: float):
+			_banner_sheen.set_meta("x", q)
+			_banner_sheen.queue_redraw(), -0.1, 1.15, 0.45).set_delay(0.08)
 		var board: GridBoard = _enemy_board if e["target_side"] == 1 else _ally_board
 		var hl := {}
 		var col := Color(1, 0.3, 0.3, 0.6) if e["target_side"] != u["side"] else Color(0.3, 1, 0.5, 0.55)
@@ -1809,7 +1836,13 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 	v.offset_bottom = -40
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	layer.add_child(v)
-	var t := UI.label("VICTORY" if won else "DEFEAT", 84, UI.GOLD if won else Color("#ff4d63"), 12)
+	var tcol: Color = UI.GOLD if won else Color("#ff4d63")
+	var t := UI.label("VICTORY" if won else "DEFEAT", 84, tcol, 0)
+	t.add_theme_color_override("font_outline_color", tcol.darkened(0.8))
+	t.add_theme_constant_override("outline_size", 16)
+	t.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.65))
+	t.add_theme_constant_override("shadow_offset_x", 4)
+	t.add_theme_constant_override("shadow_offset_y", 7)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(t)
 	UI.pop(t, 0.5)
@@ -1851,9 +1884,22 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 			why = "You retreated from battle."
 		elif reason == "trial_fallen":
 			why = "%s fell in battle — in her Trial she must survive to the end." % DB.name_of(str(params.get("hero", ""))).split(" ")[0]
-		var l := UI.wrap_label(why + "\nTip: " + Game.defeat_tip(_foes), 16, Color.WHITE)
+		var l := UI.wrap_label(why, 17, Color.WHITE)
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(l)
+		# the tip in its own framed box with a bulb marker
+		var tp := UI.styled_panel(Color(0.2, 0.02, 0.06, 0.6), Color("#ff6b7d", 0.5), 12, 1, 0)
+		var th := UI.hbox(10)
+		tp.add_child(UI.margin(th, 12, 8, 14, 8))
+		var bulb := UI.label("TIP", 13, Color("#2a0a10"), 0)
+		var bp := UI.styled_panel(Color("#ffb347"), Color.TRANSPARENT, 8, 0, 0)
+		bp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		bp.add_child(UI.margin(bulb, 7, 2, 7, 2))
+		th.add_child(bp)
+		var tl := UI.wrap_label(Game.defeat_tip(_foes), 15, Color("#ffd6dc"))
+		tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		th.add_child(tl)
+		v.add_child(tp)
 	if not rewards.is_empty():
 		var rp := UI.styled_panel(Color(0, 0, 0, 0.5), UI.GOLD_DARK, 12, 1, 14)
 		var rv := UI.vbox(6)
@@ -1887,10 +1933,12 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 	if won and mode == "tower":
 		btns.add_child(UI.button("NEXT FLOOR ▶", func(): main.replace("formation", {"mode": "tower", "floor": int(Game.s["tower"]["floor"])}), "GoldButton", Vector2(200, 54)))
 	if not won:
-		btns.add_child(UI.button("RETRY", func(): main.replace("formation", params), "GoldButton", Vector2(160, 54)))
-		btns.add_child(UI.button("UPGRADE HEROES", func(): main.replace("heroes"), "", Vector2(200, 54)))
+		btns.add_child(UI.button("RETRY", func(): main.replace("formation", params), "GoldButton", Vector2(140, 54)))
+		var ub := UI.button("UPGRADE", func(): main.replace("heroes"), "", Vector2(140, 54))
+		ub.tooltip_text = "Level up, star up and gear your heroes"
+		btns.add_child(ub)
 	btns.add_child(UI.button("STATS", _show_stats, "", Vector2(110, 54)))
-	btns.add_child(UI.button("CONTINUE", func(): main.back(), "", Vector2(160, 54)))
+	btns.add_child(UI.button("CONTINUE", func(): main.back(), "", Vector2(150 if btns.get_child_count() >= 3 else 160, 54)))
 	if not _pending_outro.is_empty():
 		for b in btns.get_children():
 			if b is Button and b.text != "STATS":

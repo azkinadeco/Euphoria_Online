@@ -159,22 +159,111 @@ func _stat_row(parent: Control, name: String, value: String, extra: String = "")
 		r.add_child(UI.label(extra, 15, UI.GREEN))
 	parent.add_child(r)
 
+## Small drawn stat glyph in a tinted circle: heart (HP), sword (ATK), shield (DEF), heart+ring (bond).
+func _stat_icon(kind: String, col: Color) -> Control:
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(24, 24)
+	c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	c.draw.connect(func():
+		var o := Vector2(12, 12)
+		c.draw_circle(o, 11.5, Color(col, 0.18))
+		c.draw_arc(o, 11.0, 0, TAU, 32, Color(col, 0.7), 1.2, true)
+		if kind == "hp" or kind == "bond":
+			c.draw_circle(o + Vector2(-2.6, -1.5), 3.2, col)
+			c.draw_circle(o + Vector2(2.6, -1.5), 3.2, col)
+			c.draw_colored_polygon(PackedVector2Array([o + Vector2(-5.6, -0.6), o + Vector2(5.6, -0.6), o + Vector2(0, 6)]), col)
+		elif kind == "atk":
+			c.draw_line(o + Vector2(-5, 5), o + Vector2(5, -5), col, 2.4, true)
+			c.draw_line(o + Vector2(-6, 2), o + Vector2(-2, 6), col, 2.0, true)
+			c.draw_colored_polygon(PackedVector2Array([o + Vector2(4, -6), o + Vector2(6.5, -6.5), o + Vector2(6, -4)]), col)
+		else:
+			c.draw_colored_polygon(PackedVector2Array([o + Vector2(-5.5, -5.5), o + Vector2(5.5, -5.5), o + Vector2(5, 1), o + Vector2(0, 6.5), o + Vector2(-5, 1)]), col)
+			c.draw_line(o + Vector2(0, -4.5), o + Vector2(0, 4.5), Color(0, 0, 0, 0.35), 1.2))
+	return c
+
+## Stat row: icon, name, value and a bar against the best hero at the same level/star.
+func _stat_bar(parent: Control, kind: String, name: String, value: int, best: int, col: Color) -> void:
+	var r := UI.hbox(8)
+	parent.add_child(r)
+	r.add_child(_stat_icon(kind, col))
+	var n := UI.label(name, 15, UI.MUTED)
+	n.custom_minimum_size = Vector2(52, 0)
+	r.add_child(n)
+	var vl := UI.label(Game.fmt(value), 17, Color.WHITE, 2)
+	vl.custom_minimum_size = Vector2(84, 0)
+	r.add_child(vl)
+	var ratio := clampf(float(value) / float(maxi(1, best)), 0.0, 1.0)
+	var bar := Control.new()
+	bar.custom_minimum_size = Vector2(0, 10)
+	bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	bar.tooltip_text = "%d%% of the strongest hero's %s at this level and star" % [int(ratio * 100.0), name]
+	bar.mouse_filter = Control.MOUSE_FILTER_PASS
+	bar.draw.connect(func():
+		var w := bar.size.x
+		bar.draw_rect(Rect2(0, 2, w, 6), Color(1, 1, 1, 0.08))
+		bar.draw_rect(Rect2(0, 2, w * ratio, 6), Color(col, 0.85))
+		bar.draw_rect(Rect2(0, 2, w * ratio, 2), Color(1, 1, 1, 0.25))
+		for k in [0.25, 0.5, 0.75]:
+			bar.draw_line(Vector2(w * k, 2), Vector2(w * k, 8), Color(0, 0, 0, 0.35), 1.0))
+	r.add_child(bar)
+	var rk := "S" if ratio >= 0.95 else ("A" if ratio >= 0.82 else ("B" if ratio >= 0.68 else "C"))
+	var rc: Color = UI.GOLD if rk == "S" else (Color("#d48cff") if rk == "A" else (Color("#7fb8ff") if rk == "B" else UI.MUTED))
+	var rl := UI.label(rk, 15, rc, 3)
+	rl.custom_minimum_size = Vector2(16, 0)
+	r.add_child(rl)
+
 func _render_info() -> void:
 	var h := Game.hero(id)
 	var st := Game.hero_stats(id)
 	var box := UI.panel("CardPanel")
 	_panel_box.add_child(box)
-	var v := UI.vbox(4)
+	var v := UI.vbox(6)
 	box.add_child(v)
+	var hlv := int(h.get("level", 1))
+	var star := int(h.get("star", 1))
+	# header: power on the left, level pill on the right
+	var i_hh := UI.hbox(10)
+	v.add_child(i_hh)
+	var i_pv := UI.vbox(0)
+	i_pv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	i_hh.add_child(i_pv)
+	i_pv.add_child(UI.label("POWER" if Game.owns(id) else "BASE POWER", 11, UI.MUTED, 1))
+	i_pv.add_child(UI.label(Game.fmt(DB.power_of(st)), 26, UI.GOLD, 4))
 	if Game.owns(id):
-		v.add_child(UI.label("Lv.%d / %d   •   Power %s" % [h["level"], Game.hero_cap(id), Game.fmt(DB.power_of(st))], 18, UI.GOLD, 3))
+		var i_cap := Game.hero_cap(id)
+		var i_lp := UI.styled_panel(Color(0, 0, 0, 0.35), Color(UI.GOLD, 0.5), 10, 1, 0)
+		i_lp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		var i_lpv := UI.vbox(2)
+		i_lp.add_child(UI.margin(i_lpv, 10, 4, 10, 6))
+		i_lpv.add_child(UI.label("Lv.%d / %d" % [hlv, i_cap], 15, Color.WHITE, 2))
+		var i_lb := UI.bar(hlv, i_cap, "GoldBar", 5)
+		i_lb.custom_minimum_size = Vector2(110, 5)
+		i_lpv.add_child(i_lb)
+		i_hh.add_child(i_lp)
 	else:
-		v.add_child(UI.label("Not recruited • Base stats", 16, UI.MUTED))
-	_stat_row(v, "HP", Game.fmt(st["hp"]))
-	_stat_row(v, "ATK", Game.fmt(st["atk"]))
-	_stat_row(v, "DEF", Game.fmt(st["def"]))
+		i_hh.add_child(UI.label("Not recruited", 13, UI.MUTED))
+	# i_best stat among all heroes at this level/star, for the comparison bars
+	var i_best := {"hp": 1, "atk": 1, "def": 1}
+	for i_hid in DB.HEROES.keys():
+		var i_o := DB.stats_for(i_hid, hlv, star)
+		for i_k in i_best.keys():
+			i_best[i_k] = maxi(int(i_best[i_k]), int(i_o[i_k]))
+	_stat_bar(v, "hp", "HP", int(st["hp"]), int(i_best["hp"]), Color("#6be0a0"))
+	_stat_bar(v, "atk", "ATK", int(st["atk"]), int(i_best["atk"]), Color("#ff7a6b"))
+	_stat_bar(v, "def", "DEF", int(st["def"]), int(i_best["def"]), Color("#7fb8ff"))
 	if Game.owns(id):
-		_stat_row(v, "Bond", "Lv.%d" % h["bond"], "+%d%% stats" % ((h["bond"] - 1) * 2 + (10 if h["oath"] else 0)))
+		var i_br := UI.hbox(8)
+		v.add_child(i_br)
+		i_br.add_child(_stat_icon("bond", Color("#ff8fb8")))
+		var i_bn := UI.label("Bond", 15, UI.MUTED)
+		i_bn.custom_minimum_size = Vector2(52, 0)
+		i_br.add_child(i_bn)
+		i_br.add_child(UI.label("Lv.%d" % h["bond"], 16, Color.WHITE, 2))
+		i_br.add_child(UI.label("+%d%% stats" % ((h["bond"] - 1) * 2 + (10 if h["oath"] else 0)), 14, UI.GREEN))
+		if h.get("oath", false):
+			i_br.add_child(UI.label("💍 OATH", 13, Color("#ff8fb8"), 2))
 
 	var sk := DB.skill_of(id)
 	var sb := UI.panel("CardPanel")
