@@ -1024,6 +1024,22 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 ## 2dx. Update batch 121 — Banner lobby
 - `lobby.gd _show_slide()`: tepi kiri art hero diberi gradasi gelap + garis tipis warna tag, menggantikan potongan vertikal yang keras.
 
+## 2dy. Update batch 122 — Kotak dialog cerita (VN)
+- `vn_dialogue.gd`: plat nama berbentuk pita miring (StyleBoxFlat `skew`) warna tema pembicara + gelar hero sebagai subteks; kotak teks punya latar bergradasi, garis aksen warna pembicara di atas, dan garis tipis di bawah (`_box_deco`); teks dengan bayangan + jarak baris; ▼ hanya muncul setelah teks selesai diketik dan memantul di holder sendiri (tidak bentrok dengan layout VBox).
+
+## 2dz. Perbaikan — Kartu hero terlalu zoom
+- Setelah batch 119, kartu hero (tinggi) memakai crop wajah yang ketat sehingga terlihat terlalu dekat. `DB.bust()` (baru) memperlebar crop wajah ke kepala-dada (lebar ±2,1× wajah, rasio 1:1,4); dipakai `hero_card.gd` dan popup Welcome Back. Thumbnail persegi kecil tetap memakai `DB.face()`.
+
+## 2ea. Update batch 123 — Masukan pemain (play-test teman)
+- **Mailbox**: `Game.mail_list()`, `delete_mail(ids)`, `delete_read_mail()` + save `mail_deleted`. Hanya surat yang sudah di-claim yang bisa dihapus. UI: tombol DELETE READ (n) dan mode ☐ SELECT dengan checkbox per surat (ALL READ / DELETE (n) / CANCEL) + konfirmasi; inbox kosong punya pesan sendiri. Flow test `[mail delete]`.
+- **Daily login**: kalender kini juga muncul untuk pemain baru (setelah dialog pembuka + panduan). Rangkaian popup awal sesi lewat `main._startup_popups()` → login → penawaran skin, masing-masing menunggu layar bersih (`_when_clear`).
+- **Iklan skin baru**: `main.show_skin_promo()` — kartu layar penuh (art skin spesial yang belum dimiliki, berganti tiap hari), nama, 3 keuntungan, harga 1.280 Gems / 1 Skin Ticket, tombol GET IT ▶ (ke Wardrobe), LATER dan ✕. Sekali per hari (`promo_day`), tidak di hari pertama.
+- **Ikon web PC**: favicon statis (`favicon.ico` multi-ukuran 16–64, `favicon-32.png`, `favicon-192.png`, `?v=124` untuk memaksa refresh cache) ditambahkan di shell setelah ikon engine; `publish_web.sh` menyalinnya ke `web/`. Tekstur ikon `art/` diubah dari VRAM-compressed ke lossless (VRAM ETC2 tidak didukung WebGL desktop).
+- **Info role di battle**: `DB.ROLE_INFO` / `role_info()` (TANK, DPS • BRUISER/ASSASSIN/RANGED, MAGE • AoE/CURSE, SUPPORT • HEALER/BUFFER). Tap unit saat battle → kartu: wajah, nama, Lv/bintang, chip kategori role, deskripsi tugas, HP live, ATK/DEF, skill + jangkauan, passive, status. Tap lagi/di luar untuk menutup. Tip di awal battle untuk pemain baru. Chip role juga di Hero Detail.
+- **Tutorial**: `game/ui/how_to_play.gd` (HowToPlay) — 7 halaman bergambar dengan diagram animasi (papan & urutan aksi, bentuk jangkauan skill, role & posisi, siklus elemen, pertumbuhan, rutinitas harian). Muncul setelah intro pertama; tombol 📖 HOW TO PLAY di Settings.
+- **Bug formasi**: tap hero lain di papan sekarang hanya memilih hero itu (dulu langsung bertukar posisi). Hero terpilih pindah hanya ke petak kosong; tukar posisi lewat drag (gaya Brown Dust). Teks petunjuk diperbarui.
+- **Web PC vs HP**: skala UI otomatis disamakan ke 1.15 di semua perangkat (dulu PC 1.0 → semua tampak lebih kecil dan menu samping berdesakan). Opsi manual di Settings tetap ada.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

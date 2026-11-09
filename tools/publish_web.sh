@@ -12,6 +12,8 @@ cp web/Euphoria_v2.html web/index.html
 for f in favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png; do
   [ -f builds/$f ] && cp builds/$f web/
 done
+# static favicons for desktop browsers (the engine's runtime icon swap is not reliable there)
+cp web_shell/favicon.ico web_shell/favicon-32.png web_shell/favicon-192.png web/
 touch web/.gdignore
 ls -la web | awk '{print $5, $9}'
 

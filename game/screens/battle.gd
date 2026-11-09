@@ -211,6 +211,117 @@ func build() -> void:
 func skip() -> void:
 	_skip = true
 
+# ---------------------------------------------------------------- tap a unit: role & stats card
+var _info_card: Control
+var _info_uid := -1
+
+func _input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+	if _done or _paused or _skip:
+		return
+	var hit := -1
+	for uid in _views.keys():
+		var v: UnitView = _views[uid]
+		if not is_instance_valid(v) or v.has_meta("dead") or v.modulate.a < 0.5:
+			continue
+		var r := v.sprite.get_global_rect().grow_individual(-v.size.x * 0.18, -v.size.y * 0.12, -v.size.x * 0.18, 0)
+		if r.has_point(event.position):
+			hit = uid
+	if hit >= 0:
+		_show_unit_info(hit)
+		get_viewport().set_input_as_handled()
+	elif is_instance_valid(_info_card) and not _info_card.get_global_rect().has_point(event.position):
+		_hide_unit_info()
+
+func _hide_unit_info() -> void:
+	if is_instance_valid(_info_card):
+		var c := _info_card
+		_info_card = null
+		_info_uid = -1
+		var tw := c.create_tween()
+		tw.tween_property(c, "modulate:a", 0.0, 0.12)
+		tw.tween_callback(c.queue_free)
+
+func _show_unit_info(uid: int) -> void:
+	if _info_uid == uid and is_instance_valid(_info_card):
+		_hide_unit_info()
+		return
+	if is_instance_valid(_info_card):
+		_info_card.queue_free()
+	_info_uid = uid
+	var u: Dictionary = sim.units[uid]
+	var v: UnitView = _views[uid]
+	var id: String = u["id"]
+	var ally: bool = u["side"] == 0
+	var ri := DB.role_info(id)
+	var rcol := Color(str(ri[1]))
+	var ec: Color = DB.ELEMENT_COLOR.get(str(u["elem"]), UI.GOLD)
+	var card := UI.styled_panel(Color(0.04, 0.02, 0.09, 0.95), Color("#7fd0ff") if ally else Color("#ff6b7d"), 12, 2, 0)
+	card.custom_minimum_size = Vector2(380, 0)
+	card.mouse_filter = Control.MOUSE_FILTER_STOP
+	card.z_index = 40
+	var root := UI.vbox(6)
+	card.add_child(UI.margin(root, 12, 10, 12, 12))
+	var top := UI.hbox(10)
+	root.add_child(top)
+	var fp := UI.styled_panel(Color.BLACK, ec, 8, 2, 1)
+	fp.add_child(UI.tex_rect(DB.face(id), Vector2(60, 60), true))
+	top.add_child(fp)
+	var tv := UI.vbox(2)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(tv)
+	var nm := UI.label(DB.name_of(id), 19, Color.WHITE, 3)
+	nm.clip_text = true
+	tv.add_child(nm)
+	var lh := UI.hbox(6)
+	tv.add_child(lh)
+	lh.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(str(u["elem"]), "elem_light")), Vector2(18, 18)))
+	lh.add_child(UI.label("Lv.%d  %s" % [int(u["level"]), "★".repeat(int(u.get("star", 1)))], 13, UI.GOLD, 2))
+	if u.get("boss", false):
+		lh.add_child(UI.label("BOSS", 12, Color("#ff6b7d"), 2))
+	var chip := UI.styled_panel(Color(rcol, 0.2), rcol, 8, 1, 0)
+	chip.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	chip.add_child(UI.margin(UI.label("%s  ·  %s" % [ri[0], DB.role_of(id)], 12, rcol.lightened(0.2), 2), 8, 2, 8, 2))
+	tv.add_child(chip)
+	root.add_child(UI.wrap_label(str(ri[2]), 13, UI.TEXT))
+	# live HP from the bar on the board, plus ATK / DEF
+	var hp := int(v.hp_bar.value) if v.hp_bar else int(u["hp"])
+	var mx := int(u["max_hp"])
+	var hb := UI.bar(hp, mx, "HpBar" if ally else "EnemyHpBar", 10)
+	root.add_child(hb)
+	var sr := UI.hbox(14)
+	root.add_child(sr)
+	sr.add_child(UI.label("HP %s / %s" % [Game.fmt(hp), Game.fmt(mx)], 13, Color.WHITE, 2))
+	sr.add_child(UI.label("ATK %s" % Game.fmt(int(u["atk"])), 13, Color("#ff9a8a"), 2))
+	sr.add_child(UI.label("DEF %s" % Game.fmt(int(u["def"])), 13, Color("#8fc4ff"), 2))
+	var sk: Dictionary = u["skill"]
+	var sl := UI.hbox(6)
+	root.add_child(sl)
+	sl.add_child(UI.tex_rect(DB.icon("icon_skill_ultimate"), Vector2(18, 18)))
+	sl.add_child(UI.label(str(sk.get("name", "Skill")), 14, UI.GOLD, 2))
+	sl.add_child(UI.label(DB.shape_label(sk), 11, Color("#9fd0ff"), 1))
+	if str(sk.get("desc", "")) != "":
+		root.add_child(UI.wrap_label(str(sk.get("desc", "")), 12, UI.MUTED))
+	var pk := str(u.get("passive", ""))
+	if pk != "" and DB.PASSIVES.has(pk):
+		root.add_child(UI.wrap_label("PASSIVE  %s — %s" % [DB.PASSIVES[pk]["name"], DB.PASSIVES[pk]["desc"]], 12, Color("#ffd6a3")))
+	if not v.statuses.is_empty():
+		root.add_child(UI.wrap_label("STATUS  " + ", ".join(v.statuses), 12, Color("#ff9f43")))
+	add_child(card)
+	_info_card = card
+	# allies' card on the left, enemies' on the right, under the turn-order strip
+	card.position = Vector2(16 if ally else size.x - 396, 214)
+	card.size = Vector2(380, 0)
+	(func():
+		if is_instance_valid(card):
+			card.size = Vector2(380, card.get_combined_minimum_size().y)
+			card.position.y = minf(card.position.y, size.y - card.size.y - 12)).call_deferred()
+	card.modulate.a = 0.0
+	var tw := card.create_tween()
+	tw.tween_property(card, "modulate:a", 1.0, 0.12)
+	Game.sfx("ui_click")
+
 func on_back() -> bool:
 	if _done:
 		return false
@@ -1322,6 +1433,8 @@ func _intro_banners() -> void:
 	if not sim.tactic.is_empty():
 		var td := DB.tactic_def(str(sim.tactic["id"]))
 		lines.append(["TACTIC: %s Lv.%d  •  %s" % [td["name"], int(sim.tactic["lv"]), td["trigger"]], UI.GOLD])
+	if Game.stages_cleared() < 8:
+		lines.append(["TIP: Tap any unit to see its role, stats and skill", Color("#9fe3ff")])
 	var first_fight: bool = str(params.get("mode", "")) == "story" and Game.stages_cleared() == 0
 	if first_fight:
 		lines.append(["Your team fights on its own. Your Formation decides the battle!", UI.GOLD])

@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://8x8ad7iuc4kh"
-path.s3tc="res://.godot/imported/icon_skill_tactical.png-5afeed4e84e60340b50f0d2f4edd4f1e.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_skill_tactical.png-5afeed4e84e60340b50f0d2f4edd4f1e.etc2.ctex"
+path="res://.godot/imported/icon_skill_tactical.png-5afeed4e84e60340b50f0d2f4edd4f1e.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/icon_skill_tactical.png"
-dest_files=["res://.godot/imported/icon_skill_tactical.png-5afeed4e84e60340b50f0d2f4edd4f1e.s3tc.ctex", "res://.godot/imported/icon_skill_tactical.png-5afeed4e84e60340b50f0d2f4edd4f1e.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_skill_tactical.png-5afeed4e84e60340b50f0d2f4edd4f1e.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

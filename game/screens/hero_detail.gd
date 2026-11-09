@@ -127,6 +127,14 @@ func _render() -> void:
 	top.add_child(UI.rarity_tag(DB.rarity_of(id), 16))
 	top.add_child(UI.element_tag(DB.element_of(id), 15))
 	top.add_child(UI.label(DB.role_of(id), 15, UI.MUTED, 3))
+	var ri := DB.role_info(id)
+	var rc := Color(str(ri[1]))
+	var rchip := UI.styled_panel(Color(rc, 0.18), Color(rc, 0.8), 8, 1, 0)
+	rchip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	rchip.add_child(UI.margin(UI.label(str(ri[0]), 12, rc.lightened(0.2), 2), 7, 1, 7, 1))
+	rchip.tooltip_text = str(ri[2])
+	rchip.mouse_filter = Control.MOUSE_FILTER_PASS
+	top.add_child(rchip)
 	_name_box.add_child(top)
 	_name_box.add_child(UI.label(DB.name_of(id), 44, Color.WHITE, 8))
 	_name_box.add_child(UI.label(DB.title_of(id), 16, DB.theme_color(id).lightened(0.4), 4))

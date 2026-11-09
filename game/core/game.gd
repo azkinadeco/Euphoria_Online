@@ -72,6 +72,7 @@ func new_state() -> Dictionary:
 		"quests": {"day": -1, "progress": {}, "claimed": {}},
 		"achievements": {},
 		"mail_claimed": [],
+		"mail_deleted": [],
 		"first_steps": [],
 		"shop": {"day": -1, "bought": {}},
 		"stats": {"oaths": 0},
@@ -359,7 +360,8 @@ func ui_scale() -> float:
 	var v := float(s["settings"].get("ui_scale", -1.0))
 	if v > 0.0:
 		return v
-	return 1.15 if DisplayServer.is_touchscreen_available() else 1.0
+	# same layout on every device: PC browsers used 1.0 and looked different (smaller, crowded side menu)
+	return 1.15
 
 ## Frame-rate cap: 60 (smooth) or 30 (cooler, longer battery on phones).
 func fps_cap() -> int:
@@ -1278,6 +1280,25 @@ func badge_quests() -> int:
 	return n
 
 # =================================================================== mail & shop
+
+## Mail still in the inbox (deleted letters are hidden for good).
+func mail_list() -> Array:
+	return DB.MAIL.filter(func(m): return not (s["mail_deleted"] as Array).has(m["id"]))
+
+## Delete letters whose gifts were already claimed (unclaimed mail is kept so no reward is lost).
+## Returns how many were removed.
+func delete_mail(ids: Array) -> int:
+	var n := 0
+	for id in ids:
+		if s["mail_claimed"].has(id) and not s["mail_deleted"].has(id):
+			s["mail_deleted"].append(id)
+			n += 1
+	if n > 0:
+		mark_dirty()
+	return n
+
+func delete_read_mail() -> int:
+	return delete_mail(mail_list().map(func(m): return m["id"]))
 
 func mail_unclaimed() -> int:
 	var n := 0

@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cq6hr75lqbkk4"
-path.s3tc="res://.godot/imported/gear_weapon.png-28d44189422a527efca6d394769cc783.s3tc.ctex"
-path.etc2="res://.godot/imported/gear_weapon.png-28d44189422a527efca6d394769cc783.etc2.ctex"
+path="res://.godot/imported/gear_weapon.png-28d44189422a527efca6d394769cc783.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/gear_weapon.png"
-dest_files=["res://.godot/imported/gear_weapon.png-28d44189422a527efca6d394769cc783.s3tc.ctex", "res://.godot/imported/gear_weapon.png-28d44189422a527efca6d394769cc783.etc2.ctex"]
+dest_files=["res://.godot/imported/gear_weapon.png-28d44189422a527efca6d394769cc783.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

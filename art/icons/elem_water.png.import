@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://io42wtk3ttp3"
-path.s3tc="res://.godot/imported/elem_water.png-32b6675f979cca01e7fdbebc6abef220.s3tc.ctex"
-path.etc2="res://.godot/imported/elem_water.png-32b6675f979cca01e7fdbebc6abef220.etc2.ctex"
+path="res://.godot/imported/elem_water.png-32b6675f979cca01e7fdbebc6abef220.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/elem_water.png"
-dest_files=["res://.godot/imported/elem_water.png-32b6675f979cca01e7fdbebc6abef220.s3tc.ctex", "res://.godot/imported/elem_water.png-32b6675f979cca01e7fdbebc6abef220.etc2.ctex"]
+dest_files=["res://.godot/imported/elem_water.png-32b6675f979cca01e7fdbebc6abef220.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

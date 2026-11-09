@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bcyy5petqhfgf"
-path.s3tc="res://.godot/imported/elem_light.png-801f1e7ccfe30774a02990e0dbd244c4.s3tc.ctex"
-path.etc2="res://.godot/imported/elem_light.png-801f1e7ccfe30774a02990e0dbd244c4.etc2.ctex"
+path="res://.godot/imported/elem_light.png-801f1e7ccfe30774a02990e0dbd244c4.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/elem_light.png"
-dest_files=["res://.godot/imported/elem_light.png-801f1e7ccfe30774a02990e0dbd244c4.s3tc.ctex", "res://.godot/imported/elem_light.png-801f1e7ccfe30774a02990e0dbd244c4.etc2.ctex"]
+dest_files=["res://.godot/imported/elem_light.png-801f1e7ccfe30774a02990e0dbd244c4.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -52,7 +52,7 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.add_child(glow)
 
-	var face := UI.tex_rect(DB.face(id, int(h.get("skin", 0)) if opts.get("skin", false) else -1), Vector2.ZERO, true)
+	var face := UI.tex_rect(DB.bust(id, int(h.get("skin", 0)) if opts.get("skin", false) else -1), Vector2.ZERO, true)
 	face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	face.offset_left = 3
 	face.offset_top = 3

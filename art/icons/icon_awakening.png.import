@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dcpkhhw125hxu"
-path.s3tc="res://.godot/imported/icon_awakening.png-93c2e1686c9999a5244dea70d296c57a.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_awakening.png-93c2e1686c9999a5244dea70d296c57a.etc2.ctex"
+path="res://.godot/imported/icon_awakening.png-93c2e1686c9999a5244dea70d296c57a.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/icon_awakening.png"
-dest_files=["res://.godot/imported/icon_awakening.png-93c2e1686c9999a5244dea70d296c57a.s3tc.ctex", "res://.godot/imported/icon_awakening.png-93c2e1686c9999a5244dea70d296c57a.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_awakening.png-93c2e1686c9999a5244dea70d296c57a.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -168,6 +168,9 @@ func _profile(parent: Control) -> void:
 		main.toast("Name changed to %s" % n)
 		main.replace("settings"), "", Vector2(110, 42)))
 	v.add_child(nh)
+	var hp := UI.button("📖 HOW TO PLAY", func(): main.show_how_to_play(), "GoldButton", Vector2(0, 44))
+	hp.tooltip_text = "Battlefield, ranges, roles, elements, growth and daily routine"
+	v.add_child(hp)
 
 func _data(parent: Control) -> void:
 	var v := _card(parent, "SAVE DATA", "icon_codex", Color("#7ee08a"))

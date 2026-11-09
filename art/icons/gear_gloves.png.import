@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bd52ofvtii5jl"
-path.s3tc="res://.godot/imported/gear_gloves.png-9d20bf2342e0dc5f082ea3afa3669625.s3tc.ctex"
-path.etc2="res://.godot/imported/gear_gloves.png-9d20bf2342e0dc5f082ea3afa3669625.etc2.ctex"
+path="res://.godot/imported/gear_gloves.png-9d20bf2342e0dc5f082ea3afa3669625.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/gear_gloves.png"
-dest_files=["res://.godot/imported/gear_gloves.png-9d20bf2342e0dc5f082ea3afa3669625.s3tc.ctex", "res://.godot/imported/gear_gloves.png-9d20bf2342e0dc5f082ea3afa3669625.etc2.ctex"]
+dest_files=["res://.godot/imported/gear_gloves.png-9d20bf2342e0dc5f082ea3afa3669625.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://de0k75tce7ei"
-path.s3tc="res://.godot/imported/icon_skill_basic.png-74adeb203f5d0d8c3a97ed3e6b37f05a.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_skill_basic.png-74adeb203f5d0d8c3a97ed3e6b37f05a.etc2.ctex"
+path="res://.godot/imported/icon_skill_basic.png-74adeb203f5d0d8c3a97ed3e6b37f05a.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/icon_skill_basic.png"
-dest_files=["res://.godot/imported/icon_skill_basic.png-74adeb203f5d0d8c3a97ed3e6b37f05a.s3tc.ctex", "res://.godot/imported/icon_skill_basic.png-74adeb203f5d0d8c3a97ed3e6b37f05a.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_skill_basic.png-74adeb203f5d0d8c3a97ed3e6b37f05a.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

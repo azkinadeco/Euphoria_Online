@@ -98,6 +98,23 @@ const PASSIVES := {
 	"GRACE": {"name": "Grace", "roles": ["HEALER", "BUFFER"], "desc": "End of round: heals the weakest ally for 6% of her Max HP."},
 }
 
+## Plain-language battle role for each class: [category tag, colour, one-line job description].
+const ROLE_INFO := {
+	"TANK": ["TANK", "#7fb8ff", "Front-line wall: soaks hits and protects the team."],
+	"KNIGHT": ["TANK", "#7fb8ff", "Armoured guard: holds the line and shields allies."],
+	"PALADIN": ["TANK • SUPPORT", "#9fd8ff", "Holy guard: tanks damage and backs up allies."],
+	"WARRIOR": ["DPS • BRUISER", "#ff9a5c", "Melee fighter: steady damage that grows each round."],
+	"ASSASSIN": ["DPS • ASSASSIN", "#ff5c8a", "Burst killer: big crits on priority targets."],
+	"RANGER": ["DPS • RANGED", "#9be36b", "Sharpshooter: hits the back line from afar."],
+	"MAGE": ["MAGE • AoE", "#c58cff", "Spellcaster: area damage that pierces armour."],
+	"WARLOCK": ["MAGE • CURSE", "#b06cff", "Dark caster: area damage plus debuffs."],
+	"HEALER": ["SUPPORT • HEALER", "#6be0a0", "Keeps the team alive with heals and cleanses."],
+	"BUFFER": ["SUPPORT • BUFFER", "#ffd479", "Empowers allies with buffs and shields."],
+}
+
+static func role_info(id: String) -> Array:
+	return ROLE_INFO.get(role_of(id), ["DPS", "#ff9a5c", "Deals damage."])
+
 static func passive_of(id: String) -> String:
 	var r := role_of(id)
 	for k in PASSIVES.keys():
@@ -2648,6 +2665,37 @@ static func face(id: String, skin: int = -1) -> Texture2D:
 	else:
 		var side := minf(w * 0.78, h * 0.62)
 		at.region = Rect2((w - side) * 0.5, h * 0.03, side, side * 1.15)
+	_tex_cache[key] = at
+	return at
+
+## Head-and-chest crop for tall cards (hero cards): the face crop widened around the head.
+## Chest-up portraits without a precomputed crop use the same region as face().
+static func bust(id: String, skin: int = -1) -> Texture2D:
+	id = base_id(id)
+	var key := "bust:%s:%d" % [id, skin]
+	if _tex_cache.has(key):
+		return _tex_cache[key]
+	var base: Texture2D = portrait(id) if skin < 0 else art(id, skin)
+	if base == null:
+		return null
+	var fc: Array = _face_crops().get(base.resource_path, [])
+	if fc.size() != 4:
+		var f := face(id, skin)
+		_tex_cache[key] = f
+		return f
+	var w := float(base.get_width())
+	var h := float(base.get_height())
+	var fx := float(fc[0]) * w
+	var fy := float(fc[1]) * h
+	var fw := float(fc[2]) * w
+	var cx := fx + fw * 0.5
+	var bw := minf(w, fw * 2.1)
+	var bh := minf(h, bw * 1.4)
+	var bx := clampf(cx - bw * 0.5, 0.0, w - bw)
+	var by := clampf(fy - fw * 0.12, 0.0, h - bh)
+	var at := AtlasTexture.new()
+	at.atlas = base
+	at.region = Rect2(bx, by, bw, bh)
 	_tex_cache[key] = at
 	return at
 

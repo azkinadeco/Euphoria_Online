@@ -178,7 +178,7 @@ func build() -> void:
 			rb.add_theme_color_override("font_color", Color("#9fd0ff"))
 			start_row.add_child(rb)
 	else:
-		btns.add_child(UI.wrap_label("Tap a hero to deploy, then tap a tile to move. Drag & drop also works. Numbers = action order.", 13, UI.MUTED))
+		btns.add_child(UI.wrap_label("Tap a hero to select, tap an empty tile to move. Drag onto another hero to swap. Numbers = action order.", 13, UI.MUTED))
 		btns.add_child(UI.button("STORY ▶", func(): main.go("story"), "GoldButton", Vector2(0, 48)))
 	_render()
 	if tutorial("formation"):
@@ -475,17 +475,22 @@ func _on_cell(cell: Vector2i) -> void:
 			main.toast("Support hero can only move to an empty tile.", UI.RED)
 		_render()
 		return
+	# Brown Dust style: tapping a hero always just selects it; a selected hero moves only onto an
+	# EMPTY tile. Swapping two deployed heroes is done by dragging one onto the other.
+	var sel_deployed := _sel != "" and Game.formation_cell_of(_sel).x >= 0
 	if _sel != "" and occ == _sel:
 		_sel = ""
+	elif occ != "" and (sel_deployed or _sel == ""):
+		_sel = occ
+		Game.sfx("ui_click")
 	elif _sel != "":
+		# empty tile (move) — or a bench hero taking a deployed hero's place when the team is full
 		var err := Game.place_hero(_sel, cell)
 		if err != "":
 			main.toast(err, UI.RED)
 		else:
 			Game.sfx("battle/dash")
 			_land = _sel
-	elif occ != "":
-		_sel = occ
 	_render()
 
 # ---------------------------------------------------------------- drag & drop

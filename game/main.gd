@@ -88,11 +88,12 @@ func enter_game() -> void:
 	go("lobby", {"intro": first_time}, false)
 	if first_time:
 		Game.s["intro_seen"] = true
+		Game.s["promo_day"] = Game.day_key()   # no shop offer on the very first day
 		Game.save_game()
 		dialogue([
 			["furu", "Commander, you've finally awakened! The Eclipse is swallowing Euphoria."],
 			["shina", "We're the last Oath Knights. Grab the supplies in your Mailbox and let's go!"],
-		])
+		], func(): show_how_to_play(_startup_popups))
 	else:
 		var after_welcome := func():
 			var bd := Game.claim_birthdays()
@@ -100,14 +101,153 @@ func enter_game() -> void:
 				var hid: String = bd[0]
 				dialogue([[hid, "Commander... you remembered? Today is my birthday!"], [hid, DB.voice(hid, "bond")["en"]]], func():
 					show_rewards("HAPPY BIRTHDAY, %s!" % DB.name_of(hid).to_upper(), {"celestial_gem": 1, "gems": 100}, func():
-						if Game.can_claim_login():
-							show_login_calendar()), "", false, hid, "%s_bday" % hid)
-			elif Game.can_claim_login():
-				show_login_calendar()
+						_startup_popups()), "", false, hid, "%s_bday" % hid)
+			else:
+				_startup_popups()
 		if Game.away_secs >= 3600:
 			_welcome_back(after_welcome)
 		else:
 			after_welcome.call()
+
+## The illustrated How to Play guide (first launch, and Settings → HOW TO PLAY).
+func show_how_to_play(done: Callable = Callable()) -> void:
+	var g := HowToPlay.new()
+	overlay.add_child(g)
+	if done.is_valid():
+		g.finished.connect(done)
+
+## Start-of-session popups, one after another: daily login calendar, then the new-skin offer (once a day).
+func _startup_popups() -> void:
+	_when_clear(func():
+		if Game.can_claim_login():
+			show_login_calendar()
+		_when_clear(func():
+			if int(Game.s.get("promo_day", -1)) != Game.day_key():
+				show_skin_promo()))
+
+## Run `cb` once no dialogue or popup is on screen (polls every 0.4 s).
+func _when_clear(cb: Callable) -> void:
+	var busy := _vn_active()
+	for c in overlay.get_children():
+		if c.has_meta("popup") and not c.is_queued_for_deletion():
+			busy = true
+	if busy or current_name != "lobby":
+		get_tree().create_timer(0.4).timeout.connect(func(): _when_clear(cb))
+		return
+	cb.call()
+
+## The skin on offer: a gem-buyable special skin the player does not own yet (rotates daily).
+func promo_skin() -> String:
+	var ids: Array = DB.SPECIAL_SKINS.keys().filter(func(h): return DB.special_index(h) >= 0 and not DB.EVENT_SKINS.has(h) and not Game.skin_unlocked(h, DB.special_index(h)))
+	if ids.is_empty():
+		return ""
+	return ids[Game.day_key() % ids.size()]
+
+## Full-screen "NEW SKIN" offer: the skin's art, its name and bonus, GET IT (→ Wardrobe) or close.
+func show_skin_promo() -> void:
+	var hid := promo_skin()
+	if hid == "":
+		return
+	Game.s["promo_day"] = Game.day_key()
+	Game.mark_dirty()
+	var idx := DB.special_index(hid)
+	var col := DB.theme_color(hid)
+	var layer := Control.new()
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	layer.set_meta("popup", true)
+	overlay.add_child(layer)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.72)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(dim)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(center)
+	var card := Control.new()
+	card.custom_minimum_size = Vector2(minf(980.0, get_viewport().get_visible_rect().size.x - 40.0), minf(560.0, get_viewport().get_visible_rect().size.y - 40.0))
+	card.clip_contents = true
+	center.add_child(card)
+	var bg := UI.tex_rect(DB.bg("blackmarket"), Vector2.ZERO, true)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.modulate = Color(0.55, 0.45, 0.6)
+	card.add_child(bg)
+	var glow := Control.new()
+	glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow.draw.connect(func():
+		var c := Vector2(glow.size.x * 0.3, glow.size.y * 0.5)
+		for i in 9:
+			glow.draw_circle(c, 300.0 - i * 30.0, Color(col, 0.05))
+		var dk := Color(0.04, 0.02, 0.08, 0.92)
+		var cl := Color(0.04, 0.02, 0.08, 0.0)
+		var x0 := glow.size.x * 0.45
+		glow.draw_polygon(PackedVector2Array([Vector2(x0, 0), Vector2(glow.size.x, 0), glow.size, Vector2(x0, glow.size.y)]), PackedColorArray([cl, dk, dk, cl])))
+	card.add_child(glow)
+	var art := UI.tex_rect(DB.art(hid, idx))
+	art.set_anchors_preset(Control.PRESET_FULL_RECT)
+	art.anchor_right = 0.58
+	art.offset_top = 10
+	art.offset_bottom = 30
+	card.add_child(art)
+	UI.live(art, col.lightened(0.4))
+	UI.fade_in(art, 0.45, Vector2(-40, 0))
+	var frame := Panel.new()
+	frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, UI.GOLD, 16, 2, 0))
+	card.add_child(frame)
+	var v := UI.vbox(8)
+	v.set_anchors_preset(Control.PRESET_FULL_RECT)
+	v.anchor_left = 0.55
+	v.offset_right = -30
+	v.offset_top = 40
+	v.offset_bottom = -30
+	v.alignment = BoxContainer.ALIGNMENT_CENTER
+	card.add_child(v)
+	var tag := UI.styled_panel(Color("#ff4d8d"), Color.TRANSPARENT, 8, 0, 0)
+	tag.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	tag.add_child(UI.margin(UI.label("✦ NEW SKIN ✦", 13, Color.WHITE, 2), 10, 3, 10, 3))
+	v.add_child(tag)
+	var nm := UI.label(str(DB.SPECIAL_SKINS[hid]).to_upper(), 36, UI.GOLD, 0)
+	nm.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	nm.add_theme_color_override("font_outline_color", col.darkened(0.8))
+	nm.add_theme_constant_override("outline_size", 10)
+	v.add_child(nm)
+	v.add_child(UI.label(DB.name_of(hid) + "  •  " + DB.title_of(hid), 15, Color.WHITE, 3))
+	var perks := UI.vbox(4)
+	for t in ["Exclusive full outfit + battle look", "+10% ATK & HP while worn", "Special scene with %s" % DB.name_of(hid).split(" ")[0]]:
+		perks.add_child(UI.label("✔  " + t, 14, Color("#ffe6a3"), 2))
+	v.add_child(perks)
+	var price := UI.hbox(8)
+	price.add_child(UI.tex_rect(DB.icon("icon_gem"), Vector2(28, 28)))
+	price.add_child(UI.label(Game.fmt(DB.SPECIAL_PRICE), 26, Color.WHITE, 4))
+	price.add_child(UI.label("or 1 Skin Ticket", 13, UI.MUTED, 2))
+	v.add_child(price)
+	var bt := UI.hbox(10)
+	v.add_child(bt)
+	var get_b := UI.button("GET IT ▶", func():
+		close_popup(layer)
+		go("wardrobe", {"hero": hid}), "GoldButton", Vector2(200, 54))
+	bt.add_child(get_b)
+	var pt := get_b.create_tween().set_loops()
+	pt.tween_property(get_b, "modulate", Color(1.2, 1.15, 1.05), 0.6)
+	pt.tween_property(get_b, "modulate", Color.WHITE, 0.6)
+	bt.add_child(UI.button("LATER", func(): close_popup(layer), "", Vector2(120, 54)))
+	var x := UI.button("✕", func(): close_popup(layer), "", Vector2(46, 46))
+	x.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	x.offset_left = -58
+	x.offset_top = 12
+	x.offset_right = -12
+	x.offset_bottom = 58
+	card.add_child(x)
+	card.modulate.a = 0.0
+	card.scale = Vector2(0.94, 0.94)
+	card.pivot_offset = card.custom_minimum_size * 0.5
+	var tw := card.create_tween().set_parallel(true)
+	tw.tween_property(card, "modulate:a", 1.0, 0.25)
+	tw.tween_property(card, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 ## Notice board (data/news.json): tabs of news on the left, the selected notice on the right.
 func show_news(sel: int = 0) -> void:
@@ -213,7 +353,7 @@ func _welcome_back(done: Callable) -> void:
 	var v := popup("WELCOME BACK, COMMANDER", 760)
 	var h := UI.hbox(16)
 	v.add_child(h)
-	var art := UI.tex_rect(DB.face(hid, int(Game.hero(hid).get("skin", 0))), Vector2(180, 220), true)
+	var art := UI.tex_rect(DB.bust(hid, int(Game.hero(hid).get("skin", 0))), Vector2(180, 220), true)
 	h.add_child(art)
 	var col := UI.vbox(8)
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL

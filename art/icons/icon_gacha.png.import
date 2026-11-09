@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtcdbqtwf62yg"
-path.s3tc="res://.godot/imported/icon_gacha.png-a6be29feced270461ae4abab7572c766.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_gacha.png-a6be29feced270461ae4abab7572c766.etc2.ctex"
+path="res://.godot/imported/icon_gacha.png-a6be29feced270461ae4abab7572c766.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/icon_gacha.png"
-dest_files=["res://.godot/imported/icon_gacha.png-a6be29feced270461ae4abab7572c766.s3tc.ctex", "res://.godot/imported/icon_gacha.png-a6be29feced270461ae4abab7572c766.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_gacha.png-a6be29feced270461ae4abab7572c766.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

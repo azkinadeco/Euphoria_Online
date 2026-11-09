@@ -6,6 +6,9 @@ var _view: VBoxContainer
 var _sel := ""
 var _all_btn: Button
 var _count_l: Label
+var _select_mode := false
+var _picked: Array = []      # mail ids ticked for deletion
+var _tools: HBoxContainer
 
 ## Per-mail flavour: [tag, tag colour, sender, icon, date]
 const META := {
@@ -39,8 +42,12 @@ func build() -> void:
 	_count_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	top.add_child(_count_l)
 	_list = UI.vbox(6)
-	lv.add_child(UI.scroll(_list))
-	lv.add_child(UI.label("Mail with gifts stays here until you claim it.", 11, UI.MUTED, 0))
+	var sc := UI.scroll(_list)
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	lv.add_child(sc)
+	_tools = UI.hbox(6)
+	lv.add_child(_tools)
+	lv.add_child(UI.label("Only claimed mail can be deleted — gifts are never lost.", 11, UI.MUTED, 0))
 	var rp := UI.styled_panel(Color(0.97, 0.94, 0.9, 0.97), Color("#d9b26a"), 14, 2, 22.0)
 	rp.anchor_left = 0.42
 	rp.anchor_right = 1.0
@@ -50,12 +57,12 @@ func build() -> void:
 	rp.add_child(_view)
 	_sel = str(params.get("mail", ""))
 	if _sel == "":
-		for m in DB.MAIL:
+		for m in Game.mail_list():
 			if not _claimed(m["id"]):
 				_sel = m["id"]
 				break
-		if _sel == "" and not DB.MAIL.is_empty():
-			_sel = DB.MAIL[0]["id"]
+		if _sel == "" and not Game.mail_list().is_empty():
+			_sel = Game.mail_list()[0]["id"]
 	_render()
 	UI.stagger(_list, 0.04)
 
@@ -69,12 +76,69 @@ func _render() -> void:
 	for c in _list.get_children():
 		c.queue_free()
 	var unread := Game.mail_unclaimed()
-	_count_l.text = "%d unclaimed  •  %d total" % [unread, DB.MAIL.size()]
+	var mails := Game.mail_list()
+	_count_l.text = "%d unclaimed  •  %d total" % [unread, mails.size()]
 	_all_btn.text = "CLAIM ALL (%d)" % unread if unread > 0 else "ALL CLAIMED"
 	_all_btn.disabled = unread == 0
-	for m in DB.MAIL:
+	if mails.is_empty():
+		var e := UI.wrap_label("Your inbox is empty.\nNew mail from the team will appear here.", 14, UI.MUTED)
+		e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_list.add_child(e)
+	for m in mails:
 		_list.add_child(_row(m))
+	_render_tools(mails)
 	_render_view()
+
+## Bottom toolbar: DELETE READ, or SELECT mode with ticks + DELETE (n) / CANCEL.
+func _render_tools(mails: Array) -> void:
+	for c in _tools.get_children():
+		c.queue_free()
+	var readable := mails.filter(func(m): return _claimed(m["id"])).size()
+	if _select_mode:
+		var all_b := UI.button("ALL READ", func():
+			_picked = mails.filter(func(m): return _claimed(m["id"])).map(func(m): return m["id"])
+			_render(), "", Vector2(0, 40))
+		all_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_tools.add_child(all_b)
+		var del := UI.button("DELETE (%d)" % _picked.size(), func(): _delete(_picked.duplicate()), "GoldButton", Vector2(0, 40))
+		del.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		del.disabled = _picked.is_empty()
+		_tools.add_child(del)
+		var cancel := UI.button("CANCEL", func():
+			_select_mode = false
+			_picked.clear()
+			_render(), "", Vector2(0, 40))
+		cancel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_tools.add_child(cancel)
+	else:
+		var sel_b := UI.button("☐ SELECT", func():
+			_select_mode = true
+			_picked.clear()
+			_render(), "", Vector2(0, 40))
+		sel_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		sel_b.disabled = readable == 0
+		_tools.add_child(sel_b)
+		var dr := UI.button("DELETE READ (%d)" % readable, func():
+			_delete(mails.filter(func(m): return _claimed(m["id"])).map(func(m): return m["id"])), "", Vector2(0, 40))
+		dr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		dr.disabled = readable == 0
+		dr.tooltip_text = "Delete every mail whose gifts you already claimed"
+		_tools.add_child(dr)
+
+func _delete(ids: Array) -> void:
+	if ids.is_empty():
+		return
+	main.confirm("Delete %d read mail%s? This cannot be undone." % [ids.size(), "" if ids.size() == 1 else "s"], func():
+		var n := Game.delete_mail(ids)
+		_select_mode = false
+		_picked.clear()
+		if ids.has(_sel):
+			_sel = ""
+			var left := Game.mail_list()
+			if not left.is_empty():
+				_sel = left[0]["id"]
+		main.toast("%d mail deleted." % n, UI.GREEN)
+		_render(), "DELETE")
 
 func _row(m: Dictionary) -> Control:
 	var id: String = m["id"]
@@ -93,6 +157,19 @@ func _row(m: Dictionary) -> Control:
 	var h := UI.hbox(10)
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fr.add_child(h)
+	if _select_mode:
+		var box := Control.new()
+		box.custom_minimum_size = Vector2(26, 26)
+		box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var on := _picked.has(id)
+		box.draw.connect(func():
+			var r := Rect2(2, 2, 22, 22)
+			box.draw_rect(r, Color(0, 0, 0, 0.4) if done else Color(1, 1, 1, 0.05))
+			box.draw_rect(r, UI.GOLD if on else (Color(1, 1, 1, 0.5) if done else Color(1, 1, 1, 0.15)), false, 2.0)
+			if on:
+				box.draw_polyline(PackedVector2Array([Vector2(7, 13), Vector2(11, 18), Vector2(19, 7)]), UI.GOLD, 3.0, true))
+		h.add_child(box)
 	var ic := UI.tex_rect(DB.icon(mt[3]), Vector2(44, 44))
 	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	if done:
@@ -124,6 +201,16 @@ func _row(m: Dictionary) -> Control:
 		right.add_child(UI.label("🎁 %d" % (m["give"] as Dictionary).size(), 11, UI.GOLD, 0))
 	btn.pressed.connect(func():
 		Game.sfx("ui_click")
+		if _select_mode:
+			if not done:
+				main.toast("Claim this mail's gifts before deleting it.", UI.MUTED)
+				return
+			if _picked.has(id):
+				_picked.erase(id)
+			else:
+				_picked.append(id)
+			_render()
+			return
 		_sel = id
 		params["mail"] = id
 		_render())
@@ -134,7 +221,7 @@ func _render_view() -> void:
 	for c in _view.get_children():
 		c.queue_free()
 	var m: Dictionary = {}
-	for x in DB.MAIL:
+	for x in Game.mail_list():
 		if x["id"] == _sel:
 			m = x
 	if m.is_empty():
@@ -196,7 +283,7 @@ func _render_view() -> void:
 	_view.create_tween().tween_property(_view, "modulate:a", 1.0, 0.2)
 
 func _next_unclaimed() -> void:
-	for m in DB.MAIL:
+	for m in Game.mail_list():
 		if not _claimed(m["id"]):
 			_sel = m["id"]
 			params["mail"] = _sel

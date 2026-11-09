@@ -1,5 +1,21 @@
 [
  {
+  "id": "n2026-11-09q",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Player Feedback Update",
+  "bg": "lobby",
+  "body": "Thanks for the feedback! Mailbox: DELETE READ and a SELECT mode with checkboxes remove mail you already claimed (unclaimed gifts are never deleted). The Daily Login calendar now opens on your very first login too. A New Skin offer appears once a day when you enter (close it or tap GET IT). New illustrated HOW TO PLAY guide on first launch, also in Settings. In battle, tap any unit to see its role (Tank, DPS, Assassin, Mage, Support), stats, skill and passive. Formation: tapping another hero now selects it instead of swapping places — drag to swap, like Brown Dust. The PC browser version now uses the same UI size as phones, and the site icon shows on desktop browsers."
+ },
+ {
+  "id": "n2026-11-09p",
+  "date": "2026-11-09",
+  "tag": "UPDATE",
+  "title": "Story Dialogue Makeover",
+  "bg": "forest",
+  "body": "Story scenes have a new dialogue box: the speaker's name sits on a slanted ribbon in her color together with her title, the box picks up a matching accent line and soft shading, lines have a gentle text shadow, and the ▼ arrow bounces only once a line has finished typing."
+ },
+ {
   "id": "n2026-11-09o",
   "date": "2026-11-09",
   "tag": "UPDATE",

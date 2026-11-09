@@ -3,21 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bwal86kbu6u20"
-path.s3tc="res://.godot/imported/icon_bag.png-31f65b74ce4cb0067f50583c740845d5.s3tc.ctex"
-path.etc2="res://.godot/imported/icon_bag.png-31f65b74ce4cb0067f50583c740845d5.etc2.ctex"
+path="res://.godot/imported/icon_bag.png-31f65b74ce4cb0067f50583c740845d5.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://art/icons/icon_bag.png"
-dest_files=["res://.godot/imported/icon_bag.png-31f65b74ce4cb0067f50583c740845d5.s3tc.ctex", "res://.godot/imported/icon_bag.png-31f65b74ce4cb0067f50583c740845d5.etc2.ctex"]
+dest_files=["res://.godot/imported/icon_bag.png-31f65b74ce4cb0067f50583c740845d5.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0

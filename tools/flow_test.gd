@@ -581,6 +581,18 @@ func _run() -> void:
 	check(G.auto_expedition_team("herb").is_empty() or G.s["expeditions"].has("herb"), "auto team skips busy heroes")
 	G.s["expeditions"] = ex_keep
 
+	print("[mail delete]")
+	var mk: Array = G.s["mail_claimed"].duplicate()
+	var md: Array = G.s["mail_deleted"].duplicate()
+	G.s["mail_claimed"].clear()
+	G.s["mail_deleted"].clear()
+	var first_id: String = DB.MAIL[0]["id"]
+	check(G.delete_mail([first_id]) == 0, "unclaimed mail cannot be deleted")
+	G.s["mail_claimed"].append(first_id)
+	check(G.delete_read_mail() == 1 and G.mail_list().size() == DB.MAIL.size() - 1, "delete read mail removes only claimed ones")
+	G.s["mail_claimed"] = mk
+	G.s["mail_deleted"] = md
+
 	print("[battle systems]")
 	check(DB.passive_of("lucidria") == "GUARD" and DB.passive_of("furu") == "GRACE" and DB.passive_of("rumi") == "ARCANE", "role passives mapped")
 	var syn: Dictionary = DB.synergy(["fidelia", "scylla", "valeria", "shina"])

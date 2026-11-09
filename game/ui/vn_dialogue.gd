@@ -30,6 +30,9 @@ var compact := false
 var cg_hero := ""        # CG mode: full-screen illustration with a slow camera pan
 var cg_key := ""         # art/cg/<cg_key>.png overrides the placeholder     # tutorial mode: small portrait, light dim, screen stays visible
 var _mini: TextureRect
+var _accent := Color("#c9a2ff")   # current speaker's theme colour (box edge + plate)
+var _box_deco: Control
+var _title_l: Label
 
 func _init(p_lines: Array = [], p_bg: String = "") -> void:
 	lines = p_lines
@@ -90,17 +93,42 @@ func _ready() -> void:
 		add_child(_mini)
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(box)
+	# backdrop drawn inside the box: darker toward the bottom, an accent line in the speaker's colour,
+	# and a faint inner rule (PanelContainer stacks it under the text)
+	_box_deco = Control.new()
+	_box_deco.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_box_deco.draw.connect(func():
+		var sz := _box_deco.size
+		var m := -18.0   # reach the panel edge past its content margin
+		var r := Rect2(Vector2(m, m), sz - Vector2(m, m) * 2.0)
+		var bot := Color(0, 0, 0, 0.35)
+		_box_deco.draw_polygon(PackedVector2Array([r.position, Vector2(r.end.x, r.position.y), r.end, Vector2(r.position.x, r.end.y)]),
+			PackedColorArray([Color(_accent, 0.10), Color(_accent, 0.04), bot, bot]))
+		_box_deco.draw_line(Vector2(r.position.x + 24, r.position.y + 2), Vector2(r.end.x - 24, r.position.y + 2), Color(_accent, 0.75), 2.0, true)
+		_box_deco.draw_line(Vector2(r.position.x + 24, r.position.y + 2), Vector2(r.end.x - 24, r.position.y + 2), Color(_accent, 0.2), 6.0, true)
+		_box_deco.draw_line(Vector2(r.position.x + 30, r.end.y - 8), Vector2(r.end.x - 30, r.end.y - 8), Color(1, 1, 1, 0.05), 1.0))
+	box.add_child(_box_deco)
 	var v := UI.vbox(6)
 	box.add_child(v)
 	_text_l = UI.wrap_label("", 20, Color.WHITE)
+	_text_l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
+	_text_l.add_theme_constant_override("shadow_offset_x", 1)
+	_text_l.add_theme_constant_override("shadow_offset_y", 2)
+	_text_l.add_theme_constant_override("line_spacing", 4)
 	_text_l.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(_text_l)
+	# the ▼ lives in its own fixed holder so its bounce never fights the VBox layout
+	var hold := Control.new()
+	hold.custom_minimum_size = Vector2(0, 22)
+	hold.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(hold)
 	_hint = UI.label("▼", 18, UI.GOLD, 3)
-	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	v.add_child(_hint)
+	_hint.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_hint.offset_left = -24
+	hold.add_child(_hint)
 	var ht := _hint.create_tween().set_loops()
-	ht.tween_property(_hint, "modulate:a", 0.2, 0.5)
-	ht.tween_property(_hint, "modulate:a", 1.0, 0.5)
+	ht.tween_property(_hint, "offset_top", 4.0, 0.35).set_trans(Tween.TRANS_SINE)
+	ht.tween_property(_hint, "offset_top", 0.0, 0.35).set_trans(Tween.TRANS_SINE)
 
 	_name_plate = UI.styled_panel(Color("#3a2468"), UI.GOLD, 10, 2, 10)
 	_name_plate.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -109,7 +137,12 @@ func _ready() -> void:
 	_name_plate.offset_bottom = -168
 	_name_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_name_l = UI.label("", 20, UI.GOLD, 4)
-	_name_plate.add_child(_name_l)
+	var nh := UI.hbox(8)
+	nh.add_child(_name_l)
+	_title_l = UI.label("", 11, Color(1, 1, 1, 0.6), 2)
+	_title_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	nh.add_child(_title_l)
+	_name_plate.add_child(UI.margin(nh, 10, 0, 14, 0))
 	add_child(_name_plate)
 
 	var bar := UI.hbox(8)
@@ -229,6 +262,7 @@ func _advance() -> void:
 		if _typing:
 			_typing.kill()
 		_text_l.visible_ratio = 1.0
+		_hint.visible = true
 		return
 	_i += 1
 	if _i >= lines.size():
@@ -246,29 +280,40 @@ func _show(i: int) -> void:
 	_name_plate.visible = sid != "nar"
 	_text_l.add_theme_color_override("font_color", Color("#d8cdf0") if sid == "nar" else Color.WHITE)
 	_name_l.text = "Commander" if is_cmd else DB.name_of(sid)
-	_name_plate.add_theme_stylebox_override("panel", UI.style(DB.theme_color(sid).darkened(0.5) if not is_cmd else Color("#24406a"), UI.GOLD, 10, 2, 10))
+	_accent = Color("#7fb8ff") if is_cmd else (Color("#c9a2ff") if sid == "nar" else DB.theme_color(sid).lightened(0.15))
+	_title_l.text = "" if is_cmd or sid == "nar" or not DB.HEROES.has(DB.base_id(sid)) else str(DB.title_of(DB.base_id(sid)))
+	# slanted ribbon plate in the speaker's colour
+	var ps := UI.style(DB.theme_color(sid).darkened(0.45) if not is_cmd else Color("#24406a"), UI.GOLD, 6, 2, 6)
+	ps.skew = Vector2(0.22, 0.0)
+	ps.shadow_color = Color(0, 0, 0, 0.5)
+	ps.shadow_size = 6
+	_name_plate.add_theme_stylebox_override("panel", ps)
+	if is_instance_valid(_box_deco):
+		_box_deco.queue_redraw()
+	_hint.visible = false
 	var side: String = _slots.get(sid, "")
 	if side == "R":
 		_name_plate.anchor_left = 1.0
 		_name_plate.anchor_right = 1.0
-		_name_plate.offset_left = -84 - maxf(160.0, _name_l.get_minimum_size().x + 24)
+		_name_plate.offset_left = -84 - maxf(160.0, _name_l.get_minimum_size().x + _title_l.get_minimum_size().x + 56)
 		_name_plate.offset_right = -84
 	else:
 		_name_plate.anchor_left = 0.0
 		_name_plate.anchor_right = 0.0
 		_name_plate.offset_left = 84
-		_name_plate.offset_right = 84 + maxf(160.0, _name_l.get_minimum_size().x + 24)
+		_name_plate.offset_right = 84 + maxf(160.0, _name_l.get_minimum_size().x + _title_l.get_minimum_size().x + 56)
 	_text_l.text = str(ln[1])
 	_text_l.visible_ratio = 0.0
 	_typing = _text_l.create_tween()
 	_typing.tween_property(_text_l, "visible_ratio", 1.0, clampf(_text_l.text.length() * 0.025, 0.3, 2.0))
+	_typing.tween_callback(func(): _hint.visible = true)
 	_auto_t = 0.0
 	if compact and _mini:
 		_mini.texture = DB.face(sid) if sid != "commander" else null
 		_name_plate.anchor_left = 0.0
 		_name_plate.anchor_right = 0.0
 		_name_plate.offset_left = 200
-		_name_plate.offset_right = 200 + maxf(160.0, _name_l.get_minimum_size().x + 24)
+		_name_plate.offset_right = 200 + maxf(160.0, _name_l.get_minimum_size().x + _title_l.get_minimum_size().x + 56)
 		_name_plate.offset_top = -154
 		_name_plate.offset_bottom = -118
 		return
