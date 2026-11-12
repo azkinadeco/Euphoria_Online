@@ -1124,6 +1124,16 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - Deteksi checker baru (dua tone abu/putih yang rata dan bersebelahan dengan area transparan) sudah dijalankan ke 324 art. Tidak ada checker lain yang ditemukan.
 - Flow test: semua form enemy punya rig pivot (60/60). Art tanpa rig (Glytta evo2_a) tetap memakai depth tilt.
 
+## 2ek. Update batch 133 — Perbaikan kedipan dari feedback user
+Feedback: kedipan aneh di Fidelia, Angela, Tamo, Kali, Kara, Atalanta, Seraph, Zennyo, Micca, Gala, Scylla, Hyeonxa, Lumeira, Mora, Ex-Nymph. Luby/Schylua belum berkedip. Wajah Cthollia ikut bergelombang. Mata Evy bergelombang. Ygg-Naar belum berkedip, dan mata di ekornya harus berkedip dengan tempo berbeda.
+- **Warna kelopak**: warna kulit diukur sekali per art di CPU (`CharRig._eye_skins`) dari pipi di bawah mata, di sisi hidung. Median warna dipakai supaya helai rambut tidak ikut terhitung. Di shader, `ring_skin` mengambil 10 sampel di cincin sekitar mata dan hanya memakai sampel yang mirip kulit tadi (rambut, bulu mata, alis, dan highlight dibuang), lalu dibobot jarak. Hasilnya kelopak menyatu dengan kulit di semua sisi.
+- **Rambut tetap di depan**: di luar bukaan mata, kelopak hanya menimpa piksel bulu mata atau kulit. Helai rambut yang melintas tidak ikut tertutup.
+- **Cakupan**: kelopak naik menutupi bulu mata atas yang tergambar. Saat hampir tertutup, kelopak bawah ikut naik (`low`), jadi garis air mata, bagian putih mata, dan bulu mata bawah tidak menyisakan outline.
+- **Wajah tidak bergelombang**: tulang (rambut/tentakel), floats, dan heat shimmer dimask keluar dari area wajah (`keep` = 1 − mask kepala). Ini memperbaiki Cthollia dan shimmer di mata Evy.
+- **Banyak mata**: shader menerima `eyes[8]`, `eye_rots[8]`, `blinks[8]`, dan `skins[8]`. Dua mata pertama adalah pasangan wajah. Mata tambahan (ekor/makhluk) punya timer kedip sendiri (1,8–6,5 detik, kedip lebih lambat). Ygg-Naar: mata visor dan 6 mata ekor.
+- **Mata baru diukur**: Luby, Schylua (`skin_hint` biru untuk kulit non-manusia). Kara dipersempit ke bagian mata yang terlihat, Angela kiri diperlebar.
+- `tools/rig_face.gd` sekarang mengisi `blinks` untuk semua mata.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

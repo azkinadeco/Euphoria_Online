@@ -61,7 +61,8 @@ func _process(_d: float) -> bool:
 	if frame == 6:
 		for i in rigs.size():
 			rigs[i].set_process(false)
-			rigs[i]._mat.set_shader_parameter("blink", STATES[i])
+			var bl := PackedFloat32Array([STATES[i], STATES[i], STATES[i], STATES[i], STATES[i], STATES[i], STATES[i], STATES[i]])
+			rigs[i]._mat.set_shader_parameter("blinks", bl)
 			rigs[i]._mat.set_shader_parameter("head_angle", 0.06 if i == 3 else 0.0)
 			rigs[i]._mat.set_shader_parameter("body_angle", 0.0)
 			rigs[i]._mat.set_shader_parameter("breath", 0.0)

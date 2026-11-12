@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-12i",
+  "date": "2026-11-12",
+  "tag": "FIX",
+  "title": "Better Blinking",
+  "body": "Blinking was reworked from your feedback. The closed eyelid now takes the exact skin tone from her cheek, so it no longer looks like a pale patch, and hair strands crossing the eye stay in front. The lid covers the upper and lower lashes fully when closed. Hair, tentacles and magic shimmer no longer ripple across the face. Luby and Schylua now blink, Evy's eyes no longer shimmer, and Ygg-Naar blinks with her visor eye while every eye on her tails blinks on its own rhythm."
+ },
+ {
   "id": "n2026-11-12h",
   "date": "2026-11-12",
   "tag": "UPDATE",

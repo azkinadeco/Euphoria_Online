@@ -21,15 +21,17 @@ uniform vec4 floats[6];
 // glows / heat shimmer: xy centre, z radius (0 = unused)
 uniform vec3 glows[6];
 uniform vec4 glow_color : source_color = vec4(0.6, 0.4, 1.0, 1.0);
-// eyes (blink): centre xy (UV), half-width / half-height (UV-height units, i.e. x scaled by aspect);
-// eye_rot = tilt of each eye's corner-to-corner axis (radians). eye_on = 0 disables blinking.
-uniform vec4 eye0 = vec4(0.45, 0.15, 0.02, 0.01);
-uniform vec4 eye1 = vec4(0.55, 0.15, 0.02, 0.01);
-uniform vec2 eye_rot = vec2(0.0, 0.0);
-uniform float eye_on = 0.0;
-uniform float lash = 0.38;        // thickness of the upper lash line (in eye half-heights)
-uniform float lid_close = 0.7;    // where the closed lash line rests (0 = eye centre, 1 = lower rim)
-uniform float cheek = 2.1;        // lid skin colour is sampled this far below the eye centre (half-heights)
+// eyes (blink): up to 8 (the face pair + extra eyes on tails, staffs, creatures...).
+// eyes[i] = centre xy (UV), half-width / half-height (UV-height units, x scaled by aspect); z = 0 unused.
+// eye_rots[i] = tilt of the corner-to-corner axis; blinks[i] = 0 open .. 1 closed (each eye its own timing).
+uniform vec4 eyes[8];
+uniform float eye_rots[8];
+uniform float blinks[8];
+uniform vec4 skins[8];            // per-eye face skin colour measured on the art around the cheek (a = 0: unknown)
+uniform int eye_count = 0;
+uniform vec4 skin_hint = vec4(0.0);   // rgb = face skin colour for non-human skin (a = 1 to use it)
+uniform float lash = 0.34;        // thickness of the upper lash line (in eye half-heights)
+uniform float lid_close = 0.42;   // where the closed lash line rests (0 = eye centre, 1 = lower rim)
 // animated values
 uniform float t = 0.0;
 uniform float calm = 1.0;
@@ -37,7 +39,6 @@ uniform float head_angle = 0.0;
 uniform float body_angle = 0.0;
 uniform float breath = 0.0;      // -1..1
 uniform float bob = 0.0;         // whole-figure vertical offset (UV)
-uniform float blink = 0.0;       // 0..1
 uniform float jolt = 0.0;        // tap impulse: every bone swings harder for a moment
 uniform float flash = 0.0;
 varying vec4 mod_color;
@@ -61,31 +62,46 @@ vec2 seg(vec2 p, vec2 a, vec2 b) {
 	return vec2(length(pa - ba * h), h);
 }
 
-// Eyelid skin tone: several samples under (and one above) the eye; keep the most skin-like
-// (warm, bright, opaque) so a hair strand or shadow next to the face is never picked.
-vec3 lid_skin(sampler2D tex, vec2 c, vec2 ex, vec2 ey, vec2 to_uv) {
-	// 1) the most skin-like sample (warm, bright, opaque)  2) average of the samples close to it
-	vec2 offs[8] = vec2[](vec2(0.0, 1.0), vec2(-0.35, 1.0), vec2(0.35, 1.0), vec2(0.0, 1.5),
-			vec2(-0.25, 0.7), vec2(0.0, -1.0), vec2(-0.4, -1.0), vec2(0.4, -1.0));
-	vec4 smp[8];
+// Skin around an eye, as a smooth field: 10 samples on a ring just outside the eye; the ones that
+// look like skin (close to the most skin-like sample) are blended by distance to the pixel, so the
+// closed lid matches the face around it on every side and no patch outline shows.
+vec3 ring_skin(sampler2D tex, vec2 c, vec2 ex, vec2 ey, vec2 to_uv, vec2 q, vec4 measured) {
+	vec4 smp[10];
+	vec2 pos[10];
 	vec3 best = vec3(0.93, 0.78, 0.7);
 	float bs = -10.0;
-	for (int k = 0; k < 8; k++) {
-		vec2 o = offs[k];
-		float dd = o.y > 0.0 ? cheek : 0.8 + cheek * 0.5;
-		smp[k] = texture(tex, c + (ex * o.x + ey * sign(o.y) * (abs(o.y) + dd)) * to_uv);
+	// the cheek under the eye is the face's own skin tone: the ring sample closest to it wins
+	// (so light hair next to a shadowed face, or a white fringe on blue skin, is never taken for skin)
+	vec4 ck0 = texture(tex, c + (ey * 3.2 + ex * 0.2) * to_uv);
+	vec4 ck1 = texture(tex, c + (ey * 2.6 - ex * 0.3) * to_uv);
+	vec4 ck2 = texture(tex, c + (ey * 3.8 + ex * 0.6) * to_uv);
+	float d01 = length(ck0.rgb - ck1.rgb), d02 = length(ck0.rgb - ck2.rgb), d12 = length(ck1.rgb - ck2.rgb);
+	vec3 cheek = d01 + d02 <= d01 + d12 && d01 + d02 <= d02 + d12 ? ck0.rgb : (d01 + d12 <= d02 + d12 ? ck1.rgb : ck2.rgb);
+	vec3 hint = skin_hint.a > 0.5 ? skin_hint.rgb : (measured.a > 0.5 ? measured.rgb : cheek);
+	for (int k = 0; k < 10; k++) {
+		float th = float(k) * 0.6283;
+		vec2 o = vec2(cos(th) * 1.35, sin(th) * (sin(th) < 0.0 ? 2.3 : 1.9));
+		pos[k] = o;
+		smp[k] = texture(tex, c + (ex * o.x + ey * o.y) * to_uv);
 		float l = dot(smp[k].rgb, vec3(0.3, 0.55, 0.15));
-		float sc = (smp[k].r - smp[k].b) * 2.0 + l - (1.0 - smp[k].a) * 3.0 - step(0.97, l);
+		float sc = (smp[k].r - smp[k].b) * 2.0 + l - (1.0 - smp[k].a) * 3.0 - step(0.97, l) - step(l, 0.25);
+		sc = sc * 0.25 - length(smp[k].rgb - hint) * 4.0;
 		if (sc > bs) { bs = sc; best = smp[k].rgb; }
 	}
 	vec3 sum = vec3(0.0);
 	float ws = 0.0;
-	for (int k = 0; k < 8; k++) {
-		float wgt = (1.0 - smoothstep(0.06, 0.16, length(smp[k].rgb - best))) * smp[k].a;
-		sum += smp[k].rgb * wgt;
-		ws += wgt;
+	for (int k = 0; k < 10; k++) {
+		// skin = warm and not much darker than the best sample (lashes, brows, hair and shadows drop out)
+		float lk = dot(smp[k].rgb, vec3(0.3, 0.55, 0.15)) / max(dot(best, vec3(0.3, 0.55, 0.15)), 0.01);
+		lk = min(lk, 2.0 - lk);   // much brighter than the face (light hair, highlights) drops out too
+		float warm = 1.0 - smoothstep(0.14, 0.3, length(smp[k].rgb - hint));
+		float ok = smoothstep(0.62, 0.8, lk) * warm * smp[k].a;
+		vec2 dq = q - pos[k];
+		float wd = 1.0 / pow(0.2 + dot(dq, dq), 2.0);
+		sum += smp[k].rgb * ok * wd;
+		ws += ok * wd;
 	}
-	return ws > 0.01 ? sum / ws : best;
+	return ws > 0.0001 ? sum / ws : best;
 }
 
 void fragment() {
@@ -99,12 +115,15 @@ void fragment() {
 	float hm = 1.0 - smoothstep(head.z * 0.85, head.z * 1.25, length(hd));
 	hm = max(hm, head_band * (1.0 - smoothstep(neck.y - 0.02, neck.y + 0.015, uv.y)) * (1.0 - smoothstep(head.z * 1.1, head.z * 1.6, abs(uv.x - head.x) * aspect)));
 	uv = mix(uv, rot_about(uv, neck, -head_angle), hm);
+	// the face itself never ripples: bones, floaters and heat shimmer leave it alone
+	float face = 1.0 - smoothstep(head.z * 0.8, head.z * 1.15, length((uv - head.xy) * vec2(aspect, 1.0)));
+	float keep = 1.0 - face;
 	// 3) bones (hair, arms, tails, tentacles, wings...)
 	for (int i = 0; i < 10; i++) {
 		float w = bone_b[i].x;
 		if (w > 0.0) {
 			vec2 sh = seg(uv, bone_a[i].xy, bone_a[i].zw);
-			float m = (1.0 - smoothstep(w * 0.55, w, sh.x)) * smoothstep(0.0, 0.85, sh.y);
+			float m = (1.0 - smoothstep(w * 0.55, w, sh.x)) * smoothstep(0.0, 0.85, sh.y) * keep;
 			if (m > 0.0) {
 				float amp = bone_b[i].y * (calm + jolt * 1.0);
 				float a = amp * sin(t * bone_b[i].z + bone_b[i].w - sh.y * bone_wave);
@@ -115,7 +134,7 @@ void fragment() {
 	// floaters bob up and down (each on its own rhythm)
 	for (int i = 0; i < 6; i++) {
 		if (floats[i].z > 0.0) {
-			float fm = 1.0 - smoothstep(floats[i].z * 0.6, floats[i].z, length((uv - floats[i].xy) * vec2(aspect, 1.0)));
+			float fm = (1.0 - smoothstep(floats[i].z * 0.6, floats[i].z, length((uv - floats[i].xy) * vec2(aspect, 1.0)))) * keep;
 			uv.y += sin(t * (1.1 + float(i) * 0.17) + float(i) * 1.9) * floats[i].w * fm * calm;
 			uv.x += cos(t * (0.7 + float(i) * 0.11) + float(i)) * floats[i].w * 0.4 * fm * calm;
 		}
@@ -128,73 +147,77 @@ void fragment() {
 	// 5) heat shimmer inside glows
 	for (int i = 0; i < 6; i++) {
 		if (glows[i].z > 0.0) {
-			float gm = 1.0 - smoothstep(0.0, glows[i].z, length((uv - glows[i].xy) * vec2(aspect, 1.0)));
+			float gm = (1.0 - smoothstep(0.0, glows[i].z, length((uv - glows[i].xy) * vec2(aspect, 1.0)))) * keep;
 			uv.x += sin(t * 8.0 + uv.y * 120.0 + float(i)) * 0.002 * gm * calm;
 			uv.y += sin(t * 5.0 + float(i) * 1.7) * 0.0022 * gm * calm;
 		}
 	}
 	// 6) blink: computed after sampling (needs the cheek colour) — see below
 	vec4 c = texture(TEXTURE, uv);
-	// 6) blink, Live2D-style: the upper lid comes down over the eye. The real painted lash line is
-	//    carried down (and deepened toward the lash colour), the lid it uncovers takes the face's
-	//    skin tone with a crease and soft shading, and at full close it rests as a curved lash line.
-	//    Every edge is feathered so no patch outline shows.
-	if (eye_on > 0.5 && blink > 0.001) {
-		for (int i = 0; i < 2; i++) {
-			vec4 e = i == 0 ? eye0 : eye1;
-			if (e.z <= 0.0) { continue; }
-			float ang = i == 0 ? eye_rot.x : eye_rot.y;
-			float ca = cos(ang), sa = sin(ang);
-			vec2 d = (uv - e.xy) * vec2(aspect, 1.0);
-			vec2 l = vec2(ca * d.x + sa * d.y, -sa * d.x + ca * d.y);
-			vec2 q = l / e.zw;
-			float ax = abs(q.x);
-			if (ax > 1.15 || q.y < -1.6 || q.y > 1.4) { continue; }
-			float ac = min(ax, 1.0);
-			float arc = sqrt(max(0.0, 1.0 - ac * ac));
-			float top = -arc;
-			float lt = lash * (0.5 + 0.5 * arc);                 // lash thins toward the corners
-			float rest = arc * lid_close;                         // closed line: lowest in the middle
-			float edge = mix(top + lt, rest, blink);              // bottom of the moving lash
-			if (q.y < top - 0.22 || q.y > edge + 0.25) { continue; }
-			vec2 to_uv = vec2(1.0) / vec2(aspect, 1.0);
-			vec2 ex = vec2(ca, sa) * e.z;
-			vec2 ey = vec2(-sa, ca) * e.w;
-			// colours
-			vec3 skin = lid_skin(TEXTURE, e.xy, ex, ey, to_uv);
-			vec3 lashc = min(texture(TEXTURE, e.xy + ey * (-1.0 + lt * 0.5) * to_uv).rgb,
-					texture(TEXTURE, e.xy + (ex * 0.4 + ey * (-0.92 + lt * 0.5)) * to_uv).rgb);
-			lashc = min(lashc, vec3(0.32, 0.22, 0.24));
-			vec3 col;
-			float w;
-			if (q.y >= edge - lt) {
-				// the lash line, carried down from its painted band
-				float f = clamp((q.y - (edge - lt)) / max(lt, 0.001), 0.0, 1.0);
-				vec3 painted = texture(TEXTURE, e.xy + (ex * q.x + ey * (top + f * lt)) * to_uv).rgb;
-				col = mix(painted, lashc, 0.35 + 0.4 * blink);
-				w = 1.0 - smoothstep(edge - 0.02, edge + 0.08, q.y);
-			} else {
-				// the lid: skin, blending into the real skin above near the top; crease + shading
-				float k = clamp((q.y - top) / max(edge - lt - top, 0.001), 0.0, 1.0);
-				// the real eyelid skin between lash and brow, stretched down (keeps eyeshadow & shading);
-				// where a hair strand / brow is there instead, fall back to the flat skin tone
-				vec3 up = texture(TEXTURE, e.xy + (ex * q.x + ey * (top - 0.3 - (1.0 - k) * 0.5)) * to_uv).rgb;
-				float lsk = dot(skin, vec3(0.3, 0.55, 0.15));
-				float lup = dot(up, vec3(0.3, 0.55, 0.15));
-				float upok = smoothstep(-0.01, 0.05, up.r - up.b) * (1.0 - smoothstep(0.2, 0.36, length(up - skin)))
-						* smoothstep(lsk - 0.2, lsk - 0.08, lup);      // never a dark brow / lash stroke
-				vec3 base = mix(skin, up, upok);
-				float crease = exp(-pow((k - 0.18) * 7.0, 2.0)) * 0.1 * blink;
-				float shade = mix(1.0, 0.88, smoothstep(0.45, 1.0, k));
-				col = base * (shade - crease);
-				w = smoothstep(top - 0.28, top + 0.1, q.y);
-			}
-			w *= 1.0 - smoothstep(0.86, 1.12, ax);
-			c.rgb = mix(c.rgb, col, clamp(w, 0.0, 1.0));
-			// soft shadow the lid casts just below the lash
-			float below = (1.0 - smoothstep(edge, edge + 0.25, q.y)) * step(edge, q.y);
-			c.rgb *= 1.0 - below * 0.22 * blink * (1.0 - smoothstep(0.8, 1.1, ax));
+	// 6) blink, Live2D-style: the painted upper lash slides down along the eye and rests as a curved
+	//    closed line; the lid above it and (near the end) the lower lid below it become skin taken from
+	//    the face all around the eye, so a closed eye has no visible patch, white or lower lashes.
+	for (int i = 0; i < 8; i++) {
+		if (i >= eye_count) { break; }
+		vec4 e = eyes[i];
+		float bk = blinks[i];
+		if (e.z <= 0.0 || bk < 0.001) { continue; }
+		float ang = eye_rots[i];
+		float ca = cos(ang), sa = sin(ang);
+		vec2 d = (uv - e.xy) * vec2(aspect, 1.0);
+		vec2 l = vec2(ca * d.x + sa * d.y, -sa * d.x + ca * d.y);
+		vec2 q = l / e.zw;
+		float ax = abs(q.x);
+		if (ax > 1.3 || q.y < -1.8 || q.y > 1.8) { continue; }
+		float ac = min(ax, 1.0);
+		float arc = sqrt(max(0.0, 1.0 - ac * ac));
+		float top = -arc;
+		float lt = lash * (0.45 + 0.55 * arc);                // lash thins toward the corners
+		float rest = arc * lid_close;                          // closed line: lowest in the middle
+		float edge = mix(top + lt, rest, bk);                  // bottom of the moving lash band
+		float low = mix(edge, arc + 0.5, smoothstep(0.5, 0.95, bk));   // lower lid rises at the end
+		if (q.y < top - 1.15 || q.y > max(edge, low) + 0.4) { continue; }
+		vec2 to_uv = vec2(1.0) / vec2(aspect, 1.0);
+		vec2 ex = vec2(ca, sa) * e.z;
+		vec2 ey = vec2(-sa, ca) * e.w;
+		vec3 skin = ring_skin(TEXTURE, e.xy, ex, ey, to_uv, q, skins[i]);
+		vec3 lashc = min(texture(TEXTURE, e.xy + ey * (-1.0 + lt * 0.5) * to_uv).rgb,
+				texture(TEXTURE, e.xy + (ex * 0.35 + ey * (-0.9 + lt * 0.5)) * to_uv).rgb);
+		lashc = min(lashc, skin * 0.35);
+		float side = 1.0 - smoothstep(0.9, 1.2, ax);          // fade out past the corners
+		// outside the eye opening only lashes and skin are painted over: a hair strand crossing the
+		// lid or cheek stays (light hair is neither dark like a lash nor close to the skin tone)
+		float lsk = max(dot(skin, vec3(0.3, 0.55, 0.15)), 0.01);
+		float sel = max(1.0 - smoothstep(0.58, 0.84, dot(c.rgb, vec3(0.3, 0.55, 0.15)) / lsk),
+				1.0 - smoothstep(0.12, 0.26, length(c.rgb - skin)));
+		float inside = smoothstep(top - 0.15, top + 0.05, q.y) * (1.0 - smoothstep(arc + 0.42, arc + 0.6, q.y));
+		float pick = mix(sel, 1.0, inside);
+		vec4 outc = c;
+		if (q.y < edge - lt) {
+			// upper lid (skin), a little darker toward the lash
+			float k = clamp((q.y - top) / max(edge - lt - top, 0.001), 0.0, 1.0);
+			vec3 col = skin * mix(1.0, 0.9, smoothstep(0.4, 1.0, k) * bk);
+			// reaches above the measured top so the painted upper lash is covered too (eases in with the blink)
+			float w = smoothstep(top - 0.85, top - 0.45, q.y) * side * smoothstep(0.0, 0.25, bk);
+			outc.rgb = mix(c.rgb, col, w * pick);
+		} else if (q.y <= edge) {
+			// the lash line, carried down from its painted band
+			float f = clamp((q.y - (edge - lt)) / max(lt, 0.001), 0.0, 1.0);
+			vec3 painted = texture(TEXTURE, e.xy + (ex * q.x + ey * (top + f * lt)) * to_uv).rgb;
+			vec3 col = mix(painted, lashc, 0.3 + 0.55 * bk);
+			float wl = (1.0 - smoothstep(1.0, 1.16, ax));
+			// soft upper edge of the band where it meets the lid
+			col = mix(skin * 0.9, col, smoothstep(0.0, 0.35, f) * mix(1.0, 0.85, ac));
+			outc.rgb = mix(c.rgb, col, wl);
+		} else {
+			// below the lash: skin once the lower lid has come up, plus the shadow the lid casts
+			float cover = (1.0 - smoothstep(low - 0.12, low + 0.18, q.y)) * side;
+			vec3 col = skin * (1.0 - 0.12 * (1.0 - smoothstep(0.0, 0.3, q.y - edge)) * bk);
+			outc.rgb = mix(c.rgb, col, cover * pick);
+			float sh = (1.0 - smoothstep(edge, edge + 0.22, q.y)) * (1.0 - cover) * side;
+			outc.rgb *= 1.0 - sh * 0.2 * bk;
 		}
+		c.rgb = outc.rgb;
 	}
 	for (int i = 0; i < 6; i++) {
 		if (glows[i].z > 0.0) {
