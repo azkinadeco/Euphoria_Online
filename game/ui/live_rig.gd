@@ -41,6 +41,7 @@ func _check() -> void:
 	_rig_mat.set_shader_parameter("strength", 0.018)
 	_rig_mat.set_shader_parameter("hue_shift", 0.72)
 	_rig_mat.set_shader_parameter("desat", 0.0)
+	_rig_mat.set_shader_parameter("tone", Vector3(1.18, 1.02, 0.78))
 	_rig_mat.set_shader_parameter("variant_glow", Color(0.75, 0.2, 1.0))
 	var cp: Dictionary = _rect.get_meta("corrupt_params", {})
 	_rig_mat.set_shader_parameter("corrupt_on", not cp.is_empty())

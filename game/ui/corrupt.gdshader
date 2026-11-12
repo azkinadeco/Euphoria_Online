@@ -2,7 +2,8 @@ shader_type canvas_item;
 // Placeholder "Corrupted / Elite" enemy variant: hue shift + dark outline glow + pulsing veins of light.
 uniform float hue_shift = 0.72;
 uniform vec4 glow : source_color = vec4(0.75, 0.2, 1.0, 1.0);
-uniform float desat = 0.0;     // 0 = keep colour, 1 = full sepia (used by "Echo" memories)
+uniform float desat = 0.0;     // 0 = keep colour, 1 = full tone (sepia for "Echo" memories)
+uniform vec3 tone = vec3(1.18, 1.02, 0.78);   // grey-scale tint used by desat (icy blue for "Frostbound")
 varying vec4 mod_color;
 
 void vertex() {
@@ -20,7 +21,7 @@ void fragment() {
 	vec4 c = texture(TEXTURE, UV);
 	c.rgb = hue(c.rgb, hue_shift) * vec3(0.8, 0.75, 0.9);
 	float g = dot(c.rgb, vec3(0.299, 0.587, 0.114));
-	c.rgb = mix(c.rgb, vec3(g * 1.18, g * 1.02, g * 0.78), desat);
+	c.rgb = mix(c.rgb, g * tone, desat);
 	float a_l = texture(TEXTURE, UV + vec2(-0.01, 0.0)).a;
 	float a_r = texture(TEXTURE, UV + vec2(0.01, 0.0)).a;
 	float a_u = texture(TEXTURE, UV + vec2(0.0, -0.01)).a;

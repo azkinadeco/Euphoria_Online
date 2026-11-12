@@ -319,7 +319,7 @@ func _show(i: int) -> void:
 		return
 	if side != "":
 		var slot := _left if side == "L" else _right
-		var variant := "mirror" if sid.begins_with("mirror:") else ("hollow" if sid.begins_with("hollow:") else ("echo" if sid.begins_with("echo:") else ("ashen" if sid.begins_with("ashen:") else ("feral" if sid.begins_with("feral:") else ""))))
+		var variant := "mirror" if sid.begins_with("mirror:") else ("hollow" if sid.begins_with("hollow:") else ("echo" if sid.begins_with("echo:") else ("ashen" if sid.begins_with("ashen:") else ("feral" if sid.begins_with("feral:") else ("frost" if sid.begins_with("frost:") else "")))))
 		var mirror := variant != ""
 		var tex := DB.art(sid, 0 if mirror else (int(Game.hero(sid).get("skin", 0)) if Game.owns(sid) else 0))
 		if slot.texture != tex or str(slot.get_meta("variant", "")) != variant:

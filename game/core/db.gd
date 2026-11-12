@@ -938,7 +938,90 @@ const CHAPTERS := [
 			["gala", "Your ancestors are welcome to come to the party, darling."],
 			["octra", "So... can I come too? My beast is house-trained. Mostly. ...It ate a door once."],
 			["morana", "Everyone is welcome under the cathedral roof. Even Abyss girls. Even foxes. ...Especially the Commander."],
-			["nar", "— END OF ARC 10: THE ABYSS CHOIR —   Thank you for playing, Commander. More stories are coming."]]},
+			["nar", "— END OF ARC 10: THE ABYSS CHOIR —   But far to the north, snow began to fall upward."]]},
+	# ---- Arc 11: The Frostbound Crown (Valeria, Schylua, Micca, Aqua, Rubby; the Winter Crown wakes)
+	{"name": "Frostvale Pass", "bg": "ice", "pool": ["slime", "scomantis", "skelinch", "ymir"], "boss": "schylua", "variant": "frost", "mirror": true, "boss_hp": 3.2, "boss_atk": 1.5,
+		"mod": {"elem": "FIRE", "atk": 0.3, "name": "Biting Cold: FIRE units +30% ATK"},
+		"intro": [["nar", "One morning the cathedral woke up under snow. Inside. On the altar, on the beds, in Gala's teacup."],
+			["gala", "Darling, my tea is a SNOWBALL. Who did this? Confess, and I'll only set you a little bit on fire."],
+			["valeria", "...No one did it, Gala. It's the Winter Crown of Frostvale. It woke up last night. I felt it — like ice behind my eyes."],
+			["commander", "Your crown? Where is it?"],
+			["valeria", "Locked in the vault at the top of Frostvale Pass. It chooses a queen who never thaws. Every hundred years it tries to choose again."],
+			["?", "valeria", ["Then we climb the pass together.", "Are you alright, Valeria?", "Rubby, bring fireworks."],
+				["...Together. Yes. Snow is lighter with two sets of footprints.", "...My hands are cold. Hold them for a minute? ...Only a minute.", "Rubby? ...Oh no. Oh, that's actually a good idea."], [40, 35, 25]]],
+		"mid": [["nar", "Halfway up the pass, the snow stopped falling and started hanging in the air, perfectly still."],
+			["rubby", "Hey, Commander! I packed forty-two firework bombs! For warmth! ...And twelve for fun!"],
+			["valeria", "Rubby. If you start an avalanche, I am leaving you in it."]],
+		"mid2": [["nar", "At the top of the pass, a reaper stood in the wind. Her scythe was frozen to her hands."],
+			["frost:schylua", "...Turn back. The Crown said. No one passes. ...I don't want to hurt you. I just can't stop."],
+			["valeria", "Schylua? You're the guardian of the vault — the Crown got you first."]],
+		"boss_lines": [["frost:schylua", "Frost Reaper — harvest of silence!"], ["rubby", "Bomb Belle special! Hot hot HOT — sorry, Schylua!"],
+			["commander", "Break the ice, not the girl. Everyone, go!"]],
+		"outro": [["nar", "Rubby's fireworks bloomed over the pass, and the ice on Schylua's hands cracked like a sugar shell."],
+			["schylua", "...Warm. That's... loud. And warm. ...Thank you. I've been standing there for three days."],
+			["valeria", "The vault, Schylua. Is the Crown still inside?"],
+			["schylua", "...No. Someone came before the snow. Small. Purple. Laughing. She carried a box."],
+			["micca", "(far away) Aaachoo! ...Huh. Someone must be talking about me~"]]},
+	{"name": "Aurora Observatory", "bg": "galaxy", "pool": ["svormentis", "slime", "lizamorph", "ymir"], "boss": "micca", "variant": "frost", "mirror": true, "boss_hp": 2.2, "boss_atk": 0.85,
+		"mod": {"elem": "LIGHTNING", "atk": 0.3, "name": "Aurora Storm: LIGHTNING units +30% ATK"},
+		"intro": [["nar", "The trail of tiny footprints ended at an observatory where the northern lights were tied in knots."],
+			["atalanta", "I ran ahead! Footprints, box tracks, candy wrappers. Commander, our thief is NOT a professional."],
+			["schylua", "...She hums while she steals. It's very... annoying."],
+			["commander", "Micca. Of course it's Micca."]],
+		"mid": [["micca", "Ehehe~ Found me! Okay, okay. A lady in white gave me a box. She said 'open it and every day becomes a snow day'!"],
+			["micca", "Who says no to infinite snow days?! ...I didn't know the box was a CROWN until it started talking."],
+			["atalanta", "Micca, it's been talking and you kept carrying it?"], ["micca", "...It said I was cute."]],
+		"mid2": [["frost:micca", "Hehe... hehehe... it's so quiet in here... the Crown says pranks are better when everyone is frozen..."],
+			["?", "micca", ["Micca, it's lying to you.", "Pranks need people to laugh.", "I'll trade you cake for the box."],
+				["...Lying? ...But it was so nice to me...", "...Laughing. Right. Frozen people don't laugh. That's... no fun at all.", "C-cake? ...What kind? ...No! Focus, Micca!"], [35, 40, 30]],
+			["frost:micca", "...Too late! The box won't let go! Open — Pandora Blizzard!"]],
+		"boss_lines": [["frost:micca", "Chaos Box — everything becomes SNOW!"], ["atalanta", "Thunderstep! I'm faster than your blizzard!"],
+			["valeria", "Micca, hold on — we're getting you out of there!"]],
+		"outro": [["nar", "The box sprang open with a sound like a sneeze. Snow, ribbons and one rubber chicken burst out of it."],
+			["micca", "...Sorry. I'm really, really sorry. I just wanted everyone to have a fun day."],
+			["valeria", "You're forgiven. You were tricked. ...But where is the Crown, Micca? The box is empty."],
+			["micca", "It jumped out on the first day. It said it wanted 'a queen who holds water'. Then it flew south, toward the sea."],
+			["aqua", "(far away, at the shore) ...Why is my chalice so cold?"]]},
+	{"name": "The Glass Sea", "bg": "aqua", "pool": ["serpentia", "slarkoi", "slime", "octra"], "boss": "aqua", "variant": "frost", "mirror": true, "boss_hp": 3.6, "boss_atk": 1.4,
+		"mod": {"elem": "FIRE", "atk": 0.3, "name": "Thaw Line: FIRE units +30% ATK"},
+		"intro": [["nar", "The sea had frozen flat as a mirror, all the way to the horizon. Waves stood still in the middle of breaking."],
+			["rubby", "Whoa! We can WALK on the ocean! ...Commander, why does nobody else look excited?"],
+			["cthollia", "Because my tide stopped singing. Every creature below the ice is holding its breath, little bomb girl."],
+			["valeria", "Aqua's chalice holds the sea's heart. If the Crown found her, the whole coast stops moving."]],
+		"mid": [["cthollia", "I went to wake her. She looked at me like I was a stranger — and froze my tentacle to the pier."],
+			["micca", "That's the Crown. It did the same to me. It makes your best thing feel like the only thing."]],
+		"mid2": [["frost:aqua", "Don't come closer. The water is finally still. No storms. No drowning. No one gets hurt."],
+			["?", "aqua", ["Still water isn't alive, Aqua.", "You always loved the rain.", "Let the tide come back."],
+				["...Alive. ...It's so quiet that I forgot what alive sounds like.", "...Rain. ...Tea parties in the rain. ...I'd almost forgotten.", "...If I let go... will it hurt?"], [40, 35, 25]],
+			["frost:aqua", "No... the Crown says if I let go, the world floods. I won't let go!"]],
+		"boss_lines": [["frost:aqua", "Chalice of the Tides — freeze, and never move again!"], ["cthollia", "Little sister, the tide misses you. Sing with me!"],
+			["rubby", "One more firework — aim for the crown, not the cup!"]],
+		"outro": [["nar", "With a crack that echoed for miles, the Glass Sea broke into a million singing pieces, and the waves remembered how to fall."],
+			["aqua", "...Oh. Oh, it's raining. I'm soaked. ...It's wonderful."],
+			["cthollia", "Welcome back, little cup. ...Now unfreeze my tentacle, please."],
+			["aqua", "Commander, the Crown slipped off my head before the ice broke. It went home. To Frostvale. To the throne."],
+			["valeria", "...Then it's waiting for me. It always was."]]},
+	{"name": "Throne of Frostvale", "bg": "ice", "pool": ["ymir", "scomantis", "skelinch", "serpentia"], "boss": "valeria", "variant": "frost", "mirror": true, "boss_hp": 1.2, "boss_atk": 0.8,
+		"mod": {"elem": "FIRE", "atk": 0.35, "name": "Hearth Oath: FIRE units +35% ATK"},
+		"intro": [["nar", "The palace of Frostvale was carved out of a single glacier. In the throne room, the Winter Crown floated alone, waiting."],
+			["valeria", "Every hundred years it chooses. A hundred years ago, it chose my grandmother. She never smiled again."],
+			["valeria", "Commander... if it chooses me, promise me something. Don't let me become a statue on a throne."],
+			["?", "valeria", ["I promise. I'll drag you out.", "It won't choose you. I won't let it.", "Then let's break it first."],
+				["...Drag me. Even by the hair. ...Thank you.", "...Brave. Foolish. ...I like that about you.", "...Break a royal relic. ...My grandmother would faint. Let's do it."], [40, 30, 35]]],
+		"mid": [["schylua", "...The Crown's guards are made of old snow. They're not alive. You can hit them as hard as you want."],
+			["atalanta", "Finally, an enemy that won't feel bad! THUNDERSTEP!"]],
+		"mid2": [["nar", "The Crown dropped onto Valeria's head before anyone could move. Her breath turned to frost in the air."],
+			["frost:valeria", "...So this is what it feels like. Nothing hurts. Nothing is warm. Nothing is anything."],
+			["frost:valeria", "Leave, Commander. A queen who never thaws does not need anyone. ...Not even you."],
+			["commander", "You told me not to let you become a statue. I'm keeping my promise."]],
+		"boss_lines": [["frost:valeria", "Frostvale Empress — Eternal Winter!"], ["rubby", "Everyone, cover your ears — GRAND FINALE BOMB!"],
+			["aqua", "Rain on the throne! Melt, melt, melt!"], ["commander", "Valeria — come back to us!"]],
+		"outro": [["nar", "The Winter Crown split down the middle, and the warmth of forty-two fireworks rolled through the glacier halls."],
+			["valeria", "...It's warm. ...My cheeks are warm. ...Commander, am I... smiling?"],
+			["schylua", "...You're crying too. ...It's okay. Both are allowed."],
+			["micca", "So! Can we still have ONE snow day? A normal one? With snowmen and cocoa and nobody frozen?"],
+			["valeria", "...One snow day. Every winter. By royal decree. And the Commander builds the first snowman."],
+			["nar", "— END OF ARC 11: THE FROSTBOUND CROWN —   Thank you for playing, Commander. More stories are coming."]]},
 ]
 const STAGES_PER_CHAPTER := 6
 
@@ -1024,6 +1107,16 @@ const INTERLUDES := [
 			["?", "morana", ["You all sound wonderful.", "Can I just listen?", "Let's sing together."],
 				["...Liar. A very kind liar. I'll forgive you this once.", "...Then sit in the front row. I'll sing toward you.", "...Then hold my hand. So I don't lose the key."], [30, 35, 40]],
 			["nar", "And for one night, the cathedral sang — badly, loudly, and happily."]]},
+	{"id": "i11", "name": "Cocoa After the Thaw", "req": 264, "bg": "lobby", "cast": ["valeria", "schylua", "micca", "aqua", "rubby"],
+		"lines": [["nar", "The first normal snow day in Frostvale history. The cathedral smelled of cocoa and slightly burnt marshmallows."],
+			["rubby", "I made the marshmallows myself! With a firework! ...That's why they're black on the outside."],
+			["micca", "I brought a box! ...It's just cookies! It's REALLY just cookies! Stop looking at me like that!"],
+			["schylua", "...I built a snowman. ...It's the Commander. ...I gave it a scarf so it wouldn't be cold."],
+			["aqua", "Valeria, your cocoa is getting cold. ...Oh. You want it cold. Right. Ice queen."],
+			["valeria", "...Actually, I'd like it hot. For once. Commander, would you pour?"],
+			["?", "valeria", ["Hot cocoa for the Empress.", "Only if you smile again.", "Let's share the mug."],
+				["...Thank you. ...It's the best thing I've tasted in a hundred years. Don't tell Rubby.", "...Like this? ...Don't stare. Royal smiles are rationed.", "...Sh-share? ...Fine. You drink first. ...From the other side."], [30, 35, 40]],
+			["nar", "Outside, the snow fell gently — downward, the way snow is supposed to."]]},
 ]
 const CHAPTER_REWARD := {"gems": 300, "summon_ticket": 3, "gear_chest": 1}
 
@@ -1253,6 +1346,7 @@ const ACHIEVEMENTS := [
 ]
 
 const MAIL := [
+	{"id": "arc11_frost", "title": "Arc 11: The Frostbound Crown", "body": "Snow is falling inside the cathedral! Four new story chapters (41-44) are open after Arc 10, where Valeria, Schylua, Micca and Aqua face the Winter Crown of Frostvale. Watch out for the new Frostbound bosses. A warm cup of supplies is attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
 	{"id": "xmas_hyeonxa", "title": "Starfall Christmas: Hyeonxa's Limited Skin!", "body": "The Starfall Christmas event is live until January 1st! Clear the snowbound event stages, collect Event Tokens and exchange 1,800 of them for Hyeonxa's limited skin SCARLET MISTLETOE — with its own battle sprite. Here are some tokens to get you started.", "give": {"festival_token": 200}},
 	{"id": "heroes_nov8", "title": "Four New Heroes & a Beast from the Abyss!", "body": "Gala, Morana, Seraph and Tamo have joined Euphoria — and Octra rides out of the Abyss in the new Arc 10. Tap the new ZOOM button on any hero or foe to view their art full screen. A small welcome gift is attached!", "give": {"gold": 50000, "exp_potion": 5}},
 	{"id": "skins_nov5", "title": "Special Skins Have Arrived!", "body": "Exclusive outfits are now in the WARDROBE: Ning Er, Spimei and Luby. Here is a Skin Ticket on us — pick your favourite!", "give": {"skin_ticket": 1, "gems": 200}},
@@ -1807,7 +1901,7 @@ static var _prof_json: Dictionary = {}
 
 ## Story speaker ids may carry a variant prefix ("mirror:", "hollow:", "echo:").
 static func base_id(id: String) -> String:
-	for p in ["mirror:", "hollow:", "echo:", "ashen:", "feral:"]:
+	for p in ["mirror:", "hollow:", "echo:", "ashen:", "feral:", "frost:"]:
 		if id.begins_with(p):
 			return id.substr(p.length())
 	return id
@@ -2275,7 +2369,7 @@ static func fav_room(id: String) -> String:
 # ------------------------------------------------------------------ Starlight Rift (weekly roguelite climb)
 const RIFT_MAPS := ["space", "alien", "abaddon", "blackhole", "dino", "bigtree", "necro", "galaxy", "dragonfire", "asgard", "outland", "ice", "apocalypse", "hell", "aqua", "forest"]
 const RIFT_POOL := ["slime", "ex_nymph", "gumi_wolf", "slarkoi", "eroghost", "evy_blood_sage", "ygg_naar", "hairly", "svormentis", "ymir", "scomantis", "skelinch", "serpentia", "voodoo", "lizamorph", "octra"]
-const RIFT_VARIANTS := ["mirror", "hollow", "astral", "echo", "ashen"]
+const RIFT_VARIANTS := ["mirror", "hollow", "astral", "echo", "ashen", "frost"]
 ## Blessings: picked 1-of-3 after every win; they stack for the rest of the run.
 const BLESSINGS := {
 	"ember": {"name": "Ember Heart", "desc": "All allies ATK +8%", "rar": "R", "bonus": {"atk": 0.08}},
@@ -3433,6 +3527,8 @@ static func name_of(id: String) -> String:
 		return "Ashen " + name_of(id.substr(6)).split(" ")[0]
 	if id.begins_with("feral:"):
 		return "Feral " + name_of(id.substr(6)).split(" ")[0]
+	if id.begins_with("frost:"):
+		return "Frostbound " + name_of(id.substr(6)).split(" ")[0]
 	var e := _entry(id)
 	return str(e.get("display_name", id.capitalize()))
 
@@ -3453,6 +3549,8 @@ static func theme_color(id: String) -> Color:
 		return Color("#8a3a20")
 	if id.begins_with("feral:"):
 		return Color("#9a2a1f")
+	if id.begins_with("frost:"):
+		return Color("#3f7fb8")
 	var c := str(_entry(id).get("theme_color", ""))
 	if c != "":
 		return Color(c)

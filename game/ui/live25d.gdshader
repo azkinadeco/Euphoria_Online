@@ -11,6 +11,7 @@ uniform bool generic = false;        // auto depth map: parallax + breathing + 3
 uniform bool corrupt_on = false;
 uniform float hue_shift = 0.72;
 uniform float desat = 0.0;
+uniform vec3 tone = vec3(1.18, 1.02, 0.78);
 uniform vec4 variant_glow : source_color = vec4(0.75, 0.2, 1.0, 1.0);
 uniform vec2 head_c = vec2(0.46, 0.30);
 uniform vec2 head_r = vec2(0.11, 0.095);
@@ -119,7 +120,7 @@ void fragment() {
 	if (corrupt_on) {
 		c.rgb = hue_rot(c.rgb, hue_shift) * vec3(0.8, 0.75, 0.9);
 		float gg = dot(c.rgb, vec3(0.299, 0.587, 0.114));
-		c.rgb = mix(c.rgb, vec3(gg * 1.18, gg * 1.02, gg * 0.78), desat);
+		c.rgb = mix(c.rgb, gg * tone, desat);
 		float a_l = texture(TEXTURE, uv + vec2(-0.01, 0.0)).a;
 		float a_r = texture(TEXTURE, uv + vec2(0.01, 0.0)).a;
 		float a_u = texture(TEXTURE, uv + vec2(0.0, -0.01)).a;

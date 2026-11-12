@@ -754,7 +754,8 @@ func _run() -> void:
 	check(not ups.is_empty() and ups[0][0] == "lucidria", "bond_up signal fires on level up")
 
 	print("[long-term content]")
-	check(DB.CHAPTERS.size() == 40 and DB.stage_count() == 240, "40 chapters / 240 stages")
+	check(DB.CHAPTERS.size() == 44 and DB.stage_count() == 264, "44 chapters / 264 stages")
+	check(DB.name_of("frost:valeria") == "Frostbound Valeria" and DB.base_id("frost:micca") == "micca", "frost variant names")
 	var bgmiss: Array = []
 	for chd2 in DB.CHAPTERS:
 		if not DB.BG.has(chd2["bg"]):

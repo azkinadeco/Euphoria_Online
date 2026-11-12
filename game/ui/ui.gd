@@ -458,6 +458,12 @@ static func corrupt(t: CanvasItem, variant: String = "") -> void:
 		m.set_shader_parameter("hue_shift", 0.0)
 		m.set_shader_parameter("desat", 0.5)
 		m.set_shader_parameter("glow", Color("#ff3b2e"))
+	elif variant == "frost":
+		# Frostbound (Arc 11): pale glacier-blue skin of ice with a white-blue rime halo
+		m.set_shader_parameter("hue_shift", 0.0)
+		m.set_shader_parameter("desat", 0.8)
+		m.set_shader_parameter("tone", Vector3(0.92, 1.12, 1.42))
+		m.set_shader_parameter("glow", Color("#bff0ff"))
 	elif variant == "hollow":
 		# Hollow (Arc 4): drained, icy-teal look with a cyan halo
 		m.set_shader_parameter("hue_shift", 0.45)
@@ -465,7 +471,7 @@ static func corrupt(t: CanvasItem, variant: String = "") -> void:
 	t.material = m
 	# 2.5D: a rigged / depth-mapped art keeps its depth and gets the variant look on top
 	if t is TextureRect:
-		t.set_meta("corrupt_params", {"hue_shift": m.get_shader_parameter("hue_shift"), "desat": m.get_shader_parameter("desat"), "variant_glow": m.get_shader_parameter("glow")})
+		t.set_meta("corrupt_params", {"hue_shift": m.get_shader_parameter("hue_shift"), "desat": m.get_shader_parameter("desat"), "variant_glow": m.get_shader_parameter("glow"), "tone": m.get_shader_parameter("tone")})
 		if not t.has_node("LiveRig"):
 			var rig := LiveRig.new()
 			rig.name = "LiveRig"

@@ -1154,6 +1154,21 @@ Feedback: kedipan aneh di Fidelia, Angela, Tamo, Kali, Kara, Atalanta, Seraph, Z
   - `enemies/ygg_naar/sprite/ygg_naar_sprite_stage1.png` dan `ygg_naar_sprite_evo1.png` (dipakai saat jadi boss lewat `DB.boss_sprite`)
 - Didaftarkan di `sprites` pada `data/character_database.json`, jadi semua pemanggilan `DB.sprite()` / `DB.boss_sprite()` langsung memakainya.
 
+## 2eo. Update batch 137 — Arc 11: The Frostbound Crown
+- **4 chapter cerita baru (41–44, 24 stage; total 44 chapter / 264 stage).** Mahkota Musim Dingin Frostvale bangun dan mencari ratu yang "tak pernah mencair".
+  - **Ch.41 Frostvale Pass** (map `ice`): bosnya Frostbound Schylua, penjaga brankas mahkota.
+  - **Ch.42 Aurora Observatory** (map `galaxy`): bosnya Frostbound Micca. Ia "dititipi" kotak oleh wanita berbaju putih.
+  - **Ch.43 The Glass Sea** (map `aqua`): bosnya Frostbound Aqua, dibantu Cthollia.
+  - **Ch.44 Throne of Frostvale** (map `ice`): bos finalnya Frostbound Valeria.
+  - Tiap chapter punya intro, mid, mid2, boss_lines, outro, pilihan VN (bond), dan field effect sendiri. Kebanyakan berupa bonus FIRE, karena "mencairkan es".
+- **Varian musuh baru `frost`:** prefix speaker `frost:`, nama "Frostbound X", warna tema biru, label battle "FROSTBOUND". Tampilannya biru es pucat dengan outline putih-biru.
+  - Shader `corrupt.gdshader` dan `live25d.gdshader` mendapat uniform `tone`. Warna grey-scale untuk `desat` sekarang bisa diatur; defaultnya tetap sepia, jadi varian lama tidak berubah.
+  - Varian ini juga masuk `RIFT_VARIANTS`.
+- **Interlude i11 "Cocoa After the Thaw"** terbuka setelah 264 stage.
+- **Mail "Arc 11"** berisi 30.000 Gold, 5 EXP Potion, dan 2 Energy Potion. Sengaja tanpa gems/tiket supaya ekonomi hari pertama tetap 12–20 summon.
+- **Balancing:** pool musuh ch42 dan ch44 dibuat tanpa Hairly/Svormentis ganda, dan multiplier bos Micca/Valeria diturunkan. Dengan tim uji standar Lv.100, win-rate bos: 85% / 60% / 65%, lalu final tetap berat (setara Arc 10).
+- **Perbaikan:** chapter 39–40 (Arc 10) sebelumnya masuk tab "ARC 9" dan berlabel "THE WILD HUNT". Sekarang ada tab ARC 10 dan ARC 11, dengan nama arc yang benar di peta dan Story Archive.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).
