@@ -181,7 +181,38 @@ static func button(text: String, cb: Callable = Callable(), variant: String = ""
 			Game.sfx("ui_click")
 			cb.call())
 	hover_fx(b)
+	if variant == "GoldButton":
+		shine(b)
 	return b
+
+const _SHINE := preload("res://game/ui/shine.gdshader")
+
+## Periodic diagonal light sweep over a rounded control (hidden while a button is disabled).
+static func shine(c: Control, period: float = 3.6, strength: float = 0.5, tint: Color = Color(1, 0.97, 0.85), radius: float = 12.0) -> ColorRect:
+	if Game.reduce_fx():
+		return null
+	var ov := ColorRect.new()
+	ov.color = Color.WHITE
+	ov.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ov.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var m := ShaderMaterial.new()
+	m.shader = _SHINE
+	m.set_shader_parameter("period", period)
+	m.set_shader_parameter("offset", randf() * period)
+	m.set_shader_parameter("strength", strength)
+	m.set_shader_parameter("tint", tint)
+	m.set_shader_parameter("radius", radius)
+	ov.material = m
+	c.add_child(ov)
+	ov.resized.connect(func(): m.set_shader_parameter("rect_size", ov.size))
+	if c is BaseButton:
+		var bb := c as BaseButton
+		var vis := func(): ov.visible = not bb.disabled
+		bb.draw.connect(vis)
+		ov.tree_exiting.connect(func():
+			if bb.draw.is_connected(vis):
+				bb.draw.disconnect(vis))
+	return ov
 
 ## Hover grow + press squash for any Control button.
 static func hover_fx(b: BaseButton, grow: float = 1.04) -> void:
@@ -522,6 +553,10 @@ static func fade_in(node: CanvasItem, dur: float = 0.25, from_offset: Vector2 = 
 
 static func pop(node: Control, dur: float = 0.3) -> void:
 	node.pivot_offset = node.size * 0.5
+	# containers lay out a frame later: keep the pivot centred while it grows
+	var piv := func(): node.pivot_offset = node.size * 0.5
+	if not node.resized.is_connected(piv):
+		node.resized.connect(piv)
 	node.scale = Vector2(0.6, 0.6)
 	node.modulate.a = 0.0
 	var tw := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

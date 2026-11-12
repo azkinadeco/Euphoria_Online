@@ -142,7 +142,7 @@ func _next() -> void:
 			var btns: Array = scope.find_children("*", "Button", true, false)
 			btns.reverse()
 			for c in btns:
-				if c.text == "CONTINUE" and c.is_visible_in_tree() and not c.disabled:
+				if c.text == "CONTINUE" and c.is_visible_in_tree() and not c.disabled and not _closing(c):
 					c.emit_signal("pressed")
 					found = true
 					break
@@ -158,7 +158,7 @@ func _next() -> void:
 			var bs: Array = scope.find_children("*", "Button", true, false)
 			bs.reverse()
 			for c in bs:
-				if c.text.begins_with(want) and c.is_visible_in_tree() and not c.disabled:
+				if c.text.begins_with(want) and c.is_visible_in_tree() and not c.disabled and not _closing(c):
 					c.emit_signal("pressed")
 					hit = true
 					break
@@ -339,3 +339,11 @@ func _next() -> void:
 				var p := kv.split("=")
 				params[p[0]] = (Array(p[1].split(";")) if ";" in p[1] else (p[1] if not p[1].is_valid_int() else int(p[1])))
 		main_node.call("go", parts[0], params)
+
+## True while the control sits in a popup that is fading out.
+func _closing(n: Node) -> bool:
+	while n != null:
+		if n.has_meta("closing"):
+			return true
+		n = n.get_parent()
+	return false

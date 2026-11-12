@@ -1227,3 +1227,16 @@ tools/
 1. Taruh art di `art/characters/heroes/<id>/char|sprite` dan daftarkan di `data/character_database.json` (format sama seperti hero lain).
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
+
+## 2eq. Update batch 139 — Polesan tampilan & animasi UI
+- **Kilau sapuan cahaya di tombol emas** (`game/ui/shine.gdshader`, `UI.shine()`):
+  - Semua `GoldButton` dari `UI.button` otomatis mendapat sapuan cahaya diagonal tiap ±3,6 detik, dengan fase acak supaya tidak serempak.
+  - Tersembunyi saat tombol disabled. Mati jika Reduce Effects aktif.
+- **Popup lebih halus** (`main.gd`):
+  - Latar gelap kini fade-in.
+  - Saat ditutup, panel mengecil dan memudar (`_dismiss`). Layer langsung berhenti dihitung sebagai popup dan semua kontrolnya tak bisa diklik, jadi tidak ada klaim ganda.
+  - Bug diperbaiki: `UI.pop` dulu membesar dari pojok kiri-atas karena ukuran panel masih 0. Pivot sekarang mengikuti `resized`.
+- **Popup hadiah lebih meriah:**
+  - Ikon jatuh dengan pantulan squash-and-stretch.
+  - Lalu muncul ledakan kilau (`game/ui/burst_fx.gd`) dengan warna sesuai jenis hadiah: pink untuk premium (shard/skin/tiket/oath ring/celestial), biru untuk Gems, hijau untuk potion/EXP, emas untuk lainnya.
+- `tools/shot_runner.gd`: `press:` / `pressok` melewati tombol di popup yang sedang menutup.

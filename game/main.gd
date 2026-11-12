@@ -514,6 +514,8 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 	dim.color = Color(0, 0, 0, 0.66)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	layer.add_child(dim)
+	dim.modulate.a = 0.0
+	dim.create_tween().tween_property(dim, "modulate:a", 1.0, 0.18)
 	if closable:
 		dim.gui_input.connect(func(e):
 			if e is InputEventMouseButton and e.pressed:
@@ -538,15 +540,37 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 		rp.add_child(t)
 		v.add_child(rp)
 	v.set_meta("layer", layer)
+	layer.set_meta("panel", p)
 	UI.pop(p)
 	return v
+
+## Fade the dim and shrink the panel away, then free the layer. The layer stops counting as a popup at once.
+func _dismiss(layer: Node) -> void:
+	if not is_instance_valid(layer) or layer.is_queued_for_deletion() or layer.has_meta("closing"):
+		return
+	if not (layer is Control) or Game.reduce_fx():
+		layer.queue_free()
+		return
+	var lc := layer as Control
+	lc.set_meta("closing", true)
+	if lc.has_meta("popup"):
+		lc.remove_meta("popup")
+	# nothing inside may be clicked twice while it fades
+	lc.propagate_call("set_mouse_filter", [Control.MOUSE_FILTER_IGNORE])
+	var tw := create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tw.tween_property(lc, "modulate:a", 0.0, 0.16)
+	var p = lc.get_meta("panel", null)
+	if p is Control and is_instance_valid(p):
+		(p as Control).pivot_offset = (p as Control).size * 0.5
+		tw.tween_property(p, "scale", Vector2(0.9, 0.9), 0.16)
+	tw.chain().tween_callback(lc.queue_free)
 
 func close_popup(layer_or_box: Node) -> void:
 	var layer: Node = layer_or_box
 	if layer_or_box.has_meta("layer"):
 		layer = layer_or_box.get_meta("layer")
 	if is_instance_valid(layer):
-		layer.queue_free()
+		_dismiss(layer)
 
 func _close_top_popup() -> bool:
 	for i in range(overlay.get_child_count() - 1, -1, -1):
@@ -554,7 +578,7 @@ func _close_top_popup() -> bool:
 		if c.has_meta("popup") and not c.is_queued_for_deletion():
 			if c.has_meta("no_back"):
 				return true
-			c.queue_free()
+			_dismiss(c)
 			return true
 	return false
 
@@ -564,6 +588,7 @@ func _close_all_popups() -> void:
 			c.queue_free()
 
 var _fly_src: Array = []
+const BurstFx := preload("res://game/ui/burst_fx.gd")
 
 ## Reward icons fly from the popup to the currency bar at the top-right.
 func _fly_icons() -> void:
@@ -603,6 +628,7 @@ func show_rewards(title: String, rewards: Dictionary, after: Callable = Callable
 		row.add_theme_constant_override("h_separation", 12)
 		row.add_theme_constant_override("v_separation", 12)
 		v.add_child(row)
+		var idx := 0
 		for k in rewards.keys():
 			var cell := Control.new()
 			cell.custom_minimum_size = Vector2(96, 110)
@@ -619,6 +645,21 @@ func show_rewards(title: String, rewards: Dictionary, after: Callable = Callable
 			ic.position = Vector2(16, 12)
 			ic.size = Vector2(64, 64)
 			cell.add_child(ic)
+			# icon drops in with a bounce, then a sparkle burst in the reward's tint
+			var rare := _reward_tint(str(k))
+			shine.modulate = Color(rare.r, rare.g, rare.b, 0.5)
+			var delay := 0.12 + idx * 0.08
+			ic.pivot_offset = Vector2(32, 32)
+			ic.position.y = -26.0
+			ic.scale = Vector2(0.7, 1.25)
+			var dt := ic.create_tween()
+			dt.tween_interval(delay)
+			dt.tween_property(ic, "position:y", 12.0, 0.28).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+			dt.parallel().tween_property(ic, "scale", Vector2.ONE, 0.28)
+			dt.tween_property(ic, "scale", Vector2(1.18, 0.84), 0.06)
+			dt.tween_property(ic, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			BurstFx.spawn(cell, Vector2(48, 44), rare, 58.0, delay + 0.28)
+			idx += 1
 			var l := UI.label("x" + Game.fmt(int(rewards[k])), 16, UI.GOLD, 4)
 			l.position = Vector2(0, 84)
 			l.size = Vector2(96, 22)
@@ -633,6 +674,16 @@ func show_rewards(title: String, rewards: Dictionary, after: Callable = Callable
 			after.call(), "GoldButton", Vector2(200, 50))
 	ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	v.add_child(ok)
+
+## Burst / halo tint for a reward key: premium currencies glow brighter and pinker.
+func _reward_tint(k: String) -> Color:
+	if k.begins_with("shard:") or k.begins_with("skin") or k in ["celestial_gem", "oath_ring", "summon_ticket", "ticket"]:
+		return Color(1.0, 0.55, 0.95)
+	if k in ["gems", "gem"]:
+		return Color(0.55, 0.9, 1.0)
+	if k.contains("exp") or k.contains("potion"):
+		return Color(0.6, 1.0, 0.6)
+	return Color(1.0, 0.85, 0.4)
 
 func show_login_calendar() -> void:
 	var v := popup("7-DAY LOGIN BONUS", 900)
