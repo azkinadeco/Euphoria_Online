@@ -141,7 +141,63 @@ func header(title: String, chips: Array = ["gold", "gems", "energy"]) -> HBoxCon
 	for k in chips:
 		bar.add_child(_chip(k))
 	_update_chips()
+	if not Game.reduce_fx():
+		_header_intro(t, line, bar)
 	return bar
+
+## One-shot header entrance: title pops in, gold rule grows from the centre, chips drop in one by one.
+func _header_intro(title: Label, line: ColorRect, bar: HBoxContainer) -> void:
+	title.modulate.a = 0.0
+	title.resized.connect(func(): title.pivot_offset = Vector2(0, title.size.y * 0.5))
+	title.scale = Vector2(0.86, 0.86)
+	var tw := title.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_property(title, "modulate:a", 1.0, 0.25).set_delay(0.08)
+	tw.tween_property(title, "scale", Vector2.ONE, 0.35).set_delay(0.08)
+	line.resized.connect(func(): line.pivot_offset = line.size * 0.5)
+	line.scale.x = 0.0
+	line.create_tween().tween_property(line, "scale:x", 1.0, 0.45).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT).set_delay(0.1)
+	var i := 0
+	for c in _chips:
+		var lab: Label = c["label"]
+		var chip := lab.get_parent().get_parent() as Control
+		if chip == null or chip.get_parent() != bar:
+			continue
+		chip.modulate.a = 0.0
+		chip.resized.connect(func(): chip.pivot_offset = chip.size * 0.5)
+		chip.scale = Vector2(0.8, 0.8)
+		var ct := chip.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		ct.tween_property(chip, "modulate:a", 1.0, 0.2).set_delay(0.12 + 0.06 * i)
+		ct.tween_property(chip, "scale", Vector2.ONE, 0.3).set_delay(0.12 + 0.06 * i)
+		i += 1
+
+## Chip feedback when a currency changes: bump + tint flash + a floating delta.
+func _chip_pulse(c: Dictionary, delta: int) -> void:
+	if Game.reduce_fx() or not is_inside_tree():
+		return
+	var lab: Label = c["label"]
+	var chip := lab.get_parent().get_parent() as Control
+	if chip == null:
+		return
+	var gain := delta > 0
+	chip.pivot_offset = chip.size * 0.5
+	var tw := chip.create_tween()
+	tw.tween_property(chip, "scale", Vector2(1.1, 1.1), 0.08).set_trans(Tween.TRANS_QUAD)
+	tw.tween_property(chip, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	var flash := Color(1.35, 1.28, 0.95) if gain else Color(1.3, 0.72, 0.72)
+	var mt := chip.create_tween()
+	mt.tween_property(chip, "modulate", flash, 0.08)
+	mt.tween_property(chip, "modulate", Color.WHITE, 0.4)
+	var f := UI.label(("+" if gain else "-") + Game.fmt(absi(delta)), 15, Color("#9dffb0") if gain else Color("#ff8a8a"), 4)
+	f.top_level = true
+	f.z_index = 50
+	f.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.add_child(f)
+	var start := chip.global_position + Vector2(chip.size.x * 0.5 - 20.0, chip.size.y - 2.0)
+	f.global_position = start
+	var ft := f.create_tween().set_parallel(true)
+	ft.tween_property(f, "global_position:y", start.y + 18.0, 0.9).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	ft.tween_property(f, "modulate:a", 0.0, 0.5).set_delay(0.45)
+	ft.chain().tween_callback(f.queue_free)
 
 func _chip(key: String) -> Control:
 	var p := UI.styled_panel(Color(0, 0, 0, 0.55), Color("#5b4790"), 22, 1, 8)
@@ -175,6 +231,7 @@ func _update_chips() -> void:
 			c["value"] = nv
 			if ov != nv and is_inside_tree():
 				UI.count_to(c["label"], ov, nv, func(x: int) -> String: return Game.fmt(x))
+				_chip_pulse(c, nv - ov)
 			else:
 				c["label"].text = Game.fmt(nv)
 

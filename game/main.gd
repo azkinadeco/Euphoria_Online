@@ -485,10 +485,30 @@ func toast(text: String, color: Color = UI.GOLD) -> void:
 				old_p.queue_free()
 	var p := UI.styled_panel(Color(0.05, 0.03, 0.1, 0.94), color, 22, 2, 14)
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(row)
+	var gl := UI.styled_panel(Color(color.r, color.g, color.b, 0.22), color, 15, 1, 0)
+	gl.custom_minimum_size = Vector2(30, 30)
+	gl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	gl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var gt := UI.label(_toast_glyph(text, color), 17, color.lightened(0.45), 2)
+	gt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	gt.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	gl.add_child(gt)
+	row.add_child(gl)
 	var l := UI.label(text, 17, Color.WHITE, 3)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	p.add_child(l)
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.custom_minimum_size.x = 120
+	row.add_child(l)
+	var bal := Control.new()
+	bal.custom_minimum_size = Vector2(30, 0)
+	bal.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(bal)
 	p.set_meta("grp", grp)
 	p.set_meta("text", text)
 	_toast_box.add_child(p)
@@ -498,10 +518,39 @@ func toast(text: String, color: Color = UI.GOLD) -> void:
 		old_t.queue_free()
 	p.modulate.a = 0.0
 	var tw := p.create_tween()
-	tw.tween_property(p, "modulate:a", 1.0, 0.18)
+	if Game.reduce_fx():
+		tw.tween_property(p, "modulate:a", 1.0, 0.18)
+	else:
+		UI.shine(p, 9.0, 0.45, color.lightened(0.5), 22)
+		# drop in with a little overshoot (scale only: the VBox owns position)
+		p.resized.connect(func(): p.pivot_offset = Vector2(p.size.x * 0.5, 0))
+		p.scale = Vector2(0.86, 0.6)
+		tw.set_parallel(true)
+		tw.tween_property(p, "modulate:a", 1.0, 0.16)
+		tw.tween_property(p, "scale", Vector2.ONE, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tw.tween_property(gl, "rotation", TAU, 0.5).from(-0.6).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		gl.resized.connect(func(): gl.pivot_offset = gl.size * 0.5)
+		tw.set_parallel(false)
 	tw.tween_interval(2.4)
 	tw.tween_property(p, "modulate:a", 0.0, 0.35)
+	if not Game.reduce_fx():
+		tw.parallel().tween_property(p, "scale", Vector2(0.94, 0.8), 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tw.tween_callback(p.queue_free)
+
+## Small leading glyph for a toast, picked from its text/colour.
+func _toast_glyph(text: String, color: Color) -> String:
+	var u := text.to_upper()
+	if u.contains("UNLOCK") or u.contains("NEW "):
+		return "✦"
+	if u.contains("LEVEL") or u.contains("LV.") or u.contains("RANK"):
+		return "▲"
+	if u.contains("NOT ENOUGH") or u.contains("NEED") or u.contains("FULL") or u.contains("CAN'T") or u.contains("CANNOT"):
+		return "!"
+	if u.contains("SAVED") or u.contains("CLAIM") or u.contains("COMPLETE") or u.contains("CLEAR"):
+		return "✓"
+	if color.is_equal_approx(UI.MUTED):
+		return "•"
+	return "★"
 
 ## Modal popup. Returns the content VBox to fill.
 func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxContainer:

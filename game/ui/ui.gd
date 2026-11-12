@@ -214,6 +214,30 @@ static func shine(c: Control, period: float = 3.6, strength: float = 0.5, tint: 
 				bb.draw.disconnect(vis))
 	return ov
 
+const _RIPPLE := preload("res://game/ui/ripple.gdshader")
+
+## Soft touch ripple expanding from `at` (local coords), clipped to the control's rounded rect.
+static func ripple(c: Control, at: Vector2, tint: Color = Color(1, 0.96, 0.88), radius: float = 12.0) -> void:
+	if Game.reduce_fx() or c.size.x < 8.0 or c.size.y < 8.0:
+		return
+	if c is BaseButton and (c as BaseButton).disabled:
+		return
+	var ov := ColorRect.new()
+	ov.color = Color.WHITE
+	ov.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ov.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var m := ShaderMaterial.new()
+	m.shader = _RIPPLE
+	m.set_shader_parameter("center", at.clamp(Vector2.ZERO, c.size))
+	m.set_shader_parameter("rect_size", c.size)
+	m.set_shader_parameter("radius", minf(radius, c.size.y * 0.5))
+	m.set_shader_parameter("tint", tint)
+	ov.material = m
+	c.add_child(ov)
+	var tw := ov.create_tween()
+	tw.tween_method(func(v: float): m.set_shader_parameter("prog", v), 0.0, 1.0, 0.45)
+	tw.tween_callback(ov.queue_free)
+
 ## Hover grow + press squash for any Control button.
 static func hover_fx(b: BaseButton, grow: float = 1.04) -> void:
 	b.mouse_entered.connect(func():
@@ -225,6 +249,7 @@ static func hover_fx(b: BaseButton, grow: float = 1.04) -> void:
 		b.create_tween().tween_property(b, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_QUAD))
 	b.button_down.connect(func():
 		b.pivot_offset = b.size * 0.5
+		ripple(b, b.get_local_mouse_position())
 		b.create_tween().tween_property(b, "scale", Vector2(0.94, 0.94), 0.05))
 	b.button_up.connect(func():
 		var tw := b.create_tween()

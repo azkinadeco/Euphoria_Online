@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-13b",
+  "date": "2026-11-13",
+  "tag": "UPDATE",
+  "title": "Touch Ripples, New Toasts & Lively Headers",
+  "body": "Buttons now answer every tap with a soft ripple that spreads from your finger. Notifications drop in with a little bounce, carry a small icon (✦ unlocks, ! warnings, ✓ done) and glide away when they finish. Screen headers animate in, and your Gold, Gems and Energy chips pulse with a floating +/− number whenever they change. All of it turns off with Reduce Effects."
+ },
+ {
   "id": "n2026-11-13a",
   "date": "2026-11-13",
   "tag": "UPDATE",

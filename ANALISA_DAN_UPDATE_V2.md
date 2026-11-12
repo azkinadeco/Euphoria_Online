@@ -1228,6 +1228,17 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2er. Update batch 140 — Ripple sentuh, toast baru, header hidup
+- **Ripple sentuh** (`game/ui/ripple.gdshader`, `UI.ripple()`): setiap tombol yang memakai `UI.hover_fx` (semua `UI.button`) memunculkan lingkaran cahaya lembut yang menyebar dari titik sentuh, terpotong rapi mengikuti sudut tombol. Tidak muncul pada tombol disabled.
+- **Toast baru** (`main.gd toast()`):
+  - Masuk dengan efek jatuh-memantul, lalu keluar sambil mengecil dan memudar.
+  - Punya badge ikon bulat di kiri (`_toast_glyph`): ✦ unlock/new, ▲ level/rank, ! peringatan (not enough/need/full), ✓ selesai/klaim/simpan, ★ lainnya. Ada juga sapuan kilau tipis.
+  - Bug tween diperbaiki: fade-out sekarang benar-benar menunggu 2,4 detik.
+- **Header layar** (`screen.gd`):
+  - `_header_intro`: judul muncul dengan pop, garis emas tumbuh dari tengah, chip mata uang jatuh satu per satu.
+  - `_chip_pulse`: saat Gold/Gems berubah, chip membesar sesaat dan berkedip (emas jika bertambah, merah jika berkurang), lalu muncul angka +/− melayang.
+- Semua efek mati saat Reduce Effects aktif.
+
 ## 2eq. Update batch 139 — Polesan tampilan & animasi UI
 - **Kilau sapuan cahaya di tombol emas** (`game/ui/shine.gdshader`, `UI.shine()`):
   - Semua `GoldButton` dari `UI.button` otomatis mendapat sapuan cahaya diagonal tiap ±3,6 detik, dengan fase acak supaya tidak serempak.
