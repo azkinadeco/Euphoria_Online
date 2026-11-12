@@ -1140,6 +1140,11 @@ Feedback: kedipan aneh di Fidelia, Angela, Tamo, Kali, Kara, Atalanta, Seraph, Z
 - **Shader menahan drift**: hasil `ring_skin` ditarik kembali ke warna kulit terukur atau `skin_hint` kalau menyimpang (0,06–0,18). Kelopak tidak lagi abu-abu di mata bercahaya (misalnya Glytta stage1 dan Svormentis).
 - **Kotak mata diperbaiki**: Skelinch diukur ulang (mata kiri sebelumnya bergeser, mata kanan terlalu kecil). Kotak Eropatra stage2/3/evo1–3 dipendekkan 28%. Kotak Svormentis stage2/evo1 dipendekkan ke bukaan mata karena silau mata ikut terhitung.
 
+## 2em. Update batch 135 — kedipan wajah merona
+- Masalah: pada art dengan rona pipi tebal, sampel kulit di sekitar mata ikut kena rona, sehingga kelopak yang menutup menjadi petak oranye atau merah. Ini terjadi pada Eropatra stage2/3/evo1–3, Lumeira evo1/evo2 dan Glytta stage2.
+- `data/char_rigs.json` sekarang menerima `skin_hint` `[r,g,b]` (warna kulit wajah tanpa rona, dipilih dari piksel kulit paling tidak merah di sekitar mata) dan `blush` `[r,g,b,kekuatan]` (median piksel rona di bawah mata, kekuatan 0,85). `DB.form_rigs()` mengubah keduanya menjadi `Color`.
+- Shader `char_rig.gdshader`: uniform baru `blush`. Di akhir `ring_skin`, warna kelopak dibaurkan dari kulit (atas) ke rona (bawah) dengan `smoothstep(-1.3, 0.7, q.y)`, jadi kelopak tertutup menyambung dengan pipi. `char_rig.gd` mereset `blush` ke 0 untuk rig yang tidak memakainya.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

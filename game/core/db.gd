@@ -3147,6 +3147,13 @@ static func form_rigs() -> Dictionary:
 					if src.has("glow_color"):
 						var c: Array = src["glow_color"]
 						r["glow_color"] = Color(c[0], c[1], c[2])
+					if src.has("skin_hint"):
+						# face skin tone picked by hand for blushing faces (the cheek ring would pick the blush)
+						var sh: Array = src["skin_hint"]
+						r["skin_hint"] = Color(sh[0], sh[1], sh[2], 1.0)
+					if src.has("blush"):
+						var bl: Array = src["blush"]
+						r["blush"] = Color(bl[0], bl[1], bl[2], bl[3])
 					_form_rigs[str(k)] = r
 	return _form_rigs
 

@@ -30,6 +30,7 @@ uniform float blinks[8];
 uniform vec4 skins[8];            // per-eye face skin colour measured on the art around the cheek (a = 0: unknown)
 uniform int eye_count = 0;
 uniform vec4 skin_hint = vec4(0.0);   // rgb = face skin colour for non-human skin (a = 1 to use it)
+uniform vec4 blush = vec4(0.0);       // blushing face: rgb = blush colour, a = strength; the closed lid runs from skin (top) into it (bottom)
 uniform float lash = 0.34;        // thickness of the upper lash line (in eye half-heights)
 uniform float lid_close = 0.42;   // where the closed lash line rests (0 = eye centre, 1 = lower rim)
 // animated values
@@ -106,6 +107,8 @@ vec3 ring_skin(sampler2D tex, vec2 c, vec2 ex, vec2 ey, vec2 to_uv, vec2 q, vec4
 	// hair, glow or shadow — the lid never ends up grey, dark or tinted on a normal face
 	if (skin_hint.a > 0.5 || measured.a > 0.5)
 		res = mix(res, hint, smoothstep(0.06, 0.18, length(res - hint)));
+	if (blush.a > 0.0)
+		res = mix(res, blush.rgb, blush.a * smoothstep(-1.3, 0.7, q.y));
 	return res;
 }
 

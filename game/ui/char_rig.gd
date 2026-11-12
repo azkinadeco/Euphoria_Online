@@ -92,11 +92,13 @@ func _check() -> void:
 		var f: Array = (rig.get("floats", []) as Array)[i] if i < (rig.get("floats", []) as Array).size() else []
 		fl.append(Vector4(f[0], f[1], f[2], f[3]) if f.size() == 4 else Vector4.ZERO)
 	_mat.set_shader_parameter("floats", fl)
-	for k in ["neck", "hips", "chest", "head", "chest_w", "glow_color", "bone_wave", "head_band", "lash", "lid_close", "skin_hint"]:
+	for k in ["neck", "hips", "chest", "head", "chest_w", "glow_color", "bone_wave", "head_band", "lash", "lid_close", "skin_hint", "blush"]:
 		if rig.has(k):
 			_mat.set_shader_parameter(k, rig[k])
 	if not rig.has("skin_hint"):
 		_mat.set_shader_parameter("skin_hint", Color(0, 0, 0, 0))
+	if not rig.has("blush"):
+		_mat.set_shader_parameter("blush", Color(0, 0, 0, 0))
 	_set_eyes(rig.get("eyes", []), float(tex.get_width()) / float(tex.get_height()))
 	_rect.material = _mat
 

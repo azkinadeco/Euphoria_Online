@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-12k",
+  "date": "2026-11-12",
+  "tag": "FIX",
+  "title": "Blushing Faces Blink Naturally",
+  "body": "Characters with a strong blush no longer blink with a flat orange or red eyelid. The closed lid now uses the face's real skin tone at the top and fades into the blush at the bottom, so it matches the cheek. Fixed for Eropatra (stage 2, stage 3 and all evolutions), Lumeira (evolutions 1 and 2) and Glytta (stage 2)."
+ },
+ {
   "id": "n2026-11-12j",
   "date": "2026-11-12",
   "tag": "FIX",
