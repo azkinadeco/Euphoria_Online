@@ -190,6 +190,18 @@ func _eye_skins(cen: PackedVector4Array, aspect: float) -> PackedVector4Array:
 		if n > 0:
 			sum /= float(n)
 			out[i] = Vector4(sum.x, sum.y, sum.z, 1.0)
+	# one face, one skin tone: when the two eyes disagree, the warmer / brighter (more skin-like)
+	# measurement wins for both (the other one hit a shadow, a hair strand or face paint)
+	if out[0].w > 0.0 and out[1].w > 0.0:
+		var a0 := Vector3(out[0].x, out[0].y, out[0].z)
+		var a1 := Vector3(out[1].x, out[1].y, out[1].z)
+		if a0.distance_to(a1) > 0.12:
+			var s0 := a0.dot(Vector3(0.3, 0.55, 0.15)) + 1.5 * (a0.x - a0.z)
+			var s1 := a1.dot(Vector3(0.3, 0.55, 0.15)) + 1.5 * (a1.x - a1.z)
+			if s0 >= s1:
+				out[1] = out[0]
+			else:
+				out[0] = out[1]
 	_skin_cache[key] = out
 	return out
 

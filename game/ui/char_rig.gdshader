@@ -101,7 +101,12 @@ vec3 ring_skin(sampler2D tex, vec2 c, vec2 ex, vec2 ey, vec2 to_uv, vec2 q, vec4
 		sum += smp[k].rgb * ok * wd;
 		ws += ok * wd;
 	}
-	return ws > 0.0001 ? sum / ws : best;
+	vec3 res = ws > 0.0001 ? sum / ws : best;
+	// a trusted tone (art hint or the CPU cheek measurement) reins in a ring that drifted onto
+	// hair, glow or shadow — the lid never ends up grey, dark or tinted on a normal face
+	if (skin_hint.a > 0.5 || measured.a > 0.5)
+		res = mix(res, hint, smoothstep(0.06, 0.18, length(res - hint)));
+	return res;
 }
 
 void fragment() {

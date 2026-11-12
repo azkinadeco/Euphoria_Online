@@ -13,7 +13,7 @@ func _process(_d: float) -> bool:
 		g.name = "Game"
 		root.add_child(g)
 		var dbs = load("res://game/core/db.gd")
-		var tex: Texture2D = dbs.art(args[1], int(args[2]) if args.size() > 2 else 0)
+		var tex: Texture2D = load(args[1]) if args[1].begins_with("res://") else dbs.art(args[1], int(args[2]) if args.size() > 2 else 0)
 		var rg: Dictionary = dbs.char_rig(tex)
 		var a := float(tex.get_width()) / tex.get_height()
 		var pts: Array = []

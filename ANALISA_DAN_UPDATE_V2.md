@@ -1134,12 +1134,18 @@ Feedback: kedipan aneh di Fidelia, Angela, Tamo, Kali, Kara, Atalanta, Seraph, Z
 - **Mata baru diukur**: Luby, Schylua (`skin_hint` biru untuk kulit non-manusia). Kara dipersempit ke bagian mata yang terlihat, Angela kiri diperlebar.
 - `tools/rig_face.gd` sekarang mengisi `blinks` untuk semua mata.
 
+## 2el. Update batch 134 — QA kedipan semua art
+- Semua 162 art yang punya mata dirender buka/tutup (`tools/rig_face.gd` sekarang juga menerima path `res://`), lalu dicek per contact sheet.
+- **Satu wajah, satu warna kulit**: di beberapa art, pengukuran pipi salah satu mata kena bayangan, helai rambut, totol rias, atau cahaya mata, sehingga kelopaknya abu-abu atau gelap. Contohnya Voodoo, Skelinch, Svormentis, Rumi evo1, Lucidria stage2, dan Lumeira stage1. Sekarang `_eye_skins` membandingkan kedua mata. Kalau beda jauh (>0,12), nilai yang paling mirip kulit (terang + hangat) dipakai untuk keduanya.
+- **Shader menahan drift**: hasil `ring_skin` ditarik kembali ke warna kulit terukur atau `skin_hint` kalau menyimpang (0,06–0,18). Kelopak tidak lagi abu-abu di mata bercahaya (misalnya Glytta stage1 dan Svormentis).
+- **Kotak mata diperbaiki**: Skelinch diukur ulang (mata kiri sebelumnya bergeser, mata kanan terlalu kecil). Kotak Eropatra stage2/3/evo1–3 dipendekkan 28%. Kotak Svormentis stage2/evo1 dipendekkan ke bukaan mata karena silau mata ikut terhitung.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).
 - **Pembayaran / top-up uang asli**: belum ada; shop memakai Gems/Gold/Arena Coin.
 - **Friend, Guild & Event** sudah ada, tapi teman/anggota masih simulasi (belum multiplayer).
-- **Animasi Live2D/Spine & voice acting**: hero memakai gambar statis + animasi "napas"/lunge. Butuh rig Spine/Live2D dan file suara.
+- **Voice acting** & rig Live2D/Spine asli: semua art sudah bergerak gaya Live2D lewat rig pivot (`char_rig`: napas, kepala, rambut/ekor, kedip). Mesh deformasi Live2D/Spine sungguhan dan file suara belum ada.
 - **Hero Mora & musuh Ygg-Naar/Ex-Nymph** belum punya sprite chibi → memakai artwork penuh. Musuh di `enemy/Belum bisa dipakai` tidak dipakai.
 
 ## 4. Struktur kode baru (`game/`, ±5.800 baris)

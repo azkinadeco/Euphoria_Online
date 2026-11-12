@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-12j",
+  "date": "2026-11-12",
+  "tag": "FIX",
+  "title": "Blink Polish for Every Character",
+  "body": "We checked the blink on every hero and enemy art. Eyelids now always use one skin tone for both eyes, so a shadow, a hair strand or face paint no longer turns one lid grey or dark (Voodoo, Skelinch, Svormentis, Rumi, Lucidria, Lumeira and more). Glowing eyes no longer tint the closed lid. Skelinch's eyes were re-measured so both now close properly, and Eropatra's and Svormentis' eyelids fit their eyes more tightly."
+ },
+ {
   "id": "n2026-11-12i",
   "date": "2026-11-12",
   "tag": "FIX",
