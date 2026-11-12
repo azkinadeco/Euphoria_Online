@@ -183,7 +183,49 @@ static func button(text: String, cb: Callable = Callable(), variant: String = ""
 	hover_fx(b)
 	if variant == "GoldButton":
 		shine(b)
+	elif variant == "TabButton":
+		_tab_marker(b)
 	return b
+
+## Active-tab glow: a gold underline that grows from the centre whenever the tab turns on.
+static func _tab_marker(b: Button) -> void:
+	if Game.reduce_fx():
+		return
+	var m := ColorRect.new()
+	m.color = Color(1.0, 0.86, 0.5, 0.95)
+	m.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	m.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	m.anchor_left = 0.22
+	m.anchor_right = 0.78
+	m.offset_left = 0
+	m.offset_right = 0
+	m.offset_top = -5
+	m.offset_bottom = -3
+	m.visible = false
+	b.add_child(m)
+	var glow := ColorRect.new()
+	glow.color = Color(1.0, 0.8, 0.4, 0.28)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	glow.offset_top = -3
+	glow.offset_bottom = 3
+	glow.offset_left = -6
+	glow.offset_right = 6
+	glow.show_behind_parent = true
+	m.add_child(glow)
+	var show_it := func(on: bool):
+		if not is_instance_valid(m):
+			return
+		if on == m.visible:
+			return
+		m.visible = on
+		if on and m.is_inside_tree():
+			m.pivot_offset = Vector2(m.size.x * 0.5, 1)
+			m.scale.x = 0.0
+			var tw := m.create_tween()
+			tw.tween_property(m, "scale:x", 1.0, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	b.toggled.connect(func(on: bool): show_it.call(on and b.toggle_mode))
+	b.ready.connect(func(): show_it.call(b.toggle_mode and b.button_pressed), CONNECT_ONE_SHOT)
 
 const _SHINE := preload("res://game/ui/shine.gdshader")
 
@@ -424,7 +466,46 @@ static func bar(value: float, max_value: float, variant: String = "", h: float =
 	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if variant != "":
 		p.theme_type_variation = variant
+	if not Game.reduce_fx() and variant in ["", "GoldBar"] and h >= 8.0:
+		_bar_gloss(p, h)
+		# bars built while a screen is opening fill up from empty
+		if Time.get_ticks_msec() - int(Game.get_meta("screen_t", -99999)) < 450 and value > 0.0:
+			var target := value
+			p.value = 0.0
+			p.ready.connect(func():
+				p.create_tween().tween_property(p, "value", target, 0.7).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT).set_delay(0.18), CONNECT_ONE_SHOT)
 	return p
+
+## Glossy top highlight + slow light sweep, clipped to the filled part of a bar.
+static func _bar_gloss(p: ProgressBar, h: float) -> void:
+	var clip := Control.new()
+	clip.clip_contents = true
+	clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(clip)
+	var hi := ColorRect.new()
+	hi.color = Color(1, 1, 1, 0.2)
+	hi.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	clip.add_child(hi)
+	var sh := Control.new()
+	sh.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	clip.add_child(sh)
+	var sweep := shine(sh, 4.5, 0.55, Color(1, 1, 0.95), minf(6.0, h * 0.5))
+	if sweep != null:
+		sweep.material.set_shader_parameter("inset", 0.0)
+		sweep.material.set_shader_parameter("width", 0.08)
+	var fit := func():
+		var span := p.max_value - p.min_value
+		var r := 0.0 if span <= 0.0 else clampf((p.value - p.min_value) / span, 0.0, 1.0)
+		var w := floorf(p.size.x * r)
+		clip.position = Vector2(1, 1)
+		clip.size = Vector2(maxf(0.0, w - 2.0), maxf(0.0, p.size.y - 2.0))
+		clip.visible = w > 4.0
+		hi.position = Vector2(2, 1)
+		hi.size = Vector2(maxf(0.0, clip.size.x - 4.0), maxf(1.0, round(clip.size.y * 0.32)))
+		sh.size = Vector2(maxf(p.size.x - 2.0, 1.0), clip.size.y)
+	p.resized.connect(fit)
+	p.value_changed.connect(func(_v: float): fit.call())
+	p.changed.connect(fit)
 
 static func stars(n: int, size: int = 16, max_n: int = 0) -> Label:
 	var t := "★".repeat(n)

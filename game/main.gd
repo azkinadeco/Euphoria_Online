@@ -412,6 +412,7 @@ func go(name: String, params: Dictionary = {}, push: bool = true) -> void:
 		history.append({"name": current_name, "params": current.params if is_instance_valid(current) else {}})
 		if history.size() > 20:
 			history.pop_front()
+	Game.set_meta("screen_t", Time.get_ticks_msec())
 	var scr: Screen = SCREENS[name].new()
 	scr.main = self
 	scr.params = params
@@ -540,6 +541,8 @@ func toast(text: String, color: Color = UI.GOLD) -> void:
 ## Small leading glyph for a toast, picked from its text/colour.
 func _toast_glyph(text: String, color: Color) -> String:
 	var u := text.to_upper()
+	if u.contains("UNLOCKS AT") or u.contains("LOCKED"):
+		return "🔒"
 	if u.contains("UNLOCK") or u.contains("NEW "):
 		return "✦"
 	if u.contains("LEVEL") or u.contains("LV.") or u.contains("RANK"):

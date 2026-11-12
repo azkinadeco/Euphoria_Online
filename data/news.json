@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-13c",
+  "date": "2026-11-13",
+  "tag": "UPDATE",
+  "title": "Glossy Progress Bars & Glowing Tabs",
+  "body": "Progress bars now have a glossy finish with a slow light sweep, and they fill up from empty when you open a screen. The selected tab gets a gold underline that grows out from its centre. Locked-feature messages show a lock icon. All of it turns off with Reduce Effects."
+ },
+ {
   "id": "n2026-11-13b",
   "date": "2026-11-13",
   "tag": "UPDATE",

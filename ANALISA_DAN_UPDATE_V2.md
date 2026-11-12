@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2es. Update batch 141 — Progress bar mengilap & tab aktif bercahaya
+- **Progress bar** (`UI.bar` → `UI._bar_gloss`, hanya varian default/`GoldBar` dengan tinggi ≥ 8px; `HpBar` di battle tidak disentuh):
+  - Kilap putih tipis di sepertiga atas bagian yang terisi, plus sapuan cahaya pelan. Keduanya terpotong mengikuti panjang isi bar dan mengikuti `value_changed`.
+  - Isi naik dari kosong: bar yang dibuat dalam 450 ms setelah `main.go()` (lewat meta `Game.screen_t`) terisi dari 0 ke nilainya dalam 0,7 detik.
+- **Tab aktif** (`UI._tab_marker`, otomatis untuk semua `TabButton`): garis emas bercahaya di bawah tab yang aktif, tumbuh dari tengah. Muncul lewat sinyal `toggled` dan saat `ready`.
+- Toast untuk fitur yang masih terkunci ("unlocks at", "locked") kini memakai ikon 🔒.
+- Semua efek mati saat Reduce Effects aktif.
+
 ## 2er. Update batch 140 — Ripple sentuh, toast baru, header hidup
 - **Ripple sentuh** (`game/ui/ripple.gdshader`, `UI.ripple()`): setiap tombol yang memakai `UI.hover_fx` (semua `UI.button`) memunculkan lingkaran cahaya lembut yang menyebar dari titik sentuh, terpotong rapi mengikuti sudut tombol. Tidak muncul pada tombol disabled.
 - **Toast baru** (`main.gd toast()`):
