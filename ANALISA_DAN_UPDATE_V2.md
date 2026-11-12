@@ -1145,13 +1145,22 @@ Feedback: kedipan aneh di Fidelia, Angela, Tamo, Kali, Kara, Atalanta, Seraph, Z
 - `data/char_rigs.json` sekarang menerima `skin_hint` `[r,g,b]` (warna kulit wajah tanpa rona, dipilih dari piksel kulit paling tidak merah di sekitar mata) dan `blush` `[r,g,b,kekuatan]` (median piksel rona di bawah mata, kekuatan 0,85). `DB.form_rigs()` mengubah keduanya menjadi `Color`.
 - Shader `char_rig.gdshader`: uniform baru `blush`. Di akhir `ring_skin`, warna kelopak dibaurkan dari kulit (atas) ke rona (bawah) dengan `smoothstep(-1.3, 0.7, q.y)`, jadi kelopak tertutup menyambung dengan pipi. `char_rig.gd` mereset `blush` ke 0 untuk rig yang tidak memakainya.
 
+## 2en. Update batch 136 — Sprite chibi Mora, Ex-Nymph, Ygg-Naar
+- Ketiganya sebelumnya tidak punya sprite chibi, jadi di battle, formation, tower dan lainnya memakai artwork penuh (kecil, kepala mungil, tidak serasi dengan unit lain).
+- `tools/chibify.py` (baru) membuat sprite chibi dari artwork penuh: kepala diperbesar 1,55–1,85× dengan warp bulge halus (pusat dan radius dari posisi wajah), lalu badan di bawah garis pinggul dipendekkan ke 62–75%. Hasilnya di-crop dan disimpan dengan tinggi maksimal 1000 px (import `size_limit=512`, sama dengan sprite lain).
+- Sprite baru:
+  - `heroes/mora/sprite/mora_sprite_stage1.png` dan `mora_sprite_evo1.png` (dipakai mulai 5★)
+  - `enemies/ex_nymph/sprite/ex_nymph_sprite_stage1.png`
+  - `enemies/ygg_naar/sprite/ygg_naar_sprite_stage1.png` dan `ygg_naar_sprite_evo1.png` (dipakai saat jadi boss lewat `DB.boss_sprite`)
+- Didaftarkan di `sprites` pada `data/character_database.json`, jadi semua pemanggilan `DB.sprite()` / `DB.boss_sprite()` langsung memakainya.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).
 - **Pembayaran / top-up uang asli**: belum ada; shop memakai Gems/Gold/Arena Coin.
 - **Friend, Guild & Event** sudah ada, tapi teman/anggota masih simulasi (belum multiplayer).
 - **Voice acting** & rig Live2D/Spine asli: semua art sudah bergerak gaya Live2D lewat rig pivot (`char_rig`: napas, kepala, rambut/ekor, kedip). Mesh deformasi Live2D/Spine sungguhan dan file suara belum ada.
-- **Hero Mora & musuh Ygg-Naar/Ex-Nymph** belum punya sprite chibi → memakai artwork penuh. Musuh di `enemy/Belum bisa dipakai` tidak dipakai.
+- Musuh di `enemy/Belum bisa dipakai` tidak dipakai.
 
 ## 4. Struktur kode baru (`game/`, ±5.800 baris)
 

@@ -444,7 +444,10 @@
      "interactions": []
     }
    },
-   "sprites": []
+   "sprites": [
+    "res://art/characters/heroes/mora/sprite/mora_sprite_stage1.png",
+    "res://art/characters/heroes/mora/sprite/mora_sprite_evo1.png"
+   ]
   },
   "rumi": {
    "id": "rumi",
@@ -1689,7 +1692,10 @@
      "interactions": []
     }
    },
-   "sprites": []
+   "sprites": [
+    "res://art/characters/enemies/ygg_naar/sprite/ygg_naar_sprite_stage1.png",
+    "res://art/characters/enemies/ygg_naar/sprite/ygg_naar_sprite_evo1.png"
+   ]
   },
   "ex_nymph": {
    "id": "ex_nymph",
@@ -1704,7 +1710,9 @@
      "interactions": []
     }
    },
-   "sprites": []
+   "sprites": [
+    "res://art/characters/enemies/ex_nymph/sprite/ex_nymph_sprite_stage1.png"
+   ]
   },
   "slime": {
    "id": "slime",
