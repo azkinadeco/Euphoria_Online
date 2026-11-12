@@ -35,6 +35,7 @@ var _last_tap_pos := Vector2.ZERO
 var _busy := false
 var _pat_t := 0
 var _hidden := false
+var _erig: CharRig
 
 static func open(main_node: Node, cid: String, index: int, allowed: Array) -> ArtViewer:
 	var v := ArtViewer.new()
@@ -104,6 +105,7 @@ func _ready() -> void:
 	_stage.add_child(_art)
 	_art.resized.connect(func(): _art.pivot_offset = Vector2(_art.size.x * 0.5, _art.size.y))
 	UI.live(_art, col.lightened(0.5))
+	_erig = CharRig.attach(_art)
 	var tw := _art.create_tween().set_loops()
 	tw.tween_property(_art, "scale", Vector2(1.004, 1.012), 1.9).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(_art, "scale", Vector2.ONE, 1.9).set_trans(Tween.TRANS_SINE)
@@ -415,6 +417,8 @@ func _tap(p: Vector2) -> void:
 	if not alts.is_empty() and _expr == 0:
 		UI.flash_expression(_art, DB.tex(str(alts[randi() % alts.size()])), 1.6)
 	_bounce(ry)
+	if _erig != null:
+		_erig.react(ry)
 	_hearts(p, 3 if ry < 0.32 else 1)
 	_say(_line(ry))
 	get_tree().create_timer(0.45).timeout.connect(func(): _busy = false)

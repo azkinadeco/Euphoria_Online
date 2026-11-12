@@ -224,7 +224,7 @@ func _render() -> void:
 	_tokens.text = Game.fmt(Game.amount("festival_token"))
 	match _tab:
 		"STAGES":
-			_right.add_child(UI.wrap_label(DB.EVENT["desc"], 14, UI.MUTED))
+			_right.add_child(UI.wrap_label(str(DB.EVENT["desc"]) + "  Each battle or sweep costs %d Energy; 3★ stages can be swept." % Game.EVENT_ENERGY, 14, UI.MUTED))
 			for i in DB.EVENT["stages"].size():
 				_stage_row(i)
 		"EXCHANGE":
@@ -242,9 +242,14 @@ func _stage_row(i: int) -> void:
 	var unlocked := i == 0 or Game.event_stars(i - 1) > 0
 	var boss := st.has("boss") or (st["enemies"] as Array).any(func(e): return e.get("boss", false))
 	var bc: Color = Color("#ff5c6c") if boss else _col
-	var p := UI.styled_panel(Color(bc.darkened(0.85), 0.92), Color(bc, 0.75 if unlocked else 0.25), 12, 2 if boss else 1, 10)
+	var is_next := unlocked and stars == 0
+	var p := UI.styled_panel(Color(bc.darkened(0.85), 0.92), UI.GOLD if is_next else Color(bc, 0.75 if unlocked else 0.25), 12, 2 if boss or is_next else 1, 10)
 	if not unlocked:
 		p.modulate = Color(1, 1, 1, 0.6)
+	if is_next:
+		var gl := p.create_tween().set_loops()
+		gl.tween_property(p, "self_modulate", Color(1.25, 1.18, 1.0), 0.8).set_trans(Tween.TRANS_SINE)
+		gl.tween_property(p, "self_modulate", Color.WHITE, 0.8).set_trans(Tween.TRANS_SINE)
 	_right.add_child(p)
 	var h := UI.hbox(12)
 	p.add_child(h)
@@ -268,20 +273,39 @@ func _stage_row(i: int) -> void:
 		bt.add_child(UI.label(" BOSS ", 11, Color.WHITE, 2))
 		bt.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		nr.add_child(bt)
+	if is_next:
+		nr.add_child(_pill("NEXT", UI.GOLD, Color(0.25, 0.15, 0.0)))
+	elif stars == 3:
+		nr.add_child(_pill("✓ 3★ CLEAR", UI.GREEN, Color(0.02, 0.2, 0.08)))
+	elif stars > 0:
+		nr.add_child(_pill("CLEARED", Color("#9fd0ff"), Color(0.03, 0.1, 0.2)))
 	var sr := UI.hbox(8)
 	v.add_child(sr)
 	sr.add_child(UI.label("★".repeat(stars) + "☆".repeat(3 - stars), 15, UI.GOLD, 2))
 	sr.add_child(UI.label("Lv.%d  •  Power %s" % [st["level"], Game.fmt(Game.enemy_power(st["enemies"]))], 12, UI.MUTED))
-	var rw := {"festival_token": st["tokens"]}
+	var rw := {"festival_token": int(st["tokens"]) + (15 if stars == 3 else 0)}
 	if stars == 0:
 		rw["gems"] = st["first_gems"]
 	v.add_child(UI.reward_row(rw, 22, 13))
 	h.add_child(v)
 	var idx: int = i
-	var b := UI.button("BATTLE" if unlocked else "LOCKED", func(): main.go("formation", {"mode": "event", "stage": idx}), "GoldButton" if unlocked else "", Vector2(116, 48))
+	var bv := UI.vbox(4)
+	bv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(bv)
+	var b := UI.button("BATTLE" if unlocked else "LOCKED", func(): main.go("formation", {"mode": "event", "stage": idx}), "GoldButton" if unlocked and stars < 3 else "", Vector2(150, 40 if stars == 3 else 48))
 	b.disabled = not unlocked
-	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	h.add_child(b)
+	bv.add_child(b)
+	if stars == 3:
+		var swr := UI.hbox(4)
+		bv.add_child(swr)
+		for n in [1, 5]:
+			var times: int = n
+			var sb := UI.button("SWEEP ×%d" % times, func(): _sweep(idx, times), "GoldButton" if times == 1 else "", Vector2(73, 36))
+			sb.add_theme_font_size_override("font_size", 12)
+			sb.tooltip_text = "%d Energy  •  +%d Event Tokens" % [Game.EVENT_ENERGY * times, (int(st["tokens"]) + 15) * times]
+			if Game.amount("energy") < Game.EVENT_ENERGY * times:
+				sb.modulate = Color(0.75, 0.72, 0.8)
+			swr.add_child(sb)
 
 func _shop_row(item: Dictionary) -> void:
 	var it := item
@@ -302,16 +326,40 @@ func _shop_row(item: Dictionary) -> void:
 	if is_skin:
 		v.add_child(UI.label("✦ LIMITED SKIN", 12, _col.lightened(0.35), 2))
 	v.add_child(UI.label(it["name"], 19 if is_skin else 17, Color.WHITE, 2))
-	v.add_child(UI.label("Sold out" if left <= 0 else "Left: %d / %d" % [left, it["limit"]], 12, UI.MUTED))
+	var short := int(it["price"]) - Game.amount("festival_token")
+	var lr := UI.hbox(8)
+	v.add_child(lr)
+	lr.add_child(UI.label("Sold out" if left <= 0 else "Left: %d / %d" % [left, it["limit"]], 12, UI.MUTED))
+	if left > 0 and short > 0:
+		lr.add_child(UI.label("Need %s more" % Game.fmt(short), 12, Color("#ff8a8a"), 1))
+	elif left > 0:
+		lr.add_child(UI.label("✓ Affordable", 12, UI.GREEN, 1))
 	h.add_child(v)
 	var b := UI.button("OWNED" if is_skin and left <= 0 else ("%s Tokens" % Game.fmt(it["price"])), func(): _buy(it), "GoldButton", Vector2(150, 46))
 	b.icon = DB.icon("icon_live_ops")
 	b.add_theme_constant_override("icon_max_width", 22)
 	b.disabled = left <= 0
 	if Game.amount("festival_token") < int(it["price"]) and left > 0:
-		b.add_theme_color_override("font_color", Color("#ff7a7a"))
+		# can't afford: dark red reads on the gold button; dim it a little
+		for fk in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+			b.add_theme_color_override(fk, Color("#8c1d1d"))
+		b.modulate = Color(0.82, 0.8, 0.85)
 	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	h.add_child(b)
+
+func _pill(text: String, col: Color, bg: Color) -> Control:
+	var pp := UI.styled_panel(Color(bg, 0.85), col, 8, 1, 0)
+	pp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	pp.add_child(UI.label(" %s " % text, 11, col, 2))
+	return pp
+
+func _sweep(i: int, times: int) -> void:
+	var r := Game.sweep_event(i, times)
+	if r.has("error"):
+		main.toast(str(r["error"]), UI.RED)
+		return
+	Game.sfx("ui_click")
+	main.show_rewards("SWEEP ×%d" % times, r, func(): _render())
 
 func _buy(it: Dictionary) -> void:
 	var err := Game.buy_event(it)

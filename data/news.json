@@ -1,5 +1,60 @@
 [
  {
+  "id": "n2026-11-12g",
+  "date": "2026-11-12",
+  "tag": "UPDATE",
+  "title": "Every Outfit Comes Alive",
+  "body": "Live2D-style motion now covers every outfit, evolution, special skin and lobby pose — over 160 arts. Whatever look you pick, your hero breathes, sways, glances around and her hair, wings and tails move. Around 95 outfits also blink with the new natural eyelid (outfits with glowing, heart or wide-shocked eyes keep their expression). Alternate expressions reuse the same motion."
+ },
+ {
+  "id": "n2026-11-12f",
+  "date": "2026-11-12",
+  "tag": "UPDATE",
+  "title": "Heroes Come Alive",
+  "bg": "lobby",
+  "body": "All 37 heroes now move like Live2D! Your heroes breathe, sway and glance around. Hair, wings, tails, tentacles and chains wave gently, and flames and orbs flicker. Blinking was rebuilt for heroes and enemies: the real eyelid and lashes slide down along the eye and close into a soft curved line, then open again naturally. Tap her head, body or legs and she nods, flinches or jumps. Works in the lobby, Hero Detail, the full-screen viewer and the Bestiary. You can turn it off with Settings → 2.5D Live art."
+ },
+ {
+  "id": "n2026-11-12e",
+  "date": "2026-11-12",
+  "tag": "NEW",
+  "title": "Hunter's Lore",
+  "bg": "necro",
+  "body": "Your hunting now pays off in battle! Each Bestiary milestone you reach against an enemy (10 / 50 / 150 / 400 defeats) raises your HUNTER'S LORE against her by one level. Every level gives your team +3% damage against that enemy and 2% less damage taken from her, up to +12% / -8%. It also counts against her hollow, echo, ashen and feral variants. Check your Lore level and progress in the Bestiary, and look for the HUNTER'S LORE chip at the start of a battle."
+ },
+ {
+  "id": "n2026-11-12d",
+  "date": "2026-11-12",
+  "tag": "UPDATE",
+  "title": "Living Enemies + Lobby Rivals",
+  "bg": "necro",
+  "body": "Enemies now come alive! In the Bestiary, the lobby and the full-screen viewer, every enemy breathes, sways, blinks and glances around. Hair, tails, tentacles, wings and fins wave, flames and glowing eyes flicker, and little ghosts and slimes float around their mistress. Tap her head, body or legs and she reacts. The Bestiary got a new look too: full-body portraits in the list, a bigger gallery in the middle and full-body form thumbnails. Set any enemy you've defeated as your LOBBY character with 🏠 SET AS LOBBY. Tamed foes love head-pats, while untamed rivals tease you. Use FORM to switch between her unlocked forms, ◆ VIEW for full screen and ⇄ HERO to bring your hero back."
+ },
+ {
+  "id": "n2026-11-12c",
+  "date": "2026-11-12",
+  "tag": "UPDATE",
+  "title": "Date Update: Records, Bonuses & Titles",
+  "bg": "forest",
+  "body": "Dates got a big upgrade! Each spot now shows your best result with your partner (PERFECT / SWEET / NICE), and the first PERFECT date with a hero at each spot pays a one-time bonus of 100 Gems + 20,000 Gold. After your first date with a hero you learn her personality (Gentle, Playful or Dreamy) and the kind of answers she loves. The plan panel lists the Bond and Gems for every result, your daily date hearts and a Bond progress bar, and your partner invites you with a line for each spot. The Date Album can be filtered by hero and shows which spots you've completed together. New Commander titles: SWEETHEART (PERFECT at 3 spots with one hero) and SOULMATE (PERFECT at every spot)."
+ },
+ {
+  "id": "n2026-11-12b",
+  "date": "2026-11-12",
+  "tag": "EVENT",
+  "title": "Event Sweep & Clearer Event Stages",
+  "bg": "lobby",
+  "body": "Farming Event Tokens is faster now: clear an event stage with 3★ and use SWEEP ×1 or SWEEP ×5 (8 Energy each, same tokens and gold as a 3★ win). The next stage to clear glows gold with a NEXT tag, and cleared stages show CLEARED or 3★ CLEAR. In the Exchange, prices you can't afford yet are easier to read and each item shows how many tokens you still need."
+ },
+ {
+  "id": "n2026-11-12a",
+  "date": "2026-11-12",
+  "tag": "UPDATE",
+  "title": "New Title Screen",
+  "bg": "lobby",
+  "body": "The title screen has a fresh look: light rays behind the logo, a name plate for the hero who greets you, an ornate TAP TO START band, your Commander card (level, heroes, team power) and a NOTICES button so you can read the latest news before you enter."
+ },
+ {
   "id": "n2026-11-09r",
   "date": "2026-11-09",
   "tag": "UPDATE",

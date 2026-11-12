@@ -1044,6 +1044,75 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - `hero_card.gd`: kartu memakai art badan penuh `DB.art(id, skin)` dengan `STRETCH_KEEP_ASPECT_CENTERED` (seluruh tubuh terlihat, proporsi asli, tanpa crop/stretch) menggantikan crop wajah/bust. Tag role (TANK/DPS/MAGE/SUP, warna dari `DB.ROLE_INFO`) di bawah ikon elemen pada kartu ≥100 px.
 - `export_presets.cfg`: preset Android/iOS ikut mengecualikan `_recut_backup/`, logo di root, dan favicon `web_shell/`.
 
+## 2ec. Update batch 125 — Title screen baru
+- `title.gd`: sinar cahaya berputar di belakang logo (`class Rays`) dan halo warna tema hero di belakang art; plat nama hero (gelar + nama outline warna tema + garis + rarity/elemen) di kanan bawah, meluncur masuk.
+- TAP TO START di pita ornamen (`class StartPlate`): latar gelap memudar ke samping, garis emas atas-bawah, berlian berdenyut, kilau menyapu tiap 3 dtk.
+- Kartu Commander: nama, Lv, jumlah hero, Power tim. Footer "v2.1 • Offline Mode" + vignette bawah.
+- Tombol 📜 NOTICES (kanan atas, badge jumlah belum dibaca via `Game.news_unread()`) membuka papan pengumuman tanpa masuk game. Saat tap: logo membesar + flash.
+
+## 2ed. Update batch 126 — Event: Sweep & penanda stage
+- `Game.sweep_event(i, times)` + `Game.EVENT_ENERGY` (8, juga dipakai `pay_battle`): stage event 3★ bisa di-sweep; hadiah = menang 3★ (token + 15, gold), tanpa gem first clear; progres misi "stage" ikut. Flow test: sweep stage belum 3★ ditolak, sweep ×3 memotong 24 Energi, energi kurang ditolak.
+- `event.gd`: stage berikutnya diberi bingkai emas berdenyut + pil NEXT; stage selesai berpil CLEARED / ✓ 3★ CLEAR; stage 3★ punya tombol SWEEP ×1 / ×5 (tooltip biaya & token) di bawah BATTLE. Biaya energi dijelaskan di deskripsi.
+- Exchange: harga yang belum terjangkau ditulis merah tua di tombol emas (dulu merah muda tidak terbaca) + tombol diredupkan; tiap item menampilkan "Need N more" atau "✓ Affordable".
+- `shot_runner.gd`: langkah `novn` menutup VN/tutorial yang terbuka (untuk screenshot layar di bawahnya).
+
+## 2ee. Update batch 127 — Date: rekor, bonus PERFECT, gelar & tampilan baru
+- **Rekor permanen** (`Game._date_state()` → `best` {hero: {spot: rank_idx}}, `count`, `perfect_paid`): `date_best(id, spot)` (0 = PERFECT, 1 = SWEET, 2 = NICE, -1 = belum), `date_count`, `date_perfects`, `date_perfect_paid`. Album tetap maksimal 60 foto; rekor disimpan terpisah. Save lama: rekor dibangun ulang dari album sekali (`DB.date_rank_index`).
+- **Bonus PERFECT pertama** per hero×spot: `DB.DATE_FIRST_PERFECT` (100 Gems + 20.000 Gold), sekali saja. `finish_date` kini mengembalikan `new_best` dan `first_perfect`; popup hasil menampilkan "FIRST PERFECT AT THIS SPOT!" / "NEW BEST AT THIS SPOT".
+- **Gelar baru**: SWEETHEART (PERFECT di 3 spot dengan satu hero) dan SOULMATE (PERFECT di semua spot).
+- `date.gd` GO ON A DATE:
+  - Daftar spot: lencana rank terbaik bersama partner yang dipilih (✦ PERFECT/SWEET/NICE atau NEW) + penghitung "✦ n / 6 PERFECT".
+  - Tengah: gelembung ajakan per spot (`DB.DATE_SPOT_INFO`) yang mengambang, plat nama (gelar + nama outline warna tema).
+  - Panel kanan: deskripsi spot; kartu partner (wajah, Bond Lv, jumlah kencan, bar Bond, tombol CHANGE); petunjuk kepribadian (`DB.DATE_STYLE` dari `DB.liking`: Gentle/Playful/Dreamy) yang terbuka setelah kencan pertama; tabel RESULTS (Bond + Gems per rank, ✦ di rank terbaik); kotak FIRST PERFECT HERE; hati harian ♥♡; tombol START DATE berdenyut / COME BACK TOMORROW.
+- DATE ALBUM: chip filter per hero, ringkasan "n photos • ✦ n Perfect", strip spot per hero berwarna rank, popup foto menampilkan berapa hari lalu.
+- `shot_runner.gd`: langkah `gcall:method|arg|arg` (panggil fungsi Game dengan banyak argumen).
+- Flow test `[dates]`: bonus PERFECT pertama, tanpa bonus kedua, rekor rank terbaik, rebuild dari album, gelar Sweetheart.
+
+## 2ef. Update batch 128 — Enemy pivot rig (idle animasi), Bestiary full body, enemy di Lobby
+- **Percobaan mesh 2.5D dari Blender DIBATALKAN** (hasilnya jelek menurut user): file `.obj`, `tools/blender_enemy_25d.py`, `Model25D` dan showcase 3D sudah dihapus.
+- **Pivot rig ala toko** (`game/ui/enemy_rig.gd` + `enemy_rig.gdshader`, data `DB.ENEMY_RIGS`, `DB.enemy_rig(tex)`): satu ilustrasi dideformasi di sekitar titik tumpu dengan bobot lembut (tanpa sambungan), seperti `NPCPuppet` penjaga toko tapi dengan "tulang":
+  - `head` (pusat + radius masker kepala) berputar di `neck`; tubuh atas condong di `hips`; napas di `chest` (`chest_w`).
+  - `bones`: [pivot x,y, ujung x,y, lebar, ayunan rad, kecepatan, fase] — bobot naik dari pivot ke ujung dan ayunan "telat" sepanjang tulang (`bone_wave`) → rambut, ekor, tentakel, sayap, lengan, sirip bergelombang.
+  - `floats`: makhluk kecil yang melayang naik-turun (hantu Eroghost, slime kecil). `glows`: kilau + heat-shimmer (mata menyala, bola api, orb). `head_band = 0` untuk pose terbalik (Lizamorph, Ygg-Naar).
+  - **Kedipan**: kelopak atas asli (dengan bulu mata) digeser turun dan kulit di atasnya meregang — tidak ada tempelan warna, poni/tato tetap utuh. Dimatikan untuk mata menyala / tertutup (Gumi, Evy, Eroghost, Lizamorph, Ygg-Naar).
+  - Idle berlapis: napas + bob, sway badan, kepala melirik ke arah acak tiap 3,5–7 detik, kedip (kadang dua kali), per-rig `speed` / `head_amp` / `body_amp`. `react(ry)`: kepala = angguk malu + kedip, badan = tersentak, kaki = semua tulang tersentak. Reduce-effects → gerak 40%.
+  - Terpasang di Bestiary (art tengah), Lobby (enemy sekretaris), Art Viewer (lensa). Art yang punya pivot rig tidak lagi memakai tilt depth otomatis (`DB.live_rig` → {}); form lain tetap memakai tilt depth.
+  - 16 enemy (form dasar / stage1) sudah di-rig dari grid koordinat + crop wajah. Alat cek: `tools/rig_preview.gd` (4 momen + overlay pivot/tulang) dan `tools/rig_face.gd` (close-up wajah: diam vs kedip+tengok).
+- **Bestiary**: grid **full body** (kartu 110×172, latar warna elemen), area galeri tengah diperlebar (34,5%–70,5%), strip form/evo full body 70×100, tombol **🏠 SET AS LOBBY**.
+- **Enemy di Lobby**: `Game.lobby_enemy()` / `lobby_enemy_form()` / `set_lobby_enemy(id, form)` (harus sudah dikalahkan). Tap = zona kepala/badan/kaki + efek + dialog (`DB.enemy_lobby_line`: dialog bond kalau dijinakkan, `DB.RIVAL_LINES` kalau belum), head-pat untuk foe jinak. Pill: ♥ TALK, FORM, SCENE, FORTUNE, ◆ VIEW (lensa), ⇄ HERO; swipe kembali ke hero.
+- `tools/shot_runner.gd`: langkah `kills:<enemy>|n`.
+- Flow test: `[lobby enemy]` + semua enemy punya live rig (pivot atau depth), pivot rig hanya mengganti tilt pada art yang di-rig.
+
+## 2eg. Update batch 129 — Hunter's Lore (bonus battle dari Bestiary)
+- Setiap milestone bestiary (10 / 50 / 150 / 400 kill) = 1 level **Hunter's Lore** melawan enemy itu: `DB.LORE_DMG` +3% damage ke dia dan `DB.LORE_GUARD` −2% damage dari dia per level (maks +12% / −8%). Varian (hollow:/echo:/…) ikut memakai lore enemy dasarnya.
+- `Game.lore_level(id)`, `Game.lore_map()` → `BattleSim.lore` (battle sungguhan + simulasi auto/sweep). Damage dihitung di `_act` setelah GUARD.
+- Battle: chip "HUNTER'S LORE: …" di pojok kiri atas kalau ada enemy yang lore-nya sudah naik.
+- Bestiary (tab INFO): kartu HUNTER'S LORE (◆◇ level, bonus sekarang, bar + kill yang kurang ke level berikut, "Lore mastered").
+- Flow test `[hunter's lore]`: level dari kill, varian, lore map, damage sekutu naik dengan lore.
+
+## 2eh. Update batch 130 — Rig pivot untuk 37 hero + kedipan presisi (hero & enemy)
+- `EnemyRig` → **`CharRig`** (`game/ui/char_rig.gd` + `char_rig.gdshader`) untuk hero DAN enemy. `UI.live` memasangnya otomatis di setiap art hidup (lobby, hero detail, viewer, bestiary, dll.). `DB.char_rig(tex)` mencari di `DB.HERO_RIGS` lalu `DB.ENEMY_RIGS`. Ekspresi alternatif (`_a`, `_altN`) memakai rig badan pose dasarnya tanpa kedip. Art yang punya pivot rig tidak memakai tilt depth (`DB.live_rig` → {}). Varian corrupt/mirror tidak disentuh.
+- **`DB.HERO_RIGS`**: art dasar (stage1) dari ke-37 hero di-rig (kepala/leher/pinggul/dada, tulang rambut, sayap, ekor, tentakel, rantai/senjata, makhluk melayang, kilau) dan dicek lewat overlay `tools/rig_preview.gd`.
+- **Mata diukur presisi** pada crop close-up (grid 0,0025 UV) lalu diverifikasi dengan overlay elips (`eyes: [[sudut x,y, sudut lain x,y, kelopak atas y, kelopak bawah y], …]`; `[]` = mata tertutup rambut). 35 hero + 11 enemy punya kedipan. Mata menyala/tertutup topeng tidak berkedip.
+- **Kedipan baru (Live2D-style)**, dihitung per-mata di ruang lokal mata (kemiringan dari kedua sudut):
+  - Garis bulu mata atas yang asli ikut turun mengikuti busur mata (sudut menutup lebih dulu) dan berhenti sebagai garis tertutup melengkung (`lid_close`).
+  - Kelopak yang terbuka diisi kulit kelopak asli dari atas bulu mata yang direntangkan (eyeshadow ikut). Kalau di situ ada rambut atau alis, otomatis memakai warna kulit (rata-rata sampel pipi yang paling mirip kulit). Ada lipatan kelopak dan bayangan di bawah bulu mata.
+  - Semua tepi di-feather. Timing: menutup cepat 0,07 dtk, tahan sebentar, membuka pelan; kadang kedip dua kali.
+- `react(ry)` dipanggil saat tap di lobby (hero & enemy), hero detail, viewer, bestiary.
+- Alat: `tools/rig_face.gd` (close-up mata: buka / setengah / tutup / tengok + titik ukur), `tools/rig_preview.gd` (overlay pivot/tulang, hero atau enemy).
+- Flow test: semua hero punya rig, ≥34 hero punya mata terukur, Glytta evo2 tetap rig buatan tangan.
+
+## 2ei. Update batch 131 — Rig pivot untuk semua outfit / evolusi / special / lobby
+- **`data/char_rigs.json`** (160 art): rig pivot untuk semua art hero selain stage1 (stage2+, evo1+, special, lobby, plus Lucidria evo1_a/_b yang tidak punya base). Dimuat lazy oleh `DB.form_rigs()` (array JSON → Vector3/Vector2/Color).
+- **Cara bikin**: wajah stage1 dicari di tiap art dengan template matching multi-skala (OpenCV), rig stage1 ditransformasi ke art itu, lalu tiap mata disempurnakan sendiri (pencarian skala + rotasi di sekitar posisi tebakan). Semua hasil dicek visual lewat overlay (badan + close-up mata).
+  - Pose sama → rig penuh ikut (tulang, floats, glow). Pose beda → floats/glow dibuang, hanya tulang dekat kepala yang dipertahankan.
+  - 36 art berpose beda total → kepala/leher/dada/pinggul/tulang ditandai manual dari grid.
+  - Mata: 95 outfit berkedip. Mata menyala, hati, spiral, kaget lebar, atau yang tidak terlacak akurat → tanpa kedip (ekspresi aman, tidak ada kelopak meleset). Kotak mata hasil otomatis diberi margin ekstra (bawah +22%) supaya iris tertutup penuh.
+- **`DB.char_rig`**: ENEMY_RIGS → HERO_RIGS → form_rigs. Ekspresi alternatif dipetakan ke base outfit-nya lewat `interactions` di character_database (bukan cuma regex `_a/_altN`, sekarang juga `_b/_c`) dan memakai rig base tanpa kedip.
+- Glytta evo2 tetap memakai rig 2.5D buatan tangan.
+- `tools/rig_face.gd` sekarang menerima indeks art (`-- out.png <id> <index>`).
+- Flow test: 192/192 outfit + ekspresi alternatif punya rig, ≥120 outfit bermata terukur, pose lobby memakai rig pivot.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

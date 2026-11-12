@@ -36,15 +36,26 @@ func _best_hero() -> String:
 			best = id
 	return best
 
+const RANK_SHORT := ["PERFECT", "SWEET", "NICE"]
+
+func _rank_col(ri: int) -> Color:
+	return Color(str(DB.DATE_RANKS[clampi(ri, 0, 2)][2]))
+
 func _build_go(b: Control) -> void:
-	# ---- left: spots
+	# ---- left: spots (with the best rank reached with the current partner)
 	var lp := UI.panel()
 	lp.anchor_right = 0.3
 	lp.anchor_bottom = 1.0
 	b.add_child(lp)
 	var lv := UI.vbox(6)
 	lp.add_child(UI.scroll(lv))
-	lv.add_child(UI.label("DATE SPOTS", 15, UI.GOLD, 3))
+	var lh := UI.hbox(6)
+	lv.add_child(lh)
+	var lt := UI.label("DATE SPOTS", 15, UI.GOLD, 3)
+	lt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lh.add_child(lt)
+	if _hero != "":
+		lh.add_child(UI.label("✦ %d / %d PERFECT" % [Game.date_perfects(_hero), DB.DATE_SPOTS.size()], 12, Color("#ffd479"), 2))
 	for sp in DB.DATE_SPOTS:
 		var key: String = sp["key"]
 		var open := Game.date_spot_open(sp)
@@ -67,49 +78,161 @@ func _build_go(b: Control) -> void:
 		nl.offset_top = -24
 		nl.offset_left = 8
 		fr.add_child(nl)
+		if open and _hero != "":
+			var ri := Game.date_best(_hero, key)
+			var bc: Color = _rank_col(ri) if ri >= 0 else Color("#b8b0d0")
+			var badge := UI.styled_panel(Color(0.05, 0.02, 0.08, 0.85), Color(bc, 0.9), 8, 1, 0)
+			badge.add_child(UI.label((" ✦ %s " % RANK_SHORT[ri]) if ri >= 0 else " NEW ", 11, bc, 2))
+			badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+			badge.offset_left = -6
+			badge.offset_right = -6
+			badge.offset_top = 6
+			badge.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+			badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			fr.add_child(badge)
 		btn.pressed.connect(func():
 			if not open:
 				main.toast("Locked — clear %d story stages." % int(sp["req"]), UI.MUTED)
 				return
 			main.replace("date", {"tab": "go", "hero": _hero, "spot": key}))
 		lv.add_child(btn)
-	# ---- centre: the hero
+	# ---- centre: the hero + invitation bubble + name plate
 	if _hero == "":
 		_build_no_partner(b)
 		return
+	var tc := DB.theme_color(_hero)
 	var art := UI.tex_rect(DB.art(_hero, int(Game.hero(_hero).get("skin", 0))))
 	art.anchor_left = 0.3
 	art.anchor_right = 0.66
 	art.anchor_bottom = 1.0
 	art.offset_top = 10
-	UI.live(art, DB.theme_color(_hero).lightened(0.5))
+	UI.live(art, tc.lightened(0.5))
 	b.add_child(art)
 	UI.fade_in(art, 0.4, Vector2(0, 20))
+	var info: Array = DB.DATE_SPOT_INFO.get(_spot, ["", "Shall we go somewhere together?"])
+	var bwrap := CenterContainer.new()
+	bwrap.anchor_left = 0.3
+	bwrap.anchor_right = 0.66
+	bwrap.offset_top = 4
+	bwrap.offset_bottom = 84
+	bwrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(bwrap)
+	var bub := UI.styled_panel(Color(1, 0.97, 0.99, 0.95), Color(tc.lightened(0.2), 0.9), 16, 2, 10)
+	bub.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var bl := UI.wrap_label("\u201c%s\u201d" % str(info[1]), 14, Color(0.2, 0.1, 0.22))
+	bl.custom_minimum_size = Vector2(300, 0)
+	bl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	bub.add_child(bl)
+	bwrap.add_child(bub)
+	UI.fade_in(bub, 0.4, Vector2(0, -10))
+	var fl := bub.create_tween().set_loops()
+	fl.tween_property(bub, "position:y", 2.0, 1.6).as_relative().set_trans(Tween.TRANS_SINE)
+	fl.tween_property(bub, "position:y", -2.0, 1.6).as_relative().set_trans(Tween.TRANS_SINE)
+	var np := UI.vbox(0)
+	np.anchor_left = 0.31
+	np.anchor_right = 0.65
+	np.anchor_top = 1.0
+	np.anchor_bottom = 1.0
+	np.offset_top = -62
+	np.offset_bottom = -6
+	np.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(np)
+	var tt := UI.label(DB.title_of(_hero).to_upper(), 11, tc.lightened(0.55), 4)
+	tt.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	np.add_child(tt)
+	var nm := UI.label(DB.name_of(_hero), 26, Color.WHITE, 7)
+	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	nm.add_theme_color_override("font_outline_color", tc.darkened(0.55))
+	np.add_child(nm)
+
 	# ---- right: plan
 	var rp := UI.panel()
 	rp.anchor_left = 0.67
 	rp.anchor_right = 1.0
 	rp.anchor_bottom = 1.0
 	b.add_child(rp)
-	var v := UI.vbox(10)
-	rp.add_child(v)
+	var v := UI.vbox(8)
+	rp.add_child(UI.scroll(v))
 	var sp2 := DB.date_spot(_spot)
-	v.add_child(UI.label("TODAY'S PLAN", 13, Color("#ff8fb8"), 3))
-	v.add_child(UI.wrap_label(str(sp2["name"]), 20, Color.WHITE))
+	v.add_child(UI.label("TODAY'S PLAN", 12, Color("#ff8fb8"), 3))
+	v.add_child(UI.wrap_label(str(sp2["name"]), 19, Color.WHITE))
+	if str(info[0]) != "":
+		v.add_child(UI.wrap_label(str(info[0]), 12, UI.MUTED))
+	# partner card
+	var h := Game.hero(_hero)
+	var pc := UI.styled_panel(Color(tc.darkened(0.8), 0.85), Color(tc, 0.7), 12, 1, 8)
+	v.add_child(pc)
+	var pv := UI.vbox(4)
+	pc.add_child(pv)
 	var hr := UI.hbox(8)
-	hr.add_child(UI.tex_rect(DB.face(_hero), Vector2(48, 48), true))
-	var hv := UI.vbox(0)
-	hv.add_child(UI.label(DB.name_of(_hero), 18, Color.WHITE, 3))
-	hv.add_child(UI.label("Bond Lv.%d" % int(Game.hero(_hero)["bond"]), 13, Color("#ff8fb8"), 2))
+	pv.add_child(hr)
+	var fp := UI.styled_panel(Color.BLACK, tc, 8, 2, 1)
+	fp.add_child(UI.tex_rect(DB.face(_hero), Vector2(46, 46), true))
+	fp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	hr.add_child(fp)
+	var hv := UI.vbox(1)
+	hv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hr.add_child(hv)
-	v.add_child(hr)
-	v.add_child(UI.button("CHANGE PARTNER", _pick_hero, "", Vector2(0, 42)))
-	v.add_child(UI.wrap_label("Answer the way she'd like best. A Perfect Date gives the most Bond and a golden photo frame.", 12, UI.MUTED))
+	hv.add_child(UI.label(DB.name_of(_hero), 17, Color.WHITE, 3))
+	var dc := Game.date_count(_hero)
+	hv.add_child(UI.label("♥ Bond Lv.%d  •  %d date%s" % [int(h["bond"]), dc, "" if dc == 1 else "s"], 12, Color("#ff8fb8"), 2))
+	var chg := UI.button("CHANGE", _pick_hero, "", Vector2(86, 36))
+	chg.add_theme_font_size_override("font_size", 13)
+	chg.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	hr.add_child(chg)
+	if int(h["bond"]) < DB.MAX_BOND:
+		pv.add_child(UI.bar(int(h["bond_exp"]), DB.bond_to_next(int(h["bond"])), "", 6))
+	# personality hint (learned after the first date with her)
+	var style: Array = DB.DATE_STYLE[DB.liking(_hero)]
+	var tip := UI.hbox(6)
+	pv.add_child(tip)
+	if Game.date_count(_hero) > 0:
+		tip.add_child(UI.label("💡 %s" % str(style[0]), 12, UI.GOLD, 2))
+		var tl := UI.wrap_label("She loves %s." % str(style[1]), 12, UI.TEXT)
+		tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tip.add_child(tl)
+	else:
+		var tl2 := UI.wrap_label("💡 Go on a first date to learn what she likes.", 12, UI.MUTED)
+		tl2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tip.add_child(tl2)
+	# rank rewards
+	v.add_child(UI.label("RESULTS", 12, UI.MUTED, 2))
+	var best := Game.date_best(_hero, _spot)
+	for ri in 3:
+		var rk: Array = DB.DATE_RANKS[ri]
+		var col := _rank_col(ri)
+		var row := UI.hbox(6)
+		v.add_child(row)
+		var rl := UI.label(("✦ " if best == ri else "") + str(rk[0]), 13, col, 2)
+		rl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(rl)
+		var bonus: int = [40, 20, 0][ri]
+		row.add_child(UI.label("+%d Bond" % bonus, 12, Color("#ff8fb8"), 1))
+		row.add_child(UI.reward_row({"gems": 20 + bonus}, 18, 12))
+	if not Game.date_perfect_paid(_hero, _spot):
+		var fpp := UI.styled_panel(Color(1, 0.83, 0.47, 0.12), Color(1, 0.83, 0.47, 0.6), 8, 1, 6)
+		v.add_child(fpp)
+		var fh := UI.hbox(6)
+		fpp.add_child(fh)
+		fh.add_child(UI.label("FIRST PERFECT HERE", 11, Color("#ffd479"), 2))
+		fh.add_child(UI.spacer())
+		fh.add_child(UI.reward_row(DB.DATE_FIRST_PERFECT, 18, 12))
 	v.add_child(UI.spacer(false))
+	# daily hearts + start
 	var left := Game.dates_left()
-	var go := UI.button("♥ START DATE  (%d / %d today)" % [left, DB.DATE_PER_DAY], _start, "GoldButton", Vector2(0, 56))
+	var dh := UI.hbox(4)
+	dh.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(dh)
+	dh.add_child(UI.label("TODAY", 12, UI.MUTED, 2))
+	for k in DB.DATE_PER_DAY:
+		dh.add_child(UI.label("♥" if k < left else "♡", 20, Color("#ff6f9f") if k < left else UI.MUTED, 2))
+	var go := UI.button("♥ START DATE" if left > 0 else "COME BACK TOMORROW", _start, "GoldButton", Vector2(0, 52))
 	go.disabled = left <= 0
 	v.add_child(go)
+	if left > 0:
+		var pulse := go.create_tween().set_loops()
+		pulse.tween_property(go, "modulate", Color(1.15, 1.08, 1.1), 0.8).set_trans(Tween.TRANS_SINE)
+		pulse.tween_property(go, "modulate", Color.WHITE, 0.8).set_trans(Tween.TRANS_SINE)
 
 func _pick_hero() -> void:
 	var v: VBoxContainer = main.popup("CHOOSE YOUR PARTNER", 820)
@@ -183,28 +306,85 @@ func _show_photo(entry: Dictionary, res: Dictionary) -> void:
 	var ph := _photo(entry, 580)
 	v.add_child(ph)
 	UI.pop(ph, 0.4)
+	if bool(res.get("first_perfect", false)) or bool(res.get("new_best", false)):
+		var tag := UI.styled_panel(Color(1, 0.83, 0.47, 0.18), Color("#ffd479"), 10, 1, 6)
+		var tl := UI.label("✦ FIRST PERFECT AT THIS SPOT! ✦" if bool(res.get("first_perfect", false)) else "✦ NEW BEST AT THIS SPOT ✦", 15, Color("#ffd479"), 3)
+		tl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		tag.add_child(tl)
+		v.add_child(tag)
+		UI.pop(tag, 0.5)
 	v.add_child(UI.label("+%d bonus Bond  •  Date Photo saved to your album" % int(res["bonus"]), 14, Color("#ff8fb8"), 3))
 	v.add_child(UI.reward_row(res["reward"], 32, 14))
 	v.add_child(UI.button("WONDERFUL", func():
 		main.close_popup(v)
 		main.replace("date", {"tab": "go", "hero": _hero, "spot": _spot}), "GoldButton", Vector2(0, 48)))
 
+var _album_hero := ""
+
 func _build_album(b: Control) -> void:
+	_album_hero = str(params.get("album_hero", ""))
 	var album := Game.date_album()
 	if album.is_empty():
 		var l := UI.label("No photos yet — go on your first date!", 20, UI.MUTED, 3)
 		l.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 		b.add_child(l)
 		return
+	var root := UI.vbox(8)
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	b.add_child(root)
+	# filter chips: ALL + every hero with photos
+	var heroes: Array = []
+	var perfect := 0
+	for e in album:
+		if not heroes.has(e["hero"]):
+			heroes.append(e["hero"])
+		if str(e["rank"]) == "PERFECT DATE":
+			perfect += 1
+	var top := UI.hbox(6)
+	root.add_child(top)
+	var chips := UI.hbox(6)
+	var csc := UI.scroll(chips, true)
+	csc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	csc.custom_minimum_size = Vector2(0, 52)
+	top.add_child(csc)
+	var all_b := UI.button("ALL", func(): main.replace("date", {"tab": "album", "hero": _hero, "spot": _spot}), "TabButton", Vector2(70, 46))
+	all_b.toggle_mode = true
+	all_b.button_pressed = _album_hero == ""
+	chips.add_child(all_b)
+	for hid in heroes:
+		var id: String = hid
+		var cb := UI.button(DB.name_of(id).split(" ")[0], func(): main.replace("date", {"tab": "album", "hero": _hero, "spot": _spot, "album_hero": id}), "TabButton", Vector2(0, 46))
+		cb.add_theme_font_size_override("font_size", 13)
+		cb.toggle_mode = true
+		cb.button_pressed = _album_hero == id
+		chips.add_child(cb)
+	var sum := UI.label("%d photos  •  ✦ %d Perfect" % [album.size(), perfect], 13, UI.GOLD, 2)
+	sum.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top.add_child(sum)
+	# per-hero spot collection strip
+	if _album_hero != "":
+		var cs := UI.styled_panel(Color(0.06, 0.03, 0.1, 0.8), Color(DB.theme_color(_album_hero), 0.6), 10, 1, 6)
+		root.add_child(cs)
+		var ch := UI.hbox(8)
+		cs.add_child(ch)
+		ch.add_child(UI.label("%s's spots" % DB.name_of(_album_hero).split(" ")[0], 13, Color.WHITE, 2))
+		for sp in DB.DATE_SPOTS:
+			var ri := Game.date_best(_album_hero, str(sp["key"]))
+			var col: Color = _rank_col(ri) if ri >= 0 else Color(1, 1, 1, 0.25)
+			var sb := UI.styled_panel(Color(col, 0.12), col, 8, 1, 4)
+			sb.add_child(UI.label("%s %s" % [str(sp["name"]).split(" ")[0] if str(sp["key"]) != "forest" else "Picnic", RANK_SHORT[ri] if ri >= 0 else "—"], 11, col if ri >= 0 else UI.MUTED, 1))
+			ch.add_child(sb)
 	var g := GridContainer.new()
 	g.columns = 3
 	g.add_theme_constant_override("h_separation", 14)
 	g.add_theme_constant_override("v_separation", 14)
 	var sc := UI.scroll(UI.margin(g, 6, 6, 6, 6))
-	sc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	b.add_child(sc)
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_child(sc)
 	for e in album:
 		var entry: Dictionary = e
+		if _album_hero != "" and str(entry["hero"]) != _album_hero:
+			continue
 		var btn := Button.new()
 		btn.theme_type_variation = "FlatButton"
 		btn.focus_mode = Control.FOCUS_NONE
@@ -214,7 +394,9 @@ func _build_album(b: Control) -> void:
 		btn.add_child(ph)
 		btn.pressed.connect(func():
 			var v: VBoxContainer = main.popup(str(DB.date_spot(entry["spot"])["name"]), 900)
-			v.add_child(_photo(entry, 840)))
+			v.add_child(_photo(entry, 840))
+			var age := Game.day_key() - int(entry.get("day", Game.day_key()))
+			v.add_child(UI.label("%s  •  %s" % [DB.name_of(entry["hero"]), "today" if age <= 0 else ("%d day%s ago" % [age, "" if age == 1 else "s"])], 14, UI.MUTED, 2)))
 		g.add_child(btn)
 	UI.stagger(g, 0.03)
 

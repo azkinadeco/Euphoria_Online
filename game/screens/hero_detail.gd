@@ -560,6 +560,7 @@ func _touch_art(ry: float) -> void:
 	var cat := "bond" if ry < 0.3 and int(Game.hero(id)["bond"]) >= 3 else ("greet" if ry < 0.3 else "tap")
 	var line := Game.voice(id, cat)
 	Game.tap_hero(id)
+	CharRig.attach(_art).react(ry)
 	UI.flash_expression(_art, DB.alt_art(id, int(Game.hero(id).get("skin", 0))))
 	var tw := _art.create_tween()
 	if ry < 0.3:

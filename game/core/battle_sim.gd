@@ -24,6 +24,8 @@ var tactic: Dictionary = {}
 var _tactic_used := false
 ## Tamed Companion assist for the ally side: {"id": enemy id, "bond": int} (empty = none).
 var companion: Dictionary = {}
+## Hunter's Lore: {enemy base id: level}. Allies deal +LORE_DMG and take -LORE_GUARD per level vs that foe.
+var lore: Dictionary = {}
 var synergies := [{}, {}]
 
 func setup(allies: Array, enemies: Array, seed_value: int = 0, stage_mod: Dictionary = {}) -> void:
@@ -288,6 +290,11 @@ func _act(u: Dictionary) -> void:
 			dmg *= 1.2
 		if v["passive"] == "GUARD":
 			dmg *= 0.85
+		if not lore.is_empty():
+			if u["side"] == 0 and v["side"] == 1:
+				dmg *= 1.0 + DB.LORE_DMG * int(lore.get(DB.base_id(str(v["id"])), 0))
+			elif u["side"] == 1 and v["side"] == 0:
+				dmg *= 1.0 - DB.LORE_GUARD * int(lore.get(DB.base_id(str(u["id"])), 0))
 		if sk.has("execute") and float(v["hp"]) / v["max_hp"] < 0.35:
 			dmg *= 1.0 + float(sk["execute"])
 		var d := maxi(1, int(dmg))

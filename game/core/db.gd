@@ -1292,6 +1292,8 @@ const TITLES := [
 	{"id": "arena", "name": "Arena Champion", "desc": "Reach 1,500 Arena RP."},
 	{"id": "slayer", "name": "Colossus Slayer", "desc": "Deal 1,000,000 damage to a World Boss in one week."},
 	{"id": "tactician", "name": "Grand Tactician", "desc": "Raise any Commander Tactic to Lv.5."},
+	{"id": "sweetheart", "name": "Sweetheart", "desc": "Have a PERFECT date at 3 different spots with one hero."},
+	{"id": "soulmate", "name": "Soulmate", "desc": "Have a PERFECT date at every date spot with one hero."},
 ]
 
 const BANNERS := [
@@ -2013,6 +2015,10 @@ const BESTIARY_TIERS := [
 	{"kills": 10, "give": {"gems": 30}}, {"kills": 50, "give": {"gems": 60, "gold": 20000}},
 	{"kills": 150, "give": {"summon_ticket": 1}}, {"kills": 400, "give": {"celestial_gem": 1, "gems": 100}},
 ]
+## ---- Hunter's Lore: every bestiary milestone (10 / 50 / 150 / 400 kills) is one lore level vs that foe.
+const LORE_DMG := 0.03       # +3% damage dealt to her per level
+const LORE_GUARD := 0.02     # -2% damage taken from her per level
+
 ## ---- Taming (Bestiary): defeat enough of a foe, then tame her and grow a bond like a hero.
 const TAME_KILLS := 20
 const TAME_GOLD := 10000
@@ -2073,6 +2079,21 @@ static func pet_story(id: String, ep: int) -> Array:
 				["commander", "Then let's make the count very, very long."],
 				[id, pet_line(id, 4)],
 				[id, "This is a promise, Commander. From %s — not the %s. Just me." % [n, title]]]
+
+## Lobby lines for an enemy secretary: her bond lines once tamed, rival banter before.
+const RIVAL_LINES := [
+	"Don't get comfortable. I'm only here to study my enemy.",
+	"You beat me once. That doesn't make me yours, Commander.",
+	"Your lobby is... cosier than my lair. Annoyingly so.",
+	"Poke me again and see what happens.",
+	"I'll be watching every move you make. Every. Single. One.",
+	"Hmph. Fine. I'll guard your castle. Today only.",
+]
+
+static func enemy_lobby_line(id: String, tamed: bool) -> String:
+	if tamed:
+		return pet_line(id, randi() % 4)
+	return str(RIVAL_LINES[randi() % RIVAL_LINES.size()])
 
 static func pet_line(id: String, slot: int) -> String:
 	var l: Array = PET_LINES.get(id, ["...", "...", "...", "...", "..."])
@@ -2160,6 +2181,26 @@ const DATE_SPOTS := [
 			["Every day can be like this.", "I'll remember it forever.", "It's not over yet."]]]},
 ]
 const DATE_RANKS := [["PERFECT DATE", 100, "#ffd479"], ["SWEET DATE", 70, "#ff8fb8"], ["NICE DATE", 0, "#9fd0ff"]]
+
+## One-time bonus for the first PERFECT date with a hero at a spot.
+const DATE_FIRST_PERFECT := {"gems": 100, "gold": 20000}
+## Spot mood line + the partner's invitation (shown on the Date screen).
+const DATE_SPOT_INFO := {
+	"forest": ["A quiet picnic under the old oak. Bring an appetite.", "I packed a basket! ...You'll eat everything, right?"],
+	"pool": ["Sun, water and shaved ice at Xylia's resort.", "The resort is open today. Want to... swim together?"],
+	"onsen": ["Steam, moonlight and a bamboo fence between you.", "They say the onsen is lovely under the full moon..."],
+	"blackmarket": ["Lanterns, trinkets and fireworks at Lulu's market.", "The night market is lit up tonight. Walk with me?"],
+	"space": ["A sea of stars from the observation deck.", "Let's go watch the stars. Just the two of us."],
+	"bigtree": ["Bridges of living wood high in Yggdrasil's crown.", "I found a path to the very top of the great tree!"],
+}
+## Answer style each personality enjoys (index = DB.liking()).
+const DATE_STYLE := [["Gentle", "sincere, caring answers"], ["Playful", "bold, energetic answers"], ["Dreamy", "admiring, curious answers"]]
+
+static func date_rank_index(rank_name: String) -> int:
+	for i in DATE_RANKS.size():
+		if DATE_RANKS[i][0] == rank_name:
+			return i
+	return 2
 
 static func date_spot(key: String) -> Dictionary:
 	for d in DATE_SPOTS:
@@ -2544,6 +2585,583 @@ const LIVE_RIGS := {
 	"res://art/characters/heroes/glytta/char/glytta_char_evo2_a.png": GLYTTA_EVO2_RIG,
 }
 
+## Pivot rigs for enemy illustrations (game/ui/char_rig.gd + char_rig.gdshader), UV space of the art.
+## eyes: [[corner x, y, other corner x, y, upper-lid y, lower-lid y], second eye] ([] = hidden eye)
+## bones: [pivot x, y, tip x, y, width, swing rad, speed, phase] • floats: [x, y, radius, bob] • glows: [x, y, radius]
+const ENEMY_RIGS := {
+	"res://art/characters/enemies/octra/char/octra_char_stage1.png": {
+		"head": Vector3(0.69, 0.13, 0.085),
+		"neck": Vector2(0.67, 0.22),
+		"hips": Vector2(0.5, 0.5),
+		"chest": Vector2(0.56, 0.33),
+		"chest_w": 0.1,
+		"eyes": [[0.6525, 0.14, 0.676, 0.141, 0.1377, 0.1437], [0.7055, 0.1405, 0.7405, 0.143, 0.1377, 0.1448]],
+		"bones": [[0.47, 0.27, 0.41, 0.05, 0.09, 0.022, 1.0, 0], [0.76, 0.2, 0.84, 0.62, 0.06, 0.02, 1.2, 1], [0.8, 0.62, 0.84, 0.86, 0.1, 0.03, 0.8, 2], [0.4, 0.72, 0.6, 0.83, 0.07, 0.03, 0.9, 3], [0.2, 0.62, 0.1, 0.48, 0.05, 0.05, 1.1, 4], [0.42, 0.07, 0.32, 0.16, 0.035, 0.07, 1.6, 5], [0.45, 0.08, 0.53, 0.12, 0.03, 0.07, 1.7, 6]],
+		"glows": [[0.41, 0.04, 0.025], [0.82, 0.76, 0.03]],
+		"glow_color": Color(0.6, 0.4, 1.0)},
+	"res://art/characters/enemies/ymir/char/ymir_char_stage1.png": {
+		"head": Vector3(0.52, 0.14, 0.07),
+		"neck": Vector2(0.52, 0.2),
+		"hips": Vector2(0.48, 0.5),
+		"chest": Vector2(0.5, 0.29),
+		"chest_w": 0.09,
+		"head_amp": 0.6,
+		"body_amp": 0.35,
+		"eyes": [[0.4935, 0.1425, 0.5235, 0.1465, 0.1383, 0.1473], [0.5545, 0.153, 0.581, 0.1555, 0.1507, 0.1574]],
+		"bones": [[0.7, 0.17, 0.73, 0.27, 0.03, 0.06, 1.5, 1], [0.4, 0.15, 0.33, 0.42, 0.06, 0.02, 1.1, 2], [0.34, 0.36, 0.25, 0.55, 0.05, 0.015, 0.9, 3]],
+		"glows": [[0.5, 0.04, 0.05]],
+		"glow_color": Color(1.0, 0.85, 0.4)},
+	"res://art/characters/enemies/slime/char/slime_char_stage1.png": {
+		"head": Vector3(0.5, 0.12, 0.075),
+		"neck": Vector2(0.5, 0.18),
+		"hips": Vector2(0.47, 0.5),
+		"chest": Vector2(0.5, 0.3),
+		"chest_w": 0.1,
+		"eyes": [[0.459, 0.1195, 0.5025, 0.1215, 0.1144, 0.129], [0.543, 0.1215, 0.572, 0.124, 0.116, 0.129]],
+		"bones": [[0.4, 0.1, 0.2, 0.4, 0.07, 0.025, 1.2, 0], [0.58, 0.12, 0.72, 0.38, 0.05, 0.02, 1.3, 1], [0.62, 0.4, 0.92, 0.06, 0.06, 0.012, 0.9, 2], [0.32, 0.27, 0.06, 0.62, 0.06, 0.012, 0.8, 3]],
+		"floats": [[0.9, 0.44, 0.06, 0.012], [0.75, 0.62, 0.05, 0.01], [0.2, 0.95, 0.045, 0.006], [0.36, 0.92, 0.045, 0.006], [0.72, 0.92, 0.05, 0.006], [0.86, 0.95, 0.045, 0.006]],
+		"glows": [[0.06, 0.62, 0.04]],
+		"glow_color": Color(1.0, 0.85, 0.3)},
+	"res://art/characters/enemies/gumi_wolf/char/gumi_wolf_char_stage1.png": {
+		"head": Vector3(0.5, 0.12, 0.08),
+		"neck": Vector2(0.5, 0.2),
+		"hips": Vector2(0.5, 0.52),
+		"chest": Vector2(0.5, 0.32),
+		"chest_w": 0.1,
+		"speed": 1.15,
+		"bones": [[0.33, 0.2, 0.05, 0.38, 0.08, 0.03, 1.2, 0], [0.67, 0.2, 0.97, 0.32, 0.08, 0.03, 1.3, 1], [0.62, 0.58, 0.47, 0.88, 0.07, 0.045, 1.4, 2], [0.4, 0.08, 0.38, 0.02, 0.03, 0.05, 2.0, 3], [0.58, 0.08, 0.6, 0.02, 0.03, 0.05, 2.1, 4], [0.26, 0.3, 0.25, 0.2, 0.04, 0.03, 1.0, 5], [0.74, 0.32, 0.76, 0.25, 0.04, 0.03, 1.0, 6]],
+		"glows": [[0.46, 0.16, 0.03], [0.54, 0.16, 0.03], [0.34, 0.12, 0.04], [0.66, 0.12, 0.04]],
+		"glow_color": Color(0.9, 0.4, 1.0)},
+	"res://art/characters/enemies/eroghost/char/eroghost_char_stage1.png": {
+		"head": Vector3(0.47, 0.08, 0.08),
+		"neck": Vector2(0.47, 0.2),
+		"hips": Vector2(0.48, 0.5),
+		"chest": Vector2(0.48, 0.27),
+		"chest_w": 0.1,
+		"speed": 0.85,
+		"bones": [[0.38, 0.22, 0.27, 0.35, 0.07, 0.035, 1.0, 0], [0.6, 0.22, 0.72, 0.35, 0.07, 0.035, 1.0, 1.5], [0.6, 0.4, 0.72, 0.7, 0.07, 0.03, 1.0, 2], [0.32, 0.42, 0.27, 0.6, 0.05, 0.025, 1.1, 3], [0.48, 0.7, 0.48, 0.97, 0.12, 0.008, 0.8, 4]],
+		"floats": [[0.26, 0.12, 0.06, 0.012], [0.68, 0.05, 0.06, 0.012], [0.15, 0.41, 0.06, 0.012], [0.84, 0.37, 0.06, 0.012], [0.62, 0.58, 0.06, 0.01], [0.32, 0.78, 0.07, 0.01]],
+		"glows": [[0.62, 0.58, 0.05], [0.32, 0.79, 0.05]],
+		"glow_color": Color(0.6, 0.9, 1.0)},
+	"res://art/characters/enemies/evy_blood_sage/char/evy_blood_sage_char_stage1.png": {
+		"head": Vector3(0.45, 0.13, 0.07),
+		"neck": Vector2(0.46, 0.2),
+		"hips": Vector2(0.47, 0.5),
+		"chest": Vector2(0.46, 0.28),
+		"chest_w": 0.1,
+		"bones": [[0.27, 0.25, 0.2, 0.2, 0.04, 0.02, 1.0, 0], [0.3, 0.33, 0.1, 0.37, 0.05, 0.02, 1.0, 1], [0.6, 0.24, 0.8, 0.26, 0.05, 0.02, 1.0, 2], [0.58, 0.4, 0.82, 0.48, 0.05, 0.02, 1.0, 3], [0.33, 0.45, 0.3, 0.57, 0.04, 0.02, 1.0, 4], [0.55, 0.2, 0.68, 0.55, 0.07, 0.02, 1.2, 5], [0.38, 0.2, 0.24, 0.5, 0.06, 0.02, 1.2, 6], [0.7, 0.12, 0.66, 0.04, 0.04, 0.06, 1.5, 7]],
+		"glows": [[0.43, 0.13, 0.02], [0.51, 0.13, 0.02], [0.22, 0.19, 0.045], [0.12, 0.35, 0.045], [0.82, 0.5, 0.05], [0.77, 0.25, 0.04]],
+		"glow_color": Color(0.8, 0.4, 1.0)},
+	"res://art/characters/enemies/ex_nymph/char/ex_nymph_char_stage1.png": {
+		"head": Vector3(0.5, 0.15, 0.08),
+		"neck": Vector2(0.5, 0.24),
+		"hips": Vector2(0.5, 0.5),
+		"chest": Vector2(0.5, 0.32),
+		"chest_w": 0.08,
+		"eyes": [[0.4685, 0.17, 0.4995, 0.17, 0.1675, 0.1758], [0.549, 0.1665, 0.58, 0.1685, 0.1642, 0.1726]],
+		"bones": [[0.4, 0.4, 0.05, 0.72, 0.15, 0.035, 2.8, 0], [0.6, 0.4, 0.95, 0.75, 0.15, 0.035, 2.8, 0.4], [0.38, 0.1, 0.33, 0.33, 0.04, 0.03, 1.3, 1], [0.62, 0.1, 0.73, 0.33, 0.04, 0.03, 1.3, 2], [0.4, 0.58, 0.37, 0.75, 0.07, 0.02, 1.0, 3]],
+		"glows": [[0.36, 0.67, 0.05]],
+		"glow_color": Color(1.0, 0.3, 0.4)},
+	"res://art/characters/enemies/hairly/char/hairly_char_stage1.png": {
+		"head": Vector3(0.52, 0.2, 0.07),
+		"neck": Vector2(0.52, 0.27),
+		"hips": Vector2(0.58, 0.58),
+		"chest": Vector2(0.53, 0.36),
+		"chest_w": 0.08,
+		"speed": 0.9,
+		"eyes": [[0.478, 0.198, 0.501, 0.2005, 0.1956, 0.2028], [0.5285, 0.1955, 0.556, 0.1945, 0.1917, 0.1995]],
+		"bones": [[0.68, 0.35, 0.97, 0.5, 0.06, 0.035, 1.0, 0], [0.5, 0.3, 0.55, 0.62, 0.12, 0.01, 0.9, 1], [0.22, 0.62, 0.05, 0.9, 0.06, 0.015, 0.7, 2]],
+		"glows": [[0.62, 0.1, 0.04]],
+		"glow_color": Color(0.5, 0.5, 1.0)},
+	"res://art/characters/enemies/lizamorph/char/lizamorph_char_stage1.png": {
+		"head": Vector3(0.47, 0.74, 0.1),
+		"neck": Vector2(0.47, 0.64),
+		"hips": Vector2(0.47, 0.45),
+		"chest": Vector2(0.47, 0.55),
+		"chest_w": 0.12,
+		"head_band": 0.0,
+		"head_amp": 0.7,
+		"body_amp": 0.4,
+		"bones": [[0.42, 0.38, 0.12, 0.08, 0.09, 0.04, 0.9, 0], [0.15, 0.15, 0.1, 0.32, 0.06, 0.05, 1.5, 1], [0.38, 0.75, 0.12, 0.9, 0.07, 0.02, 1.0, 2], [0.58, 0.72, 0.75, 0.86, 0.05, 0.02, 1.0, 3]],
+		"glows": [[0.44, 0.785, 0.02], [0.52, 0.785, 0.02], [0.12, 0.2, 0.07]],
+		"glow_color": Color(0.75, 0.35, 1.0)},
+	"res://art/characters/enemies/scomantis/char/scomantis_char_stage1.png": {
+		"head": Vector3(0.52, 0.22, 0.07),
+		"neck": Vector2(0.52, 0.29),
+		"hips": Vector2(0.5, 0.52),
+		"chest": Vector2(0.5, 0.34),
+		"chest_w": 0.1,
+		"eyes": [[0.475, 0.237, 0.5055, 0.2395, 0.234, 0.2435], [0.5435, 0.2255, 0.5815, 0.223, 0.219, 0.2305]],
+		"bones": [[0.36, 0.32, 0.14, 0.12, 0.14, 0.022, 0.9, 0], [0.66, 0.4, 0.82, 0.66, 0.14, 0.02, 0.8, 1.5], [0.42, 0.25, 0.3, 0.55, 0.06, 0.02, 1.2, 2], [0.6, 0.26, 0.66, 0.5, 0.04, 0.02, 1.2, 3], [0.45, 0.12, 0.38, 0.03, 0.03, 0.03, 1.6, 4], [0.55, 0.11, 0.53, 0.02, 0.03, 0.03, 1.6, 5]],
+		"glows": [[0.475, 0.238, 0.018], [0.565, 0.222, 0.018]],
+		"glow_color": Color(0.5, 1.0, 0.3)},
+	"res://art/characters/enemies/serpentia/char/serpentia_char_stage1.png": {
+		"head": Vector3(0.48, 0.14, 0.07),
+		"neck": Vector2(0.48, 0.2),
+		"hips": Vector2(0.52, 0.45),
+		"chest": Vector2(0.5, 0.27),
+		"chest_w": 0.09,
+		"eyes": [[0.4385, 0.1355, 0.465, 0.1385, 0.1336, 0.142], [0.494, 0.131, 0.5225, 0.1285, 0.127, 0.1336]],
+		"bones": [[0.33, 0.24, 0.19, 0.13, 0.06, 0.02, 1.0, 0], [0.38, 0.2, 0.3, 0.42, 0.06, 0.025, 1.2, 1], [0.62, 0.2, 0.75, 0.42, 0.07, 0.025, 1.2, 2], [0.45, 0.93, 0.24, 0.97, 0.06, 0.06, 1.1, 3], [0.8, 0.75, 0.95, 0.88, 0.06, 0.03, 1.0, 4], [0.25, 0.55, 0.1, 0.72, 0.07, 0.02, 0.9, 5]],
+		"glows": [[0.2, 0.12, 0.08]],
+		"glow_color": Color(1.0, 0.6, 0.2)},
+	"res://art/characters/enemies/skelinch/char/skelinch_char_stage1.png": {
+		"head": Vector3(0.5, 0.15, 0.07),
+		"neck": Vector2(0.5, 0.22),
+		"hips": Vector2(0.5, 0.52),
+		"chest": Vector2(0.5, 0.33),
+		"chest_w": 0.1,
+		"eyes": [[0.444, 0.164, 0.484, 0.168, 0.161, 0.171], [0.6, 0.164, 0.644, 0.161, 0.1583, 0.1677]],
+		"bones": [[0.3, 0.15, 0.1, 0.42, 0.06, 0.025, 1.2, 0], [0.75, 0.15, 0.9, 0.4, 0.06, 0.025, 1.2, 1], [0.5, 0.03, 0.6, 0.0, 0.04, 0.03, 1.4, 2]]},
+	"res://art/characters/enemies/slarkoi/char/slarkoi_char_stage1.png": {
+		"head": Vector3(0.47, 0.14, 0.08),
+		"neck": Vector2(0.47, 0.21),
+		"hips": Vector2(0.45, 0.5),
+		"chest": Vector2(0.45, 0.29),
+		"chest_w": 0.1,
+		"eyes": [[0.391, 0.1315, 0.443, 0.1345, 0.1262, 0.141], [0.517, 0.125, 0.5655, 0.122, 0.118, 0.132]],
+		"bones": [[0.3, 0.2, 0.08, 0.55, 0.08, 0.025, 1.1, 0], [0.65, 0.2, 0.92, 0.55, 0.08, 0.025, 1.1, 1.5], [0.72, 0.3, 0.86, 0.58, 0.05, 0.015, 0.9, 2]]},
+	"res://art/characters/enemies/svormentis/char/svormentis_char_stage1.png": {
+		"head": Vector3(0.4, 0.15, 0.07),
+		"neck": Vector2(0.4, 0.21),
+		"hips": Vector2(0.38, 0.4),
+		"chest": Vector2(0.38, 0.27),
+		"chest_w": 0.08,
+		"body_amp": 0.5,
+		"eyes": [[0.352, 0.148, 0.3785, 0.1505, 0.1388, 0.1575], [0.403, 0.1525, 0.432, 0.155, 0.1412, 0.162]],
+		"bones": [[0.75, 0.7, 0.1, 0.92, 0.12, 0.03, 0.9, 0], [0.75, 0.3, 0.95, 0.02, 0.15, 0.02, 1.1, 1], [0.22, 0.55, 0.02, 0.7, 0.1, 0.03, 1.3, 2], [0.6, 0.47, 0.33, 0.55, 0.12, 0.015, 0.8, 3], [0.33, 0.2, 0.25, 0.45, 0.05, 0.02, 1.2, 4]]},
+	"res://art/characters/enemies/voodoo/char/voodoo_char_stage1.png": {
+		"head": Vector3(0.49, 0.11, 0.065),
+		"neck": Vector2(0.49, 0.17),
+		"hips": Vector2(0.5, 0.42),
+		"chest": Vector2(0.5, 0.24),
+		"chest_w": 0.09,
+		"eyes": [[0.4555, 0.0975, 0.4795, 0.1005, 0.0935, 0.1045], [0.5085, 0.1155, 0.536, 0.119, 0.1105, 0.1207]],
+		"bones": [[0.6, 0.19, 0.95, 0.12, 0.06, 0.02, 1.0, 0], [0.33, 0.29, 0.18, 0.55, 0.06, 0.02, 1.0, 1.5], [0.58, 0.15, 0.82, 0.42, 0.07, 0.03, 1.1, 2], [0.4, 0.15, 0.3, 0.32, 0.05, 0.02, 1.2, 3]]},
+	"res://art/characters/enemies/ygg_naar/char/ygg_naar_char_stage1.png": {
+		"head": Vector3(0.27, 0.26, 0.08),
+		"neck": Vector2(0.3, 0.33),
+		"hips": Vector2(0.5, 0.5),
+		"chest": Vector2(0.3, 0.42),
+		"chest_w": 0.08,
+		"head_band": 0.0,
+		"body_amp": 0.4,
+		"speed": 0.9,
+		"bones": [[0.5, 0.28, 0.12, 0.05, 0.07, 0.035, 0.9, 0], [0.55, 0.27, 0.55, 0.17, 0.07, 0.04, 1.0, 1], [0.62, 0.27, 0.92, 0.38, 0.08, 0.035, 0.9, 2], [0.6, 0.3, 0.72, 0.1, 0.07, 0.035, 1.1, 3], [0.36, 0.6, 0.38, 0.82, 0.06, 0.04, 1.0, 4], [0.6, 0.55, 0.72, 0.75, 0.06, 0.04, 1.0, 5], [0.25, 0.6, 0.18, 0.72, 0.06, 0.04, 1.0, 6], [0.15, 0.38, 0.05, 0.42, 0.05, 0.04, 1.2, 7], [0.2, 0.3, 0.12, 0.6, 0.07, 0.015, 1.0, 8]],
+		"glows": [[0.12, 0.06, 0.04], [0.53, 0.19, 0.035], [0.7, 0.11, 0.04], [0.95, 0.37, 0.04], [0.05, 0.42, 0.04], [0.18, 0.7, 0.04]],
+		"glow_color": Color(0.6, 0.4, 1.0)},
+}
+
+## Pivot rigs for hero illustrations (same format as ENEMY_RIGS; eyes measured on close-ups).
+const HERO_RIGS := {
+	"res://art/characters/heroes/abadonia/char/abadonia_char_stage1.png": {
+		"head": Vector3(0.55, 0.105, 0.05),
+		"neck": Vector2(0.55, 0.15),
+		"hips": Vector2(0.5, 0.45),
+		"chest": Vector2(0.5, 0.22),
+		"chest_w": 0.08,
+		"eyes": [[0.543, 0.153, 0.57, 0.157, 0.151, 0.161], [0.604, 0.155, 0.627, 0.153, 0.1525, 0.162]],
+		"body_amp": 0.6,
+		"bones": [[0.45, 0.12, 0.3, 0.4, 0.06, 0.02, 1.1, 0], [0.15, 0.45, 0.05, 0.75, 0.08, 0.02, 0.9, 1]]},
+	"res://art/characters/heroes/angela/char/angela_char_stage1.png": {
+		"head": Vector3(0.52, 0.07, 0.05),
+		"neck": Vector2(0.51, 0.12),
+		"hips": Vector2(0.52, 0.42),
+		"chest": Vector2(0.52, 0.23),
+		"chest_w": 0.08,
+		"eyes": [[0.502, 0.091, 0.52, 0.093, 0.088, 0.0945], [0.5475, 0.094, 0.57, 0.093, 0.09, 0.097]],
+		"bones": [[0.38, 0.25, 0.12, 0.6, 0.15, 0.025, 1.1, 0], [0.66, 0.25, 0.9, 0.6, 0.15, 0.025, 1.1, 0.5], [0.6, 0.1, 0.65, 0.3, 0.05, 0.02, 1.2, 1]]},
+	"res://art/characters/heroes/atalanta/char/atalanta_char_stage1.png": {
+		"head": Vector3(0.38, 0.175, 0.07),
+		"neck": Vector2(0.4, 0.26),
+		"hips": Vector2(0.55, 0.52),
+		"chest": Vector2(0.45, 0.35),
+		"chest_w": 0.09,
+		"eyes": [[0.263, 0.136, 0.305, 0.145, 0.13, 0.15], [0.345, 0.138, 0.395, 0.135, 0.129, 0.151]],
+		"bones": [[0.5, 0.2, 0.7, 0.5, 0.1, 0.02, 1.0, 0]]},
+	"res://art/characters/heroes/cthollia/char/cthollia_char_stage1.png": {
+		"head": Vector3(0.53, 0.3, 0.04),
+		"neck": Vector2(0.53, 0.34),
+		"hips": Vector2(0.53, 0.55),
+		"chest": Vector2(0.53, 0.42),
+		"chest_w": 0.06,
+		"eyes": [[0.413, 0.321, 0.442, 0.329, 0.3205, 0.331], [0.456, 0.338, 0.469, 0.337, 0.335, 0.342]],
+		"bones": [[0.4, 0.45, 0.08, 0.3, 0.06, 0.04, 1.0, 0], [0.45, 0.4, 0.25, 0.12, 0.05, 0.04, 1.1, 1], [0.62, 0.42, 0.85, 0.25, 0.06, 0.04, 1.0, 2], [0.62, 0.5, 0.95, 0.6, 0.06, 0.04, 1.0, 3], [0.35, 0.55, 0.05, 0.62, 0.06, 0.04, 0.9, 4], [0.7, 0.25, 0.85, 0.08, 0.1, 0.02, 0.8, 5], [0.5, 0.6, 0.3, 0.85, 0.08, 0.02, 1.0, 6], [0.55, 0.6, 0.85, 0.85, 0.08, 0.02, 1.0, 7]]},
+	"res://art/characters/heroes/eropatra/char/eropatra_char_stage1.png": {
+		"head": Vector3(0.42, 0.215, 0.045),
+		"neck": Vector2(0.43, 0.26),
+		"hips": Vector2(0.45, 0.48),
+		"chest": Vector2(0.45, 0.32),
+		"chest_w": 0.07,
+		"eyes": [[0.497, 0.23, 0.535, 0.236, 0.226, 0.239], [0.556, 0.238, 0.58, 0.233, 0.233, 0.244]],
+		"bones": [[0.3, 0.4, 0.18, 0.8, 0.08, 0.015, 0.9, 0], [0.6, 0.4, 0.78, 0.78, 0.08, 0.015, 0.9, 1], [0.72, 0.22, 0.74, 0.17, 0.04, 0.02, 1.2, 2], [0.35, 0.25, 0.08, 0.45, 0.06, 0.02, 1.0, 3]],
+		"glows": [[0.43, 0.12, 0.04]],
+		"glow_color": Color(1.0, 0.85, 0.4)},
+	"res://art/characters/heroes/kali/char/kali_char_stage1.png": {
+		"head": Vector3(0.55, 0.08, 0.06),
+		"neck": Vector2(0.53, 0.14),
+		"hips": Vector2(0.52, 0.4),
+		"chest": Vector2(0.52, 0.24),
+		"chest_w": 0.09,
+		"eyes": [[0.473, 0.11, 0.506, 0.113, 0.105, 0.1145], [0.5435, 0.119, 0.576, 0.121, 0.1157, 0.1245]],
+		"bones": [[0.38, 0.08, 0.25, 0.5, 0.07, 0.02, 1.1, 0], [0.68, 0.08, 0.82, 0.5, 0.07, 0.02, 1.1, 1]]},
+	"res://art/characters/heroes/kara/char/kara_char_stage1.png": {
+		"head": Vector3(0.47, 0.12, 0.05),
+		"neck": Vector2(0.47, 0.17),
+		"hips": Vector2(0.48, 0.42),
+		"chest": Vector2(0.48, 0.26),
+		"chest_w": 0.08,
+		"eyes": [[], [0.455, 0.135, 0.496, 0.137, 0.1325, 0.1405]],
+		"bones": [[0.38, 0.15, 0.3, 0.4, 0.06, 0.025, 1.1, 0], [0.58, 0.15, 0.68, 0.4, 0.06, 0.025, 1.1, 1]]},
+	"res://art/characters/heroes/luby/char/luby_char_stage1.png": {
+		"head": Vector3(0.27, 0.22, 0.07),
+		"neck": Vector2(0.3, 0.28),
+		"hips": Vector2(0.45, 0.45),
+		"chest": Vector2(0.42, 0.36),
+		"chest_w": 0.09,
+		"bones": [[0.62, 0.2, 0.85, 0.05, 0.08, 0.015, 0.9, 0]]},
+	"res://art/characters/heroes/mei/char/mei_char_stage1.png": {
+		"head": Vector3(0.6, 0.15, 0.07),
+		"neck": Vector2(0.6, 0.22),
+		"hips": Vector2(0.55, 0.5),
+		"chest": Vector2(0.58, 0.32),
+		"chest_w": 0.09,
+		"eyes": [[0.545, 0.164, 0.599, 0.171, 0.1645, 0.1725], [0.656, 0.177, 0.709, 0.178, 0.1735, 0.1795]],
+		"bones": [[0.7, 0.12, 0.8, 0.32, 0.07, 0.02, 1.1, 0]]},
+	"res://art/characters/heroes/micca/char/micca_char_stage1.png": {
+		"head": Vector3(0.55, 0.21, 0.05),
+		"neck": Vector2(0.55, 0.26),
+		"hips": Vector2(0.53, 0.42),
+		"chest": Vector2(0.53, 0.32),
+		"chest_w": 0.07,
+		"eyes": [[0.513, 0.236, 0.537, 0.24, 0.2325, 0.2445], [0.553, 0.24, 0.576, 0.238, 0.2365, 0.2445]],
+		"bones": [[0.47, 0.22, 0.35, 0.42, 0.05, 0.025, 1.2, 0], [0.62, 0.22, 0.68, 0.45, 0.05, 0.025, 1.2, 1], [0.75, 0.45, 0.85, 0.33, 0.1, 0.015, 0.8, 2], [0.75, 0.65, 0.82, 0.78, 0.1, 0.015, 0.8, 3], [0.25, 0.5, 0.15, 0.75, 0.06, 0.03, 1.0, 4]],
+		"glows": [[0.83, 0.32, 0.03], [0.8, 0.72, 0.04], [0.6, 0.73, 0.03]],
+		"glow_color": Color(1.0, 0.25, 0.2)},
+	"res://art/characters/heroes/morana/char/morana_char_stage1.png": {
+		"head": Vector3(0.5, 0.1, 0.06),
+		"neck": Vector2(0.5, 0.15),
+		"hips": Vector2(0.5, 0.42),
+		"chest": Vector2(0.52, 0.25),
+		"chest_w": 0.08,
+		"eyes": [[0.434, 0.115, 0.491, 0.119, 0.1135, 0.1215], [0.543, 0.12, 0.59, 0.117, 0.1145, 0.123]],
+		"bones": [[0.62, 0.17, 0.7, 0.35, 0.05, 0.015, 1.0, 0]],
+		"glows": [[0.88, 0.07, 0.04]],
+		"glow_color": Color(1.0, 0.85, 0.4)},
+	"res://art/characters/heroes/seraph/char/seraph_char_stage1.png": {
+		"head": Vector3(0.47, 0.14, 0.06),
+		"neck": Vector2(0.47, 0.2),
+		"hips": Vector2(0.47, 0.47),
+		"chest": Vector2(0.47, 0.3),
+		"chest_w": 0.08,
+		"eyes": [[0.383, 0.118, 0.406, 0.12, 0.116, 0.1235], [0.437, 0.104, 0.46, 0.101, 0.1005, 0.1068]],
+		"bones": [[0.35, 0.25, 0.05, 0.65, 0.16, 0.025, 1.1, 0], [0.6, 0.25, 0.95, 0.6, 0.16, 0.025, 1.1, 0.5]]},
+	"res://art/characters/heroes/shina/char/shina_char_stage1.png": {
+		"head": Vector3(0.42, 0.17, 0.06),
+		"neck": Vector2(0.41, 0.23),
+		"hips": Vector2(0.4, 0.47),
+		"chest": Vector2(0.4, 0.32),
+		"chest_w": 0.08,
+		"eyes": [[0.401, 0.181, 0.425, 0.179, 0.1755, 0.185], [0.455, 0.172, 0.4865, 0.17, 0.1675, 0.1755]],
+		"bones": [[0.45, 0.48, 0.08, 0.82, 0.08, 0.03, 0.9, 0], [0.5, 0.45, 0.9, 0.36, 0.07, 0.03, 0.9, 1], [0.6, 0.6, 0.85, 0.8, 0.07, 0.03, 0.9, 2], [0.35, 0.07, 0.15, 0.08, 0.05, 0.03, 1.0, 3], [0.5, 0.06, 0.8, 0.15, 0.05, 0.03, 1.0, 4]],
+		"glows": [[0.48, 0.06, 0.025]],
+		"glow_color": Color(1.0, 0.3, 0.3)},
+	"res://art/characters/heroes/tamo/char/tamo_char_stage1.png": {
+		"head": Vector3(0.6, 0.09, 0.05),
+		"neck": Vector2(0.58, 0.13),
+		"hips": Vector2(0.58, 0.42),
+		"chest": Vector2(0.58, 0.22),
+		"chest_w": 0.08,
+		"eyes": [[0.566, 0.099, 0.605, 0.104, 0.0978, 0.1045], [0.6386, 0.112, 0.665, 0.112, 0.1087, 0.1142]],
+		"bones": [[0.5, 0.1, 0.42, 0.3, 0.06, 0.02, 1.1, 0], [0.68, 0.1, 0.75, 0.3, 0.05, 0.02, 1.1, 1]]},
+	"res://art/characters/heroes/valeria/char/valeria_char_stage1.png": {
+		"head": Vector3(0.6, 0.18, 0.06),
+		"neck": Vector2(0.58, 0.24),
+		"hips": Vector2(0.55, 0.55),
+		"chest": Vector2(0.58, 0.33),
+		"chest_w": 0.08,
+		"eyes": [[0.535, 0.193, 0.563, 0.198, 0.191, 0.204], [0.602, 0.212, 0.636, 0.215, 0.2105, 0.2215]],
+		"bones": [[0.68, 0.2, 0.88, 0.55, 0.07, 0.02, 1.0, 0]]},
+	"res://art/characters/heroes/xylia/char/xylia_char_stage1.png": {
+		"head": Vector3(0.58, 0.27, 0.06),
+		"neck": Vector2(0.57, 0.33),
+		"hips": Vector2(0.5, 0.55),
+		"chest": Vector2(0.52, 0.42),
+		"chest_w": 0.08,
+		"eyes": [[0.493, 0.2655, 0.535, 0.2735, 0.2605, 0.2765], [0.595, 0.2795, 0.648, 0.2775, 0.2725, 0.2855]],
+		"bones": [[0.65, 0.25, 0.88, 0.75, 0.08, 0.02, 1.0, 0], [0.4, 0.6, 0.35, 0.85, 0.04, 0.04, 1.2, 1]],
+		"floats": [[0.25, 0.16, 0.06, 0.01], [0.12, 0.33, 0.04, 0.01], [0.86, 0.38, 0.05, 0.01], [0.93, 0.48, 0.04, 0.01]],
+		"glows": [[0.25, 0.16, 0.05], [0.86, 0.38, 0.04]],
+		"glow_color": Color(1.0, 0.55, 0.2)},
+	"res://art/characters/heroes/zennyo/char/zennyo_char_stage1.png": {
+		"head": Vector3(0.42, 0.18, 0.06),
+		"neck": Vector2(0.42, 0.23),
+		"hips": Vector2(0.45, 0.48),
+		"chest": Vector2(0.42, 0.33),
+		"chest_w": 0.09,
+		"eyes": [[0.391, 0.167, 0.428, 0.174, 0.163, 0.176], [0.4625, 0.157, 0.512, 0.155, 0.152, 0.1645]],
+		"bones": [[0.65, 0.42, 0.6, 0.85, 0.06, 0.03, 1.0, 0], [0.62, 0.2, 0.75, 0.25, 0.06, 0.03, 1.6, 1]],
+		"floats": [[0.8, 0.09, 0.05, 0.01], [0.18, 0.17, 0.06, 0.01], [0.83, 0.33, 0.06, 0.01]]},
+	"res://art/characters/heroes/aqua/char/aqua_char_stage1.png": {
+		"head": Vector3(0.57, 0.12, 0.06),
+		"neck": Vector2(0.56, 0.19),
+		"hips": Vector2(0.55, 0.45),
+		"chest": Vector2(0.55, 0.27),
+		"chest_w": 0.08,
+		"eyes": [[0.459, 0.121, 0.498, 0.124, 0.118, 0.1245], [0.544, 0.129, 0.58, 0.133, 0.1262, 0.1342]],
+		"bones": [[0.65, 0.1, 0.85, 0.5, 0.08, 0.025, 1.0, 0], [0.85, 0.35, 0.95, 0.6, 0.06, 0.03, 1.2, 1], [0.15, 0.45, 0.1, 0.7, 0.06, 0.03, 1.2, 2]],
+		"glows": [[0.12, 0.08, 0.05], [0.75, 0.25, 0.05]],
+		"glow_color": Color(0.4, 0.9, 1.0)},
+	"res://art/characters/heroes/furu/char/furu_char_stage1.png": {
+		"head": Vector3(0.66, 0.2, 0.06),
+		"neck": Vector2(0.66, 0.27),
+		"hips": Vector2(0.66, 0.5),
+		"chest": Vector2(0.66, 0.36),
+		"chest_w": 0.09,
+		"eyes": [[0.573, 0.18, 0.607, 0.183, 0.174, 0.188], [0.645, 0.176, 0.686, 0.174, 0.171, 0.1845]],
+		"bones": [[0.8, 0.25, 0.92, 0.6, 0.06, 0.02, 1.0, 0], [0.55, 0.25, 0.5, 0.5, 0.05, 0.015, 1.0, 1], [0.12, 0.42, 0.17, 0.85, 0.06, 0.02, 0.9, 2]]},
+	"res://art/characters/heroes/gala/char/gala_char_stage1.png": {
+		"head": Vector3(0.49, 0.33, 0.04),
+		"neck": Vector2(0.48, 0.37),
+		"hips": Vector2(0.5, 0.55),
+		"chest": Vector2(0.48, 0.42),
+		"chest_w": 0.06,
+		"eyes": [[0.52, 0.307, 0.538, 0.31, 0.3052, 0.3105], [0.557, 0.3, 0.578, 0.299, 0.297, 0.302]],
+		"bones": [[0.42, 0.33, 0.3, 0.6, 0.05, 0.02, 1.0, 0], [0.5, 0.6, 0.25, 0.85, 0.08, 0.02, 1.0, 1], [0.55, 0.6, 0.8, 0.85, 0.08, 0.02, 1.0, 2], [0.4, 0.25, 0.2, 0.1, 0.15, 0.01, 0.7, 3]],
+		"glows": [[0.6, 0.35, 0.05], [0.3, 0.6, 0.05]],
+		"glow_color": Color(1.0, 0.5, 0.15)},
+	"res://art/characters/heroes/gemora/char/gemora_char_stage1.png": {
+		"head": Vector3(0.6, 0.26, 0.06),
+		"neck": Vector2(0.6, 0.3),
+		"hips": Vector2(0.6, 0.55),
+		"chest": Vector2(0.6, 0.38),
+		"chest_w": 0.08,
+		"eyes": [[0.625, 0.197, 0.659, 0.205, 0.1935, 0.209], [0.6935, 0.219, 0.7175, 0.2245, 0.2158, 0.227]],
+		"bones": [[0.55, 0.15, 0.5, 0.6, 0.08, 0.015, 1.0, 0], [0.62, 0.1, 0.65, 0.03, 0.02, 0.04, 1.5, 1]],
+		"glows": [[0.1, 0.45, 0.06], [0.92, 0.75, 0.05], [0.66, 0.9, 0.04]],
+		"glow_color": Color(0.8, 0.4, 1.0)},
+	"res://art/characters/heroes/glytta/char/glytta_char_stage1.png": {
+		"head": Vector3(0.5, 0.31, 0.06),
+		"neck": Vector2(0.5, 0.37),
+		"hips": Vector2(0.5, 0.55),
+		"chest": Vector2(0.5, 0.45),
+		"chest_w": 0.08,
+		"eyes": [[0.45, 0.309, 0.486, 0.311, 0.308, 0.3152], []],
+		"bones": [[0.42, 0.25, 0.25, 0.5, 0.07, 0.02, 1.0, 0], [0.5, 0.7, 0.45, 0.85, 0.03, 0.04, 1.3, 1], [0.25, 0.4, 0.1, 0.25, 0.12, 0.015, 0.8, 2], [0.75, 0.4, 0.9, 0.2, 0.12, 0.015, 0.8, 3]],
+		"glows": [[0.85, 0.6, 0.05], [0.48, 0.15, 0.08]],
+		"glow_color": Color(0.45, 0.85, 1.0)},
+	"res://art/characters/heroes/hyeonxa/char/hyeonxa_char_stage1.png": {
+		"head": Vector3(0.42, 0.14, 0.05),
+		"neck": Vector2(0.43, 0.19),
+		"hips": Vector2(0.45, 0.42),
+		"chest": Vector2(0.45, 0.27),
+		"chest_w": 0.08,
+		"eyes": [[0.41, 0.15, 0.435, 0.153, 0.1463, 0.156], [0.456, 0.137, 0.487, 0.134, 0.132, 0.139]],
+		"bones": [[0.36, 0.2, 0.08, 0.45, 0.08, 0.025, 1.0, 0], [0.55, 0.2, 0.85, 0.45, 0.08, 0.025, 1.0, 1], [0.65, 0.12, 0.75, 0.05, 0.07, 0.03, 1.0, 2], [0.68, 0.2, 0.75, 0.35, 0.07, 0.03, 1.0, 3]]},
+	"res://art/characters/heroes/lumeira/char/lumeira_char_stage1.png": {
+		"head": Vector3(0.5, 0.16, 0.06),
+		"neck": Vector2(0.5, 0.22),
+		"hips": Vector2(0.5, 0.55),
+		"chest": Vector2(0.5, 0.33),
+		"chest_w": 0.08,
+		"eyes": [[0.4515, 0.205, 0.4945, 0.206, 0.1995, 0.2175], [0.533, 0.192, 0.57, 0.191, 0.187, 0.2035]],
+		"bones": [[0.38, 0.25, 0.08, 0.55, 0.15, 0.025, 1.1, 0], [0.62, 0.25, 0.92, 0.55, 0.15, 0.025, 1.1, 0.5], [0.4, 0.15, 0.35, 0.42, 0.05, 0.02, 1.1, 1], [0.6, 0.15, 0.66, 0.42, 0.05, 0.02, 1.1, 2]]},
+	"res://art/characters/heroes/ninger/char/ninger_char_stage1.png": {
+		"head": Vector3(0.47, 0.1, 0.06),
+		"neck": Vector2(0.47, 0.16),
+		"hips": Vector2(0.48, 0.42),
+		"chest": Vector2(0.5, 0.25),
+		"chest_w": 0.08,
+		"eyes": [[0.4785, 0.116, 0.5065, 0.118, 0.112, 0.1267], [0.534, 0.12, 0.5615, 0.119, 0.1158, 0.1298]],
+		"bones": [[0.35, 0.12, 0.2, 0.65, 0.08, 0.02, 1.0, 0], [0.6, 0.12, 0.75, 0.65, 0.08, 0.02, 1.0, 1], [0.4, 0.5, 0.25, 0.9, 0.1, 0.01, 0.8, 2], [0.6, 0.5, 0.8, 0.9, 0.1, 0.01, 0.8, 3]],
+		"floats": [[0.1, 0.25, 0.04, 0.008], [0.9, 0.27, 0.05, 0.008], [0.05, 0.55, 0.04, 0.008], [0.93, 0.62, 0.04, 0.008], [0.85, 0.9, 0.04, 0.008], [0.88, 0.04, 0.04, 0.008]],
+		"glows": [[0.3, 0.05, 0.04]],
+		"glow_color": Color(1.0, 0.85, 0.3)},
+	"res://art/characters/heroes/rubby/char/rubby_char_stage1.png": {
+		"head": Vector3(0.6, 0.15, 0.07),
+		"neck": Vector2(0.6, 0.22),
+		"hips": Vector2(0.58, 0.5),
+		"chest": Vector2(0.55, 0.3),
+		"chest_w": 0.08,
+		"eyes": [[0.5295, 0.1005, 0.551, 0.106, 0.0992, 0.1067], [0.596, 0.11, 0.638, 0.114, 0.1073, 0.1153]],
+		"bones": [[0.7, 0.15, 0.88, 0.42, 0.07, 0.025, 1.0, 0]],
+		"glows": [[0.88, 0.47, 0.035]],
+		"glow_color": Color(1.0, 0.75, 0.3)},
+	"res://art/characters/heroes/schylua/char/schylua_char_stage1.png": {
+		"head": Vector3(0.53, 0.12, 0.06),
+		"neck": Vector2(0.53, 0.18),
+		"hips": Vector2(0.5, 0.48),
+		"chest": Vector2(0.5, 0.28),
+		"chest_w": 0.08,
+		"bones": [[0.45, 0.12, 0.25, 0.4, 0.07, 0.025, 1.1, 0], [0.6, 0.12, 0.75, 0.3, 0.06, 0.025, 1.1, 1]],
+		"glows": [[0.15, 0.25, 0.08], [0.3, 0.08, 0.04]],
+		"glow_color": Color(0.4, 0.9, 1.0)},
+	"res://art/characters/heroes/scylla/char/scylla_char_stage1.png": {
+		"head": Vector3(0.6, 0.27, 0.05),
+		"neck": Vector2(0.6, 0.33),
+		"hips": Vector2(0.6, 0.55),
+		"chest": Vector2(0.62, 0.4),
+		"chest_w": 0.07,
+		"eyes": [[0.544, 0.275, 0.576, 0.278, 0.272, 0.2815], [0.615, 0.286, 0.638, 0.284, 0.2836, 0.2895]],
+		"bones": [[0.52, 0.3, 0.3, 0.5, 0.07, 0.025, 1.0, 0], [0.68, 0.3, 0.85, 0.48, 0.07, 0.025, 1.0, 1]],
+		"glows": [[0.22, 0.55, 0.05]],
+		"glow_color": Color(0.75, 0.35, 1.0)},
+	"res://art/characters/heroes/spimei/char/spimei_char_stage1.png": {
+		"head": Vector3(0.43, 0.21, 0.07),
+		"neck": Vector2(0.43, 0.27),
+		"hips": Vector2(0.45, 0.5),
+		"chest": Vector2(0.45, 0.36),
+		"chest_w": 0.09,
+		"eyes": [[0.4545, 0.2105, 0.492, 0.206, 0.2054, 0.2143], [0.528, 0.196, 0.56, 0.193, 0.1923, 0.2002]],
+		"bones": [[0.33, 0.2, 0.25, 0.4, 0.06, 0.025, 1.1, 0], [0.55, 0.2, 0.65, 0.35, 0.05, 0.025, 1.1, 1]]},
+	"res://art/characters/heroes/vexira/char/vexira_char_stage1.png": {
+		"head": Vector3(0.47, 0.14, 0.06),
+		"neck": Vector2(0.47, 0.2),
+		"hips": Vector2(0.5, 0.45),
+		"chest": Vector2(0.5, 0.28),
+		"chest_w": 0.08,
+		"eyes": [[0.457, 0.121, 0.5, 0.125, 0.118, 0.131], [0.539, 0.125, 0.577, 0.121, 0.118, 0.131]],
+		"bones": [[0.38, 0.15, 0.35, 0.5, 0.06, 0.025, 1.1, 0], [0.58, 0.15, 0.62, 0.5, 0.06, 0.025, 1.1, 1], [0.68, 0.48, 0.88, 0.58, 0.05, 0.05, 1.4, 2]],
+		"floats": [[0.33, 0.1, 0.06, 0.01], [0.88, 0.28, 0.06, 0.01], [0.13, 0.47, 0.06, 0.01], [0.25, 0.28, 0.04, 0.01], [0.75, 0.24, 0.04, 0.01], [0.2, 0.6, 0.04, 0.01]],
+		"glows": [[0.25, 0.28, 0.04], [0.75, 0.24, 0.04], [0.2, 0.6, 0.04]],
+		"glow_color": Color(1.0, 0.45, 0.7)},
+	"res://art/characters/heroes/eurnipha/char/eurnipha_char_stage1.png": {
+		"head": Vector3(0.37, 0.15, 0.05),
+		"neck": Vector2(0.38, 0.2),
+		"hips": Vector2(0.45, 0.45),
+		"chest": Vector2(0.42, 0.27),
+		"chest_w": 0.07,
+		"eyes": [[0.353, 0.139, 0.382, 0.142, 0.1374, 0.1472], [0.401, 0.149, 0.4215, 0.146, 0.1434, 0.1526]],
+		"bones": [[0.3, 0.15, 0.1, 0.75, 0.12, 0.015, 0.9, 0], [0.45, 0.15, 0.5, 0.6, 0.08, 0.015, 0.9, 1], [0.75, 0.65, 0.85, 0.78, 0.06, 0.03, 1.0, 2]],
+		"floats": [[0.1, 0.33, 0.05, 0.01], [0.68, 0.15, 0.05, 0.01], [0.87, 0.47, 0.05, 0.01]]},
+	"res://art/characters/heroes/fidelia/char/fidelia_char_stage1.png": {
+		"head": Vector3(0.56, 0.205, 0.06),
+		"neck": Vector2(0.56, 0.27),
+		"hips": Vector2(0.55, 0.55),
+		"chest": Vector2(0.55, 0.37),
+		"chest_w": 0.08,
+		"eyes": [[0.5135, 0.202, 0.5405, 0.205, 0.197, 0.2133], [0.577, 0.2135, 0.611, 0.212, 0.2083, 0.2243]],
+		"bones": [[0.5, 0.2, 0.2, 0.5, 0.1, 0.02, 1.0, 0], [0.68, 0.1, 0.82, 0.2, 0.07, 0.04, 1.5, 1]],
+		"glows": [[0.15, 0.3, 0.06]],
+		"glow_color": Color(0.5, 0.85, 1.0)},
+	"res://art/characters/heroes/lucidria/char/lucidria_char_stage1.png": {
+		"head": Vector3(0.51, 0.2, 0.06),
+		"neck": Vector2(0.5, 0.26),
+		"hips": Vector2(0.48, 0.5),
+		"chest": Vector2(0.48, 0.33),
+		"chest_w": 0.08,
+		"eyes": [[0.459, 0.2035, 0.487, 0.205, 0.198, 0.213], [0.523, 0.21, 0.5685, 0.21, 0.2055, 0.2228]],
+		"bones": [[0.35, 0.2, 0.25, 0.65, 0.07, 0.015, 1.0, 0], [0.25, 0.75, 0.15, 0.85, 0.1, 0.015, 0.8, 1], [0.75, 0.75, 0.82, 0.85, 0.1, 0.015, 0.8, 2]],
+		"glows": [[0.45, 0.35, 0.03]],
+		"glow_color": Color(0.4, 0.9, 1.0)},
+	"res://art/characters/heroes/mora/char/mora_char_stage1.png": {
+		"head": Vector3(0.6, 0.13, 0.06),
+		"neck": Vector2(0.6, 0.19),
+		"hips": Vector2(0.55, 0.47),
+		"chest": Vector2(0.55, 0.27),
+		"chest_w": 0.08,
+		"eyes": [[0.5105, 0.114, 0.549, 0.12, 0.1103, 0.122], [0.596, 0.13, 0.629, 0.131, 0.1272, 0.137]],
+		"bones": [[0.5, 0.15, 0.35, 0.55, 0.08, 0.02, 1.0, 0], [0.7, 0.15, 0.88, 0.55, 0.08, 0.02, 1.0, 1]],
+		"floats": [[0.22, 0.08, 0.09, 0.008]],
+		"glows": [[0.22, 0.08, 0.08], [0.6, 0.38, 0.06]],
+		"glow_color": Color(0.7, 0.6, 1.0)},
+	"res://art/characters/heroes/rumi/char/rumi_char_stage1.png": {
+		"head": Vector3(0.74, 0.225, 0.055),
+		"neck": Vector2(0.72, 0.29),
+		"hips": Vector2(0.58, 0.55),
+		"chest": Vector2(0.66, 0.36),
+		"chest_w": 0.08,
+		"eyes": [[0.7045, 0.221, 0.7355, 0.2255, 0.218, 0.228], [0.7585, 0.239, 0.7835, 0.2395, 0.2352, 0.2451]],
+		"bones": [[0.42, 0.4, 0.2, 0.65, 0.1, 0.02, 0.9, 0], [0.75, 0.4, 0.95, 0.65, 0.1, 0.02, 0.9, 1], [0.52, 0.2, 0.45, 0.42, 0.06, 0.02, 1.1, 2]]},
+	"res://art/characters/heroes/siv/char/siv_char_stage1.png": {
+		"head": Vector3(0.57, 0.1, 0.06),
+		"neck": Vector2(0.57, 0.16),
+		"hips": Vector2(0.55, 0.42),
+		"chest": Vector2(0.57, 0.24),
+		"chest_w": 0.08,
+		"eyes": [[0.459, 0.0837, 0.5, 0.091, 0.0827, 0.0943], [0.539, 0.099, 0.5675, 0.099, 0.0955, 0.1043]],
+		"bones": [[0.43, 0.1, 0.2, 0.55, 0.08, 0.02, 1.0, 0], [0.7, 0.1, 0.85, 0.45, 0.06, 0.02, 1.0, 1]]},
+	"res://art/characters/heroes/sven/char/sven_char_stage1.png": {
+		"head": Vector3(0.47, 0.1, 0.06),
+		"neck": Vector2(0.47, 0.16),
+		"hips": Vector2(0.48, 0.42),
+		"chest": Vector2(0.47, 0.25),
+		"chest_w": 0.09,
+		"eyes": [[0.415, 0.15, 0.4485, 0.152, 0.1475, 0.155], [0.5, 0.1485, 0.5415, 0.1465, 0.145, 0.1525]],
+		"bones": [[0.35, 0.08, 0.32, 0.22, 0.05, 0.02, 1.1, 0], [0.6, 0.08, 0.62, 0.22, 0.05, 0.02, 1.1, 1]]},
+}
+
+## Pivot rig (hero or enemy) for the art shown, or {}.
+static func char_rig(tex: Texture2D) -> Dictionary:
+	if tex == null:
+		return {}
+	var p := tex.resource_path
+	var r: Dictionary = _rig_for(p)
+	if not r.is_empty():
+		return r
+	# alternate expression of a rigged outfit (same pose): reuse the body rig, no blink (eyes differ)
+	if not _alt_rig.has(p):
+		var base := str(_inter_base().get(p, ""))
+		if base == "":
+			var re := RegEx.create_from_string("_(a|b|c|alt\\d+)\\.png$")
+			base = re.sub(p, ".png")
+		var br: Dictionary = _rig_for(base) if base != p else {}
+		if not br.is_empty():
+			br = br.duplicate()
+			br["eyes"] = []
+		_alt_rig[p] = br
+	return _alt_rig[p]
+
+static var _alt_rig: Dictionary = {}
+static var _form_rigs: Dictionary = {}
+static var _inter_map: Dictionary = {}
+
+static func _rig_for(p: String) -> Dictionary:
+	if ENEMY_RIGS.has(p):
+		return ENEMY_RIGS[p]
+	if HERO_RIGS.has(p):
+		return HERO_RIGS[p]
+	return form_rigs().get(p, {})
+
+## Pivot rigs for the other outfits / forms (data/char_rigs.json, built by measuring each art
+## against its stage1 rig). JSON arrays become the Vector/Color types the CharRig shader expects.
+static func form_rigs() -> Dictionary:
+	if _form_rigs.is_empty():
+		_form_rigs["_loaded"] = {}
+		var f := FileAccess.open("res://data/char_rigs.json", FileAccess.READ)
+		if f:
+			var parsed: Variant = JSON.parse_string(f.get_as_text())
+			if parsed is Dictionary:
+				for k in (parsed as Dictionary).keys():
+					var src: Dictionary = parsed[k]
+					var r: Dictionary = src.duplicate(true)
+					var hd: Array = src.get("head", [0.5, 0.15, 0.05])
+					r["head"] = Vector3(hd[0], hd[1], hd[2])
+					for key in ["neck", "hips", "chest"]:
+						var v: Array = src.get(key, [0.5, 0.3])
+						r[key] = Vector2(v[0], v[1])
+					if src.has("glow_color"):
+						var c: Array = src["glow_color"]
+						r["glow_color"] = Color(c[0], c[1], c[2])
+					_form_rigs[str(k)] = r
+	return _form_rigs
+
+## interaction (alternate expression) art path → its outfit's base art path
+static func _inter_base() -> Dictionary:
+	if _inter_map.is_empty():
+		_inter_map["_loaded"] = ""
+		for e in (_db().get("heroes", {}) as Dictionary).values():
+			var states: Dictionary = (e as Dictionary).get("char_states", {})
+			for st in states.values():
+				var base := str((st as Dictionary).get("base", ""))
+				for q in (st as Dictionary).get("interactions", []):
+					_inter_map[str(q)] = base
+	return _inter_map
+
+static func enemy_rig(tex: Texture2D) -> Dictionary:
+	return {} if tex == null else ENEMY_RIGS.get(tex.resource_path, {})
+
+
 static var _auto_rig: Dictionary = {}
 
 ## Hand-made rig if there is one, else the automatic 2.5D depth (art/depth/<name>_depth.png).
@@ -2553,6 +3171,8 @@ static func live_rig(tex: Texture2D) -> Dictionary:
 	var p := tex.resource_path
 	if LIVE_RIGS.has(p):
 		return LIVE_RIGS[p]
+	if not char_rig(tex).is_empty():
+		return {}   # pivot-rigged art: CharRig animates it instead of the depth tilt
 	if not (p.contains("/heroes/") or p.contains("/enemies/")):
 		return {}
 	if not _auto_rig.has(p):

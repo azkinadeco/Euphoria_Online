@@ -27,6 +27,8 @@ var _slide_t := 0.0
 var _dots: HBoxContainer
 var _pointer: Control
 var _pointer_target: Control
+var _enemy := ""          # discovered enemy shown instead of the hero secretary
+var _erig: CharRig
 
 func build() -> void:
 	set_bg(str(Game.s.get("lobby_bg", "lobby")), 0.18)
@@ -37,6 +39,7 @@ func build() -> void:
 		add_child(ffx)
 		move_child(ffx, mini(3, get_child_count() - 1))
 	var hid: String = Game.s["lobby_hero"]
+	_enemy = Game.lobby_enemy()
 
 	_bg = get_child(0) as TextureRect
 	_bg.resized.connect(func(): _bg.pivot_offset = _bg.size * 0.5)
@@ -49,7 +52,8 @@ func build() -> void:
 	# --- main hero art
 	var lskin := int(Game.hero(hid).get("skin", 0))
 	var lpose := DB.lobby_art(hid) if lskin == 0 else null
-	_hero_art = UI.tex_rect(lpose if lpose else DB.art(hid, lskin))
+	var etex: Texture2D = DB.art(_enemy, Game.lobby_enemy_form()) if _enemy != "" else null
+	_hero_art = UI.tex_rect(etex if etex else (lpose if lpose else DB.art(hid, lskin)))
 	_hero_art.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_hero_art.anchor_left = 0.08
 	_hero_art.anchor_right = 0.56
@@ -58,6 +62,7 @@ func build() -> void:
 	_hero_art.offset_bottom = -70
 	_holder.add_child(_hero_art)
 	UI.live(_hero_art, DB.theme_color(hid).lightened(0.5))
+	_erig = CharRig.attach(_hero_art)
 	if params.has("swipe"):
 		# arrived by swiping: slide in from the side the finger came from
 		var sdir := float(params["swipe"])
@@ -69,7 +74,7 @@ func build() -> void:
 			st.tween_property(_hero_art, "position:x", x0, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 			st.tween_property(_hero_art, "modulate:a", 1.0, 0.25)).call_deferred()
 		params.erase("swipe")
-	if lskin > 0 and lskin == DB.special_index(hid):
+	if _enemy == "" and lskin > 0 and lskin == DB.special_index(hid):
 		# special skin showcase: golden sparkles around the secretary
 		var sp := FestivalFX.new("firefly", Color("#ffd479"), 24)
 		sp.anchor_left = 0.08
@@ -106,16 +111,29 @@ func build() -> void:
 	acts.modulate.a = 0.85
 	var tk := _pill("♥ TALK", func(): main.talk(Game.s["lobby_hero"]), Color("#ff8fb8"))
 	var ob := _pill("OUTFIT", _next_outfit, Color.WHITE)
+	if _enemy != "":
+		tk = _pill("♥ TALK", func(): _say(DB.enemy_lobby_line(_enemy, Game.is_tamed(_enemy))), Color("#ff8fb8"))
+		ob = _pill("FORM", _next_enemy_form, Color.WHITE)
 	var sc := _pill("SCENE", _pick_scene, Color.WHITE)
 	var fb := _pill("FORTUNE" + (" ✦" if Game.fortune_ready() else ""), _open_fortune, UI.GOLD if Game.fortune_ready() else Color.WHITE)
 	for btn in [tk, ob, sc, fb]:
 		acts.add_child(btn)
-	if Game.secretary_ready() and not params.get("intro", false):
+	if _enemy != "":
+		acts.add_child(_pill("◆ VIEW", func():
+			var allowed: Array = []
+			for k in DB.art_list(_enemy).size():
+				if Game.form_unlocked(_enemy, k):
+					allowed.append(k)
+			ArtViewer.open(main, _enemy, Game.lobby_enemy_form(), allowed), Color("#bfe6ff")))
+		acts.add_child(_pill("⇄ HERO", func():
+			Game.set_lobby_enemy("")
+			main.replace("lobby"), Color("#9fd0ff")))
+	if _enemy == "" and Game.secretary_ready() and not params.get("intro", false):
 		_add_moment_heart()
 	add_child(tap)
 	add_child(acts)
 	# tamed Companion sits beside the secretary (tap = line + daily head-pat)
-	if Game.companion() != "":
+	if Game.companion() != "" and Game.companion() != _enemy:
 		var cam := CompanionCameo.new(Game.companion(), true)
 		cam.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 		cam.anchor_left = 0.43
@@ -128,7 +146,7 @@ func build() -> void:
 		add_child(cam)
 
 	# speech bubble
-	_bubble = UI.styled_panel(Color(1, 1, 1, 0.94), DB.theme_color(hid), 18, 3, 14)
+	_bubble = UI.styled_panel(Color(1, 1, 1, 0.94), DB.ELEMENT_COLOR.get(DB.element_of(_enemy), UI.GOLD) if _enemy != "" else DB.theme_color(hid), 18, 3, 14)
 	_bubble.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_bubble.anchor_left = 0.34
 	_bubble.anchor_top = 0.2
@@ -152,7 +170,7 @@ func build() -> void:
 		var hid0: String = Game.s["lobby_hero"]
 		get_tree().create_timer(0.4).timeout.connect(func():
 			if is_inside_tree():
-				_say(Game.voice(hid0, "greet")))
+				_say(DB.enemy_lobby_line(_enemy, Game.is_tamed(_enemy)) if _enemy != "" else Game.voice(hid0, "greet")))
 
 func _build_top_bar() -> void:
 	var hid: String = Game.s["lobby_hero"]
@@ -771,6 +789,10 @@ func _hero_center() -> Vector2:
 func _idle_action() -> void:
 	if _busy:
 		return
+	if _enemy != "":
+		if randf() < 0.25 and not _bubble.visible:
+			_say(DB.enemy_lobby_line(_enemy, Game.is_tamed(_enemy)))
+		return
 	var lh: String = Game.s["lobby_hero"]
 	if int(Game.hero(lh).get("bond", 1)) >= 3 and randf() < 0.3 and not _bubble.visible:
 		_say(DB.voice(lh, "bond" if randf() < 0.5 else "greet")["en"])
@@ -791,11 +813,15 @@ func _idle_action() -> void:
 func _on_hero_touch(ry: float, at: Vector2) -> void:
 	if _busy:
 		return
+	if _enemy != "":
+		_on_enemy_poke(Vector2(0.5, ry))
+		return
 	_busy = true
 	var hid: String = Game.s["lobby_hero"]
 	var h := Game.hero(hid)
 	Game.tap_hero(hid)   # bond exp + daily quest
 	var zone := "head" if ry < 0.28 else ("body" if ry < 0.62 else "legs")
+	_erig.react(ry)
 	if DB.lobby_art(hid) == null or int(h.get("skin", 0)) > 0:
 		UI.flash_expression(_hero_art, DB.alt_art(hid, int(h.get("skin", 0))))
 	var tcol: Color = {"head": Color("#ff8fb8"), "body": Color("#ff6f9a"), "legs": Color("#ffd479")}[zone]
@@ -897,6 +923,8 @@ func _gesture(e: InputEvent, tap: Control) -> void:
 				_head_pat(tap.get_global_rect().position + e.position - get_global_rect().position)
 
 func _head_pat(at: Vector2) -> void:
+	if _enemy != "":
+		return
 	var now := Time.get_ticks_msec()
 	if now - _g_pat_t < 140:
 		return
@@ -926,7 +954,7 @@ func _clear_pat() -> void:
 func _close_up() -> void:
 	var hid: String = Game.s["lobby_hero"]
 	Game.sfx("ui_click")
-	_say(Game.voice(hid, "greet"))
+	_say(DB.enemy_lobby_line(_enemy, Game.is_tamed(_enemy)) if _enemy != "" else Game.voice(hid, "greet"))
 	# zoom the holder (the art itself runs a looping breathing tween on its scale)
 	var head := _hero_art.position + Vector2(_hero_art.size.x * 0.5, _hero_art.size.y * 0.2)
 	_holder.pivot_offset = head
@@ -938,6 +966,10 @@ func _close_up() -> void:
 ## Swipe: next/previous owned hero becomes the secretary (gallery-style slide).
 func _switch_secretary(dir: int) -> void:
 	var ids: Array = Game.s["heroes"].keys()
+	if _enemy != "":
+		Game.set_lobby_enemy("")   # swiping leaves the enemy and returns to the heroes
+		main.replace("lobby", {"swipe": dir})
+		return
 	if ids.size() < 2:
 		return
 	var i := ids.find(Game.s["lobby_hero"])
@@ -1231,6 +1263,48 @@ func _next_outfit() -> void:
 			Game.sfx("star_up")
 			return
 
+## Enemy secretary: touch zones on her 2.5D figure (or flat art).
+func _on_enemy_poke(uv: Vector2) -> void:
+	var tamed := Game.is_tamed(_enemy)
+	var at := _hero_art.get_global_rect().position - get_global_rect().position + _hero_art.size * uv
+	var zone := "head" if uv.y < 0.28 else ("body" if uv.y < 0.62 else "legs")
+	var col: Color = {"head": Color("#ff8fb8"), "body": Color("#d4b8ff"), "legs": Color("#ffd479")}[zone]
+	_fx.wave(at, col, 110.0)
+	Game.sfx("ui_click")
+	if _erig != null:
+		_erig.react(uv.y)
+	var tw := _hero_art.create_tween()
+	var y0 := _hero_art.position.y
+	tw.tween_property(_hero_art, "position:y", y0 - 18, 0.12).set_trans(Tween.TRANS_QUAD)
+	tw.tween_property(_hero_art, "position:y", y0, 0.25).set_trans(Tween.TRANS_BOUNCE)
+	if zone == "head" and tamed:
+		if Game.pet_pat(_enemy):
+			_heart_burst()
+			_float_mark(at, "♥ pat pat", Color("#ff8fb8"))
+			_say(DB.pet_line(_enemy, 3))
+			return
+		_float_mark(at, "♥", Color("#ff8fb8"), 30)
+	elif zone == "legs":
+		_float_mark(at, "!", Color("#ffd479"), 48)
+	else:
+		_float_mark(at, "///" if tamed else "!?", col)
+	_say(DB.enemy_lobby_line(_enemy, tamed))
+
+## FORM pill: cycle through the enemy's unlocked forms.
+func _next_enemy_form() -> void:
+	var n := DB.art_list(_enemy).size()
+	var cur := Game.lobby_enemy_form()
+	for i in range(1, n + 1):
+		var k := (cur + i) % n
+		if Game.form_unlocked(_enemy, k):
+			if k == cur:
+				main.toast("Defeat her more (or raise her tamed Bond) to unlock more forms.", UI.MUTED)
+				return
+			Game.set_lobby_enemy(_enemy, k)
+			Game.sfx("star_up")
+			main.replace("lobby")
+			return
+
 func _on_hero_tap() -> void:
 	var hid: String = Game.s["lobby_hero"]
 	var line := Game.tap_hero(hid)
@@ -1242,7 +1316,9 @@ func _on_hero_tap() -> void:
 	_heart_burst()
 
 func _say(text: String, who: String = "") -> void:
-	_bubble_label.text = "%s\n%s" % [DB.name_of(who if who != "" else Game.s["lobby_hero"]), text]
+	if who == "":
+		who = _enemy if _enemy != "" else str(Game.s["lobby_hero"])
+	_bubble_label.text = "%s\n%s" % [DB.name_of(who), text]
 	_bubble.visible = true
 	UI.pop(_bubble, 0.25)
 	if _bubble.has_meta("tw"):

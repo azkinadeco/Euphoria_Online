@@ -426,6 +426,10 @@ static func live(t: TextureRect, rim_col: Color = Color(1, 0.85, 1), strength: f
 		t.add_child(rig)
 	else:
 		(t.get_node("LiveRig") as LiveRig).set_live(m)
+	# pivot-rigged arts (DB.HERO_RIGS / ENEMY_RIGS): breathing, blinking, hair & tail sway
+	var cr := CharRig.attach(t)
+	if cr.is_inside_tree():
+		cr.refresh()
 
 static var _corrupt_shader: Shader
 

@@ -18,6 +18,8 @@ var _down := false
 var _start := Vector2.ZERO
 var _rub := 0.0
 var _moved := false
+var _rig: CharRig
+var _hint: Label
 
 func build() -> void:
 	set_bg("necro", 0.6)
@@ -25,7 +27,7 @@ func build() -> void:
 	header("BESTIARY", ["gold", "gems"])
 	var b := body(76)
 	var lp := UI.panel()
-	lp.anchor_right = 0.42
+	lp.anchor_right = 0.335
 	lp.anchor_bottom = 1.0
 	b.add_child(lp)
 	var lv := UI.vbox(8)
@@ -42,24 +44,36 @@ func build() -> void:
 	lv.add_child(UI.bar(seen, DB.ENEMIES.size(), "GoldBar", 8))
 	_grid = GridContainer.new()
 	_grid.columns = 3
-	_grid.add_theme_constant_override("h_separation", 8)
-	_grid.add_theme_constant_override("v_separation", 8)
+	_grid.add_theme_constant_override("h_separation", 6)
+	_grid.add_theme_constant_override("v_separation", 6)
 	lv.add_child(UI.scroll(_grid))
 	var mid := Control.new()
-	mid.anchor_left = 0.43
-	mid.anchor_right = 0.7
+	mid.anchor_left = 0.345
+	mid.anchor_right = 0.705
 	mid.anchor_bottom = 1.0
 	mid.clip_contents = true
 	b.add_child(mid)
 	_mid = mid
 	_art = UI.tex_rect(null)
 	_art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_art.offset_bottom = -86
+	_art.offset_bottom = -112
 	_art.mouse_filter = Control.MOUSE_FILTER_STOP
 	_art.gui_input.connect(_art_input)
 	_art.resized.connect(func(): _art.pivot_offset = _art.size * 0.5)
 	mid.add_child(_art)
 	UI.live(_art, Color(1.0, 0.85, 0.9))
+	_rig = CharRig.attach(_art)
+	# floor glow under the figure
+	var fl := Panel.new()
+	fl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fl.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	fl.offset_top = -150
+	fl.offset_bottom = -108
+	fl.offset_left = 30
+	fl.offset_right = -30
+	fl.add_theme_stylebox_override("panel", UI.style(Color(0.55, 0.35, 0.9, 0.14), Color(0, 0, 0, 0), 60, 0, 0))
+	mid.add_child(fl)
+	mid.move_child(fl, 0)
 	_pinch = PinchZoom.new(func(f: float, _c: Vector2): _set_zoom(_zoom * f))
 	_art.add_child(_pinch)
 	var zb := UI.zoom_button(func():
@@ -77,10 +91,11 @@ func build() -> void:
 	zb.offset_top = 6
 	zb.offset_bottom = 64
 	mid.add_child(zb)
-	var zh := UI.label("Pinch to zoom • tap to interact • lens = full screen", 11, UI.MUTED, 2)
+	var zh := UI.label("", 11, UI.MUTED, 2)
+	_hint = zh
 	zh.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	zh.offset_top = -104
-	zh.offset_bottom = -86
+	zh.offset_top = -130
+	zh.offset_bottom = -112
 	zh.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	mid.add_child(zh)
 	_forms = UI.hbox(6)
@@ -88,11 +103,11 @@ func build() -> void:
 	var fs := ScrollContainer.new()
 	fs.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	fs.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-	fs.offset_top = -82
+	fs.offset_top = -108
 	fs.add_child(_forms)
 	mid.add_child(fs)
 	var rp := UI.panel()
-	rp.anchor_left = 0.71
+	rp.anchor_left = 0.715
 	rp.anchor_right = 1.0
 	rp.anchor_bottom = 1.0
 	b.add_child(rp)
@@ -111,16 +126,28 @@ func _render() -> void:
 		var btn := Button.new()
 		btn.theme_type_variation = "FlatButton"
 		btn.focus_mode = Control.FOCUS_NONE
-		btn.custom_minimum_size = Vector2(118, 140)
+		btn.custom_minimum_size = Vector2(110, 172)
+		var ec: Color = DB.ELEMENT_COLOR.get(DB.element_of(eid), Color("#8a6ad0")) if known else Color("#3a2e58")
 		var fr := Panel.new()
 		fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		fr.add_theme_stylebox_override("panel", UI.style(Color(0.06, 0.04, 0.1, 0.95), UI.GOLD if eid == _sel else Color("#4a3a6e"), 10, 2 if eid == _sel else 1, 0))
 		fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 		fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		btn.add_child(fr)
-		var f := UI.tex_rect(DB.face(eid), Vector2.ZERO, true)
+		# element-tinted backdrop so the full-body figure reads clearly
+		var gl := Panel.new()
+		gl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		gl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		gl.offset_top = 70
+		gl.add_theme_stylebox_override("panel", UI.style(Color(ec, 0.22), Color(0, 0, 0, 0), 0, 0, 0))
+		fr.add_child(gl)
+		var f := UI.tex_rect(DB.art(eid, 0))
+		f.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		f.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		f.offset_bottom = -24
+		f.offset_top = 4
+		f.offset_left = 2
+		f.offset_right = -2
+		f.offset_bottom = -22
 		if not known:
 			f.modulate = Color(0, 0, 0, 0.85)
 		fr.add_child(f)
@@ -138,7 +165,7 @@ func _render() -> void:
 		for t in DB.BESTIARY_TIERS.size():
 			if Game.bestiary_state(eid, t) == "ready":
 				var dot := UI.label("!", 16, UI.GOLD, 4)
-				dot.position = Vector2(98, 2)
+				dot.position = Vector2(92, 2)
 				fr.add_child(dot)
 				break
 		btn.pressed.connect(func():
@@ -157,8 +184,8 @@ func _render_detail() -> void:
 	_form = clampi(_form, 0, maxi(0, n_forms - 1))
 	if not Game.form_unlocked(id, _form):
 		_form = 0
-	_art.texture = DB.art(id, _form)
 	_art.modulate = Color.WHITE if known else Color(0, 0, 0, 0.9)
+	_show_art(DB.art(id, _form))
 	_set_zoom(1.0)
 	_render_forms()
 	var title := UI.hbox(6)
@@ -190,6 +217,18 @@ func _render_detail() -> void:
 	var sk: Dictionary = DB.ENEMIES[id]["skill"]
 	_detail.add_child(UI.label("Skill: " + str(sk["name"]), 14, UI.GOLD, 2))
 	_detail.add_child(UI.label("Defeated: %s" % Game.fmt(Game.kills_of(id)), 16, UI.GREEN, 3))
+	var in_lobby := Game.lobby_enemy() == id and Game.lobby_enemy_form() == _form
+	var lb := UI.button("🏠 IN LOBBY ✓" if in_lobby else "🏠 SET AS LOBBY", func():
+		if in_lobby:
+			Game.set_lobby_enemy("")
+			main.toast("Your hero is back in the lobby.", UI.MUTED)
+		elif Game.set_lobby_enemy(id, _form):
+			Game.sfx("star_up")
+			main.toast("%s now waits for you in the lobby." % DB.name_of(id), UI.GOLD)
+		_render_detail(), "" if in_lobby else "GoldButton", Vector2(0, 38))
+	lb.add_theme_font_size_override("font_size", 12)
+	_detail.add_child(lb)
+	_detail.add_child(_lore_card(id))
 	_detail.add_child(UI.label("HUNTER MILESTONES", 14, UI.GOLD, 3))
 	for t in DB.BESTIARY_TIERS.size():
 		var tier: int = t
@@ -216,6 +255,34 @@ func _render_detail() -> void:
 			cb.disabled = st != "ready"
 			h.add_child(cb)
 
+## Hunter's Lore: what your kills are worth in battle against her, and the next level.
+func _lore_card(id: String) -> Control:
+	var lv := Game.lore_level(id)
+	var p := UI.styled_panel(Color("#2a3a14", 0.55), Color("#c8f08f", 0.55), 10, 1, 8.0)
+	var v := UI.vbox(4)
+	p.add_child(v)
+	var h := UI.hbox(6)
+	var t := UI.label("HUNTER'S LORE", 13, Color("#c8f08f"), 3)
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(t)
+	var pips := ""
+	for i in DB.BESTIARY_TIERS.size():
+		pips += "◆" if i < lv else "◇"
+	h.add_child(UI.label(pips, 14, Color("#c8f08f"), 2))
+	v.add_child(h)
+	if lv > 0:
+		v.add_child(UI.label("+%d%% damage to her  •  −%d%% damage from her" % [roundi(DB.LORE_DMG * lv * 100), roundi(DB.LORE_GUARD * lv * 100)], 12, Color.WHITE, 2))
+	else:
+		v.add_child(UI.label("No bonus yet", 12, UI.MUTED, 1))
+	if lv < DB.BESTIARY_TIERS.size():
+		var need := int(DB.BESTIARY_TIERS[lv]["kills"])
+		var k := Game.kills_of(id)
+		v.add_child(UI.bar(k, need, "GoldBar", 6))
+		v.add_child(UI.label("Lv.%d at %d kills (%d to go): +%d%% / −%d%%" % [lv + 1, need, need - k, roundi(DB.LORE_DMG * (lv + 1) * 100), roundi(DB.LORE_GUARD * (lv + 1) * 100)], 11, UI.MUTED, 1))
+	else:
+		v.add_child(UI.label("✦ Lore mastered", 12, UI.GOLD, 2))
+	return p
+
 # ---------------------------------------------------------------- forms (upgrade / evolution arts)
 
 func _render_forms() -> void:
@@ -231,15 +298,18 @@ func _render_forms() -> void:
 		var b := Button.new()
 		b.theme_type_variation = "FlatButton"
 		b.focus_mode = Control.FOCUS_NONE
-		b.custom_minimum_size = Vector2(58, 76)
+		b.custom_minimum_size = Vector2(70, 100)
 		var fr := Panel.new()
 		fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		fr.add_theme_stylebox_override("panel", UI.style(Color(0.06, 0.04, 0.1, 0.95), UI.GOLD if fk == _form else Color("#4a3a6e"), 8, 2 if fk == _form else 1, 0))
 		fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 		fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(fr)
-		var th := UI.tex_rect(DB.face(id, fk) if open else DB.face(id, 0), Vector2.ZERO, true)
+		var th := UI.tex_rect(DB.art(id, fk))
+		th.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		th.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		th.offset_top = 3
+		th.offset_bottom = -16
 		if not open:
 			th.modulate = Color(0.06, 0.05, 0.1)
 		fr.add_child(th)
@@ -256,7 +326,7 @@ func _render_forms() -> void:
 				return
 			Game.sfx("ui_click")
 			_form = fk
-			_art.texture = DB.art(id, fk)
+			_show_art(DB.art(id, fk))
 			_set_zoom(1.0)
 			UI.fade_in(_art, 0.25, Vector2(0, 10))
 			_render_forms())
@@ -269,6 +339,12 @@ func _first_evo(id: String) -> int:
 		if "_evo" in str(arts[i]).get_file():
 			return i
 	return arts.size()
+
+# ---------------------------------------------------------------- art
+
+func _show_art(tex: Texture2D) -> void:
+	_art.texture = tex
+	_hint.text = "Pinch to zoom • tap to interact • lens = full screen" if Game.kills_of(_sel) > 0 else "Defeat her once to reveal her."
 
 # ---------------------------------------------------------------- zoom & interaction
 
@@ -313,6 +389,7 @@ func _art_input(e: InputEvent) -> void:
 ## Tap: a reaction animation (hop / shiver / lean) and a line if she is tamed.
 func _react(ry: float) -> void:
 	Game.sfx("ui_click")
+	_rig.react(ry)
 	var tw := _art.create_tween()
 	var y0 := _art.position.y
 	if ry < 0.35:

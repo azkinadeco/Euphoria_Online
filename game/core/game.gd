@@ -1496,6 +1496,7 @@ func quick_battle(params: Dictionary) -> Dictionary:
 	meal_consume(params)
 	var sim := BattleSim.new()
 	sim.setup(ally_team(params), enemies_for(params), 0, battle_mod(params))
+	sim.lore = lore_map()
 	sim.tactic = equipped_tactic()
 	sim.companion = companion_assist()
 	var res := sim.run()
@@ -1585,7 +1586,7 @@ func pay_battle(params: Dictionary) -> String:
 			s["arena"]["tickets"] = int(s["arena"]["tickets"]) - 1
 			mark_dirty()
 		"event":
-			if not spend("energy", 8):
+			if not spend("energy", EVENT_ENERGY):
 				return "Not enough Energy (8 needed)."
 		"hard":
 			var hc: int = DB.hard_stage(int(params["stage"]))["energy"]
@@ -1964,6 +1965,23 @@ func apply_event_result(i: int, won: bool, stars: int) -> Dictionary:
 	s["event"]["cleared"][str(i)] = maxi(stars, event_stars(i))
 	_ingredient_drop(r, false)
 	quest_progress("stage")
+	give(r)
+	return r
+
+const EVENT_ENERGY := 8
+
+## Sweep a 3★ event stage `times` times: same tokens/gold as a 3★ win, no first-clear gems.
+func sweep_event(i: int, times: int) -> Dictionary:
+	if event_stars(i) < 3:
+		return {"error": "Clear this stage with 3★ to unlock Sweep."}
+	var cost := EVENT_ENERGY * times
+	if amount("energy") < cost:
+		return {"error": "Not enough Energy (%d needed)." % cost}
+	spend("energy", cost)
+	var st := DB.event_stage(i)
+	var r := {"festival_token": (int(st["tokens"]) + 15) * times, "gold": (1000 + i * 800) * times}
+	for k in times:
+		quest_progress("stage")
 	give(r)
 	return r
 
@@ -3247,6 +3265,8 @@ func title_unlocked(id: String) -> bool:
 		"arena": return int(s["arena"]["rp"]) >= 1500
 		"slayer": return int(s["wboss"]["total"]) >= 1000000 or bool(s["player"].get("slayer", false))
 		"tactician": return s["tactics"]["lv"].values().any(func(l): return int(l) >= DB.TACTIC_MAX_LV)
+		"sweetheart": return s["heroes"].keys().any(func(h): return date_perfects(h) >= 3)
+		"soulmate": return s["heroes"].keys().any(func(h): return date_perfects(h) >= DB.DATE_SPOTS.size())
 	return false
 
 func title_name() -> String:
@@ -3845,6 +3865,42 @@ func pet_gift(id: String, item_id: String) -> String:
 	return ""
 
 ## Forms (evolution arts) of a foe the player has unlocked: by kills or by pet bond.
+## Hunter's Lore level (0..4) vs an enemy type = bestiary milestones reached by kills.
+func lore_level(id: String) -> int:
+	var k := kills_of(DB.base_id(id))
+	var lv := 0
+	for t in DB.BESTIARY_TIERS:
+		if k >= int(t["kills"]):
+			lv += 1
+	return lv
+
+## {enemy id: lore level} for every foe with at least one level (fed to BattleSim.lore).
+func lore_map() -> Dictionary:
+	var out := {}
+	for e in DB.ENEMIES.keys():
+		var lv := lore_level(e)
+		if lv > 0:
+			out[e] = lv
+	return out
+
+## Lobby can show a discovered enemy instead of the hero secretary ("" = hero).
+func lobby_enemy() -> String:
+	var e := str(s.get("lobby_enemy", ""))
+	return e if DB.ENEMIES.has(e) and kills_of(e) > 0 else ""
+
+func lobby_enemy_form() -> int:
+	var e := lobby_enemy()
+	var k := int(s.get("lobby_enemy_form", 0))
+	return k if e != "" and k < DB.art_list(e).size() and form_unlocked(e, k) else 0
+
+func set_lobby_enemy(id: String, form: int = 0) -> bool:
+	if id != "" and (not DB.ENEMIES.has(id) or kills_of(id) <= 0):
+		return false
+	s["lobby_enemy"] = id
+	s["lobby_enemy_form"] = form if id != "" and form_unlocked(id, form) else 0
+	mark_dirty()
+	return true
+
 func form_unlocked(id: String, k: int) -> bool:
 	if k == 0:
 		return kills_of(id) > 0
@@ -3875,8 +3931,42 @@ func _date_state() -> Dictionary:
 	if int(d["day"]) != day_key():
 		d["day"] = day_key()
 		d["used"] = 0
+	if not d.has("best"):
+		# permanent records (the album is capped); rebuild from old photos once
+		var best := {}
+		var count := {}
+		for e in (d.get("album", []) as Array):
+			var hid := str(e["hero"])
+			var ri := DB.date_rank_index(str(e["rank"]))
+			var hb: Dictionary = best.get(hid, {})
+			if not hb.has(str(e["spot"])) or ri < int(hb[str(e["spot"])]):
+				hb[str(e["spot"])] = ri
+			best[hid] = hb
+			count[hid] = int(count.get(hid, 0)) + 1
+		d["best"] = best
+		d["count"] = count
+		d["perfect_paid"] = []
 	s["dates"] = d
 	return d
+
+## Best rank index at a spot with a hero (0 = PERFECT, 1 = SWEET, 2 = NICE), -1 = never.
+func date_best(id: String, key: String) -> int:
+	var hb: Dictionary = _date_state()["best"].get(id, {})
+	return int(hb.get(key, -1))
+
+func date_perfect_paid(id: String, key: String) -> bool:
+	return (_date_state()["perfect_paid"] as Array).has("%s|%s" % [id, key])
+
+func date_count(id: String) -> int:
+	return int(_date_state()["count"].get(id, 0))
+
+## Spots where this hero has had a PERFECT date.
+func date_perfects(id: String) -> int:
+	var n := 0
+	for sp in DB.DATE_SPOTS:
+		if date_best(id, str(sp["key"])) == 0:
+			n += 1
+	return n
 
 func dates_left() -> int:
 	return DB.DATE_PER_DAY - int(_date_state()["used"])
@@ -3914,10 +4004,25 @@ func finish_date(id: String, key: String, score: int) -> Dictionary:
 	var bonus := 40 if rank[0] == "PERFECT DATE" else (20 if rank[0] == "SWEET DATE" else 0)
 	add_bond(id, bonus)
 	var r := {"gems": 20 + bonus}
+	# records: best rank per hero x spot, date count, one-time PERFECT bonus per hero x spot
+	var ri := DB.date_rank_index(str(rank[0]))
+	var prev := date_best(id, key)
+	var hb: Dictionary = d["best"].get(id, {})
+	if prev < 0 or ri < prev:
+		hb[key] = ri
+	d["best"][id] = hb
+	d["count"][id] = date_count(id) + 1
+	var first_perfect := false
+	var pk := "%s|%s" % [id, key]
+	if ri == 0 and not (d["perfect_paid"] as Array).has(pk):
+		(d["perfect_paid"] as Array).append(pk)
+		first_perfect = true
+		for k in DB.DATE_FIRST_PERFECT:
+			r[k] = int(r.get(k, 0)) + int(DB.DATE_FIRST_PERFECT[k])
 	give(r)
 	quest_progress("bond")
 	mark_dirty()
-	return {"rank": rank, "reward": r, "bonus": bonus}
+	return {"rank": rank, "reward": r, "bonus": bonus, "new_best": prev < 0 or ri < prev, "first_perfect": first_perfect}
 
 func date_album() -> Array:
 	return _date_state()["album"]

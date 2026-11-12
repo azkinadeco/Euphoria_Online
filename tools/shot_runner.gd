@@ -74,6 +74,20 @@ func _next() -> void:
 			g.call(parts[0], arg)
 		else:
 			g.call(parts[0])
+	elif v.begins_with("gcall:"):
+		# gcall:finish_date|fidelia|forest|120 -> Game.finish_date("fidelia", "forest", 120)
+		var parts := v.substr(6).split("|")
+		var cargs: Array = []
+		for a in parts.slice(1):
+			cargs.append(int(a) if a.is_valid_int() else a)
+		root.get_node("Game").callv(parts[0], cargs)
+	elif v.begins_with("kills:"):
+		# kills:octra|30 -> Game.record_kills([octra x30])
+		var parts := v.substr(6).split("|")
+		var arr: Array = []
+		for i in int(parts[1]) if parts.size() > 1 else 1:
+			arr.append(parts[0])
+		root.get_node("Game").record_kills(arr)
 	elif v.begins_with("gset:"):
 		# gset:tower.floor|9 -> Game.s["tower"]["floor"] = 9
 		var parts := v.substr(5).split("|")
@@ -107,6 +121,11 @@ func _next() -> void:
 		for hid in g.s["heroes"].keys():
 			g.s["heroes"][hid]["level"] = 80
 			g.s["heroes"][hid]["star"] = 6
+	elif v == "novn":
+		# close any open VN dialogue / tutorial so the screen under it is visible
+		for c in main_node.overlay.get_children():
+			if c.has_method("_show_log"):
+				c.queue_free()
 	elif v == "skipbattle":
 		for c in main_node.host.get_children():
 			if c.has_method("skip"):

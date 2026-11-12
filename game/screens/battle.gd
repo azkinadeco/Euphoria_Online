@@ -84,6 +84,7 @@ func build() -> void:
 	var allies: Array = Game.ally_team(params)
 	sim = BattleSim.new()
 	sim.setup(allies, Game.enemies_for(params), 0, Game.battle_mod(params))
+	sim.lore = Game.lore_map()
 	sim.tactic = Game.equipped_tactic()
 	sim.companion = Game.companion_assist()
 	summary = sim.run()
@@ -1430,6 +1431,13 @@ func _intro_banners() -> void:
 		lines.append(["COMPANION: %s  →  +%.1f%% team ATK/HP" % [DB.name_of(Game.companion()), Game.companion_bonus() * 100.0], Color("#ffb8d6")])
 		if is_instance_valid(_cameo):
 			_cameo.cheer()
+	var lore_names: Array = []
+	for eu in sim.side_units(1, false):
+		var lid := DB.base_id(str(eu["id"]))
+		if sim.lore.has(lid) and not lore_names.has(DB.name_of(lid)):
+			lore_names.append(DB.name_of(lid))
+	if not lore_names.is_empty():
+		lines.append(["HUNTER'S LORE: " + ", ".join(lore_names.slice(0, 3)) + ("…" if lore_names.size() > 3 else ""), Color("#c8f08f")])
 	if not sim.tactic.is_empty():
 		var td := DB.tactic_def(str(sim.tactic["id"]))
 		lines.append(["TACTIC: %s Lv.%d  •  %s" % [td["name"], int(sim.tactic["lv"]), td["trigger"]], UI.GOLD])

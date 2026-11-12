@@ -423,6 +423,12 @@ func _run() -> void:
 	var evs0: int = int(G.s["shards"].get(evf, 0))
 	var shard_item: Dictionary = (DB.EVENT["shop"] as Array).filter(func(it): return (it["give"] as Dictionary).has("shard:" + evf))[0]
 	check(G.buy_event(shard_item) == "" and int(G.s["shards"].get(evf, 0)) >= evs0 + 10, "event exchange for featured shards")
+	check(G.sweep_event(1, 1).has("error"), "cannot sweep an uncleared event stage")
+	G.s["cur"]["energy"] = 40
+	var evtk0: int = G.amount("festival_token")
+	var evsw: Dictionary = G.sweep_event(0, 3)
+	check(not evsw.has("error") and G.amount("festival_token") == evtk0 + int(evsw["festival_token"]) and G.amount("energy") == 40 - 24 and not evsw.has("gems"), "event sweep x3: tokens, 24 energy, no first-clear gems")
+	check(G.sweep_event(0, 5).has("error"), "event sweep needs enough energy")
 	print("[christmas event]")
 	DB.set_event_period(-1)
 	check(DB.EVENT["name"] == "Starfall Christmas" and DB.EVENT["skin"] == "hyeonxa" and DB.HEROES.has("hyeonxa"), "pinned Christmas event")
@@ -925,6 +931,43 @@ func _run() -> void:
 		check(G.claim_road(5) and not G.claim_road(5), "road reward once")
 	check(DB.road_reward(25).has("celestial_gem") and DB.road_levels().size() == 20, "grand reward every 25 levels")
 
+	print("[hunter's lore]")
+	check(G.lore_level("svormentis") == 0, "no lore before kills")
+	var lore_k: Array = []
+	for i in 50:
+		lore_k.append("svormentis")
+	G.record_kills(lore_k)
+	check(G.lore_level("svormentis") == 2 and G.lore_level("hollow:svormentis") == 2, "lore Lv.2 at 50 kills (variants count)")
+	check(int(G.lore_map().get("svormentis", 0)) == 2, "lore map feeds the sim")
+	var lt_a := [{"id": "shina", "cell": Vector2i(0, 1), "level": 30, "star": 3}]
+	var lt_e := [{"id": "svormentis", "cell": Vector2i(0, 1), "level": 30, "star": 3}]
+	var lsim0 := BattleSim.new()
+	lsim0.setup(lt_a, lt_e, 777)
+	lsim0.run()
+	var lsim1 := BattleSim.new()
+	lsim1.setup(lt_a, lt_e, 777)
+	lsim1.lore = {"svormentis": 4}
+	lsim1.run()
+	var ld0 := 0
+	var ld1 := 0
+	for ev in lsim0.events:
+		if ev["t"] == "hit" and int(ev["src"]) == 0:
+			ld0 = int(ev["dmg"])
+			break
+	for ev in lsim1.events:
+		if ev["t"] == "hit" and int(ev["src"]) == 0:
+			ld1 = int(ev["dmg"])
+			break
+	check(ld0 > 0 and ld1 > ld0, "lore raises ally damage vs that foe (%d → %d)" % [ld0, ld1])
+	print("[lobby enemy]")
+	check(not G.set_lobby_enemy("ymir") or G.kills_of("ymir") > 0, "undiscovered enemy can't be lobby")
+	G.record_kills(["ymir", "ymir"])
+	check(G.set_lobby_enemy("ymir", 0) and G.lobby_enemy() == "ymir", "discovered enemy set as lobby")
+	G.s["lobby_enemy_form"] = 3
+	check(G.lobby_enemy_form() == 0 or G.form_unlocked("ymir", 3), "locked form falls back to 0")
+	check(DB.enemy_lobby_line("ymir", false) != "", "rival lobby line")
+	G.set_lobby_enemy("")
+	check(G.lobby_enemy() == "", "back to hero secretary")
 	print("[dates]")
 	var dh: String = G.s["heroes"].keys()[0]
 	G.s["heroes"][dh]["bond"] = 5
@@ -933,7 +976,20 @@ func _run() -> void:
 	check(dl.size() == 9 and str(dl[2][0]) == "?", "date scene: 3 beats with choices")
 	var dres: Dictionary = G.finish_date(dh, "forest", 120)
 	check(dres["rank"][0] == "PERFECT DATE" and G.date_album().size() >= 1 and G.dates_left() == DB.DATE_PER_DAY - 1, "perfect date saves a photo")
-	check(G.finish_date(dh, "forest", 30)["rank"][0] == "NICE DATE", "low score = nice date")
+	check(bool(dres["first_perfect"]) and int(dres["reward"]["gems"]) == 60 + int(DB.DATE_FIRST_PERFECT["gems"]) and int(dres["reward"].get("gold", 0)) == int(DB.DATE_FIRST_PERFECT["gold"]), "first PERFECT at a spot pays the bonus")
+	var dres2: Dictionary = G.finish_date(dh, "forest", 30)
+	check(dres2["rank"][0] == "NICE DATE" and not bool(dres2["first_perfect"]) and not bool(dres2["new_best"]), "low score = nice date, no bonus")
+	check(G.date_best(dh, "forest") == 0 and G.date_count(dh) == 2 and G.date_perfects(dh) == 1 and G.date_best(dh, "pool") == -1, "date records keep the best rank")
+	G.s["dates"]["used"] = 0
+	check(not bool(G.finish_date(dh, "forest", 120)["first_perfect"]), "PERFECT bonus only once per spot")
+	G.s["dates"].erase("best")
+	check(G.date_best(dh, "forest") == 0 and G.date_count(dh) == G.date_album().filter(func(e): return e["hero"] == dh).size(), "records rebuilt from the album on old saves")
+	check(G.date_perfect_paid(dh, "forest") == false, "rebuilt save: bonus available again (old saves never had it)")
+	check(not G.title_unlocked("sweetheart"), "Sweetheart needs 3 PERFECT spots")
+	for dk in ["pool", "onsen"]:
+		G.s["dates"]["used"] = 0
+		G.finish_date(dh, dk, 120)
+	check(G.title_unlocked("sweetheart") and not G.title_unlocked("soulmate"), "Sweetheart title after 3 PERFECT spots")
 	check(DB.DATE_SPOTS.all(func(s2): return DB.BG.has(s2["key"])), "date spot maps exist")
 
 	print("[bestiary / arc 8]")
@@ -988,15 +1044,50 @@ func _run() -> void:
 	var auto_ok := 0
 	for hid0 in DB.hero_ids():
 		var arl: Dictionary = DB.live_rig(DB.art(hid0, 0))
-		if not arl.is_empty() and ResourceLoader.exists(str(arl["depth"])):
+		var hrig: Dictionary = DB.char_rig(DB.art(hid0, 0))
+		if (not arl.is_empty() and ResourceLoader.exists(str(arl["depth"]))) or (hrig.has("neck") and hrig.has("bones")):
 			auto_ok += 1
-	check(auto_ok == DB.hero_ids().size(), "every hero has 2.5D Live depth (%d/%d)" % [auto_ok, DB.hero_ids().size()])
+	check(auto_ok == DB.hero_ids().size(), "every hero has a live rig (pivot or depth) (%d/%d)" % [auto_ok, DB.hero_ids().size()])
+	check(DB.HERO_RIGS.size() == DB.hero_ids().size(), "every hero's base art has a pivot rig")
+	var eye_ok := 0
+	for rp in DB.HERO_RIGS.keys():
+		var ey: Array = DB.HERO_RIGS[rp].get("eyes", [])
+		if ey.size() == 2 and ((ey[0] as Array).size() == 6 or (ey[1] as Array).size() == 6):
+			eye_ok += 1
+	check(eye_ok >= 34, "hero rigs have measured eyes (%d)" % eye_ok)
+	# batch 131: every outfit / form (and lobby pose) has a pivot rig; alternate expressions reuse it
+	var forms_ok := 0
+	var forms_all := 0
+	var form_eyes := 0
+	for hid1 in DB.hero_ids():
+		var arts: Array = DB.art_list(hid1)
+		for ai in arts.size():
+			var tx: Texture2D = DB.tex(arts[ai])
+			if str(arts[ai]).ends_with("glytta_char_evo2.png") or str(arts[ai]).ends_with("glytta_char_evo2_a.png"):
+				continue   # keeps her hand-made 2.5D rig
+			forms_all += 1
+			var fr: Dictionary = DB.char_rig(tx)
+			if fr.get("head", null) is Vector3 and fr.get("neck", null) is Vector2:
+				forms_ok += 1
+				if not (fr.get("eyes", []) as Array).is_empty():
+					form_eyes += 1
+			for q in DB.alt_arts(hid1, ai):
+				var alr: Dictionary = DB.char_rig(DB.tex(str(q)))
+				if alr.is_empty() or (not DB.form_rigs().has(str(q)) and not (alr.get("eyes", []) as Array).is_empty()):
+					forms_ok -= 1
+	check(forms_ok == forms_all, "every hero outfit/form has a pivot rig, alt expressions reuse it without blink (%d/%d)" % [forms_ok, forms_all])
+	check(form_eyes >= 120, "outfits with measured eyes (%d)" % form_eyes)
+	var lb: Texture2D = DB.lobby_art("angela")
+	check(lb != null and not DB.char_rig(lb).is_empty() and DB.live_rig(lb).is_empty(), "lobby pose uses the pivot rig")
 	var en_ok := 0
 	for eid0 in DB.ENEMIES.keys():
 		var erl: Dictionary = DB.live_rig(DB.art(eid0, 0))
-		if not erl.is_empty() and ResourceLoader.exists(str(erl["depth"])):
+		var prig: Dictionary = DB.enemy_rig(DB.art(eid0, 0))
+		if (not erl.is_empty() and ResourceLoader.exists(str(erl["depth"]))) or (prig.has("neck") and prig.has("bones")):
 			en_ok += 1
-	check(en_ok == DB.ENEMIES.size(), "every enemy has 2.5D Live depth (%d/%d)" % [en_ok, DB.ENEMIES.size()])
+	check(en_ok == DB.ENEMIES.size(), "every enemy has a live rig (pivot or depth) (%d/%d)" % [en_ok, DB.ENEMIES.size()])
+	check(DB.ENEMY_RIGS.size() == DB.ENEMIES.size(), "every enemy's base art has a pivot rig")
+	check(DB.live_rig(DB.art("octra", 0)).is_empty() and not DB.live_rig(DB.art("octra", 1)).is_empty(), "pivot rig replaces depth tilt only on rigged art")
 	print("[gear sets]")
 	check(DB.GEAR_SETS.has(DB.gear_set({"uid": 7})), "old gear gets a fixed set")
 	var gsA: Array = []
@@ -1147,7 +1238,7 @@ func _run() -> void:
 	check(G.import_code(scode) == "" and G.gear_by_uid(int(legacy["uid"]))["subs"].size() == 3, "substats survive export/import")
 	G.s["gear"].clear()
 	var grig: Dictionary = DB.live_rig(DB.art("glytta", 3))
-	check(not grig.is_empty() and ResourceLoader.exists(str(grig["depth"])) and not grig.get("generic", false) and DB.live_rig(DB.art("glytta", 0)).get("generic", false), "Glytta evo2 keeps her hand-made rig; other skins auto")
+	check(not grig.is_empty() and ResourceLoader.exists(str(grig["depth"])) and not grig.get("generic", false) and not DB.char_rig(DB.art("glytta", 1)).is_empty() and not DB.char_rig(DB.art("glytta", 0)).is_empty(), "Glytta evo2 keeps her hand-made rig; other forms = pivot rigs")
 	check(DB.HEROES.size() == 37, "37 heroes (%d)" % DB.HEROES.size())
 	for ne in ["scomantis", "skelinch", "serpentia", "voodoo", "lizamorph"]:
 		check(DB.ENEMIES.has(ne) and DB.art(ne, 0) != null and DB.sprite(ne, 1) != null, "new enemy %s" % ne) if not (DB.ENEMIES.has(ne) and DB.art(ne, 0) != null) else null
