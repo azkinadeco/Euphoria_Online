@@ -462,7 +462,7 @@ static func corrupt(t: CanvasItem, variant: String = "") -> void:
 		# Frostbound (Arc 11): pale glacier-blue skin of ice with a white-blue rime halo
 		m.set_shader_parameter("hue_shift", 0.0)
 		m.set_shader_parameter("desat", 0.8)
-		m.set_shader_parameter("tone", Vector3(0.92, 1.12, 1.42))
+		m.set_shader_parameter("tone", Vector3(0.74, 1.08, 1.62))
 		m.set_shader_parameter("glow", Color("#bff0ff"))
 	elif variant == "hollow":
 		# Hollow (Arc 4): drained, icy-teal look with a cyan halo

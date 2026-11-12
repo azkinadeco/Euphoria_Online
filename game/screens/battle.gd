@@ -356,6 +356,8 @@ func _place_units() -> void:
 			_views[uid] = v
 			if u.get("elite", false) and u["side"] == 1:
 				UI.corrupt(v.sprite, str(u.get("variant", "")))
+				if str(u.get("variant", "")) == "frost":
+					v.sprite.modulate = Color(0.8, 0.95, 1.2)   # cold light instead of the warm boss tint, so the ice reads on pale outfits
 				var hollow: bool = str(u.get("variant", "")) in ["hollow", "frost"]
 				var el := UI.label(("FROSTBOUND" if str(u["variant"]) == "frost" else str(u["variant"]).to_upper()) if u.get("mirror", false) else ("ELITE" if not u["boss"] else "CORRUPTED"), 11, Color("#7ff6ff") if hollow else Color("#d48cff"), 4)
 				el.position = Vector2(0, v.size.y * 0.05)

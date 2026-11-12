@@ -1169,6 +1169,23 @@ Feedback: kedipan aneh di Fidelia, Angela, Tamo, Kali, Kara, Atalanta, Seraph, Z
 - **Balancing:** pool musuh ch42 dan ch44 dibuat tanpa Hairly/Svormentis ganda, dan multiplier bos Micca/Valeria diturunkan. Dengan tim uji standar Lv.100, win-rate bos: 85% / 60% / 65%, lalu final tetap berat (setara Arc 10).
 - **Perbaikan:** chapter 39–40 (Arc 10) sebelumnya masuk tab "ARC 9" dan berlabel "THE WILD HUNT". Sekarang ada tab ARC 10 dan ARC 11, dengan nama arc yang benar di peta dan Story Archive.
 
+## 2ep. Update batch 138 — Gelar & hadiah arc, link "After the Thaw", Frostbound di battle
+- **Gelar Commander baru** (`DB.TITLES` + `Game.title_unlocked`):
+  - Gatebreaker (Arc 8, 204 stage)
+  - Master of the Hunt (Arc 9, 228)
+  - Conductor of the Abyss (Arc 10, 240)
+  - Crownbreaker of Frostvale (Arc 11, 264)
+  - Sebelumnya gelar arc berhenti di Arc 7.
+- **Achievement baru:**
+  - Clear Arc 10: 10.000 Gems, 20 tiket, 1 Oath Ring.
+  - Clear Arc 11: 16.000 Gems, 30 tiket, 7 Celestial Gem.
+  - Recruit all 37 heroes: 5.000 Gems dan 1 Special Skin Ticket. Skin Ticket di Bag sekarang mencantumkan Achievements sebagai sumbernya.
+- **Story Link "After the Thaw"** (Valeria + Rubby + Aqua): ATK/HP/DEF +5%.
+- **Frostbound terbaca jelas:**
+  - Tone es diperkuat (`tone` 0.74/1.08/1.62).
+  - Di battle, bos Frostbound memakai modulate dingin (0.8, 0.95, 1.2), bukan tint hangat bos yang menetralkan biru pada outfit putih.
+  - `shot_runner` `matprobe` kini juga mencetak `tone`/`desat`.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).

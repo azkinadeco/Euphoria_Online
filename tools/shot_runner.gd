@@ -199,7 +199,7 @@ func _next() -> void:
 			stack.append_array(n.get_children())
 			if n is TextureRect and n.has_node("LiveRig") and n.texture:
 				var sm := n.material as ShaderMaterial
-				print("PROBE ", n.texture.resource_path.get_file(), " -> ", sm.shader.resource_path.get_file() if sm else "none", " corrupt=", sm.get_shader_parameter("corrupt_on") if sm and sm.shader.resource_path.ends_with("live25d.gdshader") else "-")
+				print("PROBE ", n.texture.resource_path.get_file(), " -> ", sm.shader.resource_path.get_file() if sm else "none", " corrupt=", sm.get_shader_parameter("corrupt_on") if sm and sm.shader.resource_path.ends_with("live25d.gdshader") else "-", " tone=", sm.get_shader_parameter("tone") if sm else "-", " desat=", sm.get_shader_parameter("desat") if sm else "-")
 	elif v.begins_with("tame:"):
 		var g := root.get_node("Game")
 		var tid := v.substr(5)
