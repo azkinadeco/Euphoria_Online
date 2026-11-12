@@ -1077,6 +1077,14 @@ func _run() -> void:
 					forms_ok -= 1
 	check(forms_ok == forms_all, "every hero outfit/form has a pivot rig, alt expressions reuse it without blink (%d/%d)" % [forms_ok, forms_all])
 	check(form_eyes >= 120, "outfits with measured eyes (%d)" % form_eyes)
+	var en_forms := 0
+	var en_all := 0
+	for eid1 in DB.ENEMIES.keys():
+		for ep in DB.art_list(eid1):
+			en_all += 1
+			if not DB.char_rig(DB.tex(ep)).is_empty():
+				en_forms += 1
+	check(en_all > 50 and en_forms == en_all, "every enemy form has a pivot rig (%d/%d)" % [en_forms, en_all])
 	var lb: Texture2D = DB.lobby_art("angela")
 	check(lb != null and not DB.char_rig(lb).is_empty() and DB.live_rig(lb).is_empty(), "lobby pose uses the pivot rig")
 	var en_ok := 0
@@ -1087,7 +1095,7 @@ func _run() -> void:
 			en_ok += 1
 	check(en_ok == DB.ENEMIES.size(), "every enemy has a live rig (pivot or depth) (%d/%d)" % [en_ok, DB.ENEMIES.size()])
 	check(DB.ENEMY_RIGS.size() == DB.ENEMIES.size(), "every enemy's base art has a pivot rig")
-	check(DB.live_rig(DB.art("octra", 0)).is_empty() and not DB.live_rig(DB.art("octra", 1)).is_empty(), "pivot rig replaces depth tilt only on rigged art")
+	check(DB.live_rig(DB.art("octra", 0)).is_empty() and DB.live_rig(DB.art("octra", 1)).is_empty() and not DB.live_rig(DB.tex("res://art/characters/heroes/glytta/char/glytta_char_evo2_a.png")).is_empty(), "pivot rig replaces depth tilt on rigged art; unrigged art keeps it")
 	print("[gear sets]")
 	check(DB.GEAR_SETS.has(DB.gear_set({"uid": 7})), "old gear gets a fixed set")
 	var gsA: Array = []

@@ -3150,12 +3150,13 @@ static func form_rigs() -> Dictionary:
 static func _inter_base() -> Dictionary:
 	if _inter_map.is_empty():
 		_inter_map["_loaded"] = ""
-		for e in (_db().get("heroes", {}) as Dictionary).values():
-			var states: Dictionary = (e as Dictionary).get("char_states", {})
-			for st in states.values():
-				var base := str((st as Dictionary).get("base", ""))
-				for q in (st as Dictionary).get("interactions", []):
-					_inter_map[str(q)] = base
+		for group in ["heroes", "enemies"]:
+			for e in (_db().get(group, {}) as Dictionary).values():
+				var states: Dictionary = (e as Dictionary).get("char_states", {})
+				for st in states.values():
+					var base := str((st as Dictionary).get("base", ""))
+					for q in (st as Dictionary).get("interactions", []):
+						_inter_map[str(q)] = base
 	return _inter_map
 
 static func enemy_rig(tex: Texture2D) -> Dictionary:

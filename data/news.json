@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-12h",
+  "date": "2026-11-12",
+  "tag": "UPDATE",
+  "title": "Living Enemy Forms + Art Cleanup",
+  "body": "Every enemy form and evolution in the Bestiary now moves Live2D-style too — 46 more arts breathe, sway and move their hair, tails, wings and tentacles, and 18 of them blink. Art fixes: a leftover checkerboard pattern was removed from Scylla's evo2 art, and leftover white background patches were cleaned from two of Zennyo's outfits."
+ },
+ {
   "id": "n2026-11-12g",
   "date": "2026-11-12",
   "tag": "UPDATE",

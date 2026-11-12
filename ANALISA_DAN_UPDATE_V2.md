@@ -1113,6 +1113,17 @@ Pemeriksaan tab Hero Detail (INFO, UPGRADE, GEAR, OUTFITS, BOND) dan Wardrobe, k
 - `tools/rig_face.gd` sekarang menerima indeks art (`-- out.png <id> <index>`).
 - Flow test: 192/192 outfit + ekspresi alternatif punya rig, ≥120 outfit bermata terukur, pose lobby memakai rig pivot.
 
+## 2ej. Update batch 132 — Rig pivot untuk semua form enemy + pembersihan art
+- **46 form enemy** (stage2+, evo, lobby Hairly/Ymir) masuk `data/char_rigs.json` (total 206 art). Enemy dengan mata terukur memakai pencocokan wajah + mata. Enemy tanpa kedip (Eroghost, Evy, Gumi, Ygg-Naar) dicocokkan lewat area kepala. 9 form berpose beda (Eroghost stage2/evo1/evo2, Gumi evo2–6, Hairly evo2) ditandai manual.
+- 18 form enemy berkedip. Mata spiral, kaget lebar, atau tidak akurat dibiarkan tanpa kedip.
+- `DB._inter_base` sekarang juga memetakan ekspresi alternatif milik enemy.
+- **Pembersihan art**:
+  - `scylla_char_evo2`: pola checker yang ikut tergambar di antara kaki dibuat transparan, termasuk sisa serpihannya di dekat tali sepatu.
+  - `zennyo_char_evo3/evo4`: gumpalan latar putih di antara lengan dan sayap dibuat transparan, dengan tepi di-unmix supaya tidak ada halo putih.
+  - Backup ada di scratchpad sesi (`bak132/`). Zennyo evo2 tidak diubah karena putihnya inti bola api.
+- Deteksi checker baru (dua tone abu/putih yang rata dan bersebelahan dengan area transparan) sudah dijalankan ke 324 art. Tidak ada checker lain yang ditemukan.
+- Flow test: semua form enemy punya rig pivot (60/60). Art tanpa rig (Glytta evo2_a) tetap memakai depth tilt.
+
 ## 3. Yang BELUM ada (butuh keputusan/aset tambahan)
 
 - **Online sungguhan** (akun, server, PvP real-time, guild, chat, anti-cheat): butuh backend (mis. Nakama, PlayFab, Firebase). Saat ini semua lokal (offline).
