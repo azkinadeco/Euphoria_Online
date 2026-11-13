@@ -15,12 +15,18 @@ var _mode := ""
 var _land := ""
 var _land_fx: SkillFX
 const SUPPORT := "@support"
+const Warmer = preload("res://game/ui/warmer.gd")
 
 func build() -> void:
 	_mode = str(params.get("mode", ""))
 	_enemies = Game.enemies_for(params)
 	_scout = Game.scout(_enemies)
 	set_bg(Game.battle_bg(params) if _mode != "" else "battle", 0.55)
+	if _mode != "":
+		# while the player arranges the team, quietly load the cut-in / ultimate art the battle will need
+		var w = Warmer.new()
+		w.source = _warm_jobs
+		add_child(w)
 	var bar := header("FORMATION" if _mode == "" else "BATTLE PREP", ["energy"] if _mode in ["story", "event", "hard"] else [])
 	_power = UI.label("", 18, Color("#ffb86b"), 4)
 	_power.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -821,6 +827,21 @@ func _pick_tactic() -> void:
 				_pick_tactic(), "", Vector2(130, 38))
 			ub.add_theme_font_size_override("font_size", 13)
 			bv.add_child(ub)
+
+func _warm_jobs() -> Array:
+	var jobs: Array = []
+	for e in Game.formation():
+		var hid := str(e[0])
+		if hid.begins_with("@"):
+			continue
+		jobs.append([hid, DB.warm_battle_art.bind(hid, true, false, int(Game.hero(hid).get("skin", 0)))])
+	if params.has("support"):
+		var sid := str(params["support"]["id"])
+		jobs.append([sid, DB.warm_battle_art.bind(sid, true, false, 0)])
+	for en in _enemies:
+		var eid := str(en["id"])
+		jobs.append(["e:" + eid, DB.warm_battle_art.bind(eid, false, bool(en.get("boss", false)), 0)])
+	return jobs
 
 func _start() -> void:
 	if Game.formation().is_empty():

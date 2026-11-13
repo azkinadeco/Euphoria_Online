@@ -3515,6 +3515,17 @@ static func cutin(id: String) -> Texture2D:
 	_tex_cache[key] = at
 	return at
 
+## Loads the illustrations a battle will show for this unit: the action-banner face, the cut-in crop
+## (boss / area skills) and the full art of an SSR ally's ultimate — same rule as battle.gd uses to trigger
+## them — so the fight never stalls on a full-size texture load. Already-loaded art costs nothing.
+static func warm_battle_art(id: String, ally: bool, boss: bool, skin: int = 0) -> void:
+	face(id)
+	var ult := ally and not boss and rarity_of(id) == "SSR"
+	if ult or boss or str(skill_of(id).get("shape", "single")) in ["all", "square", "x"]:
+		cutin(id)
+		if ult:
+			art(id, skin)
+
 ## Chibi battle sprite. Evolved sprite unlocks at 5★.
 static func sprite(id: String, star: int = 1, skin: int = -1) -> Texture2D:
 	if skin >= 0 and skin == special_index(id):

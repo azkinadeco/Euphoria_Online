@@ -88,6 +88,7 @@ func build() -> void:
 	sim.tactic = Game.equipped_tactic()
 	sim.companion = Game.companion_assist()
 	summary = sim.run()
+	_preload_art()
 
 	# top bar
 	var top := UI.hbox(10)
@@ -530,6 +531,7 @@ func _play() -> void:
 				_finish(e)
 		i += 1
 
+const UltBackdrop = preload("res://game/ui/ult_backdrop.gd")
 const MELEE_ROLES := ["WARRIOR", "ASSASSIN", "KNIGHT", "PALADIN", "TANK"]
 const ELEMENT_SFX := {"FIRE": "fire", "WATER": "water", "ICE": "ice", "WIND": "wind", "LIGHTNING": "thunder",
 	"EARTH": "earth", "LIGHT": "light", "DARK": "dark", "CHAOS": "dark"}
@@ -552,6 +554,20 @@ func _react_voice(g: Dictionary) -> void:
 	elif g.get("crit", false) or randf() < 0.25:
 		Game.voice(u["id"], "hurt")
 		_voice_cd = now + 1400
+
+## Every illustration the playback will show (action banner faces, cut-ins, ultimates) is loaded while the
+## screen opens, so a hero's first skill never stalls the fight on a full-size texture load mid-animation.
+func _preload_art() -> void:
+	var seen := {}
+	if bool(Game.s["settings"].get("skip_cutin", false)):
+		return
+	for e in sim.events:
+		if str(e["t"]) != "act" or seen.has(e["uid"]):
+			continue
+		seen[e["uid"]] = true
+		var u: Dictionary = sim.units[e["uid"]]
+		var hid: String = u["id"]
+		DB.warm_battle_art(hid, u["side"] == 0, bool(u["boss"]), int(Game.hero(hid).get("skin", 0)) if Game.owns(hid) else 0)
 
 func _bsfx(name: String) -> void:
 	if not _skip:
@@ -953,62 +969,18 @@ func _ultimate(u: Dictionary) -> float:
 			var c := ec.lightened(0.55)
 			c.a = 0.18 + 0.32 * sd.y / 1.6
 			lines.draw_line(Vector2(x, y), Vector2(x + ln, y - ln * 0.18), c, 2.0 + sd.y * 2.0))
-	# magic circle, halftone, light rays and a huge watermark of the skill name
-	var deco := Control.new()
+	# magic circle, halftone, light rays and a huge watermark of the skill name (batched: few draw calls)
+	var deco = UltBackdrop.new()
+	deco.ec = ec
+	deco.wm = str(u["skill"]["name"]).to_upper()
 	deco.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	deco.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(deco)
 	root.move_child(deco, lines.get_index())
-	var wm := str(u["skill"]["name"]).to_upper()
-	deco.draw.connect(func():
-		var s := deco.size
-		var t: float = phase[0] * 1.6
-		# radial glow behind the hero
-		var gc := Vector2(s.x * 0.26, s.y * 0.46)
-		for k in 10:
-			deco.draw_circle(gc, s.y * (0.75 - k * 0.06), Color(ec, 0.035))
-		# god rays
-		for k in 14:
-			var a := t * 0.25 + k * TAU / 14.0
-			var a2 := a + 0.07
-			var R := s.x
-			deco.draw_polygon(PackedVector2Array([gc, gc + Vector2(cos(a), sin(a)) * R, gc + Vector2(cos(a2), sin(a2)) * R]),
-				PackedColorArray([Color(ec.lightened(0.5), 0.16), Color(ec, 0.0), Color(ec, 0.0)]))
-		# magic circle: two rings, rotating ticks and an inscribed hexagram
-		var r1 := s.y * 0.42
-		var mc := Color(ec.lightened(0.45), 0.55)
-		deco.draw_arc(gc, r1, 0, TAU, 96, mc, 2.5, true)
-		deco.draw_arc(gc, r1 * 0.86, 0, TAU, 96, Color(mc, 0.35), 1.5, true)
-		deco.draw_arc(gc, r1 * 1.08, t * 0.8, t * 0.8 + PI * 1.3, 64, Color(mc, 0.5), 3.0, true)
-		for k in 36:
-			var a3 := -t * 0.6 + k * TAU / 36.0
-			var d := Vector2(cos(a3), sin(a3))
-			deco.draw_line(gc + d * r1 * 0.88, gc + d * r1 * (0.97 if k % 3 == 0 else 0.93), Color(mc, 0.6), 1.5, true)
-		for tri in 2:
-			var pts := PackedVector2Array()
-			for k in 4:
-				var a4 := t * 0.4 + tri * PI / 3.0 + k * TAU / 3.0 - PI / 2.0
-				pts.append(gc + Vector2(cos(a4), sin(a4)) * r1 * 0.84)
-			deco.draw_polyline(pts, Color(mc, 0.3), 1.5, true)
-		# halftone dots fading toward the right side
-		var step := 22.0
-		var y := s.y * 0.55
-		while y < s.y:
-			var x := s.x * 0.45
-			while x < s.x:
-				var f := clampf((y - s.y * 0.55) / (s.y * 0.45), 0.0, 1.0) * clampf((x - s.x * 0.45) / (s.x * 0.4), 0.0, 1.0)
-				if f > 0.05:
-					deco.draw_circle(Vector2(x + fmod(y, step * 2.0) * 0.5, y), 1.0 + 4.0 * f, Color(ec.lightened(0.3), 0.12))
-				x += step
-			y += step
-		# giant watermark, drifting left
-		var fnt := ThemeDB.fallback_font
-		deco.draw_string(fnt, Vector2(s.x * 0.15 - t * 80.0, s.y * 0.97), wm, HORIZONTAL_ALIGNMENT_LEFT, -1, 150, Color(ec.lightened(0.6), 0.07)))
 	var lt := lines.create_tween()
 	lt.tween_method(func(p: float):
 		phase[0] = p
 		lines.queue_redraw()
-		deco.queue_redraw(), 0.0, 1.0, 1.6)
+		deco.phase = p, 0.0, 1.0, 1.6)
 	# cinematic letterbox bars
 	for top in [true, false]:
 		var bar := ColorRect.new()

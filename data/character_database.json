@@ -1710,9 +1710,7 @@
      "interactions": []
     }
    },
-   "sprites": [
-    "res://art/characters/enemies/ex_nymph/sprite/ex_nymph_sprite_stage1.png"
-   ]
+   "sprites": []
   },
   "slime": {
    "id": "slime",

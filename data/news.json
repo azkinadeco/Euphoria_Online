@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-13h",
+  "date": "2026-11-13",
+  "tag": "UPDATE",
+  "title": "Smoother Ultimates & Ex-Nymph Fix",
+  "body": "SSR Ultimate cut-ins now play smoothly: the magic-circle backdrop looks exactly the same but is drawn far more efficiently. Heroes' skill illustrations are also loaded while you prepare your team, so the first skill of each hero no longer makes the battle stutter. The Ex-Nymph enemy uses her original artwork again in battle (the distorted battle sprite was removed)."
+ },
+ {
   "id": "n2026-11-13g",
   "date": "2026-11-13",
   "tag": "UPDATE",

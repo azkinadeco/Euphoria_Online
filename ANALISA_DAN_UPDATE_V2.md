@@ -1228,6 +1228,12 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ex. Update batch 146 — Ultimate & skill di battle tidak tersendat, sprite Ex-Nymph dikembalikan
+
+- **Ultimate backdrop di-batch**: `game/ui/ult_backdrop.gd` (baru) menggantikan closure `deco` di `battle.gd::_ultimate`. Bentuk & urutan gambar sama (AABatch), bagian diam (glow, 2 ring, halftone) dibangun sekali. Draw call 426 → 5; diff piksel maks 1/255 (~40 piksel).
+- **Art skill dimuat sebelum battle**: `DB.warm_battle_art(id, ally, boss, skin)` (face + cutin + art ultimate SSR, aturan sama dengan pemicu cut-in). `game/ui/warmer.gd` (baru) menjalankan 1 job/frame di layar Battle Prep (formation dengan mode) saat layar tidak disentuh. `battle.gd::_preload_art()` sebagai cadangan (hit cache bila sudah dipanaskan). Texture yang dimuat di tengah battle: 13+ → ~1; buka battle setelah prep ±34 ms.
+- **Ex-Nymph**: sprite chibify (batch 136) dihapus, `sprites: []` lagi di `character_database.json` → battle memakai art utama (permintaan user, wajah rusak).
+
 ## 2ew. Update batch 145 — Semua layar terbuka lebih cepat (gambar dimuat bertahap)
 
 Waktu `main.go()` kunjungan pertama (Mac Intel, semua fitur terbuka):
