@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-13e",
+  "date": "2026-11-13",
+  "tag": "UPDATE",
+  "title": "Even Smoother Formation, Battles & Story Map",
+  "body": "Second performance pass. The battle grid, unit base rings, story stage medallions and lobby particles are now sent to the graphics card in a handful of batches instead of hundreds of separate pieces each frame. Formation and battles run up to twice as smooth on older devices, and the lobby and story map hold a steady frame rate. Everything looks the same as before."
+ },
+ {
   "id": "n2026-11-13d",
   "date": "2026-11-13",
   "tag": "UPDATE",

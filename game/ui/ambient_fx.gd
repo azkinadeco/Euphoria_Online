@@ -39,8 +39,10 @@ class _Mote extends Node2D:
 	var d: Dictionary
 	func _draw() -> void:
 		var c := Color(fx.color.r, fx.color.g, fx.color.b, d["a"])
-		draw_circle(Vector2.ZERO, d["r"] * 2.6, Color(c.r, c.g, c.b, c.a * 0.18))
-		draw_circle(Vector2.ZERO, d["r"], c)
+		var b = load("res://game/ui/aa_batch.gd").new()   # both circles in one draw call
+		b.circle(Vector2.ZERO, d["r"] * 2.6, Color(c.r, c.g, c.b, c.a * 0.18))
+		b.circle(Vector2.ZERO, d["r"], c)
+		b.flush(self)
 
 var _nodes: Array = []
 

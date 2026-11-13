@@ -1,5 +1,6 @@
 class_name FestivalFX
 extends Control
+const AABatch = preload("res://game/ui/aa_batch.gd")
 ## Seasonal particle layer: lanterns, snow, petals, hearts, leaves, rain, fireflies.
 
 var kind := "lantern"
@@ -130,23 +131,26 @@ func _process(delta: float) -> void:
 func _draw_part(ci: CanvasItem, p: Dictionary) -> void:
 	var r: float = p["r"]
 	var c := Color(color.r, color.g, color.b, p["a"])
+	var b = AABatch.new()   # all shapes of one particle in one draw call (same geometry as draw_*)
 	match kind:
 		"lantern":
-			_lantern(ci, r * 1.15, c)
+			_lantern(b, r * 1.15, c)
 		"snow":
-			ci.draw_circle(Vector2.ZERO, r * 0.7, c)
-			ci.draw_circle(Vector2.ZERO, r * 1.5, Color(c.r, c.g, c.b, c.a * 0.15))
+			b.circle(Vector2.ZERO, r * 0.7, c)
+			b.circle(Vector2.ZERO, r * 1.5, Color(c.r, c.g, c.b, c.a * 0.15))
 		"petal", "leaf":
-			ci.draw_circle(Vector2.ZERO, r * (1.1 if kind == "petal" else 1.4), c)
+			b.circle(Vector2.ZERO, r * (1.1 if kind == "petal" else 1.4), c)
 		"heart":
-			ci.draw_circle(Vector2(-r * 0.5, 0), r * 0.6, c)
-			ci.draw_circle(Vector2(r * 0.5, 0), r * 0.6, c)
-			ci.draw_colored_polygon(PackedVector2Array([Vector2(-r * 1.08, r * 0.2), Vector2(r * 1.08, r * 0.2), Vector2(0, r * 1.4)]), c)
+			b.circle(Vector2(-r * 0.5, 0), r * 0.6, c)
+			b.circle(Vector2(r * 0.5, 0), r * 0.6, c)
+			b.polygon(PackedVector2Array([Vector2(-r * 1.08, r * 0.2), Vector2(r * 1.08, r * 0.2), Vector2(0, r * 1.4)]), PackedColorArray([c]))
 		"rain":
+			# plain lines already batch across particles natively; keep them out of the triangle batch
 			ci.draw_line(Vector2.ZERO, Vector2(-2, r), Color(c.r, c.g, c.b, c.a * 0.5), 1.5)
 		"firefly":
-			ci.draw_circle(Vector2.ZERO, r * 2.2, Color(c.r, c.g, c.b, 0.12))
-			ci.draw_circle(Vector2.ZERO, r * 0.5, c)
+			b.circle(Vector2.ZERO, r * 2.2, Color(c.r, c.g, c.b, 0.12))
+			b.circle(Vector2.ZERO, r * 0.5, c)
+	b.flush(ci)
 
 func _lantern_base(c: Color) -> Color:
 	return Color(1.0, 0.62, 0.3, c.a) if c.s < 0.15 else c
@@ -161,10 +165,10 @@ func _draw_tassel(ci: CanvasItem, p: Dictionary) -> void:
 ## Paper sky lantern: soft halo, barrel-shaped glowing body with ribs, bright flame core (tassel: _draw_tassel).
 ## Drawn additively, so shading comes from brightness (no dark fills). A plain white color gets a warm tint.
 ## Drawn upright at the origin; sway rotation and flame flicker come from the node's transform / modulate.
-func _lantern(ci: CanvasItem, r: float, c: Color) -> void:
+func _lantern(b: Object, r: float, c: Color) -> void:
 	var base := _lantern_base(c)
-	ci.draw_circle(Vector2.ZERO, r * 4.2, Color(base.r, base.g, base.b, 0.05))
-	ci.draw_circle(Vector2.ZERO, r * 2.4, Color(base.r, base.g, base.b, 0.09))
+	b.circle(Vector2.ZERO, r * 4.2, Color(base.r, base.g, base.b, 0.05))
+	b.circle(Vector2.ZERO, r * 2.4, Color(base.r, base.g, base.b, 0.09))
 	# barrel body: wider in the middle, flat top and bottom
 	var body := PackedVector2Array()
 	var w := r * 1.05
@@ -175,16 +179,16 @@ func _lantern(ci: CanvasItem, r: float, c: Color) -> void:
 	for k in 13:
 		var t := 1.0 - k / 12.0
 		body.append(Vector2(w * (0.72 + 0.28 * sin(t * PI)), lerpf(-h, h, t)))
-	ci.draw_colored_polygon(body, Color(base.r * 0.75, base.g * 0.55, base.b * 0.45, 0.55 * base.a))
+	b.polygon(body, PackedColorArray([Color(base.r * 0.75, base.g * 0.55, base.b * 0.45, 0.55 * base.a)]))
 	# ribs
 	for x in [-0.45, 0.0, 0.45]:
-		ci.draw_line(Vector2(w * x * 0.8, -h + 1), Vector2(w * x, h - 1), Color(base.r, base.g * 0.8, base.b * 0.6, 0.22), 1.0, true)
+		b.line(Vector2(w * x * 0.8, -h + 1), Vector2(w * x, h - 1), Color(base.r, base.g * 0.8, base.b * 0.6, 0.22), 1.0)
 	# glowing core: brighter towards the flame near the bottom
-	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 1.35))
-	ci.draw_circle(Vector2(0, h * 0.12), r * 0.75, Color(base.r, base.g, base.b, 0.45))
-	ci.draw_circle(Vector2(0, h * 0.2), r * 0.42, Color(1, 0.92, 0.65, 0.75))
-	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	ci.draw_circle(Vector2(0, h * 0.42), r * 0.22, Color(1, 1, 0.9, 0.9))
+	b.xf = Transform2D(0.0, Vector2(1.0, 1.35), 0.0, Vector2.ZERO)
+	b.circle(Vector2(0, h * 0.12), r * 0.75, Color(base.r, base.g, base.b, 0.45))
+	b.circle(Vector2(0, h * 0.2), r * 0.42, Color(1, 0.92, 0.65, 0.75))
+	b.xf = Transform2D.IDENTITY
+	b.circle(Vector2(0, h * 0.42), r * 0.22, Color(1, 1, 0.9, 0.9))
 	# rims
-	ci.draw_line(Vector2(-w * 0.72, -h), Vector2(w * 0.72, -h), Color(1, 0.8, 0.5, 0.5), 1.6, true)
-	ci.draw_line(Vector2(-w * 0.72, h), Vector2(w * 0.72, h), Color(1, 0.8, 0.5, 0.5), 1.6, true)
+	b.line(Vector2(-w * 0.72, -h), Vector2(w * 0.72, -h), Color(1, 0.8, 0.5, 0.5), 1.6)
+	b.line(Vector2(-w * 0.72, h), Vector2(w * 0.72, h), Color(1, 0.8, 0.5, 0.5), 1.6)

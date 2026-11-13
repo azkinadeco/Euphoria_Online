@@ -1,5 +1,6 @@
 class_name UnitView
 extends Control
+const AABatch = preload("res://game/ui/aa_batch.gd")
 ## Chibi unit standing on a grid tile: shadow, sprite, order badge, HP bar.
 
 var unit_id := ""
@@ -53,27 +54,27 @@ func _init(id: String = "", is_enemy: bool = false, tex: Texture2D = null, sz: V
 	if boss:
 		rcol = Color("#ffb347")
 	var rt0 := randf() * TAU
+	# Base ellipses never change: recorded once on the ring. The three turning arcs live on a child layer
+	# (drawn right after, as before) whose shape is cached per rotation step, so a redraw only re-submits
+	# cached arrays as one triangle array.
 	ring.draw.connect(func():
-		var c := ring.size * 0.5
-		var rx := ring.size.x * 0.5
-		var ry := ring.size.y * 0.5
+		var b = AABatch.new()
+		var e := _ellipse(ring.size, 1.0, 0.0, TAU)
+		b.polyline(e, Color(rcol, 0.22), 4.0)
+		b.polyline(e, Color(rcol, 0.55), 1.4)
+		b.flush(ring))
+	var arcs := Node2D.new()
+	ring.add_child(arcs)
+	var acol := Color(rcol.lightened(0.3), 0.6)
+	arcs.draw.connect(func():
 		var t := float(Time.get_ticks_msec()) / 1000.0
-		var ell := func(sc: float, a0: float, a1: float) -> PackedVector2Array:
-			var pts := PackedVector2Array()
-			for k in 25:
-				var a := lerpf(a0, a1, k / 24.0)
-				pts.append(c + Vector2(cos(a) * rx * sc, sin(a) * ry * sc))
-			return pts
-		ring.draw_polyline(ell.call(1.0, 0.0, TAU), Color(rcol, 0.22), 4.0, true)
-		ring.draw_polyline(ell.call(1.0, 0.0, TAU), Color(rcol, 0.55), 1.4, true)
 		var rot := rt0 + t * (0.8 if not is_enemy else -0.8)
-		for k in 3:
-			var a0 := rot + k * TAU / 3.0
-			ring.draw_polyline(ell.call(0.8, a0, a0 + 0.9), Color(rcol.lightened(0.3), 0.6), 1.6, true))
+		var geo: Array = _arc_geo(ring.size, rot, acol)
+		RenderingServer.canvas_item_add_triangle_array(arcs.get_canvas_item(), geo[1], geo[0], geo[2]))
 	var rtk := Timer.new()
 	rtk.wait_time = 1.0 / 20.0
 	rtk.autostart = true
-	rtk.timeout.connect(ring.queue_redraw)
+	rtk.timeout.connect(arcs.queue_redraw)
 	ring.add_child(rtk)
 	add_child(ring)
 
@@ -275,3 +276,34 @@ func wind_up(dur: float = 0.12) -> void:
 	var tw := sprite.create_tween()
 	tw.tween_property(sprite, "scale", Vector2(1.08, 0.88), dur).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tw.tween_property(sprite, "scale", Vector2(0.95, 1.07), dur * 0.7).set_trans(Tween.TRANS_BACK)
+
+static func _ellipse(rs: Vector2, sc: float, a0: float, a1: float) -> PackedVector2Array:
+	var c := rs * 0.5
+	var rx := rs.x * 0.5
+	var ry := rs.y * 0.5
+	var pts := PackedVector2Array()
+	for k in 25:
+		var a := lerpf(a0, a1, k / 24.0)
+		pts.append(c + Vector2(cos(a) * rx * sc, sin(a) * ry * sc))
+	return pts
+
+const ARC_STEPS := 720
+static var _arc_cache := {}   # "w:h:step" -> PackedVector2Array ; "idx" -> PackedInt32Array ; Color -> colours
+
+## The 3 arcs repeat every TAU/3, so ARC_STEPS shapes per ring size cover the whole turn.
+static func _arc_geo(rs: Vector2, rot: float, col: Color) -> Array:
+	var per := TAU / 3.0
+	var step := int(round(fposmod(rot, per) / per * ARC_STEPS)) % ARC_STEPS
+	var key := "%.2f:%.2f:%d" % [rs.x, rs.y, step]
+	if not _arc_cache.has(key) or not _arc_cache.has(col):
+		var b = AABatch.new()
+		var ang := per * step / ARC_STEPS
+		for k in 3:
+			var a0 := ang + k * TAU / 3.0
+			b.polyline(_ellipse(rs, 0.8, a0, a0 + 0.9), col, 1.6)
+		if _arc_cache.size() > 4000:
+			_arc_cache.clear()
+		_arc_cache[key] = b.pts
+		_arc_cache["idx"] = b.idx
+		_arc_cache[col] = b.cols
+	return [_arc_cache[key], _arc_cache["idx"], _arc_cache[col]]

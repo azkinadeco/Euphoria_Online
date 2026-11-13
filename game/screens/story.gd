@@ -737,37 +737,98 @@ func _battle() -> void:
 
 
 ## Stage medallion: soft glow, layered metal rim, rotating ring on the stage to play next.
+## Drawn as one triangle batch (was ~10 draw calls, ~40 on the current stage). The animated stage splits
+## into layers in the original paint order: shadow (self) → pulsing halo → static rim → turning arcs
+## (cached per rotation step), so only the halo and arcs are re-submitted each frame.
 class StageNode extends Control:
+	const AABatch = preload("res://game/ui/aa_batch.gd")
+	const SPIN_STEPS := 720
+	static var _spin_cache := {}
 	var d := 74.0
 	var col := Color.WHITE
 	var state := "open"
 	var selected := false
 	var _t := 0.0
+	var _pulse_l: Node2D
+	var _spin_l: Node2D
+
+	func _animated() -> bool:
+		return state == "current" or selected
+
+	func _ready() -> void:
+		if not _animated():
+			return
+		_pulse_l = Node2D.new()
+		_pulse_l.draw.connect(_draw_pulse)
+		var body := Node2D.new()
+		body.draw.connect(_draw_body.bind(body))
+		_spin_l = Node2D.new()
+		_spin_l.draw.connect(_draw_spin)
+		var k := 0
+		for n in [_pulse_l, body, _spin_l]:
+			add_child(n)
+			move_child(n, k)
+			k += 1
 
 	func _process(delta: float) -> void:
-		if state == "current" or selected:
+		if _animated():
 			_t += delta
-			queue_redraw()
+			if _pulse_l:
+				_pulse_l.queue_redraw()
+				_spin_l.queue_redraw()
 
 	func _draw() -> void:
 		var c := Vector2(d, d) * 0.5
 		var r := d * 0.5
-		draw_circle(c + Vector2(0, 6), r, Color(0, 0, 0, 0.45))
+		if _animated():
+			draw_circle(c + Vector2(0, 6), r, Color(0, 0, 0, 0.45))
+			return
+		var b = AABatch.new()
+		b.circle(c + Vector2(0, 6), r, Color(0, 0, 0, 0.45))
 		if state != "locked":
-			var pulse := 0.5 + 0.5 * sin(_t * 3.0)
-			draw_circle(c, r + 9 + pulse * 3.0, Color(col, 0.10 + 0.08 * pulse))
-			draw_circle(c, r + 4, Color(col, 0.22))
-		draw_circle(c, r, col.darkened(0.55))
-		draw_circle(c, r - 2, col)
-		draw_circle(c, r - 4.5, col.darkened(0.35))
-		draw_circle(c, r - 6.5, Color(0.05, 0.03, 0.1))
-		draw_arc(c, r - 1.2, PI * 1.1, PI * 1.9, 24, Color(1, 1, 1, 0.55), 1.5, true)
-		if state == "current" or selected:
-			var a0 := _t * 1.4
-			var rc := r + 8.0
+			b.circle(c, r + 9 + 0.5 * 3.0, Color(col, 0.10 + 0.08 * 0.5))
+		_rim(b)
+		b.flush(self)
+
+	func _draw_pulse() -> void:
+		if state == "locked":
+			return
+		var pulse := 0.5 + 0.5 * sin(_t * 3.0)
+		_pulse_l.draw_circle(Vector2(d, d) * 0.5, d * 0.5 + 9 + pulse * 3.0, Color(col, 0.10 + 0.08 * pulse))
+
+	func _draw_body(n: Node2D) -> void:
+		var b = AABatch.new()
+		_rim(b)
+		b.flush(n)
+
+	func _rim(b: Object) -> void:
+		var c := Vector2(d, d) * 0.5
+		var r := d * 0.5
+		if state != "locked":
+			b.circle(c, r + 4, Color(col, 0.22))
+		b.circle(c, r, col.darkened(0.55))
+		b.circle(c, r - 2, col)
+		b.circle(c, r - 4.5, col.darkened(0.35))
+		b.circle(c, r - 6.5, Color(0.05, 0.03, 0.1))
+		b.arc(c, r - 1.2, PI * 1.1, PI * 1.9, 24, Color(1, 1, 1, 0.55), 1.5)
+
+	func _draw_spin() -> void:
+		var per := TAU / 10.0
+		var step := int(round(fposmod(_t * 1.4, per) / per * SPIN_STEPS)) % SPIN_STEPS
+		var ac := Color(col.lightened(0.3), 0.95)
+		var key := "%.2f:%d:%s" % [d, step, ac]
+		if not _spin_cache.has(key):
+			var b = AABatch.new()
+			var c := Vector2(d, d) * 0.5
+			var a0 := per * step / SPIN_STEPS
 			for k in 10:
 				var s0 := a0 + k * TAU / 10.0
-				draw_arc(c, rc, s0, s0 + 0.32, 6, Color(col.lightened(0.3), 0.95), 3.0, true)
+				b.arc(c, d * 0.5 + 8.0, s0, s0 + 0.32, 6, ac, 3.0)
+			if _spin_cache.size() > 3000:
+				_spin_cache.clear()
+			_spin_cache[key] = [b.idx, b.pts, b.cols]
+		var g: Array = _spin_cache[key]
+		RenderingServer.canvas_item_add_triangle_array(_spin_l.get_canvas_item(), g[0], g[1], g[2])
 
 ## Texture drawn inside a circle (the enemy portrait).
 class CircleTex extends Control:
@@ -794,14 +855,16 @@ class StageShade extends Control:
 	var locked := false
 
 	func _draw() -> void:
+		var b = load("res://game/ui/aa_batch.gd").new()   # one draw call (was ~20)
 		var c := Vector2(d, d) * 0.5
 		var r := d * 0.5 - 7.0
 		for k in 6:
-			draw_arc(c, r - 2 - k * 2.0, PI * 0.15, PI * 0.85, 20, Color(0, 0, 0, 0.16), 4.0, true)
-		draw_circle(c, r, Color(0, 0, 0, 0.18))
+			b.arc(c, r - 2 - k * 2.0, PI * 0.15, PI * 0.85, 20, Color(0, 0, 0, 0.16), 4.0)
+		b.circle(c, r, Color(0, 0, 0, 0.18))
 		if locked:
 			var lc := Color(0.82, 0.82, 0.88, 0.9)
 			var o := c + Vector2(0, -6)
-			draw_arc(o + Vector2(0, -6), 7.0, PI, TAU, 16, lc, 3.0, true)
-			draw_rect(Rect2(o + Vector2(-10, -6), Vector2(20, 15)), lc)
-			draw_circle(o + Vector2(0, 1), 2.5, Color(0.1, 0.08, 0.14))
+			b.arc(o + Vector2(0, -6), 7.0, PI, TAU, 16, lc, 3.0)
+			b.rect(Rect2(o + Vector2(-10, -6), Vector2(20, 15)), lc)
+			b.circle(o + Vector2(0, 1), 2.5, Color(0.1, 0.08, 0.14))
+		b.flush(self)

@@ -1228,6 +1228,24 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2eu. Update batch 143 — Draw call dipangkas (grafis tetap sama)
+
+| Bagian | Sebelum | Sesudah |
+|---|---|---|
+| Formation (frame) | 28–47 ms, ~857 draw call | 16,7 ms (60 fps, batas vsync), ~200 draw call |
+| Battle (frame) | 31–56 ms, ~800 draw call | 17–23 ms, ~200 draw call |
+| Lobby | 476 draw call | 274 draw call, 60 fps |
+| Story map | 544 draw call | 309 draw call, 60 fps |
+
+- Temuan: setelah batch 142, sisa lag ada di sisi render. Tiap `draw_polyline(..., true)` = 3 draw call, tiap lingkaran/poligon = 1 draw call. Papan grid saja ±270 draw call per papan (Intel/WebGL: ~25 µs per draw call).
+- `game/ui/aa_batch.gd` (baru): port baris-per-baris dari Godot 4.7.2 `canvas_item_add_polyline` / `add_line` / `add_ellipse` / `add_polygon` / `draw_arc` / `draw_rect`, dikumpulkan jadi SATU `canvas_item_add_triangle_array`. Urutan segitiga sama → blending sama. Warna garis dibulatkan ke half-float seperti renderer GL. Tes: 0 piksel beda (811 → 2 draw call).
+- `grid_board.gd`: sel diam di-cache per sel (geometri tetap); sel highlight/terpilih di layer `_live` (sel berjarak 8 px, outline < 4 px → tidak ada tumpang tindih, piksel sama). Rune: geometri di-cache per langkah putaran (240 langkah per TAU/6), digeser dengan `Transform2D * PackedVector2Array` (C++), 1 draw call untuk 9 sel.
+- `unit_view.gd`: elips dasar direkam sekali; 3 busur berputar di child `arcs`, di-cache per langkah (720 per TAU/3).
+- `story.gd` StageNode/StageShade: satu batch; stage aktif dipecah layer (bayangan → halo denyut → rim statis → busur berputar ter-cache) sesuai urutan asli.
+- `festival_fx.gd` / `ambient_fx.gd`: semua bentuk satu partikel = 1 draw call (garis hujan tetap native karena sudah di-batch Godot lintas node).
+- Verifikasi piksel (lama vs baru, state sama): papan/partikel/medali statis 0 beda; lentera maks 1/255; bagian berputar maks 3–7/255 di tepi (pembulatan langkah putaran, ≈0,05–0,1 px).
+- Catatan: menghitung geometri di GDScript itu mahal (~0,1 ms per polyline), jadi semua yang beranimasi WAJIB di-cache, jangan dibangun ulang tiap frame.
+
 ## 2et. Update batch 142 — Performa lebih lancar (grafis identik)
 - **Masalah:** di build web/iPhone lobby terasa lag. Penyebab utamanya, efek partikel menggambar ulang semua bentuknya dari nol setiap frame (ribuan lingkaran/polygon per frame). Di Mac uji, lobby hanya ~13 fps.
 - **`FestivalFX` & `AmbientFX`** (lentera, kunang-kunang, salju, kelopak, daun, hati, hujan, butiran cahaya):
