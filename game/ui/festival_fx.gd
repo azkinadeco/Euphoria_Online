@@ -21,6 +21,10 @@ func _ready() -> void:
 		material = m
 	for i in count:
 		_p.append(_spawn(true))
+	_is_fall = _falls()
+	_spin = 2.0 if kind in ["petal", "leaf"] else 0.0
+	for i in _p.size():
+		_make_part(i)
 
 func _falls() -> bool:
 	return kind in ["snow", "petal", "leaf", "rain"]
@@ -40,60 +44,127 @@ func _spawn(anywhere: bool) -> Dictionary:
 	return {"pos": Vector2(randf() * s.x, y), "v": v, "r": randf_range(3.0, 7.0) if kind != "rain" else randf_range(10, 22),
 		"ph": randf() * TAU, "rot": randf() * TAU, "a": randf_range(0.45, 0.95)}
 
+## Each particle is its own retained Node2D: its shape is recorded once (and again only when it respawns),
+## and every frame only its transform / alpha changes. Pixel-identical to redrawing everything each frame,
+## but far cheaper (the old per-frame _draw rebuilt thousands of polygons, which tanked the web build).
+class _Part extends Node2D:
+	var fx
+	var d: Dictionary
+	func _draw() -> void:
+		fx._draw_part(self, d)
+
+## Lantern tassel: its tip sways on its own, so this single line is the only part redrawn every frame.
+class _Tassel extends Node2D:
+	var fx
+	var d: Dictionary
+	func _draw() -> void:
+		fx._draw_tassel(self, d)
+
+var _nodes: Array = []
+var _tassels: Array = []
+var _is_fall := false
+var _spin := 0.0
+
+func _make_part(i: int) -> void:
+	var n := _Part.new()
+	n.fx = self
+	n.d = _p[i]
+	n.use_parent_material = true
+	if kind in ["petal", "leaf"]:
+		n.scale = Vector2(1.0, 0.55)
+	add_child(n)
+	_nodes.append(n)
+	if kind == "lantern":
+		var t := _Tassel.new()
+		t.fx = self
+		t.d = _p[i]
+		t.use_parent_material = true
+		n.add_child(t)
+		_tassels.append(t)
+	_sync(i)
+
+func _respawn(i: int, anywhere: bool) -> void:
+	_p[i] = _spawn(anywhere)
+	_nodes[i].d = _p[i]
+	_nodes[i].queue_redraw()
+	if kind == "lantern":
+		_tassels[i].d = _p[i]
+		_tassels[i].queue_redraw()
+
+## Per-frame state -> node transform / alpha.
+func _sync(i: int) -> void:
+	var p: Dictionary = _p[i]
+	var n: Node2D = _nodes[i]
+	n.position = p["pos"]
+	match kind:
+		"lantern":
+			var ph: float = p["ph"]
+			n.rotation = sin(ph * 0.8) * 0.12
+			n.modulate.a = 0.82 + 0.18 * sin(ph * 3.0) * sin(ph * 1.3 + 1.0)
+			_tassels[i].queue_redraw()
+		"petal", "leaf":
+			n.rotation = p["rot"]
+		"firefly":
+			n.modulate.a = 0.5 + 0.5 * sin(p["ph"] * 2.3)
+
 func _process(delta: float) -> void:
 	var s := size
+	var firefly := kind == "firefly"
+	var wob_x := 18.0 if kind != "rain" else 0.0
 	for i in _p.size():
 		var p: Dictionary = _p[i]
 		p["ph"] += delta * 1.6
-		p["rot"] += delta * (2.0 if kind in ["petal", "leaf"] else 0.0)
-		var wob := Vector2(sin(p["ph"]) * (18.0 if kind != "rain" else 0.0), 0)
-		if kind == "firefly":
+		p["rot"] += delta * _spin
+		var wob := Vector2(sin(p["ph"]) * wob_x, 0)
+		if firefly:
 			wob = Vector2(sin(p["ph"] * 0.7) * 20.0, cos(p["ph"]) * 14.0)
 		p["pos"] += (p["v"] + wob) * delta
-		var out: bool = p["pos"].y > s.y + 20 if _falls() else p["pos"].y < -30
-		if kind == "firefly":
+		var out: bool = p["pos"].y > s.y + 20 if _is_fall else p["pos"].y < -30
+		if firefly:
 			out = p["pos"].x < -20 or p["pos"].x > s.x + 20 or p["pos"].y < -20 or p["pos"].y > s.y + 20
 		if out:
-			_p[i] = _spawn(kind == "firefly")
-	queue_redraw()
+			_respawn(i, firefly)
+		_sync(i)
 
-func _draw() -> void:
-	for p in _p:
-		var pos: Vector2 = p["pos"]
-		var r: float = p["r"]
-		var c := Color(color.r, color.g, color.b, p["a"])
-		match kind:
-			"lantern":
-				_lantern(pos, r * 1.15, c, p["ph"])
-			"snow":
-				draw_circle(pos, r * 0.7, c)
-				draw_circle(pos, r * 1.5, Color(c.r, c.g, c.b, c.a * 0.15))
-			"petal", "leaf":
-				draw_set_transform(pos, p["rot"], Vector2(1.0, 0.55))
-				draw_circle(Vector2.ZERO, r * (1.1 if kind == "petal" else 1.4), c)
-				draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-			"heart":
-				draw_circle(pos + Vector2(-r * 0.5, 0), r * 0.6, c)
-				draw_circle(pos + Vector2(r * 0.5, 0), r * 0.6, c)
-				draw_colored_polygon(PackedVector2Array([pos + Vector2(-r * 1.08, r * 0.2), pos + Vector2(r * 1.08, r * 0.2), pos + Vector2(0, r * 1.4)]), c)
-			"rain":
-				draw_line(pos, pos + Vector2(-2, r), Color(c.r, c.g, c.b, c.a * 0.5), 1.5)
-			"firefly":
-				var tw := 0.5 + 0.5 * sin(p["ph"] * 2.3)
-				draw_circle(pos, r * 2.2, Color(c.r, c.g, c.b, 0.12 * tw))
-				draw_circle(pos, r * 0.5, Color(c.r, c.g, c.b, c.a * tw))
+## One particle at its local origin. Time-varying alpha (flicker / twinkle) comes from the node's modulate.
+func _draw_part(ci: CanvasItem, p: Dictionary) -> void:
+	var r: float = p["r"]
+	var c := Color(color.r, color.g, color.b, p["a"])
+	match kind:
+		"lantern":
+			_lantern(ci, r * 1.15, c)
+		"snow":
+			ci.draw_circle(Vector2.ZERO, r * 0.7, c)
+			ci.draw_circle(Vector2.ZERO, r * 1.5, Color(c.r, c.g, c.b, c.a * 0.15))
+		"petal", "leaf":
+			ci.draw_circle(Vector2.ZERO, r * (1.1 if kind == "petal" else 1.4), c)
+		"heart":
+			ci.draw_circle(Vector2(-r * 0.5, 0), r * 0.6, c)
+			ci.draw_circle(Vector2(r * 0.5, 0), r * 0.6, c)
+			ci.draw_colored_polygon(PackedVector2Array([Vector2(-r * 1.08, r * 0.2), Vector2(r * 1.08, r * 0.2), Vector2(0, r * 1.4)]), c)
+		"rain":
+			ci.draw_line(Vector2.ZERO, Vector2(-2, r), Color(c.r, c.g, c.b, c.a * 0.5), 1.5)
+		"firefly":
+			ci.draw_circle(Vector2.ZERO, r * 2.2, Color(c.r, c.g, c.b, 0.12))
+			ci.draw_circle(Vector2.ZERO, r * 0.5, c)
+
+func _lantern_base(c: Color) -> Color:
+	return Color(1.0, 0.62, 0.3, c.a) if c.s < 0.15 else c
+
+func _draw_tassel(ci: CanvasItem, p: Dictionary) -> void:
+	var r: float = p["r"] * 1.15
+	var base := _lantern_base(Color(color.r, color.g, color.b, p["a"]))
+	var h := r * 1.45
+	ci.draw_line(Vector2(0, h), Vector2(sin(float(p["ph"]) * 2.0) * 1.5, h + r * 0.9), Color(base.r, base.g, base.b, 0.35), 1.0, true)
 
 
-## Paper sky lantern: soft halo, barrel-shaped glowing body with ribs, bright flame core and a tassel.
+## Paper sky lantern: soft halo, barrel-shaped glowing body with ribs, bright flame core (tassel: _draw_tassel).
 ## Drawn additively, so shading comes from brightness (no dark fills). A plain white color gets a warm tint.
-func _lantern(pos: Vector2, r: float, c: Color, ph: float) -> void:
-	var base := c
-	if c.s < 0.15:
-		base = Color(1.0, 0.62, 0.3, c.a)
-	var fl := 0.82 + 0.18 * sin(ph * 3.0) * sin(ph * 1.3 + 1.0)
-	draw_set_transform(pos, sin(ph * 0.8) * 0.12, Vector2.ONE)
-	draw_circle(Vector2.ZERO, r * 4.2, Color(base.r, base.g, base.b, 0.05 * fl))
-	draw_circle(Vector2.ZERO, r * 2.4, Color(base.r, base.g, base.b, 0.09 * fl))
+## Drawn upright at the origin; sway rotation and flame flicker come from the node's transform / modulate.
+func _lantern(ci: CanvasItem, r: float, c: Color) -> void:
+	var base := _lantern_base(c)
+	ci.draw_circle(Vector2.ZERO, r * 4.2, Color(base.r, base.g, base.b, 0.05))
+	ci.draw_circle(Vector2.ZERO, r * 2.4, Color(base.r, base.g, base.b, 0.09))
 	# barrel body: wider in the middle, flat top and bottom
 	var body := PackedVector2Array()
 	var w := r * 1.05
@@ -104,18 +175,16 @@ func _lantern(pos: Vector2, r: float, c: Color, ph: float) -> void:
 	for k in 13:
 		var t := 1.0 - k / 12.0
 		body.append(Vector2(w * (0.72 + 0.28 * sin(t * PI)), lerpf(-h, h, t)))
-	draw_colored_polygon(body, Color(base.r * 0.75, base.g * 0.55, base.b * 0.45, 0.55 * base.a * fl))
+	ci.draw_colored_polygon(body, Color(base.r * 0.75, base.g * 0.55, base.b * 0.45, 0.55 * base.a))
 	# ribs
 	for x in [-0.45, 0.0, 0.45]:
-		draw_line(Vector2(w * x * 0.8, -h + 1), Vector2(w * x, h - 1), Color(base.r, base.g * 0.8, base.b * 0.6, 0.22 * fl), 1.0, true)
+		ci.draw_line(Vector2(w * x * 0.8, -h + 1), Vector2(w * x, h - 1), Color(base.r, base.g * 0.8, base.b * 0.6, 0.22), 1.0, true)
 	# glowing core: brighter towards the flame near the bottom
-	draw_set_transform(pos, sin(ph * 0.8) * 0.12, Vector2(1.0, 1.35))
-	draw_circle(Vector2(0, h * 0.12), r * 0.75, Color(base.r, base.g, base.b, 0.45 * fl))
-	draw_circle(Vector2(0, h * 0.2), r * 0.42, Color(1, 0.92, 0.65, 0.75 * fl))
-	draw_set_transform(pos, sin(ph * 0.8) * 0.12, Vector2.ONE)
-	draw_circle(Vector2(0, h * 0.42), r * 0.22, Color(1, 1, 0.9, 0.9 * fl))
-	# rims + tassel
-	draw_line(Vector2(-w * 0.72, -h), Vector2(w * 0.72, -h), Color(1, 0.8, 0.5, 0.5 * fl), 1.6, true)
-	draw_line(Vector2(-w * 0.72, h), Vector2(w * 0.72, h), Color(1, 0.8, 0.5, 0.5 * fl), 1.6, true)
-	draw_line(Vector2(0, h), Vector2(sin(ph * 2.0) * 1.5, h + r * 0.9), Color(base.r, base.g, base.b, 0.35 * fl), 1.0, true)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 1.35))
+	ci.draw_circle(Vector2(0, h * 0.12), r * 0.75, Color(base.r, base.g, base.b, 0.45))
+	ci.draw_circle(Vector2(0, h * 0.2), r * 0.42, Color(1, 0.92, 0.65, 0.75))
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	ci.draw_circle(Vector2(0, h * 0.42), r * 0.22, Color(1, 1, 0.9, 0.9))
+	# rims
+	ci.draw_line(Vector2(-w * 0.72, -h), Vector2(w * 0.72, -h), Color(1, 0.8, 0.5, 0.5), 1.6, true)
+	ci.draw_line(Vector2(-w * 0.72, h), Vector2(w * 0.72, h), Color(1, 0.8, 0.5, 0.5), 1.6, true)

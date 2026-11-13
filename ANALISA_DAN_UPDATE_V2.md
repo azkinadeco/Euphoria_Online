@@ -1228,6 +1228,26 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2et. Update batch 142 — Performa lebih lancar (grafis identik)
+- **Masalah:** di build web/iPhone lobby terasa lag. Penyebab utamanya, efek partikel menggambar ulang semua bentuknya dari nol setiap frame (ribuan lingkaran/polygon per frame). Di Mac uji, lobby hanya ~13 fps.
+- **`FestivalFX` & `AmbientFX`** (lentera, kunang-kunang, salju, kelopak, daun, hati, hujan, butiran cahaya):
+  - Setiap partikel kini jadi `Node2D` sendiri (`_Part` / `_Mote`) yang bentuknya direkam sekali dan direkam ulang hanya saat respawn.
+  - Tiap frame cukup `position`, `rotation` dan `modulate.a` (kedip/flicker) yang berubah.
+  - Tali lentera tetap digambar ulang tiap frame (satu garis), supaya goyangannya persis sama.
+- **Peta Story:** jalur (polyline anti-alias tebal) kini digambar sekali. Hanya titik cahaya yang mengalir di jalur yang sudah clear yang digambar ulang tiap frame, di lapisan `_flow_layer` (anak pertama `_map_layer`, tetap di bawah medali stage).
+- **`GridBoard` (papan battle/formation):** rune yang berputar dipindah ke lapisan anak `_runes` (redraw tiap 3 frame seperti sebelumnya). Petak, bingkai dan bracket tidak digambar ulang lagi saat diam. Highlight dan sel terpilih tetap redraw tiap frame.
+- **Verifikasi grafis:** render deterministik (seed dan langkah tetap) lama vs baru dibandingkan per piksel.
+  - Semua jenis partikel dan papan (diam, terpilih, highlight) beda 0 piksel.
+  - Kunang-kunang beda 1/255 di 12 piksel (pembulatan), tidak terlihat mata.
+- **Hasil di Mac uji (Intel Iris 6100):**
+
+  | Layar | Sebelum | Sesudah |
+  |---|---|---|
+  | Lobby | ~13 fps | ~37–40 fps |
+  | Story | ~12–18 fps | ~39 fps |
+
+  Battle juga lebih ringan karena atmosfer partikel dan papannya ikut dioptimasi.
+
 ## 2es. Update batch 141 — Progress bar mengilap & tab aktif bercahaya
 - **Progress bar** (`UI.bar` → `UI._bar_gloss`, hanya varian default/`GoldBar` dengan tinggi ≥ 8px; `HpBar` di battle tidak disentuh):
   - Kilap putih tipis di sepertiga atas bagian yang terisi, plus sapuan cahaya pelan. Keduanya terpotong mengikuti panjang isi bar dan mengikuti `value_changed`.

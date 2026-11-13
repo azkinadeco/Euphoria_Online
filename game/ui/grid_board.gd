@@ -19,6 +19,8 @@ var selected := Vector2i(-1, -1):
 	set(v):
 		selected = v
 		queue_redraw()
+		if _runes:
+			_runes.queue_redraw()
 var hover := Vector2i(-1, -1)
 var interactive := false:
 	set(v):
@@ -26,17 +28,28 @@ var interactive := false:
 		mouse_filter = Control.MOUSE_FILTER_STOP if v else Control.MOUSE_FILTER_IGNORE
 var _t := 0.0
 
+## The turning runes sit on their own child layer (always drawn last in each cell, and cells never overlap),
+## so the idle board only redraws the runes; the tiles / frames / brackets stay recorded.
+var _runes: Node2D
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE
+	_runes = Node2D.new()
+	add_child(_runes)
+	_runes.draw.connect(_draw_runes)
 	resized.connect(queue_redraw)
+	resized.connect(_runes.queue_redraw)
 
 var _frame := 0
 func _process(delta: float) -> void:
 	_t += delta
 	_frame += 1
 	# highlights animate every frame; the idle rune rotation only needs ~20 fps
-	if not highlights.is_empty() or selected.x >= 0 or _frame % 3 == 0:
+	if not highlights.is_empty() or selected.x >= 0:
 		queue_redraw()
+		_runes.queue_redraw()
+	elif _frame % 3 == 0:
+		_runes.queue_redraw()
 
 var max_aspect := 0.52   # board height / width (battle uses a taller, closer board)
 
@@ -160,6 +173,18 @@ func _draw() -> void:
 				var pp: Vector2 = poly[(k + 3) % 4]
 				draw_line(p0, p0.lerp(pn, 0.14), cc, 2.0, true)
 				draw_line(p0, p0.lerp(pp, 0.18), cc, 2.0, true)
+
+func _cell_line_color(cell: Vector2i, pulse: float) -> Color:
+	if cell == selected:
+		return Color(1.0, 0.85, 0.45, 0.7 + 0.3 * pulse)
+	return line_color
+
+func _draw_runes() -> void:
+	var pulse := 0.5 + 0.5 * sin(_t * 5.0)
+	for c in 3:
+		for r in 3:
+			var cell := Vector2i(c, r)
+			var lc := _cell_line_color(cell, pulse)
 			# inner rune: squashed (perspective) dashed ring turning slowly + 4 ticks
 			var ctr := cell_center(cell)
 			var rr := tile_h() * 0.26
@@ -173,8 +198,8 @@ func _draw() -> void:
 				for m in 5:
 					var a := a0 + (TAU / 12.0) * m / 4.0
 					pts.append(ctr + Vector2(cos(a) * rr * 1.25, sin(a) * rr * 0.62))
-				draw_polyline(pts, rc, 1.2, true)
+				_runes.draw_polyline(pts, rc, 1.2, true)
 			for k in 4:
 				var a2 := rot * -0.5 + k * PI / 2.0
 				var d := Vector2(cos(a2) * 1.25, sin(a2) * 0.62)
-				draw_line(ctr + d * rr * 0.55, ctr + d * rr * 0.8, Color(rc, 0.3), 1.2, true)
+				_runes.draw_line(ctr + d * rr * 0.55, ctr + d * rr * 0.8, Color(rc, 0.3), 1.2, true)

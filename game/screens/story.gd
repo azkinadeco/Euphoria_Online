@@ -245,15 +245,24 @@ func _render_map() -> void:
 	_map_layer.add_child(ib)
 	_map_layer.add_child(_star_bar())
 	_map_layer.draw.connect(_draw_path)
+	# the glowing dots flowing along cleared roads live on their own layer (drawn right after the roads,
+	# before every stage medallion) so only they are redrawn each frame, not the whole anti-aliased road map
+	_flow_layer = Control.new()
+	_flow_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_flow_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_map_layer.add_child(_flow_layer)
+	_map_layer.move_child(_flow_layer, 0)
+	_flow_layer.draw.connect(_draw_flow)
 	_map_layer.resized.connect(_place_nodes)
 	_place_nodes.call_deferred()
 
 var _flow_t := 0.0
+var _flow_layer: Control
 
 func _process(delta: float) -> void:
 	_flow_t += delta
-	if is_instance_valid(_map_layer):
-		_map_layer.queue_redraw()
+	if is_instance_valid(_flow_layer):
+		_flow_layer.queue_redraw()
 
 ## Star Chests bar along the bottom of the map: stars collected in this chapter + three chests to open.
 func _star_bar() -> Control:
@@ -363,15 +372,22 @@ func _draw_path() -> void:
 		if done:
 			_map_layer.draw_polyline(pts, Color(1, 0.8, 0.35, 0.35), 7.0, true)
 			_map_layer.draw_polyline(pts, Color(1, 0.92, 0.6, 0.95), 2.5, true)
-			for k in 4:
-				var f := fmod(_flow_t * 0.45 + k / 4.0, 1.0)
-				var p: Vector2 = pts[int(f * (pts.size() - 1))]
-				_map_layer.draw_circle(p, 8.0, Color(1, 0.88, 0.45, 0.22))
-				_map_layer.draw_circle(p, 3.5, Color(1, 0.97, 0.75, 0.95))
 		else:
 			# footstep dots on a road not walked yet
 			for k in range(2, pts.size() - 2, 3):
 				_map_layer.draw_circle(pts[k], 2.2, Color(1, 1, 1, 0.38))
+
+func _draw_flow() -> void:
+	var s := _map_layer.size
+	for i in NODE_POS.size() - 1:
+		if _stars(_chapter * DB.STAGES_PER_CHAPTER + i) <= 0:
+			continue
+		var pts := _curve(i, s)
+		for k in 4:
+			var f := fmod(_flow_t * 0.45 + k / 4.0, 1.0)
+			var p: Vector2 = pts[int(f * (pts.size() - 1))]
+			_flow_layer.draw_circle(p, 8.0, Color(1, 0.88, 0.45, 0.22))
+			_flow_layer.draw_circle(p, 3.5, Color(1, 0.97, 0.75, 0.95))
 
 func _place_nodes() -> void:
 	if not is_instance_valid(_map_layer):
