@@ -9,6 +9,18 @@ var _sort := "power"
 var _tabs: Array = []
 var _count: Label
 
+## Cards whose full-body art is not loaded yet; filled a few per frame (~8 ms budget) in display order.
+var _art_queue: Array = []
+
+func _process(_delta: float) -> void:
+	var t0 := Time.get_ticks_usec()
+	while not _art_queue.is_empty():
+		var c = _art_queue.pop_front()
+		if is_instance_valid(c):
+			c.load_art()
+		if Time.get_ticks_usec() - t0 > 8000:
+			break
+
 func build() -> void:
 	set_bg("lobby", 0.62)
 	header("HEROES")
@@ -273,6 +285,7 @@ func _rebuild() -> void:
 			eb.button_pressed = str(eb.get_meta("elem")) == _elem
 	for c in _grid.get_children():
 		c.queue_free()
+	_art_queue.clear()
 	var ids: Array = []
 	for id in DB.hero_ids():
 		var owned := Game.owns(id)
@@ -296,7 +309,9 @@ func _rebuild() -> void:
 		return Game.hero_power(a) > Game.hero_power(b))
 	for id in ids:
 		var hid: String = id
-		var card := HeroCard.new(hid, Vector2(_card_w, _card_w * 1.3), {"skin": true})
+		var card := HeroCard.new(hid, Vector2(_card_w, _card_w * 1.3), {"skin": true, "lazy": true})
+		if card.needs_art():
+			_art_queue.append(card)
 		card.pressed.connect(func():
 			Game.sfx("ui_click")
 			main.go("hero_detail", {"id": hid, "list": ids}))

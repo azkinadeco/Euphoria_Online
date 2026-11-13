@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1794542737|12527450';
+const CACHE_VERSION = '1794544008|44282372';
 /** @type {string} */
 const CACHE_PREFIX = 'Euphoria Online-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;

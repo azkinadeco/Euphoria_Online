@@ -1228,6 +1228,20 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ev. Update batch 144 — Layar Heroes langsung terbuka
+
+| Ukuran (Mac Intel, kunjungan pertama) | Sebelum | Sesudah |
+|---|---|---|
+| `main.go("heroes")` (layar membeku) | ~2.500 ms | ~480 ms |
+| Kunjungan kedua | ~330 ms | ~220 ms |
+| FPS di layar Heroes | 60 | 60 (tidak berubah) |
+
+- Penyebab: 37 kartu memuat art full-body (WebP 1200 px, 20–380 ms per gambar) secara sinkron sebelum layar tampil.
+- `HeroCard` opsi `lazy`: kalau art belum ada di `DB._tex_cache`, kartu dibuat tanpa art; `load_art()` memasang art yang sama lalu fade-in 0,18 dtk. `heroes.gd` `_art_queue` memuat art per frame dengan budget ~8 ms, urut sesuai tampilan (selaras dengan animasi stagger). Kunjungan berikutnya: art sudah di cache → langsung tampil seperti biasa.
+- `DB.art_list()` di-cache (dulu `ResourceLoader.exists` per outfit tiap panggilan, ~1,6 ms); mengembalikan salinan. Baru: `DB.art_path()`, `DB.tex_loaded()`.
+- Verifikasi: screenshot layar Heroes setelah semua art termuat sama dengan versi lama (beda hanya kilau header yang beranimasi). Tes `clip_children` pada kartu: tidak berpengaruh ke fps, jadi tidak diubah.
+- Belum: Wardrobe (~830 ms pertama kali, crop wajah butuh art penuh skin spesial).
+
 ## 2eu. Update batch 143 — Draw call dipangkas (grafis tetap sama)
 
 | Bagian | Sebelum | Sesudah |

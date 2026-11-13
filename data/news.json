@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-13f",
+  "date": "2026-11-13",
+  "tag": "UPDATE",
+  "title": "Heroes Roster Opens Instantly",
+  "body": "The Heroes roster no longer freezes for a couple of seconds the first time you open it. The screen appears right away and each hero's full art fades in a moment later as it loads. Outfit lists are also looked up faster everywhere. The art itself is unchanged, at full quality."
+ },
+ {
   "id": "n2026-11-13e",
   "date": "2026-11-13",
   "tag": "UPDATE",

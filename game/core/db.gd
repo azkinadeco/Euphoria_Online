@@ -3321,7 +3321,27 @@ static func _state_sort_key(k: String) -> String:
 	return "2" + k
 
 ## Ordered list of full-art paths (the "skins"/art tiers) for a hero or enemy.
+## art_list() probes the disk (ResourceLoader.exists) for every outfit, ~1.6 ms a call; hero data never
+## changes at runtime, so the result is cached (a copy is returned so callers may modify it).
+static var _art_list_cache: Dictionary = {}
+
 static func art_list(id: String) -> Array:
+	if not _art_list_cache.has(id):
+		_art_list_cache[id] = _art_list_scan(id)
+	return (_art_list_cache[id] as Array).duplicate()
+
+## Path of an outfit's art (same pick as art()), without loading it.
+static func art_path(id: String, index: int = 0) -> String:
+	id = base_id(id)
+	var l := art_list(id)
+	if l.is_empty():
+		return ""
+	return str(l[clampi(index, 0, l.size() - 1)])
+
+static func tex_loaded(path: String) -> bool:
+	return _tex_cache.has(path)
+
+static func _art_list_scan(id: String) -> Array:
 	var states: Dictionary = _entry(id).get("char_states", {})
 	var keys: Array = states.keys()
 	keys.sort_custom(func(a, b): return _state_sort_key(a) < _state_sort_key(b))
