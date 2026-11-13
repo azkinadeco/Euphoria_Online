@@ -156,7 +156,7 @@ func _render_skin() -> void:
 	var h := UI.hbox(10)
 	_skin_box.add_child(h)
 	var fr := UI.styled_panel(Color.BLACK, _col, 34, 2, 2)
-	fr.add_child(UI.tex_rect(DB.face(hid, si), Vector2(64, 64), true))
+	fr.add_child(UI.face_rect(hid, Vector2(64, 64), si))
 	fr.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	h.add_child(fr)
 	var v := UI.vbox(1)
@@ -260,7 +260,7 @@ func _stage_row(i: int) -> void:
 	var faces := UI.hbox(3)
 	for e in st["enemies"].slice(0, 3):
 		var fp := UI.styled_panel(Color.BLACK, Color("#ff5c6c") if e.get("boss", false) else Color(bc, 0.6), 6, 2, 1)
-		fp.add_child(UI.tex_rect(DB.face(e["id"]), Vector2(44, 44), true))
+		fp.add_child(UI.face_rect(e["id"], Vector2(44, 44)))
 		faces.add_child(fp)
 	h.add_child(faces)
 	var v := UI.vbox(2)
@@ -392,7 +392,7 @@ func _story_tab() -> void:
 		var h := UI.hbox(12)
 		p.add_child(h)
 		var lines: Array = DB.EVENT[key]
-		h.add_child(UI.tex_rect(DB.face(str(lines[0][0])), Vector2(56, 56), true))
+		h.add_child(UI.face_rect(str(lines[0][0]), Vector2(56, 56)))
 		var v := UI.vbox(2)
 		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(v)

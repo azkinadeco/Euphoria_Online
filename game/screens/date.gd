@@ -167,7 +167,7 @@ func _build_go(b: Control) -> void:
 	var hr := UI.hbox(8)
 	pv.add_child(hr)
 	var fp := UI.styled_panel(Color.BLACK, tc, 8, 2, 1)
-	fp.add_child(UI.tex_rect(DB.face(_hero), Vector2(46, 46), true))
+	fp.add_child(UI.face_rect(_hero, Vector2(46, 46)))
 	fp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	hr.add_child(fp)
 	var hv := UI.vbox(1)
@@ -247,7 +247,7 @@ func _pick_hero() -> void:
 	ids.sort_custom(func(a, c): return int(Game.hero(a)["bond"]) > int(Game.hero(c)["bond"]))
 	for id in ids:
 		var hid: String = id
-		var card := HeroCard.new(hid, Vector2(108, 136), {"skin": true, "show_level": false, "badge": int(Game.hero(hid)["bond"])})
+		var card := HeroCard.new(hid, Vector2(108, 136), {"skin": true, "show_level": false, "lazy": true, "badge": int(Game.hero(hid)["bond"])})
 		if not Game.can_date(hid):
 			card.modulate = Color(0.4, 0.4, 0.45)
 		card.set_selected(hid == _hero)
@@ -448,7 +448,7 @@ func _build_no_partner(b: Control) -> void:
 		g.add_child(row)
 		var rh := UI.hbox(10)
 		row.add_child(rh)
-		rh.add_child(UI.tex_rect(DB.face(hid), Vector2(52, 52), true))
+		rh.add_child(UI.face_rect(hid, Vector2(52, 52)))
 		var rv := UI.vbox(3)
 		rv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		rh.add_child(rv)

@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-13g",
+  "date": "2026-11-13",
+  "tag": "UPDATE",
+  "title": "Faster Screen Opening Everywhere",
+  "body": "Screens with many hero or enemy pictures no longer freeze when you open them for the first time. Gallery, Arena, Bestiary, Friends, Summon, Wardrobe, Hunt, Tower, Event, Dates and the Room now appear right away, and their portraits fade in a moment later. All pictures are unchanged, at full quality."
+ },
+ {
   "id": "n2026-11-13f",
   "date": "2026-11-13",
   "tag": "UPDATE",

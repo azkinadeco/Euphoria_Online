@@ -215,7 +215,7 @@ func _floor_row(f: int, cur: int, is_top: bool, is_bottom: bool) -> Control:
 		var gid: String = DB.tower_floor(f)["enemies"][0]["id"]
 		var gp := UI.styled_panel(Color.BLACK, Color("#ff6b7d"), 16, 2, 1)
 		gp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		gp.add_child(UI.tex_rect(DB.face(gid), Vector2(32, 32), true))
+		gp.add_child(UI.face_rect(gid, Vector2(32, 32)))
 		gp.tooltip_text = "Guardian: " + DB.name_of(gid)
 		gp.mouse_filter = Control.MOUSE_FILTER_PASS
 		h.add_child(gp)
@@ -268,7 +268,7 @@ func _enemy_card(e: Dictionary) -> Control:
 	c.custom_minimum_size = Vector2(84, 100)
 	c.clip_contents = true
 	fp.add_child(c)
-	var face := UI.tex_rect(DB.face(e["id"]), Vector2.ZERO, true)
+	var face := UI.face_rect(e["id"], Vector2.ZERO)
 	face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	c.add_child(face)
 	var strip := ColorRect.new()

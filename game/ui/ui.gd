@@ -378,6 +378,26 @@ static func add_badge(parent: Control, n: int) -> void:
 	tw.tween_property(p, "scale", Vector2(1.18, 1.18), 0.45).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(p, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
 
+const LazyTex = preload("res://game/ui/lazy_tex.gd")
+
+## tex_rect whose texture comes from `loader`; when `ready` is false (texture not loaded yet) it is filled
+## a moment later by LazyTex so opening a screen never waits for dozens of full-size arts.
+static func tex_rect_lazy(ready: bool, loader: Callable, size: Vector2 = Vector2.ZERO, cover: bool = false) -> TextureRect:
+	var t := tex_rect(loader.call() if ready else null, size, cover)
+	if not ready:
+		var n := LazyTex.new()
+		n.loader = loader
+		t.add_child(n)
+	return t
+
+## Hero / enemy face crop (DB.face), loaded lazily.
+static func face_rect(id: String, size: Vector2 = Vector2.ZERO, skin: int = -1) -> TextureRect:
+	return tex_rect_lazy(DB.face_ready(id, skin), func(): return DB.face(id, skin), size, true)
+
+## Full art (DB.art), loaded lazily.
+static func art_rect(id: String, index: int = 0, size: Vector2 = Vector2.ZERO, cover: bool = false) -> TextureRect:
+	return tex_rect_lazy(DB.art_ready(id, index), func(): return DB.art(id, index), size, cover)
+
 static func tex_rect(tex: Texture2D, size: Vector2 = Vector2.ZERO, cover: bool = false) -> TextureRect:
 	var t := TextureRect.new()
 	t.texture = tex

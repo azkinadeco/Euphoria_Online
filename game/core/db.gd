@@ -3341,6 +3341,23 @@ static func art_path(id: String, index: int = 0) -> String:
 static func tex_loaded(path: String) -> bool:
 	return _tex_cache.has(path)
 
+static func portrait_path(id: String) -> String:
+	var p := str(_entry(id).get("portrait", ""))
+	if p != "" and ResourceLoader.exists(p):
+		return p
+	return art_path(id, 0)
+
+## True when art(id, index) would not hit the disk.
+static func art_ready(id: String, index: int = 0) -> bool:
+	return tex_loaded(art_path(id, index))
+
+## True when face(id, skin) would not hit the disk.
+static func face_ready(id: String, skin: int = -1) -> bool:
+	id = base_id(id)
+	if _tex_cache.has("face:%s:%d" % [id, skin]):
+		return true
+	return tex_loaded(portrait_path(id) if skin < 0 else art_path(id, skin))
+
 static func _art_list_scan(id: String) -> Array:
 	var states: Dictionary = _entry(id).get("char_states", {})
 	var keys: Array = states.keys()

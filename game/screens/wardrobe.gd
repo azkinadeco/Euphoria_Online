@@ -47,7 +47,7 @@ func build() -> void:
 		fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 		fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		btn.add_child(fr)
-		var face := UI.tex_rect(DB.face(hid, DB.special_index(hid)), Vector2(72, 72), true)
+		var face := UI.face_rect(hid, Vector2(72, 72), DB.special_index(hid))
 		face.position = Vector2(6, 6)
 		face.size = Vector2(72, 72)
 		fr.add_child(face)
@@ -119,7 +119,7 @@ func build() -> void:
 		var un := Game.owns(_sel) and Game.skin_unlocked(_sel, k)
 		var cell := Control.new()
 		cell.custom_minimum_size = Vector2(38, 38)
-		var ft := UI.tex_rect(DB.face(_sel, k), Vector2.ZERO, true)
+		var ft := UI.face_rect(_sel, Vector2.ZERO, k)
 		ft.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		if not un:
 			ft.modulate = Color(0.35, 0.35, 0.4)

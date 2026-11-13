@@ -141,7 +141,7 @@ func _card(f: Dictionary, sent: bool) -> Control:
 	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var h := UI.hbox(10)
 	p.add_child(h)
-	var hc := HeroCard.new(f["hero"], Vector2(84, 108), {"owned": true, "show_level": false})
+	var hc := HeroCard.new(f["hero"], Vector2(84, 108), {"owned": true, "show_level": false, "lazy": true})
 	if used:
 		hc.modulate = Color(0.55, 0.55, 0.6)
 	h.add_child(hc)
@@ -185,7 +185,7 @@ func _avatar(hid: String, sz: int, ring: Color, glow: bool) -> Control:
 	clip.add_theme_stylebox_override("panel", UI.style(Color.WHITE, Color.TRANSPARENT, sz / 2, 0, 0))
 	clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	c.add_child(clip)
-	var t := UI.tex_rect(DB.face(hid), Vector2.ZERO, true)
+	var t := UI.face_rect(hid, Vector2.ZERO)
 	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	clip.add_child(t)
 	var ring_p := Panel.new()

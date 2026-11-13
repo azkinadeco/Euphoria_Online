@@ -1228,6 +1228,29 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ew. Update batch 145 — Semua layar terbuka lebih cepat (gambar dimuat bertahap)
+
+Waktu `main.go()` kunjungan pertama (Mac Intel, semua fitur terbuka):
+
+| Layar | Sebelum | Sesudah |
+|---|---|---|
+| Gallery | 2.192 ms | 326 ms |
+| Arena | 1.349 ms | 264 ms |
+| Wardrobe | 918 ms | 353 ms |
+| Date | 866 ms | ~400 ms |
+| Bestiary | 831 ms | 109 ms |
+| Hunt | 825 ms | 249 ms |
+| Friends | 810 ms | 120 ms |
+| Gacha | 803 ms | 287 ms |
+| Event / Tower | 413 / 379 ms | 263 / 228 ms |
+
+- Penyebab: potongan wajah (`DB.face`) dan thumbnail butuh art full-body dimuat dulu, puluhan sekaligus.
+- `game/ui/lazy_tex.gd` (baru): child node di TextureRect yang mengisi texture di frame berikutnya; semua antrian berbagi budget ~8 ms per frame (minimal 1 per frame), urutan tree ≈ urutan tampilan, fade-in 0,18 dtk. Texture-nya persis sama.
+- `UI.tex_rect_lazy(ready, loader, size, cover)`, `UI.face_rect(id, size, skin)`, `UI.art_rect(id, idx, size, cover)`; `DB.face_ready()`, `DB.art_ready()`, `DB.portrait_path()`. Kalau gambar sudah di cache → langsung dipasang seperti dulu.
+- `HeroCard` opsi `lazy` sekarang memakai LazyTex (antrian khusus di heroes.gd dihapus); dipakai di Heroes, Date, Friends, Room, daftar rate Gacha.
+- Art utama (hero besar di tengah layar, hasil gacha) sengaja tidak di-lazy-kan.
+- Verifikasi: screenshot setelah semua gambar termuat sama dengan versi lama (beda hanya partikel/animasi). Tes flow + smoke PASS.
+
 ## 2ev. Update batch 144 — Layar Heroes langsung terbuka
 
 | Ukuran (Mac Intel, kunjungan pertama) | Sebelum | Sesudah |

@@ -148,7 +148,7 @@ func _bond_card(hid: String, h: Dictionary) -> Control:
 	v.add_child(hrow)
 	var fp := UI.styled_panel(Color.BLACK, PINK, 22, 2, 0)
 	fp.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
-	fp.add_child(UI.tex_rect(DB.face(hid, int(h.get("skin", 0))), Vector2(44, 44), true))
+	fp.add_child(UI.face_rect(hid, Vector2(44, 44), int(h.get("skin", 0))))
 	hrow.add_child(fp)
 	var hv := UI.vbox(0)
 	hv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -235,7 +235,7 @@ func _pick_hero() -> void:
 	ids.sort_custom(func(a, b): return int(Game.hero(a)["bond"]) > int(Game.hero(b)["bond"]))
 	for id in ids:
 		var hid: String = id
-		var opts := {"skin": true, "show_level": false}
+		var opts := {"skin": true, "show_level": false, "lazy": true}
 		if DB.fav_room(hid) == _loc:
 			opts["badge"] = "♥"
 		var card := HeroCard.new(hid, Vector2(108, 136), opts)

@@ -129,7 +129,7 @@ func _hero_card(id: String) -> Control:
 	fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(fr)
-	var t := UI.tex_rect(DB.portrait(id), Vector2.ZERO, true)
+	var t := UI.tex_rect_lazy(DB.tex_loaded(DB.portrait_path(id)), func(): return DB.portrait(id), Vector2.ZERO, true)
 	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	t.offset_bottom = -40
 	if not owned:
@@ -224,7 +224,7 @@ func _thumb(k: int) -> Control:
 	fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(fr)
-	var t := UI.tex_rect(DB.art(e["id"], e["idx"]), Vector2.ZERO, false)
+	var t := UI.art_rect(e["id"], e["idx"], Vector2.ZERO, false)
 	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	t.offset_bottom = -24
 	fr.add_child(t)

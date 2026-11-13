@@ -255,7 +255,7 @@ func _opp_card(o: Dictionary, oi: int, can_fight: bool) -> Control:
 		fc.custom_minimum_size = Vector2(40, 40)
 		fc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		fp.add_child(fc)
-		var ft := UI.tex_rect(DB.face(u["id"]), Vector2(40, 40), true)
+		var ft := UI.face_rect(u["id"], Vector2(40, 40))
 		ft.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		fc.add_child(ft)
 		var el := UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(u["id"]), "elem_light")), Vector2(14, 14))
@@ -310,7 +310,7 @@ func _render_foot() -> void:
 	h.add_child(faces)
 	for e in Game.formation():
 		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(e[0])], 7, 1, 1)
-		fp.add_child(UI.tex_rect(DB.face(e[0], int(Game.hero(e[0]).get("skin", 0))), Vector2(34, 34), true))
+		fp.add_child(UI.face_rect(e[0], Vector2(34, 34), int(Game.hero(e[0]).get("skin", 0))))
 		faces.add_child(fp)
 	h.add_child(UI.spacer())
 	var tk := int(a["tickets"])
@@ -349,7 +349,7 @@ func _render_ranking() -> void:
 		rl.custom_minimum_size = Vector2(46, 0)
 		rh.add_child(rl)
 		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(e["hero"])], 6, 1, 1)
-		fp.add_child(UI.tex_rect(DB.face(e["hero"]), Vector2(34, 34), true))
+		fp.add_child(UI.face_rect(e["hero"], Vector2(34, 34)))
 		rh.add_child(fp)
 		var nl := UI.label(str(e["name"]) + ("  (You)" if me else ""), 16, UI.GREEN if me else Color.WHITE, 2)
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL

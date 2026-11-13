@@ -66,7 +66,7 @@ func _render() -> void:
 		th.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		th.modulate = Color(0.7, 0.7, 0.75) if hid == _sel else Color(0.4, 0.4, 0.45)
 		fr.add_child(th)
-		var face := UI.tex_rect(DB.face(h["boss"]), Vector2(60, 60), true)
+		var face := UI.face_rect(h["boss"], Vector2(60, 60))
 		face.position = Vector2(8, 8)
 		face.size = Vector2(60, 60)
 		UI.corrupt(face, "astral")

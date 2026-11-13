@@ -4,8 +4,6 @@ extends Button
 
 var hero_id := ""
 var _sel: Panel
-var _face: TextureRect
-var _lazy_art := -1
 static var _glow_tex: GradientTexture2D
 
 ## Shared radial glow (white, tinted per card with modulate) behind the portrait.
@@ -55,14 +53,11 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	frame.add_child(glow)
 
 	# full-body art, whole figure visible at its own proportions (no crop, no stretch)
-	# opts.lazy: a full-body art not loaded yet is fetched later via load_art() (the roster spreads the
+	# opts.lazy: a full-body art not loaded yet is filled a moment later by LazyTex (the roster spreads the
 	# first-visit loading over several frames instead of freezing ~2 s before the screen appears)
 	var art_i: int = int(h.get("skin", 0)) if opts.get("skin", false) else 0
 	var lazy: bool = opts.get("lazy", false) and not DB.tex_loaded(DB.art_path(id, art_i))
-	var face := UI.tex_rect(null if lazy else DB.art(id, art_i), Vector2.ZERO, false)
-	_face = face
-	if lazy:
-		_lazy_art = art_i
+	var face := UI.tex_rect_lazy(not lazy, func(): return DB.art(id, art_i), Vector2.ZERO, false)
 	face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	face.offset_left = 2
 	face.offset_top = 4
@@ -238,16 +233,3 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 
 func set_selected(v: bool) -> void:
 	_sel.visible = v
-
-func needs_art() -> bool:
-	return _lazy_art >= 0
-
-## Loads the deferred art (see opts.lazy) and fades it in.
-func load_art() -> void:
-	if _lazy_art < 0:
-		return
-	_face.texture = DB.art(hero_id, _lazy_art)
-	_lazy_art = -1
-	var a := _face.modulate.a
-	_face.modulate.a = 0.0
-	_face.create_tween().tween_property(_face, "modulate:a", a, 0.18)

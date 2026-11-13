@@ -89,7 +89,7 @@ func _render() -> void:
 		h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		btn.add_child(h)
 		var fid: String = bd["featured"] if bd["featured"] != "" else "micca"
-		var face := UI.tex_rect(DB.face(fid), Vector2(66, 66), true)
+		var face := UI.face_rect(fid, Vector2(66, 66))
 		face.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		h.add_child(face)
 		var v := UI.vbox(0)
@@ -237,7 +237,7 @@ func _show_history() -> void:
 	for h in hist:
 		var row := UI.hbox(10)
 		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[h["r"]], 6, 2, 1)
-		fp.add_child(UI.tex_rect(DB.face(h["id"]), Vector2(32, 32), true))
+		fp.add_child(UI.face_rect(h["id"], Vector2(32, 32)))
 		row.add_child(fp)
 		var nl := UI.label("%s  %s" % [h["r"], DB.name_of(h["id"])], 15, DB.RARITY_COLOR[h["r"]].lightened(0.2), 2)
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -258,7 +258,7 @@ func _show_rates() -> void:
 		v.add_child(UI.label(r, 18, DB.RARITY_COLOR[r], 3))
 		for id in DB.hero_ids():
 			if DB.rarity_of(id) == r:
-				f.add_child(HeroCard.new(id, Vector2(84, 108), {"show_level": false}))
+				f.add_child(HeroCard.new(id, Vector2(84, 108), {"show_level": false, "lazy": true}))
 		v.add_child(f)
 	var ok := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
 	ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER

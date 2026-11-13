@@ -141,7 +141,7 @@ func _render() -> void:
 		gl.offset_top = 70
 		gl.add_theme_stylebox_override("panel", UI.style(Color(ec, 0.22), Color(0, 0, 0, 0), 0, 0, 0))
 		fr.add_child(gl)
-		var f := UI.tex_rect(DB.art(eid, 0))
+		var f := UI.art_rect(eid, 0)
 		f.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		f.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		f.offset_top = 4
@@ -305,7 +305,7 @@ func _render_forms() -> void:
 		fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 		fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(fr)
-		var th := UI.tex_rect(DB.art(id, fk))
+		var th := UI.art_rect(id, fk)
 		th.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		th.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		th.offset_top = 3
