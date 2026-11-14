@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fc. Update batch 151 — Wishlist di Standard Summon
+
+- `DB.WISH_MAX` (3) dan `DB.WISH_RATE` (0,5). `Game.wishlist()` / `toggle_wish(id)` menyimpan pilihan di `s["gacha"]["wish"]` (hanya SSR, id yang sudah tidak ada dibuang).
+- `Game.pull()`: di banner tanpa `featured`, hasil SSR punya peluang 50% diganti hero acak dari wishlist (`res["wished"] = true`). Rate SSR, pity, dan banner rate-up tidak berubah.
+- `gacha.gd`: `_wish_row()` (3 slot wajah + EDIT WISHLIST, tampil di panel meter banner Standard) dan `_show_wishlist()` (popup kartu semua SSR, tag ♥ WISH pada yang dipilih, toast bila penuh).
+- `hero_card.gd`: kartu sempit (< 110 px) memakai ikon gembok saja; sebelumnya teks "NOT OWNED" terpotong (juga di popup RATES).
+- Flow test: batas 3 hero, non-SSR ditolak, pity di banner Standard memberi hero wishlist ±50%.
+
 ## 2fb. Update batch 150 — Schedule (kalender semua timer + ulang tahun)
 
 - `Game.schedule()`: baris `{icon, name, note, left, route, color}` untuk Daily Reset, Weekly Reset, Event (plus event berikutnya), Festival (plus festival bulan depan), Season Pass, Arena Season, World Boss Week dan Starlight Rift. Fitur yang masih terkunci level tidak tampil.

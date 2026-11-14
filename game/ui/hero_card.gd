@@ -180,7 +180,7 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 		lv2.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		frame.add_child(lv2)
 		var ready := sh >= need
-		var lock := UI.label("🔒 NOT OWNED" if sh == 0 else ("✦ RECRUIT!" if ready else "SHARDS"), 11, UI.GOLD if ready else UI.MUTED, 3)
+		var lock := UI.label(("🔒 NOT OWNED" if card_size.x >= 110 else "🔒") if sh == 0 else ("✦ RECRUIT!" if ready else "SHARDS"), 11, UI.GOLD if ready else UI.MUTED, 3)
 		lock.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lv2.add_child(lock)
 		if sh > 0:

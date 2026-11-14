@@ -160,6 +160,8 @@ func _render() -> void:
 			tw.tween_property(xb, "modulate", Color(1.3, 1.2, 1.3), 0.5)
 			tw.tween_property(xb, "modulate", Color.WHITE, 0.5)
 		mv.add_child(sr)
+	else:
+		mv.add_child(_wish_row())
 	_info.add_child(UI.wrap_label("10x summon guarantees at least one SR. Duplicates turn into hero shards. Each pull on a rate-up banner gives 1 Summon Point — %d points = the featured hero." % DB.SPARK_COST, 12, UI.MUTED))
 	var ir := UI.hbox(8)
 	var rb := UI.button("RATES & HERO LIST", _show_rates, "", Vector2(0, 40))
@@ -220,6 +222,87 @@ func _meter(title: String, sub: String, val: int, mx: int, col: Color) -> Contro
 	bar.add_theme_stylebox_override("fill", UI.style(col, Color.TRANSPARENT, 4, 0, 0))
 	v.add_child(bar)
 	return v
+
+## Standard banner: the wishlist slots + EDIT.
+func _wish_row() -> Control:
+	var w := Game.wishlist()
+	var v := UI.vbox(4)
+	var h := UI.hbox(6)
+	v.add_child(h)
+	h.add_child(UI.label("WISHLIST", 13, Color("#ff9ad5"), 2))
+	var sl := UI.label("%d%% of SSR pulls come from your picks" % int(DB.WISH_RATE * 100), 11, UI.MUTED, 0)
+	sl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(sl)
+	var r := UI.hbox(8)
+	v.add_child(r)
+	for i in DB.WISH_MAX:
+		var slot := UI.styled_panel(Color(0, 0, 0, 0.5), Color("#ff9ad5") if i < w.size() else Color(1, 1, 1, 0.2), 8, 2 if i < w.size() else 1, 2)
+		slot.custom_minimum_size = Vector2(50, 50)
+		if i < w.size():
+			slot.add_child(UI.face_rect(str(w[i]), Vector2(44, 44)))
+			slot.tooltip_text = DB.name_of(str(w[i]))
+		else:
+			var pl := UI.label("+", 22, Color(1, 1, 1, 0.35), 0)
+			pl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			pl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			slot.add_child(pl)
+		r.add_child(slot)
+	r.add_child(UI.spacer())
+	var eb := UI.button("EDIT WISHLIST", _show_wishlist, "GoldButton" if w.is_empty() else "", Vector2(140, 38))
+	eb.add_theme_font_size_override("font_size", 12)
+	eb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	r.add_child(eb)
+	return v
+
+func _show_wishlist() -> void:
+	var v: VBoxContainer = main.popup("WISHLIST", 760)
+	var head := UI.label("", 14, UI.GOLD, 2)
+	v.add_child(head)
+	v.add_child(UI.wrap_label("Pick up to %d SSR heroes. On the Standard Summon, %d%% of your SSR pulls will be one of them. Heroes you already own still count: duplicates become shards." % [DB.WISH_MAX, int(DB.WISH_RATE * 100)], 13, UI.MUTED))
+	var f := HFlowContainer.new()
+	f.add_theme_constant_override("h_separation", 8)
+	f.add_theme_constant_override("v_separation", 8)
+	var sc := UI.scroll(f)
+	sc.custom_minimum_size = Vector2(0, 360)
+	v.add_child(sc)
+	var cards := {}
+	var sync := func():
+		var w := Game.wishlist()
+		head.text = "Chosen %d / %d" % [w.size(), DB.WISH_MAX]
+		for id in cards.keys():
+			(cards[id] as HeroCard).set_selected(w.has(id))
+			(cards[id] as HeroCard).get_node("wish").visible = w.has(id)
+	for id in DB.hero_ids():
+		if DB.rarity_of(id) != "SSR":
+			continue
+		var hid: String = id
+		var card := HeroCard.new(hid, Vector2(96, 124), {"show_level": false, "lazy": true})
+		if not Game.owns(hid):
+			card.tooltip_text = "Not recruited yet"
+		card.pressed.connect(func():
+			var err := Game.toggle_wish(hid)
+			if err != "":
+				main.toast(err, UI.RED)
+				return
+			Game.sfx("ui_click")
+			sync.call())
+		var tag := UI.styled_panel(Color("#c2185b"), Color("#ffd0e4"), 8, 1, 2)
+		tag.name = "wish"
+		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tag.position = Vector2(14, 50)
+		tag.custom_minimum_size = Vector2(68, 0)
+		var tgl := UI.label("♥ WISH", 12, Color.WHITE, 2)
+		tgl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		tag.add_child(tgl)
+		card.add_child(tag)
+		cards[hid] = card
+		f.add_child(card)
+	sync.call()
+	var ok := UI.button("DONE", func():
+		main.close_popup(v)
+		_render(), "GoldButton", Vector2(180, 46))
+	ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(ok)
 
 func _show_history() -> void:
 	var v: VBoxContainer = main.popup("SUMMON HISTORY", 640)

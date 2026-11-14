@@ -1179,9 +1179,15 @@ func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 		# rate-up: half of the pulls of the featured hero's rarity become her (SSR banners and SR/R pick-ups)
 		if str(banner.get("featured", "")) != "" and DB.rarity_of(str(banner["featured"])) == rarity and randf() < 0.5:
 			id = banner["featured"]
+		# wishlist: on the Standard banner half of the SSR pulls come from the player's picks
+		var wished := false
+		if str(banner.get("featured", "")) == "" and rarity == "SSR" and not wishlist().is_empty() and randf() < DB.WISH_RATE:
+			id = wishlist()[randi() % wishlist().size()]
+			wished = true
 		var res := add_hero(id)
 		res["id"] = id
 		res["rarity"] = rarity
+		res["wished"] = wished
 		results.append(res)
 		if str(banner.get("featured", "")) != "":
 			var sp: Dictionary = s["gacha"].get("spark", {})
@@ -1201,6 +1207,26 @@ func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 	mark_dirty()
 	save_game()
 	return {"results": results}
+
+## SSR heroes picked for the Standard banner (ids that no longer exist are dropped).
+func wishlist() -> Array:
+	var w: Array = s["gacha"].get("wish", [])
+	return w.filter(func(id): return DB.HEROES.has(id) and DB.rarity_of(id) == "SSR")
+
+## Adds or removes a hero from the wishlist. Returns "" or an error text.
+func toggle_wish(id: String) -> String:
+	if not DB.HEROES.has(id) or DB.rarity_of(id) != "SSR":
+		return "Only SSR heroes can be wished for."
+	var w := wishlist()
+	if w.has(id):
+		w.erase(id)
+	elif w.size() >= DB.WISH_MAX:
+		return "Your wishlist is full (%d heroes). Remove one first." % DB.WISH_MAX
+	else:
+		w.append(id)
+	s["gacha"]["wish"] = w
+	mark_dirty()
+	return ""
 
 # =================================================================== quests & achievements
 

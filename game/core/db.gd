@@ -1419,6 +1419,9 @@ const DUPE_SHARDS := {"R": 10, "SR": 20, "SSR": 40}
 ## Spark: every pull on a rate-up banner gives 1 Summon Point for that banner;
 ## SPARK_COST points can be exchanged for the featured hero (or her duplicate shards).
 const SPARK_COST := 150
+## Wishlist: on the Standard banner, half of the SSR pulls become one of up to WISH_MAX chosen SSR heroes.
+const WISH_MAX := 3
+const WISH_RATE := 0.5
 
 ## Commander titles (shown under the name). Conditions are checked in Game.title_unlocked().
 const TITLES := [

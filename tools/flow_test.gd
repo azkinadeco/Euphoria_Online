@@ -1558,6 +1558,35 @@ func _run() -> void:
 	check(sch2.size() >= 7 and sch2.all(func(e): return int(e["left"]) >= 0 and ResourceLoader.exists("res://game/screens/%s.gd" % e["route"])), "full schedule has valid timers and routes")
 	G.s["player"]["level"] = sch_lv
 
+	print("[wishlist]")
+	var wl_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	var wl_ssr: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == "SSR")
+	var wl_r: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == "R")
+	check(G.toggle_wish(str(wl_r[0])) != "" and G.wishlist().is_empty(), "only SSR heroes can be wished for")
+	for wi in 3:
+		check(G.toggle_wish(str(wl_ssr[wi])) == "", "wish %d accepted" % (wi + 1))
+	check(G.toggle_wish(str(wl_ssr[3])) != "" and G.wishlist().size() == 3, "wishlist is capped at 3")
+	check(G.toggle_wish(str(wl_ssr[0])) == "" and G.wishlist().size() == 2 and not G.wishlist().has(wl_ssr[0]), "tapping a wished hero removes her")
+	G.s["gacha"]["wish"] = [wl_ssr[5]]
+	G.s["cur"]["gems"] = 10000000
+	G.s["gacha"]["first10_done"] = true
+	var wl_hits := 0
+	var wl_n := 0
+	for wi in 300:
+		G.s["gacha"]["pity"] = DB.GACHA_PITY - 1
+		var wr: Dictionary = G.pull("standard", 1, "gems")["results"][0]
+		wl_n += 1 if wr["rarity"] == "SSR" else 0
+		wl_hits += 1 if wr["id"] == wl_ssr[5] else 0
+	check(wl_n == 300 and wl_hits > 110 and wl_hits < 200, "about half of Standard SSR pulls are the wished hero (%d / 300)" % wl_hits)
+	var wl_feat := 0
+	for wi in 60:
+		G.s["gacha"]["pity"] = DB.GACHA_PITY - 1
+		wl_feat += 1 if G.pull("limited", 1, "gems")["results"][0].get("wished", false) else 0
+	check(wl_feat == 0, "rate-up banners ignore the wishlist")
+	G.s = wl_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)
