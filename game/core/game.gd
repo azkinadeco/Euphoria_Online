@@ -131,9 +131,22 @@ func load_game() -> void:
 	if f == null:
 		return
 	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	f = null
 	if parsed is Dictionary and int(parsed.get("version", 0)) == SAVE_VERSION:
 		_merge(s, parsed)
+	elif not (parsed is Dictionary):
+		# the save file is damaged: keep a copy of it and fall back to the newest automatic backup
+		DirAccess.make_dir_recursive_absolute(backup_dir)
+		DirAccess.copy_absolute(SAVE_PATH, "%s/save_damaged.json" % backup_dir)
+		for b in backups():
+			var data := _read_save(str(b["path"]))
+			if not data.is_empty():
+				_merge(s, data)
+				restored_from = str(b["label"])
+				break
 	_sanitize()
+	if not FileAccess.file_exists(_backup_path("%06d" % day_key())):
+		make_backup()
 
 func _merge(dst: Dictionary, src: Dictionary) -> void:
 	for k in src.keys():
@@ -250,6 +263,84 @@ func _sanitize() -> void:
 	if not s["heroes"].has(s["lobby_hero"]):
 		s["lobby_hero"] = s["heroes"].keys()[0]
 
+# ---- automatic backups: one per day played (the save as it was when the game started), newest BACKUP_KEEP kept
+const BACKUP_DIR := "user://backups"
+const BACKUP_KEEP := 5
+var backup_dir := BACKUP_DIR      # tests point this at a throwaway folder
+var restored_from := ""           # set when a damaged save was replaced by a backup at startup
+
+func _backup_path(tag: String) -> String:
+	return "%s/save_%s.json" % [backup_dir, tag]
+
+## Parsed save file, or {} when it is missing, damaged or from another version.
+func _read_save(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if parsed is Dictionary and int(parsed.get("version", 0)) == SAVE_VERSION and parsed.has("heroes"):
+		return parsed
+	return {}
+
+## Writes the current state as a backup. tag "" = today's daily backup; "before_*" tags are kept outside the daily limit.
+func make_backup(tag: String = "") -> bool:
+	if not persist and backup_dir == BACKUP_DIR:
+		return false
+	DirAccess.make_dir_recursive_absolute(backup_dir)
+	var f := FileAccess.open(_backup_path(tag if tag != "" else "%06d" % day_key()), FileAccess.WRITE)
+	if f == null:
+		return false
+	f.store_string(JSON.stringify(s))
+	f = null
+	var daily: Array = backups().filter(func(b): return str(b["tag"]).is_valid_int())
+	for i in range(BACKUP_KEEP, daily.size()):
+		DirAccess.remove_absolute(str(daily[i]["path"]))
+	return true
+
+## Readable backups, newest first: {path, tag, label, level, heroes, stages}.
+func backups() -> Array:
+	var out: Array = []
+	var d := DirAccess.open(backup_dir)
+	if d == null:
+		return out
+	for fn in d.get_files():
+		if not (fn.begins_with("save_") and fn.ends_with(".json")) or fn == "save_damaged.json":
+			continue
+		var path := "%s/%s" % [backup_dir, fn]
+		var data := _read_save(path)
+		if data.is_empty():
+			continue
+		var tag := fn.substr(5, fn.length() - 10)
+		var label := tag.replace("_", " ").capitalize()
+		if tag.is_valid_int():
+			var dt: Dictionary = Time.get_date_dict_from_unix_time(int(tag) * 86400)
+			label = "%04d-%02d-%02d" % [dt["year"], dt["month"], dt["day"]]
+		out.append({"path": path, "tag": tag, "label": label, "level": int(data["player"]["level"]), "heroes": (data["heroes"] as Dictionary).size(),
+			"stages": (data["story"]["cleared"] as Dictionary).size(), "seen": int(data.get("last_seen", 0))})
+	# daily backups by day (newest first), then the "before ..." safety copies
+	out.sort_custom(func(a, b):
+		var ai: bool = str(a["tag"]).is_valid_int()
+		var bi: bool = str(b["tag"]).is_valid_int()
+		if ai != bi:
+			return ai
+		return int(a["tag"]) > int(b["tag"]) if ai else str(a["tag"]) < str(b["tag"]))
+	return out
+
+## Replaces the current progress with a backup (the current one is kept as "Before Restore"). "" or an error.
+func restore_backup(path: String) -> String:
+	var data := _read_save(path)
+	if data.is_empty():
+		return "This backup can't be read."
+	if not path.ends_with("save_before_restore.json"):
+		make_backup("before_restore")
+	var fresh := new_state()
+	_merge(fresh, data)
+	s = fresh
+	_sanitize()
+	_check_day()
+	save_game()
+	changed.emit()
+	return ""
+
 func save_game() -> void:
 	if not persist:
 		return
@@ -263,6 +354,7 @@ func mark_dirty() -> void:
 	changed.emit()
 
 func reset_save() -> void:
+	make_backup("before_reset")
 	s = new_state()
 	_check_day()
 	save_game()

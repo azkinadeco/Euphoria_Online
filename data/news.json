@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-14o",
+  "date": "2026-11-14",
+  "tag": "UPDATE",
+  "title": "Automatic Save Backups",
+  "body": "Your progress is now protected by automatic backups. Each day you play, the game keeps a copy of your save as it was when you started, for the last 5 days played, on this device. Open Settings and tap AUTOMATIC BACKUPS to see them and restore one; your current progress is kept as \"Before Restore\", so a restore can be undone. A copy is also kept before RESET SAVE. If the save file is ever damaged, the game now loads the newest backup instead of starting over. Backup Codes still work for moving to another device."
+ },
+ {
   "id": "n2026-11-14n",
   "date": "2026-11-14",
   "tag": "UPDATE",

@@ -1228,6 +1228,15 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fm. Update batch 161 — Backup otomatis save
+
+- `Game.make_backup(tag)`: menulis `s` ke `user://backups/save_<tag>.json`. Tag kosong = backup harian (`day_key`), dibuat di `load_game()` bila belum ada untuk hari itu (isi = save saat game dibuka). Hanya `BACKUP_KEEP` (5) backup harian terbaru yang disimpan; tag `before_restore` dan `before_reset` di luar batas itu.
+- `Game.backups()`: daftar backup yang bisa dibaca (label tanggal, level, jumlah hero, stage). `Game.restore_backup(path)`: menyimpan progres sekarang sebagai "Before Restore", lalu memuat backup lewat jalur `_merge` + `_sanitize` yang sama dengan Backup Code.
+- **Save rusak**: sebelumnya file save yang gagal di-parse membuat game mulai dari nol dan menimpa file itu. Sekarang file rusak disalin ke `save_damaged.json`, backup terbaru dimuat, dan pemain diberi toast (`Game.restored_from`).
+- `reset_save()` membuat backup `before_reset` dulu.
+- `settings.gd`: tombol **AUTOMATIC BACKUPS (n)** + popup daftar dengan RESTORE (konfirmasi).
+- Tes memakai `Game.backup_dir` sementara; dengan `persist = false` folder asli tidak pernah disentuh.
+
 ## 2fl. Update batch 160 — Achievement Rank
 
 - `DB.ACH_POINTS` (10 per achievement) dan `DB.ACH_RANKS` (Bronze 50, Silver 120, Gold 220, Platinum 340, Diamond 480, Legend 640 poin; tiap rank punya hadiah sekali klaim).

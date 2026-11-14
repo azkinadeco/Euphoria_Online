@@ -180,6 +180,7 @@ func _data(parent: Control) -> void:
 	var eb := UI.button("BACKUP CODE", _export_save, "GoldButton", Vector2(0, 46))
 	v.add_child(eb)
 	v.add_child(UI.button("RESTORE FROM CODE", _import_save, "", Vector2(0, 42)))
+	v.add_child(UI.button("AUTOMATIC BACKUPS  (%d)" % Game.backups().size(), _show_backups, "", Vector2(0, 42)))
 	var dh := UI.hbox(8)
 	var ri := UI.button("REPLAY INTRO", func():
 		main.dialogue([["furu", "Commander, welcome back to Euphoria."], ["shina", "Let's show the Eclipse what we're made of!"]]), "", Vector2(0, 40))
@@ -288,6 +289,44 @@ func _account(parent: Control) -> void:
 		ce.text = ""
 		main.show_rewards("CODE REDEEMED", r["give"]), "GoldButton", Vector2(120, 42)))
 	v.add_child(rh)
+
+## Automatic backups kept on this device: one per day played, plus safety copies made before a restore or reset.
+func _show_backups() -> void:
+	var v: VBoxContainer = main.popup("AUTOMATIC BACKUPS", 700)
+	v.add_child(UI.wrap_label("The game keeps a copy of your save from each of the last %d days you played, on this device. Restoring one replaces your current progress; the current progress is kept as \"Before Restore\" so you can undo it." % Game.BACKUP_KEEP, 13, UI.MUTED))
+	var list := UI.vbox(6)
+	var sc := UI.scroll(list)
+	sc.custom_minimum_size = Vector2(0, 320)
+	v.add_child(sc)
+	var all := Game.backups()
+	if all.is_empty():
+		list.add_child(UI.wrap_label("No backups yet. The first one is made the next time you start the game.", 14, UI.MUTED))
+	for b in all:
+		var bk: Dictionary = b
+		var daily: bool = str(bk["tag"]).is_valid_int()
+		var p := UI.styled_panel(Color(0.08, 0.05, 0.14, 0.92), Color(UI.GOLD, 0.4) if daily else Color("#9fd0ff", 0.5), 10, 1, 8)
+		list.add_child(p)
+		var h := UI.hbox(10)
+		p.add_child(h)
+		var tv := UI.vbox(1)
+		tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(tv)
+		tv.add_child(UI.label(("Start of " if daily else "") + str(bk["label"]), 16, Color.WHITE, 2))
+		tv.add_child(UI.label("Commander Lv.%d  •  %d heroes  •  %d stages cleared" % [int(bk["level"]), int(bk["heroes"]), int(bk["stages"])], 12, UI.MUTED))
+		var rb := UI.button("RESTORE", func():
+			main.confirm("Replace your current progress with the backup \"%s\" (Commander Lv.%d)?" % [bk["label"], int(bk["level"])], func():
+				var err := Game.restore_backup(str(bk["path"]))
+				main.close_popup(v)
+				if err != "":
+					main.toast(err, UI.RED)
+					return
+				main.toast("Backup restored.", UI.GREEN)
+				main.home(), "RESTORE"), "", Vector2(120, 40))
+		rb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		h.add_child(rb)
+	var c := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
+	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(c)
 
 func _export_save() -> void:
 	var code := Game.export_code()

@@ -119,6 +119,9 @@ func show_how_to_play(done: Callable = Callable()) -> void:
 
 ## Start-of-session popups, one after another: daily login calendar, then the new-skin offer (once a day).
 func _startup_popups() -> void:
+	if Game.restored_from != "":
+		toast("Your save file was damaged. Restored the backup from %s." % Game.restored_from, UI.RED)
+		Game.restored_from = ""
 	_when_clear(func():
 		if Game.can_claim_login():
 			show_login_calendar()

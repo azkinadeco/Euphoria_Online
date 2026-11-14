@@ -1756,6 +1756,36 @@ func _run() -> void:
 			check(G.s["cur"].has(arr) or DB.ITEMS.has(arr), "rank %s pays a real reward (%s)" % [ark["name"], arr])
 	G.s = ar_save
 
+	print("[automatic backups]")
+	var bk_save: Dictionary = G.s
+	check(not G.make_backup(), "a non-persistent game never writes to the real backup folder")
+	G.backup_dir = "user://flow_test_backups"
+	for bkf in G.backups():
+		DirAccess.remove_absolute(str(bkf["path"]))
+	G.s = G.new_state()
+	G._check_day()
+	G.s["player"]["level"] = 7
+	for bki in 7:
+		check(G.make_backup("%06d" % (20000 + bki)), "daily backup %d written" % bki)
+		G.s["player"]["level"] = 8 + bki
+	var bk_all: Array = G.backups()
+	check(bk_all.size() == G.BACKUP_KEEP and str(bk_all[0]["tag"]) == "020006" and int(bk_all[0]["level"]) == 13, "only the newest %d daily backups are kept, newest first" % G.BACKUP_KEEP)
+	G.s["player"]["level"] = 50
+	check(G.restore_backup(str(bk_all[1]["path"])) == "" and int(G.s["player"]["level"]) == 12, "restoring brings back that day's progress")
+	var bk_pre: Array = G.backups().filter(func(b): return str(b["tag"]) == "before_restore")
+	check(bk_pre.size() == 1 and int(bk_pre[0]["level"]) == 50 and G.backups().size() == G.BACKUP_KEEP + 1, "the replaced progress is kept as Before Restore")
+	check(G.restore_backup(str(bk_pre[0]["path"])) == "" and int(G.s["player"]["level"]) == 50, "a restore can be undone")
+	var bk_bad := FileAccess.open("user://flow_test_backups/save_020099.json", FileAccess.WRITE)
+	bk_bad.store_string("{not json")
+	bk_bad = null
+	check(G.restore_backup("user://flow_test_backups/save_020099.json") != "" and not G.backups().any(func(b): return str(b["tag"]) == "020099"), "a damaged backup is refused and not listed")
+	DirAccess.remove_absolute("user://flow_test_backups/save_020099.json")
+	for bkf2 in G.backups():
+		DirAccess.remove_absolute(str(bkf2["path"]))
+	DirAccess.remove_absolute("user://flow_test_backups")
+	G.backup_dir = G.BACKUP_DIR
+	G.s = bk_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)
