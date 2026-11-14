@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ff. Update batch 154 — Arc 12: The Dreaming Lantern
+
+- **4 chapter baru (45–48, total 48 chapter / 288 stage)** di `DB.CHAPTERS`: The Sleeping Cathedral (bos Dreambound Glytta), The Field Without Endings (Kara), The Star That Stayed (Gemora), The Butterfly's Cradle (Lumeira). Tiap chapter punya intro, mid, mid2, boss_lines, outro, pilihan VN, dan field mod.
+- **Varian baru `dream`** (prefix `dream:`, nama "Dreambound X"): `UI.corrupt` (desat 0,55, tone 1,42/0,98/1,36, halo pink), `DB.base_id` / `name_of` / `theme_color`, deteksi di `vn_dialogue.gd`, label DREAMBOUND + modulate rose di `battle.gd`, masuk `DB.RIFT_VARIANTS`.
+- Penutup Arc 11 diubah jadi pengantar Arc 12. Interlude `i12` "Breakfast, Awake" (req 288), title `dreamwalker`, achievement `ch48`, Story Link `dawn` "Good Morning" (Lumeira + Kara + Gemora), mail `arc12_dream` (tanpa gems/tiket).
+- `story.gd`: tab ARC 12 (chapter 44+) dan nama arc di `_arc_name`.
+- Flow test: 48 chapter / 288 stage, nama varian, setiap chapter baru berakhir dengan bos Dreambound, semua speaker dialog valid.
+
 ## 2fe. Update batch 153 — Training Ground (uji damage tim)
 
 - Mode battle baru `"training"` (params `elem`, `spar`): `Game.enemies_for` mengembalikan satu partner ber-flag `raid` (HP tak habis) dari `DB.training_dummy(elem)`, level = rata-rata tim; DUMMY `atk_mult` 0,02, SPARRING `atk_mult` 1,3 dan +3 level.

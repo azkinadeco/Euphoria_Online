@@ -754,7 +754,15 @@ func _run() -> void:
 	check(not ups.is_empty() and ups[0][0] == "lucidria", "bond_up signal fires on level up")
 
 	print("[long-term content]")
-	check(DB.CHAPTERS.size() == 44 and DB.stage_count() == 264, "44 chapters / 264 stages")
+	check(DB.CHAPTERS.size() == 48 and DB.stage_count() == 288, "48 chapters / 288 stages")
+	check(DB.name_of("dream:lumeira") == "Dreambound Lumeira" and DB.base_id("dream:kara") == "kara", "dream variant names")
+	for dch in range(44, 48):
+		var dst: Dictionary = DB.stage(dch * DB.STAGES_PER_CHAPTER + 5)
+		check(bool(dst["boss"]) and (dst["enemies"] as Array).any(func(e): return bool(e.get("boss", false)) and str(e.get("variant", "")) == "dream"), "chapter %d ends with a Dreambound boss" % (dch + 1))
+		for dk in ["intro", "mid", "mid2", "boss_lines", "outro"]:
+			for dl in (DB.CHAPTERS[dch][dk] as Array):
+				var sp := str(dl[1]) if str(dl[0]) == "?" else str(dl[0])
+				check(sp in ["nar", "commander"] or DB.HEROES.has(DB.base_id(sp)), "chapter %d %s speaker %s exists" % [dch + 1, dk, sp])
 	check(DB.name_of("frost:valeria") == "Frostbound Valeria" and DB.base_id("frost:micca") == "micca", "frost variant names")
 	var bgmiss: Array = []
 	for chd2 in DB.CHAPTERS:

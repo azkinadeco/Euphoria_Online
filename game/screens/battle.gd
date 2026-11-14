@@ -359,8 +359,10 @@ func _place_units() -> void:
 				UI.corrupt(v.sprite, str(u.get("variant", "")))
 				if str(u.get("variant", "")) == "frost":
 					v.sprite.modulate = Color(0.8, 0.95, 1.2)   # cold light instead of the warm boss tint, so the ice reads on pale outfits
+				if str(u.get("variant", "")) == "dream":
+					v.sprite.modulate = Color(1.12, 0.95, 1.15)   # rose light, the warm boss tint would wash out the violet haze
 				var hollow: bool = str(u.get("variant", "")) in ["hollow", "frost"]
-				var el := UI.label(("FROSTBOUND" if str(u["variant"]) == "frost" else str(u["variant"]).to_upper()) if u.get("mirror", false) else ("ELITE" if not u["boss"] else "CORRUPTED"), 11, Color("#7ff6ff") if hollow else Color("#d48cff"), 4)
+				var el := UI.label(("FROSTBOUND" if str(u["variant"]) == "frost" else ("DREAMBOUND" if str(u["variant"]) == "dream" else str(u["variant"]).to_upper())) if u.get("mirror", false) else ("ELITE" if not u["boss"] else "CORRUPTED"), 11, Color("#7ff6ff") if hollow else Color("#d48cff"), 4)
 				el.position = Vector2(0, v.size.y * 0.05)
 				el.size = Vector2(v.size.x, 16)
 				el.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

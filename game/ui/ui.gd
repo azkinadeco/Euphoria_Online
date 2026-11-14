@@ -621,6 +621,12 @@ static func corrupt(t: CanvasItem, variant: String = "") -> void:
 		m.set_shader_parameter("desat", 0.8)
 		m.set_shader_parameter("tone", Vector3(0.74, 1.08, 1.62))
 		m.set_shader_parameter("glow", Color("#bff0ff"))
+	elif variant == "dream":
+		# Dreambound (Arc 12): soft rose-violet haze, like a painting seen through closed eyelids, with a pink halo
+		m.set_shader_parameter("hue_shift", 0.0)
+		m.set_shader_parameter("desat", 0.55)
+		m.set_shader_parameter("tone", Vector3(1.42, 0.98, 1.36))
+		m.set_shader_parameter("glow", Color("#ffb3ec"))
 	elif variant == "hollow":
 		# Hollow (Arc 4): drained, icy-teal look with a cyan halo
 		m.set_shader_parameter("hue_shift", 0.45)

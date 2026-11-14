@@ -1022,7 +1022,101 @@ const CHAPTERS := [
 			["schylua", "...You're crying too. ...It's okay. Both are allowed."],
 			["micca", "So! Can we still have ONE snow day? A normal one? With snowmen and cocoa and nobody frozen?"],
 			["valeria", "...One snow day. Every winter. By royal decree. And the Commander builds the first snowman."],
-			["nar", "— END OF ARC 11: THE FROSTBOUND CROWN —   Thank you for playing, Commander. More stories are coming."]]},
+			["nar", "— END OF ARC 11: THE FROSTBOUND CROWN —   That night, a paper lantern nobody remembered lighting began to glow."]]},
+	# ---- Arc 12: The Dreaming Lantern (Lumeira, Glytta, Kara, Gemora; Rumi, Furu and Mora keep everyone awake)
+	{"name": "The Sleeping Cathedral", "bg": "lobby", "pool": ["slime", "ex_nymph", "eroghost", "hairly"], "boss": "glytta", "variant": "dream", "mirror": true, "boss_hp": 3.0, "boss_atk": 1.35,
+		"mod": {"elem": "LIGHT", "atk": 0.3, "name": "Morning Bell: LIGHT units +30% ATK"},
+		"intro": [["nar", "The morning bell did not ring. In every room of the cathedral, the heroes slept on, smiling, with a butterfly resting on each forehead."],
+			["rumi", "Commander! Finally, someone awake! I've been shaking people for an hour. Nobody pays me for this!"],
+			["furu", "It isn't a curse, Rumi. I prayed over them. They are... happy. Whatever they see, they don't want to leave it."],
+			["mora", "The butterflies are Lumeira's. She fell asleep under the old festival lantern three nights ago. Her dream has been growing ever since."],
+			["commander", "Then we go in after them. Can you get us inside the dream?"],
+			["?", "rumi", ["Name your price, Rumi.", "We need an exorcist. We need you.", "I'll buy you mochi for a year."],
+				["...Smart Commander. Half now, half when everyone's awake. Hold my hand, we're going in.", "...Hmph. Flattery doesn't pay the bills. ...But fine. For you, a discount.", "A YEAR?! ...Deal. No take-backs. I'm writing it down."], [30, 40, 35]]],
+		"mid": [["nar", "Inside the dream, the cathedral was a theatre. Every seat was full of paper people, clapping in perfect time."],
+			["furu", "Listen... the music never stops. The same song, again and again."],
+			["rumi", "And nobody boos. Creepy. A real crowd always has one guy who boos."]],
+		"mid2": [["nar", "On the stage, under a hundred lanterns, Glytta danced. Her feet were bleeding crystal, and she was still smiling."],
+			["dream:glytta", "Commander! You came to watch! Sit, sit — this is my best encore yet. The four-hundredth!"],
+			["?", "glytta", ["Glytta, your feet. Stop.", "The crowd is made of paper.", "Dance with me instead."],
+				["...They don't hurt. Nothing hurts here. Isn't that... wonderful...?", "...Paper claps just as loud. ...Doesn't it?", "...With you? ...But if the song ends, they'll all go home..."], [40, 30, 35]],
+			["dream:glytta", "No. No, the song can't end. If it ends, I'm just a girl standing still. One more encore — with you in it!"]],
+		"boss_lines": [["dream:glytta", "Crystal Encore — the curtain never falls!"], ["rumi", "Sorry, twinkle-toes. Show's over. Exorcism Seal!"],
+			["furu", "Gently, everyone. She is only dreaming."]],
+		"outro": [["nar", "The last lantern on the stage went out, and the paper audience folded themselves away, one by one."],
+			["glytta", "...Ow. Ow ow ow. My feet. ...Commander, how long was I dancing?"],
+			["furu", "Three days, dear. Sit. Let me bandage them."],
+			["glytta", "...It was so nice, though. Everyone clapped. ...You'd clap for me even if I messed up, right?"],
+			["mora", "One awake. The butterflies are flying east, to the old graveyard. ...Kara sleeps there."]]},
+	{"name": "The Field Without Endings", "bg": "forest", "pool": ["gumi_wolf", "scomantis", "voodoo", "evy_blood_sage"], "boss": "kara", "variant": "dream", "mirror": true, "boss_hp": 2.4, "boss_atk": 1.6,
+		"mod": {"elem": "WATER", "atk": 0.3, "name": "Morning Dew: WATER units +30% ATK"},
+		"intro": [["nar", "In Kara's dream the graveyard was gone. In its place lay a meadow where every flower was in bloom at once, and nothing had ever wilted."],
+			["glytta", "It's pretty. ...Too pretty. Even the fallen leaves are jumping back onto the trees."],
+			["rumi", "No ghosts. Not one. Commander, a graveyard with no ghosts is bad for business AND bad news."],
+			["mora", "Kara guides the dead. It is the heaviest work any of us do. Of course she dreams of a world that doesn't need her."]],
+		"mid": [["nar", "A phoenix chick hopped past, fell into the stream, and hopped out again dry. It had never burned. It had never been reborn."],
+			["furu", "Nothing ends here. But... nothing is born, either. Look. The buds never open any further."],
+			["glytta", "A dance with no last step. ...I know that one."]],
+		"mid2": [["dream:kara", "Commander. Put the weapons down. There's black tea, and the birds are finally quiet. Nobody dies here."],
+			["dream:kara", "Do you know how many hands I have let go of? Here, I never have to let go again."],
+			["?", "kara", ["You never let go. You walked them home.", "Who walks with you, Kara?", "The tea has gone cold. Come back."],
+				["...Home. ...That's what the old ones called it. I had forgotten that word.", "...No one. Death walks alone. ...Unless you're offering.", "...Cold? ...It was hot a moment ago. ...How long is a moment, here?"], [40, 35, 25]],
+			["dream:kara", "...No. If I wake, the scythe is waiting. I'm so tired of the scythe. Phoenix — burn the door shut!"]],
+		"boss_lines": [["dream:kara", "Phoenix Reaper — a harvest that never comes!"], ["glytta", "My turn to wake somebody! Crystal Step!"],
+			["commander", "She's tired, not lost. Hold on, Kara!"]],
+		"outro": [["nar", "A single petal fell. Then another. All across the meadow, the flowers finally let themselves finish blooming."],
+			["kara", "...It ended. ...And it's still beautiful. Hm. I should have known that. I tell it to the dead every day."],
+			["kara", "Commander. Next time I look that tired... don't wait three days. Bring tea. Sit with me."],
+			["rumi", "Two awake! That's two invoices. Where next, clock lady?"],
+			["mora", "Up. The butterflies are climbing past the clouds. Gemora is dreaming of the stars."]]},
+	{"name": "The Star That Stayed", "bg": "space", "pool": ["svormentis", "lizamorph", "ymir", "octra"], "boss": "gemora", "variant": "dream", "mirror": true, "boss_hp": 3.4, "boss_atk": 1.25,
+		"mod": {"elem": "EARTH", "atk": 0.3, "name": "Solid Ground: EARTH units +30% ATK"},
+		"intro": [["nar", "Gemora's dream had no ground. Only a small warm star, and around it a ring of houses made of light."],
+			["kara", "I know the look of a place that is already gone. This star died a long time ago."],
+			["mora", "Her home. It went dark before she ever reached us. She does not speak of it. She files it under 'old data'."],
+			["furu", "Then here, in the dream, the lights are still on. Oh, Gemora..."]],
+		"mid": [["nar", "The people of light waved as the party passed. They said the same greeting, in the same voice, every time."],
+			["rumi", "They're recordings. Like a shrine bell that only knows one note."],
+			["glytta", "She's playing her memories on repeat. That's... the loneliest playlist I've ever heard."]],
+		"mid2": [["dream:gemora", "Signal confirmed: Commander. Welcome to my home star. Population: everyone. Status: never offline."],
+			["dream:gemora", "I have calculated it. If I stay asleep, the star stays lit. Probability of loss: zero. It is the correct answer."],
+			["?", "gemora", ["A recording can't learn your new words.", "Your home is also with us now.", "What is the word for missing someone?"],
+				["...New words. I learned 'mochi' last week. They... would not know 'mochi'.", "...Two homes. Insufficient data. ...Requesting more data. Please keep talking.", "...The word is... Error. I have the word. I do not want to say it."], [35, 40, 30]],
+			["dream:gemora", "Warning. Warning. Wake-up signal detected. Rejecting. Cosmic Envoy — defend the star!"]],
+		"boss_lines": [["dream:gemora", "Void Envoy — orbit lock! Nothing leaves this sky!"], ["kara", "Some lights are meant to be carried, not guarded. Let it go."],
+			["rumi", "Hey, star girl! You still owe me three mochi! Wake up and pay!"]],
+		"outro": [["nar", "The little star did not go out. It grew small enough to hold, and settled in Gemora's hands like a warm coin."],
+			["gemora", "...Log entry. My home star is gone. I... miss it. That is the word. 'Miss'."],
+			["gemora", "New data: saying the word did not delete the star. It is still in memory. And you are all still here. Curious."],
+			["furu", "That's how it works, dear. Come, hold my hand on the way down."],
+			["mora", "Three awake. Only the dreamer is left. She is at the roots of the great tree, at the very bottom of her own sleep."]]},
+	{"name": "The Butterfly's Cradle", "bg": "bigtree", "pool": ["ex_nymph", "hairly", "serpentia", "skelinch"], "boss": "lumeira", "variant": "dream", "mirror": true, "boss_hp": 1.5, "boss_atk": 0.9,
+		"mod": {"elem": "LIGHT", "atk": 0.35, "name": "First Light: LIGHT units +35% ATK"},
+		"intro": [["nar", "At the roots of the great tree hung the old festival lantern. Inside it, curled up like a cat, slept Lumeira, and a million butterflies breathed in time with her."],
+			["mora", "The lantern is a wish-catcher. It was never meant to stay lit after the festival. It heard one wish too many."],
+			["kara", "Whose wish?"],
+			["mora", "Hers. On the last night she wished that nobody she loved would ever be sad again. The lantern took her at her word."],
+			["?", "mora", ["Then we wake her kindly.", "A kind wish. A terrible lantern.", "Can you slow time while we talk to her?"],
+				["...Kindly. Yes. She is the gentlest of us. She deserves a gentle morning.", "...Well put. I will add it to my diary tonight.", "...For you, Commander, I can give you one long minute. Use it well."], [40, 30, 35]]],
+		"mid": [["nar", "The closer they came, the sleepier they grew. Rumi yawned first, then swore she had not."],
+			["rumi", "I'm not sleepy. You're sleepy. ...Is that a pile of gold coins? It looks so soft..."],
+			["glytta", "Rumi, no! Pinch her! Somebody pinch her!"],
+			["gemora", "Advice: think of something unfinished. The dream cannot hold a person who still has plans."]],
+		"mid2": [["dream:lumeira", "Mmm... Commander...? You're here too... Good. Now everyone is in my dream. Nobody is sad. Nobody is hurt."],
+			["dream:lumeira", "Stay... It's warm... I made a garden for Glytta, and tea for Kara, and a star for Gemora... I can make one for you..."],
+			["?", "lumeira", ["I'd rather be sad with you awake.", "Your butterflies are tired too.", "What did you dream for yourself?"],
+				["...Sad... with me? ...That's a strange thing to choose. ...Why does it sound so nice?", "...Oh. ...Oh, they are. Their little wings are shaking. I didn't see...", "...For me? ...I forgot to make one. I was busy with everyone else's."], [40, 30, 35]],
+			["dream:lumeira", "...No... if I wake up, the sad things come back... Just five more minutes... five more years... Astral Cocoon..."]],
+		"boss_lines": [["dream:lumeira", "Astral Butterfly — sleep, and be happy forever..."], ["kara", "Even good dreams need an ending, little sage."],
+			["gemora", "Wake-up signal at full power! Sending: 'We miss you'!"], ["commander", "Lumeira — good morning!"]],
+		"outro": [["nar", "The lantern's flame shrank to a spark, then to nothing. A million butterflies opened their wings at once, and it was morning."],
+			["lumeira", "...Mmh. ...Good morning. ...Why is everyone crying? Did I... oh. Oh no. Was that all me?"],
+			["furu", "You wished for something kind, dear one. It only went a little too far."],
+			["lumeira", "I'm sorry. I thought happy meant never sad. But Kara's flowers were prettier when they fell... and Gemora's star..."],
+			["glytta", "Hey. We all stayed in there because part of us wanted to. You don't get to carry that alone."],
+			["lumeira", "...Then next time, I'll wish for something smaller. Like breakfast. With everyone. Awake."],
+			["rumi", "Breakfast is on the Commander. It's in the contract. I wrote it down."],
+			["nar", "— END OF ARC 12: THE DREAMING LANTERN —   Thank you for playing, Commander. More stories are coming."]]},
 ]
 const STAGES_PER_CHAPTER := 6
 
@@ -1118,6 +1212,16 @@ const INTERLUDES := [
 			["?", "valeria", ["Hot cocoa for the Empress.", "Only if you smile again.", "Let's share the mug."],
 				["...Thank you. ...It's the best thing I've tasted in a hundred years. Don't tell Rubby.", "...Like this? ...Don't stare. Royal smiles are rationed.", "...Sh-share? ...Fine. You drink first. ...From the other side."], [30, 35, 40]],
 			["nar", "Outside, the snow fell gently — downward, the way snow is supposed to."]]},
+	{"id": "i12", "name": "Breakfast, Awake", "req": 288, "bg": "lobby", "cast": ["lumeira", "glytta", "kara", "gemora", "rumi"],
+		"lines": [["nar", "The first breakfast after the long sleep. The table was too small, the bread was slightly burnt, and nobody minded."],
+			["glytta", "I'm not allowed to dance for a week. Furu's orders. So I'm going to eat EVERYTHING instead."],
+			["kara", "Black tea. Hot this time. ...Commander, you remembered. Sit here. This seat is for whoever walks with me."],
+			["gemora", "New word acquired: 'seconds'. It means a second breakfast. This planet is excellent."],
+			["rumi", "Bill for one dream rescue: four heroes, one lantern. ...I'll take it in mochi. I'm feeling generous."],
+			["lumeira", "Commander... I didn't dream anything last night. Nothing at all. It was the best sleep I've ever had."],
+			["?", "lumeira", ["Then tonight, dream something just for you.", "I'm glad you woke up.", "Save me a seat at breakfast tomorrow."],
+				["...Just for me? ...Maybe a small one. A nap in the sun. ...With you nearby.", "...Me too. Being awake is noisy and bright and a little sad. I like it.", "...Every tomorrow. I'll even wake up on time. ...Probably."], [35, 40, 30]],
+			["nar", "The old lantern hangs in the hall now, unlit. Lumeira dusts it every morning, and says good morning to it, just in case."]]},
 ]
 const CHAPTER_REWARD := {"gems": 300, "summon_ticket": 3, "gear_chest": 1}
 
@@ -1333,6 +1437,7 @@ const ACHIEVEMENTS := [
 	{"id": "ch38", "name": "Clear Arc 9: The Wild Hunt", "stat": "stages_cleared", "target": 228, "give": {"gems": 16000, "summon_ticket": 30, "celestial_gem": 7}},
 	{"id": "ch40", "name": "Clear Arc 10: The Abyss Choir", "stat": "stages_cleared", "target": 240, "give": {"gems": 10000, "summon_ticket": 20, "oath_ring": 1}},
 	{"id": "ch44", "name": "Clear Arc 11: The Frostbound Crown", "stat": "stages_cleared", "target": 264, "give": {"gems": 16000, "summon_ticket": 30, "celestial_gem": 7}},
+	{"id": "ch48", "name": "Clear Arc 12: The Dreaming Lantern", "stat": "stages_cleared", "target": 288, "give": {"gems": 16000, "summon_ticket": 30, "oath_ring": 1}},
 	{"id": "hard30", "name": "Clear 30 Hard stages", "stat": "hard_cleared", "target": 30, "give": {"gems": 1500, "star_stone": 20}},
 	{"id": "own8", "name": "Recruit 8 heroes", "stat": "heroes_owned", "target": 8, "give": {"gems": 300}},
 	{"id": "own27", "name": "Recruit 27 heroes", "stat": "heroes_owned", "target": 27, "give": {"gems": 3000}},
@@ -1403,6 +1508,7 @@ static func ach_cat(a: Dictionary) -> String:
 	return str(ACH_CAT_OF.get(a["stat"], "COLLECTION"))
 
 const MAIL := [
+	{"id": "arc12_dream", "title": "Arc 12: The Dreaming Lantern", "body": "The morning bell did not ring, and half the cathedral will not wake up. Four new story chapters (45-48) are open after Arc 11: follow Rumi, Furu and Mora into Lumeira's dream and bring back Glytta, Kara and Gemora. Watch out for the new Dreambound bosses. Something to keep you awake is attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
 	{"id": "arc11_frost", "title": "Arc 11: The Frostbound Crown", "body": "Snow is falling inside the cathedral! Four new story chapters (41-44) are open after Arc 10, where Valeria, Schylua, Micca and Aqua face the Winter Crown of Frostvale. Watch out for the new Frostbound bosses. A warm cup of supplies is attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
 	{"id": "xmas_hyeonxa", "title": "Starfall Christmas: Hyeonxa's Limited Skin!", "body": "The Starfall Christmas event is live until January 1st! Clear the snowbound event stages, collect Event Tokens and exchange 1,800 of them for Hyeonxa's limited skin SCARLET MISTLETOE — with its own battle sprite. Here are some tokens to get you started.", "give": {"festival_token": 200}},
 	{"id": "heroes_nov8", "title": "Four New Heroes & a Beast from the Abyss!", "body": "Gala, Morana, Seraph and Tamo have joined Euphoria — and Octra rides out of the Abyss in the new Arc 10. Tap the new ZOOM button on any hero or foe to view their art full screen. A small welcome gift is attached!", "give": {"gold": 50000, "exp_potion": 5}},
@@ -1443,6 +1549,7 @@ const TITLES := [
 	{"id": "wild_hunt", "name": "Master of the Hunt", "desc": "Clear Arc 9 (Chapter 38)."},
 	{"id": "abyss_choir", "name": "Conductor of the Abyss", "desc": "Clear Arc 10 (Chapter 40)."},
 	{"id": "frostbound", "name": "Crownbreaker of Frostvale", "desc": "Clear Arc 11 (Chapter 44)."},
+	{"id": "dreamwalker", "name": "Dreamwalker", "desc": "Clear Arc 12 (Chapter 48)."},
 	{"id": "homebody", "name": "Homebody", "desc": "Unlock every Private Room."},
 	{"id": "mirror_master", "name": "Mirror Master", "desc": "Clear 30 Hero Trial tiers."},
 	{"id": "hunter", "name": "Apex Hunter", "desc": "Defeat any Boss Hunt target on ABYSS difficulty."},
@@ -1967,7 +2074,7 @@ static var _prof_json: Dictionary = {}
 
 ## Story speaker ids may carry a variant prefix ("mirror:", "hollow:", "echo:").
 static func base_id(id: String) -> String:
-	for p in ["mirror:", "hollow:", "echo:", "ashen:", "feral:", "frost:"]:
+	for p in ["mirror:", "hollow:", "echo:", "ashen:", "feral:", "frost:", "dream:"]:
 		if id.begins_with(p):
 			return id.substr(p.length())
 	return id
@@ -2435,7 +2542,7 @@ static func fav_room(id: String) -> String:
 # ------------------------------------------------------------------ Starlight Rift (weekly roguelite climb)
 const RIFT_MAPS := ["space", "alien", "abaddon", "blackhole", "dino", "bigtree", "necro", "galaxy", "dragonfire", "asgard", "outland", "ice", "apocalypse", "hell", "aqua", "forest"]
 const RIFT_POOL := ["slime", "ex_nymph", "gumi_wolf", "slarkoi", "eroghost", "evy_blood_sage", "ygg_naar", "hairly", "svormentis", "ymir", "scomantis", "skelinch", "serpentia", "voodoo", "lizamorph", "octra"]
-const RIFT_VARIANTS := ["mirror", "hollow", "astral", "echo", "ashen", "frost"]
+const RIFT_VARIANTS := ["mirror", "hollow", "astral", "echo", "ashen", "frost", "dream"]
 ## Blessings: picked 1-of-3 after every win; they stack for the rest of the run.
 const BLESSINGS := {
 	"ember": {"name": "Ember Heart", "desc": "All allies ATK +8%", "rar": "R", "bonus": {"atk": 0.08}},
@@ -2570,6 +2677,7 @@ const LINKS := [
 	{"id": "blaze", "name": "Blaze Brigade", "heroes": ["rubby", "shina"], "bonus": {"atk": 0.06}, "line": "Fireworks and dragonfire."},
 	{"id": "wander", "name": "Wanderer & Sage", "heroes": ["sven", "hyeonxa"], "bonus": {"hp": 0.08}, "line": "Quiet roads and quieter tea."},
 	{"id": "warm", "name": "Warm Hearts", "heroes": ["eurnipha", "cthollia"], "bonus": {"hp": 0.08}, "line": "Saved from the Hollow Star together."},
+	{"id": "dawn", "name": "Good Morning", "heroes": ["lumeira", "kara", "gemora"], "bonus": {"atk": 0.05, "hp": 0.05, "def": 0.05}, "line": "A nap, a cup of tea and a small warm star."},
 	{"id": "thaw", "name": "After the Thaw", "heroes": ["valeria", "rubby", "aqua"], "bonus": {"atk": 0.05, "hp": 0.05, "def": 0.05}, "line": "Ice, fireworks and rain — the recipe for spring."},
 	{"id": "lastlight", "name": "The Last Light", "heroes": ["shina", "fidelia", "mora"], "bonus": {"atk": 0.06, "hp": 0.06, "def": 0.06}, "line": "Today, tomorrow, and every tomorrow after that."},
 ]
@@ -3660,6 +3768,8 @@ static func name_of(id: String) -> String:
 		return "Feral " + name_of(id.substr(6)).split(" ")[0]
 	if id.begins_with("frost:"):
 		return "Frostbound " + name_of(id.substr(6)).split(" ")[0]
+	if id.begins_with("dream:"):
+		return "Dreambound " + name_of(id.substr(6)).split(" ")[0]
 	var e := _entry(id)
 	return str(e.get("display_name", id.capitalize()))
 
@@ -3682,6 +3792,8 @@ static func theme_color(id: String) -> Color:
 		return Color("#9a2a1f")
 	if id.begins_with("frost:"):
 		return Color("#3f7fb8")
+	if id.begins_with("dream:"):
+		return Color("#b05fc0")
 	var c := str(_entry(id).get("theme_color", ""))
 	if c != "":
 		return Color(c)
