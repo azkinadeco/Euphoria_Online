@@ -351,6 +351,12 @@ func show_daily_board() -> void:
 			h.add_child(UI.label("✓", 18, UI.GREEN, 2))
 			continue
 		var route: String = row[0]
+		if route == "dungeon" and Game.dungeon_sweeps_ready() > 0:
+			h.add_child(UI.button("SWEEP %d" % Game.dungeon_sweeps_ready(), func():
+				var res := Game.sweep_all_dungeons()
+				close_popup(v)
+				Game.sfx("star_up")
+				show_rewards("SWEPT %d RUNS" % int(res["runs"]), res["rewards"], show_daily_board), "", Vector2(110, 38)))
 		var label := "CLAIM" if route in ["afk", "login"] else "GO"
 		h.add_child(UI.button(label, func(): _board_go(route, v), "GoldButton", Vector2(96, 38)))
 	UI.stagger(list, 0.02)

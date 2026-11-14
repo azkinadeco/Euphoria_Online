@@ -1681,6 +1681,21 @@ func _run() -> void:
 	check((pu_again["levels"] as Dictionary).is_empty() and int(pu_again["gear"]) == 0 and int(pu_again["after"]) == int(pu_again["before"]), "nothing left to do without resources")
 	G.s = pu_save
 
+	print("[sweep all dungeons]")
+	var sd_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	G.s["player"]["level"] = 20
+	check(G.dungeon_sweeps_ready() == 0 and int(G.sweep_all_dungeons()["runs"]) == 0, "nothing to sweep before a dungeon is cleared")
+	G.s["dungeon"]["cleared"] = {"gold": 1, "exp": 0}
+	check(G.dungeon_sweeps_ready() == 2 * DB.DUNGEON_TRIES, "two cleared dungeons are sweepable")
+	var sd_gold: int = G.amount("gold")
+	var sd: Dictionary = G.sweep_all_dungeons()
+	check(int(sd["runs"]) == 2 * DB.DUNGEON_TRIES and int(sd["by"]["gold"]) == DB.DUNGEON_TRIES, "every remaining try is used")
+	check(G.amount("gold") == sd_gold + int(sd["rewards"].get("gold", 0)) and int(sd["rewards"]["gold"]) >= 3 * int(DB.dungeon_stage("gold", 1)["rewards"]["gold"]), "rewards are summed at the highest cleared difficulty")
+	check(G.dungeon_tries("gold") == 0 and G.dungeon_tries("gear") == DB.DUNGEON_TRIES and G.dungeon_sweeps_ready() == 0, "the uncleared dungeon keeps its tries")
+	G.s = sd_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

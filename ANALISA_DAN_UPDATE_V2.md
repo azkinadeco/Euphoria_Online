@@ -1228,6 +1228,12 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fi. Update batch 157 — SWEEP ALL untuk Daily Dungeon
+
+- `Game.dungeon_sweeps_ready()`: jumlah sweep yang bisa dijalankan sekarang (sisa attempt semua dungeon yang sudah punya difficulty ter-clear).
+- `Game.sweep_all_dungeons()`: memanggil `sweep_dungeon(id, dungeon_cleared(id))` sampai attempt habis, untuk tiap dungeon. Hasil `{rewards, runs, by}`. Dungeon yang belum pernah di-clear dilewati.
+- `dungeon.gd`: tombol **SWEEP ALL (n)** di header. `main.gd::show_daily_board`: tombol **SWEEP n** di baris Daily Dungeons, lalu kembali ke board.
+
 ## 2fh. Update batch 156 — Quick Power-Up (tombol BOOST di Formation)
 
 - `Game.power_up_plan()`: simulasi tanpa mengubah save. Hero di formation dinaikkan merata (selalu yang level terendah dulu, berhenti di `hero_cap`) dengan Hero EXP dan Gold yang ada. Hasil `{levels: {id: [dari, ke]}, exp, gold}`.

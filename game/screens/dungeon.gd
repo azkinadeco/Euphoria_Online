@@ -10,7 +10,10 @@ func build() -> void:
 	_sel = str(params.get("dungeon", "gold"))
 	set_bg(DB.dungeon_def(_sel)["bg"], 0.5)
 	_bg_rect = get_child(0) as TextureRect
-	header("DAILY DUNGEON", ["gold", "gems", "hero_exp"])
+	var hbar := header("DAILY DUNGEON", ["gold", "gems", "hero_exp"])
+	_all_btn = UI.button("SWEEP ALL", _sweep_all, "GoldButton", Vector2(170, 46))
+	_all_btn.tooltip_text = "Use every remaining attempt at the highest difficulty you have cleared"
+	hbar.add_child(_all_btn)
 	var b := body(76)
 	_list = UI.vbox(10)
 	_list.anchor_right = 0.3
@@ -28,12 +31,26 @@ func build() -> void:
 	_render()
 	tutorial("dungeon")
 
+var _all_btn: Button
+
+func _sweep_all() -> void:
+	var res := Game.sweep_all_dungeons()
+	if int(res["runs"]) == 0:
+		main.toast("Nothing to sweep: clear a difficulty first, or come back tomorrow.", UI.MUTED)
+	else:
+		Game.sfx("star_up")
+		main.show_rewards("SWEPT %d RUNS" % int(res["runs"]), res["rewards"])
+	_render()
+
 func refresh() -> void:
 	super.refresh()
 
 func _render() -> void:
 	_bg_rect.texture = DB.bg(DB.dungeon_def(_sel)["bg"])
 	params["dungeon"] = _sel
+	var ready := Game.dungeon_sweeps_ready()
+	_all_btn.text = "SWEEP ALL (%d)" % ready if ready > 0 else "SWEEP ALL"
+	_all_btn.disabled = ready == 0
 	for c in _list.get_children():
 		c.queue_free()
 	for d in DB.DUNGEONS:

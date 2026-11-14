@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-14k",
+  "date": "2026-11-14",
+  "tag": "UPDATE",
+  "title": "Sweep All Dungeons",
+  "body": "Daily Dungeons have a SWEEP ALL button. One tap uses every remaining attempt of every dungeon at the highest difficulty you have already cleared, and shows all the rewards together. The same sweep is available from the Daily Dungeons row on Today's Board. Dungeons you have never cleared are left alone, so you can still fight them yourself."
+ },
+ {
   "id": "n2026-11-14j",
   "date": "2026-11-14",
   "tag": "UPDATE",

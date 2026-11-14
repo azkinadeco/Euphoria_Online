@@ -2448,6 +2448,40 @@ func sweep_dungeon(id: String, diff: int) -> Dictionary:
 	stat_add("sweeps")
 	return apply_dungeon_result(id, diff, true)
 
+## How many sweeps SWEEP ALL would run now (every remaining try of every dungeon that has a cleared difficulty).
+func dungeon_sweeps_ready() -> int:
+	if not feature_unlocked("dungeon"):
+		return 0
+	var n := 0
+	for d in DB.DUNGEONS:
+		if dungeon_cleared(str(d["id"])) >= 0:
+			n += dungeon_tries(str(d["id"]))
+	return n
+
+## Sweeps every dungeon at its highest cleared difficulty until its tries run out.
+## Returns {"rewards": total, "runs": n, "by": {dungeon id: runs}}.
+func sweep_all_dungeons() -> Dictionary:
+	var total := {}
+	var by := {}
+	var runs := 0
+	if not feature_unlocked("dungeon"):
+		return {"rewards": total, "runs": 0, "by": by}
+	for d in DB.DUNGEONS:
+		var id := str(d["id"])
+		var diff := dungeon_cleared(id)
+		while diff >= 0 and dungeon_tries(id) > 0:
+			var r := sweep_dungeon(id, diff)
+			if r.has("error"):
+				break
+			runs += 1
+			by[id] = int(by.get(id, 0)) + 1
+			for k in r.keys():
+				total[k] = int(total.get(k, 0)) + int(r[k])
+	if runs > 0:
+		save_game()
+		changed.emit()
+	return {"rewards": total, "runs": runs, "by": by}
+
 # =================================================================== bond stories
 
 func bond_story_unlocked(id: String, ep: int) -> bool:
