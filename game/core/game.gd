@@ -2680,6 +2680,73 @@ func daily_board() -> Array:
 	rows.sort_custom(func(a, b): return int(a[4] > 0) > int(b[4] > 0))
 	return rows
 
+## "2d 05h" / "05h 12m" / "04m 09s" for a countdown in seconds.
+static func left_text(secs: int) -> String:
+	secs = maxi(0, secs)
+	if secs >= 86400:
+		return "%dd %02dh" % [secs / 86400, (secs / 3600) % 24]
+	if secs >= 3600:
+		return "%02dh %02dm" % [secs / 3600, (secs / 60) % 60]
+	return "%02dm %02ds" % [secs / 60, secs % 60]
+
+## A 29 February birthday is celebrated on 28 February in years without one.
+static func birthday_in_year(mmdd: String, year: int) -> String:
+	var leap := (year % 4 == 0 and year % 100 != 0) or year % 400 == 0
+	return "02-28" if mmdd == "02-29" and not leap else mmdd
+
+## Days until the next MM-DD date (0 = today).
+func days_until(mmdd: String) -> int:
+	var parts := mmdd.split("-")
+	if parts.size() != 2:
+		return 9999
+	var d := Time.get_date_dict_from_system()
+	var today := int(Time.get_unix_time_from_datetime_dict({"year": d["year"], "month": d["month"], "day": d["day"], "hour": 0, "minute": 0, "second": 0}))
+	for y in [int(d["year"]), int(d["year"]) + 1]:
+		var md := birthday_in_year(mmdd, y).split("-")
+		var t := int(Time.get_unix_time_from_datetime_dict({"year": y, "month": int(md[0]), "day": int(md[1]), "hour": 0, "minute": 0, "second": 0}))
+		if t >= today:
+			return (t - today) / 86400
+	return 9999
+
+## The next `n` hero birthdays: [{id, days, date}] sorted by how soon they are. Owned heroes only when `owned`.
+func upcoming_birthdays(n: int = 4, owned: bool = false) -> Array:
+	var out: Array = []
+	for id in DB.HEROES.keys():
+		var bd := str(DB.profile(id).get("birthday", ""))
+		if bd == "" or (owned and not owns(id)):
+			continue
+		out.append({"id": id, "days": days_until(bd), "date": bd})
+	out.sort_custom(func(a, b): return int(a["days"]) < int(b["days"]) or (int(a["days"]) == int(b["days"]) and str(a["id"]) < str(b["id"])))
+	return out.slice(0, n)
+
+## Everything that runs on a clock: {icon, name, note, left (seconds), route, color}. Locked features are skipped.
+func schedule() -> Array:
+	var out: Array = []
+	var d := day_key()
+	var day_left := (d + 1) * 86400 - 7 * 3600 - now()
+	var week_left := (d / 7 + 1) * 7 * 86400 - 7 * 3600 - now()
+	out.append({"icon": "icon_quest", "name": "Daily Reset", "note": "Daily missions, shop stock, dungeon tries, arena tickets, talks and dates", "left": day_left, "route": "quests", "color": "#5fb8ff"})
+	out.append({"icon": "icon_pass", "name": "Weekly Reset", "note": "Weekly missions, World Boss ranking, Starlight Rift, Hunter's Exchange", "left": week_left, "route": "quests", "color": "#b98cff"})
+	if feature_unlocked("event"):
+		var regular: Array = DB.EVENTS.filter(func(e): return not e.has("skin"))
+		var p := event_period()
+		var nxt := str(regular[posmod(p + 1, regular.size())]["name"]) if p >= 0 else ""
+		out.append({"icon": "icon_live_ops", "name": "Event: " + str(DB.EVENT["name"]), "note": ("Next up: " + nxt) if nxt != "" else "Limited event with an exclusive skin", "left": event_ends_in(), "route": "event", "color": str(DB.EVENT.get("color", "#ff8fb8"))})
+	var f := festival()
+	if feature_unlocked("festival") and not f.is_empty():
+		var nm := int(Time.get_date_dict_from_system()["month"]) % 12 + 1
+		var nf := str(DB.FESTIVALS.get(nm, {}).get("name", ""))
+		out.append({"icon": "icon_festival", "name": str(f["name"]), "note": ("Next month: " + nf) if nf != "" and nf != str(f["name"]) else "Seasonal festival, Lantern Charms and daily wish", "left": festival_ends_in(), "route": "festival", "color": str(f.get("color", "#ffd479"))})
+	if feature_unlocked("pass"):
+		out.append({"icon": "icon_pass", "name": "Season Pass  •  Lv.%d" % pass_level(), "note": "Unclaimed levels are lost when the season ends", "left": pass_ends_in(), "route": "pass", "color": "#ffd479"})
+	if feature_unlocked("arena"):
+		out.append({"icon": "icon_arena", "name": "Arena Season", "note": "Season rewards are paid by tier when it ends", "left": arena_season_ends_in(), "route": "arena", "color": "#ff9a5a"})
+	if feature_unlocked("worldboss"):
+		out.append({"icon": "icon_boss", "name": "World Boss Week", "note": "Rank #%d now  •  rank rewards at the weekly reset" % wboss_rank(), "left": week_left, "route": "worldboss", "color": "#ff6b6b"})
+	if feature_unlocked("rift"):
+		out.append({"icon": "icon_awakening", "name": "Starlight Rift Run", "note": "Best floor %d  •  the rift and its milestones reset weekly" % int(s["rift"]["best"]), "left": week_left, "route": "rift", "color": "#9fd0ff"})
+	return out
+
 ## Everything that can be collected right now without playing: [label, n] rows (n = how many).
 func collectables() -> Array:
 	var out: Array = []
@@ -3119,7 +3186,7 @@ func birthday_heroes() -> Array:
 	var key := "%02d-%02d" % [d["month"], d["day"]]
 	var out: Array = []
 	for id in s["heroes"].keys():
-		if str(DB.profile(id).get("birthday", "")) == key:
+		if birthday_in_year(str(DB.profile(id).get("birthday", "")), int(d["year"])) == key:
 			out.append(id)
 	return out
 

@@ -305,7 +305,14 @@ func show_daily_board() -> void:
 	var v := popup("TODAY'S BOARD", 760)
 	var rows := Game.daily_board()
 	var left := rows.filter(func(r): return int(r[4]) > 0).size()
-	v.add_child(UI.label("%d activities still waiting today  •  resets at 07:00" % left if left > 0 else "All done for today — great work, Commander!", 14, UI.GOLD if left > 0 else UI.GREEN, 3))
+	var top := UI.hbox(8)
+	v.add_child(top)
+	var tl := UI.label("%d activities still waiting today  •  resets at 07:00" % left if left > 0 else "All done for today — great work, Commander!", 14, UI.GOLD if left > 0 else UI.GREEN, 3)
+	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(tl)
+	top.add_child(UI.button("SCHEDULE ▶", func():
+		close_popup(v)
+		show_schedule(), "", Vector2(150, 36)))
 	# one-tap collection of everything that needs no playing
 	var col := Game.collectables()
 	var cp := UI.styled_panel(Color("#3a2a18") if not col.is_empty() else Color(0.05, 0.04, 0.08, 0.7), UI.GOLD if not col.is_empty() else Color("#2c2444"), 12, 1, 8)
@@ -345,6 +352,88 @@ func show_daily_board() -> void:
 		var route: String = row[0]
 		var label := "CLAIM" if route in ["afk", "login"] else "GO"
 		h.add_child(UI.button(label, func(): _board_go(route, v), "GoldButton", Vector2(96, 38)))
+	UI.stagger(list, 0.02)
+
+## Calendar of everything on a timer (events, seasons, resets) and the next hero birthdays.
+func show_schedule() -> void:
+	var v := popup("SCHEDULE", 820)
+	var top := UI.hbox(8)
+	v.add_child(top)
+	var tl := UI.label("What is running, and for how long", 14, UI.GOLD, 3)
+	tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(tl)
+	top.add_child(UI.button("◀ TODAY", func():
+		close_popup(v)
+		show_daily_board(), "", Vector2(150, 36)))
+	var list := UI.vbox(6)
+	var sc := UI.scroll(list)
+	sc.custom_minimum_size = Vector2(0, 350)
+	v.add_child(sc)
+	var chips: Array = []
+	for e in Game.schedule():
+		var row: Dictionary = e
+		var col := Color(str(row["color"]))
+		var p := UI.styled_panel(Color(0.08, 0.06, 0.15, 0.92), Color(col, 0.55), 10, 1, 8)
+		list.add_child(p)
+		var h := UI.hbox(10)
+		p.add_child(h)
+		var ic := UI.tex_rect(DB.icon(str(row["icon"])), Vector2(36, 36))
+		ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		h.add_child(ic)
+		var tv := UI.vbox(1)
+		tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(tv)
+		tv.add_child(UI.label(str(row["name"]), 16, Color.WHITE, 2))
+		tv.add_child(UI.wrap_label(str(row["note"]), 12, UI.MUTED))
+		var cp := UI.styled_panel(Color(0, 0, 0, 0.45), Color(col, 0.7), 8, 1, 6)
+		cp.custom_minimum_size = Vector2(108, 0)
+		cp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		var cl := UI.label("", 14, col.lightened(0.35), 2)
+		cl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cp.add_child(cl)
+		h.add_child(cp)
+		chips.append([cl, Game.now() + int(row["left"])])
+		var route := str(row["route"])
+		var gb := UI.button("GO", func():
+			close_popup(v)
+			go(route), "", Vector2(70, 38))
+		gb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		h.add_child(gb)
+	# birthdays
+	var bds := Game.upcoming_birthdays(4)
+	if not bds.is_empty():
+		v.add_child(UI.label("✦ UPCOMING BIRTHDAYS", 14, Color("#ff9ad5"), 2))
+		var bh := UI.hbox(8)
+		v.add_child(bh)
+		for bd in bds:
+			var b: Dictionary = bd
+			var own := Game.owns(str(b["id"]))
+			var bp := UI.styled_panel(Color(0.12, 0.05, 0.14, 0.92), Color("#ff9ad5", 0.6 if own else 0.25), 10, 1, 6)
+			bp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			bp.tooltip_text = "Her present arrives on her birthday" if own else "Recruit her to celebrate together"
+			bh.add_child(bp)
+			var bx := UI.hbox(8)
+			bp.add_child(bx)
+			var fr := UI.face_rect(str(b["id"]), Vector2(46, 46))
+			if not own:
+				fr.modulate = Color(0.5, 0.5, 0.55)
+			bx.add_child(fr)
+			var bv := UI.vbox(0)
+			bx.add_child(bv)
+			bv.add_child(UI.label(DB.name_of(str(b["id"])).split(" ")[0], 14, Color.WHITE if own else UI.MUTED, 2))
+			var dd := int(b["days"])
+			bv.add_child(UI.label("TODAY!" if dd == 0 else ("Tomorrow" if dd == 1 else "in %d days" % dd), 12, UI.GOLD if dd <= 1 else Color("#ff9ad5"), 2))
+	var tick := func():
+		for c in chips:
+			var left: int = int(c[1]) - Game.now()
+			(c[0] as Label).text = Game.left_text(left)
+			(c[0] as Label).add_theme_color_override("font_color", Color("#ff8a8a") if left < 86400 else Color.WHITE)
+	tick.call()
+	var tm := Timer.new()
+	tm.wait_time = 1.0
+	tm.autostart = true
+	tm.timeout.connect(tick)
+	v.add_child(tm)
 	UI.stagger(list, 0.02)
 
 func _collect_all(v: Control) -> void:

@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fb. Update batch 150 — Schedule (kalender semua timer + ulang tahun)
+
+- `Game.schedule()`: baris `{icon, name, note, left, route, color}` untuk Daily Reset, Weekly Reset, Event (plus event berikutnya), Festival (plus festival bulan depan), Season Pass, Arena Season, World Boss Week dan Starlight Rift. Fitur yang masih terkunci level tidak tampil.
+- `Game.left_text(secs)` (format hitung mundur), `Game.days_until("MM-DD")`, `Game.upcoming_birthdays(n, owned)`.
+- `main.gd::show_schedule()`: popup SCHEDULE, hitung mundur diperbarui tiap detik (`Timer`), merah bila < 1 hari, tombol GO per baris, 4 ulang tahun terdekat di bawah (hero yang belum dimiliki diredupkan). Tombol **SCHEDULE ▶** di Today's Board dan **◀ TODAY** untuk kembali.
+- Perbaikan: `Game.birthday_in_year()` — hero berulang tahun 29 Februari kini dirayakan 28 Februari di tahun non-kabisat (sebelumnya hadiahnya hanya muncul 4 tahun sekali). Dipakai `birthday_heroes()` dan `days_until()`.
+- `tools/shot_runner.gd`: step `schedule`.
+
 ## 2fa. Update batch 149 — COLLECT ALL di Today's Board
 
 - `Game.collectables()`: daftar `[label, jumlah]` semua yang bisa diambil tanpa bermain (AFK ≥ 60 dtk, Login Bonus, hadiah Mail, misi harian/mingguan yang siap, Season Pass, Friend Hearts, Guild Check-in, Kitchen Basket, Expedition selesai). Fitur yang masih terkunci level tidak ikut.

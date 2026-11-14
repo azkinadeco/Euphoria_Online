@@ -1542,6 +1542,22 @@ func _run() -> void:
 	check(G.collectables().is_empty() and (G.collect_all()["done"] as Array).is_empty(), "second collect all finds nothing")
 	G.s = ca_save
 
+	print("[schedule]")
+	check(G.left_text(90061) == "1d 01h" and G.left_text(3725) == "01h 02m" and G.left_text(65) == "01m 05s", "countdown text formats")
+	check(G.birthday_in_year("02-29", 2027) == "02-28" and G.birthday_in_year("02-29", 2028) == "02-29" and G.birthday_in_year("08-14", 2027) == "08-14", "29 Feb birthday moves to 28 Feb outside leap years")
+	var sch_today: Dictionary = Time.get_date_dict_from_system()
+	check(G.days_until("%02d-%02d" % [sch_today["month"], sch_today["day"]]) == 0, "today's date is 0 days away")
+	var sch_bd: Array = G.upcoming_birthdays(4)
+	check(sch_bd.size() == 4 and int(sch_bd[0]["days"]) <= int(sch_bd[3]["days"]) and int(sch_bd[3]["days"]) < 366, "next four birthdays sorted by date")
+	var sch_lv: int = int(G.s["player"]["level"])
+	G.s["player"]["level"] = 1
+	var sch1: Array = G.schedule()
+	check(sch1.size() == 2 and int(sch1[0]["left"]) > 0 and int(sch1[0]["left"]) <= 86400, "level 1 schedule shows only the resets")
+	G.s["player"]["level"] = 30
+	var sch2: Array = G.schedule()
+	check(sch2.size() >= 7 and sch2.all(func(e): return int(e["left"]) >= 0 and ResourceLoader.exists("res://game/screens/%s.gd" % e["route"])), "full schedule has valid timers and routes")
+	G.s["player"]["level"] = sch_lv
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

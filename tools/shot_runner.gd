@@ -308,6 +308,8 @@ func _next() -> void:
 		Input.parse_input_event(re2)
 	elif v == "board":
 		main_node.show_daily_board()
+	elif v == "schedule":
+		main_node.show_schedule()
 	elif v.begins_with("huntclear:"):
 		root.get_node("Game").s["hunt"]["cleared"][v.substr(10)] = 1
 	elif v == "welcome":
