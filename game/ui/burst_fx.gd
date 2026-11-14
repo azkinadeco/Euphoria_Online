@@ -40,6 +40,8 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _star(p: Vector2, s: float, rot: float, c: Color) -> void:
+	if s < 0.6:
+		return   # a near-zero star is a degenerate polygon (triangulation error spam)
 	var pts := PackedVector2Array()
 	for i in 8:
 		var a := rot + TAU * i / 8.0

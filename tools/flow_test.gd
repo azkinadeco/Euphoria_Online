@@ -1526,6 +1526,22 @@ func _run() -> void:
 	check(G.stat_value("gear_ssr") == 1 and G.stat_value("gear_max") == 0, "SSR gear counted, none at +10")
 	G.s = fresh_ach
 
+	print("[collect all]")
+	var ca_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	G.s["afk_ts"] = G.now() - 7200
+	var ca_names: Array = G.collectables().map(func(c): return str(c[0]))
+	check(ca_names.has("AFK Rewards") and ca_names.has("Login Bonus") and ca_names.has("Mail gifts") and ca_names.has("Missions"), "collectables lists AFK, login, mail and missions")
+	check(not ca_names.has("Guild Check-in") and not ca_names.has("Friend Hearts"), "locked features are not collected")
+	var ca_gold: int = G.amount("gold")
+	var ca: Dictionary = G.collect_all()
+	check((ca["done"] as Array).size() == ca_names.size() and int(ca["rewards"].get("gold", 0)) > 0, "collect all claims every listed source")
+	check(G.amount("gold") == ca_gold + int(ca["rewards"]["gold"]), "collect all reports exactly the gold it paid")
+	check(G.mail_unclaimed() == 0 and not G.can_claim_login(), "mail and login are claimed")
+	check(G.collectables().is_empty() and (G.collect_all()["done"] as Array).is_empty(), "second collect all finds nothing")
+	G.s = ca_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

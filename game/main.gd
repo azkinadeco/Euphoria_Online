@@ -306,9 +306,23 @@ func show_daily_board() -> void:
 	var rows := Game.daily_board()
 	var left := rows.filter(func(r): return int(r[4]) > 0).size()
 	v.add_child(UI.label("%d activities still waiting today  •  resets at 07:00" % left if left > 0 else "All done for today — great work, Commander!", 14, UI.GOLD if left > 0 else UI.GREEN, 3))
+	# one-tap collection of everything that needs no playing
+	var col := Game.collectables()
+	var cp := UI.styled_panel(Color("#3a2a18") if not col.is_empty() else Color(0.05, 0.04, 0.08, 0.7), UI.GOLD if not col.is_empty() else Color("#2c2444"), 12, 1, 8)
+	v.add_child(cp)
+	var ch := UI.hbox(10)
+	cp.add_child(ch)
+	var names: Array = col.map(func(c): return str(c[0]) + (" ×%d" % int(c[1]) if int(c[1]) > 1 else ""))
+	var cl := UI.wrap_label("Ready now:  " + ", ".join(names) if not col.is_empty() else "Nothing to collect right now. AFK rewards, mail and mission rewards will show up here.", 13, Color.WHITE if not col.is_empty() else UI.MUTED)
+	cl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	ch.add_child(cl)
+	var cb := UI.button("✦ COLLECT ALL", func(): _collect_all(v), "GoldButton" if not col.is_empty() else "", Vector2(190, 46))
+	cb.disabled = col.is_empty()
+	cb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	ch.add_child(cb)
 	var list := UI.vbox(6)
 	var sc := UI.scroll(list)
-	sc.custom_minimum_size = Vector2(0, 430)
+	sc.custom_minimum_size = Vector2(0, 370)
 	v.add_child(sc)
 	for r in rows:
 		var row: Array = r
@@ -332,6 +346,22 @@ func show_daily_board() -> void:
 		var label := "CLAIM" if route in ["afk", "login"] else "GO"
 		h.add_child(UI.button(label, func(): _board_go(route, v), "GoldButton", Vector2(96, 38)))
 	UI.stagger(list, 0.02)
+
+func _collect_all(v: Control) -> void:
+	var res := Game.collect_all()
+	close_popup(v)
+	if (res["done"] as Array).is_empty():
+		toast("Nothing to collect right now.")
+		return
+	Game.sfx("star_up")
+	var after := func():
+		toast("Collected: " + ", ".join(res["done"]), UI.GREEN)
+		if current and current.has_method("refresh"):
+			current.refresh()
+	if (res["rewards"] as Dictionary).is_empty():
+		after.call()
+	else:
+		show_rewards("ALL COLLECTED", res["rewards"], after)
 
 func _board_go(route: String, v: Control) -> void:
 	close_popup(v)

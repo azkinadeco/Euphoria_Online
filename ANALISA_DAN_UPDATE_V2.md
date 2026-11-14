@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fa. Update batch 149 — COLLECT ALL di Today's Board
+
+- `Game.collectables()`: daftar `[label, jumlah]` semua yang bisa diambil tanpa bermain (AFK ≥ 60 dtk, Login Bonus, hadiah Mail, misi harian/mingguan yang siap, Season Pass, Friend Hearts, Guild Check-in, Kitchen Basket, Expedition selesai). Fitur yang masih terkunci level tidak ikut.
+- `Game.collect_all()`: mengklaim semuanya lewat fungsi klaim yang sudah ada (jadi progres misi, EXP pass, bond ekspedisi tetap jalan), misi diklaim dua putaran karena klaim bisa menyelesaikan misi lain. Mengembalikan `{rewards, done}`.
+- `main.gd::show_daily_board`: panel "Ready now: …" + tombol **✦ COLLECT ALL** di atas daftar; setelah klaim muncul popup ALL COLLECTED lalu toast "Collected: …".
+- Perbaikan: `burst_fx.gd::_star` tidak lagi menggambar bintang berukuran hampir nol (memicu spam error "Invalid polygon data, triangulation failed" di akhir animasi popup hadiah).
+- Flow test: fresh save → collect_all mengambil login + mail, panggilan kedua kosong.
+
 ## 2ez. Update batch 148 — 37 achievement baru + filter kategori
 
 - `DB.ACHIEVEMENTS`: 37 entri baru (total 70) untuk sistem yang sebelumnya tanpa achievement: jumlah battle, win streak, 3★, Arena, Tower 50/100, Boss Hunt, Rift, Hero Trial, Commander Lv, Awaken A5, Limit Break, gear SSR/+10, Bond 10, 5 Oath, date, PERFECT date, foto, foe jinak, Special Skin, level Guild, hari login, Gold terpakai.

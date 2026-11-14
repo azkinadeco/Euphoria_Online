@@ -2680,6 +2680,72 @@ func daily_board() -> Array:
 	rows.sort_custom(func(a, b): return int(a[4] > 0) > int(b[4] > 0))
 	return rows
 
+## Everything that can be collected right now without playing: [label, n] rows (n = how many).
+func collectables() -> Array:
+	var out: Array = []
+	if int(afk_pending().get("secs", 0)) >= 60:
+		out.append(["AFK Rewards", 1])
+	if can_claim_login():
+		out.append(["Login Bonus", 1])
+	if mail_unclaimed() > 0:
+		out.append(["Mail gifts", mail_unclaimed()])
+	var qn := 0
+	for q in DB.DAILY_QUESTS:
+		qn += 1 if quest_state(q) == "ready" else 0
+	for q in DB.WEEKLY_QUESTS:
+		qn += 1 if weekly_state(q) == "ready" else 0
+	if qn > 0:
+		out.append(["Missions", qn])
+	if feature_unlocked("pass") and pass_claimable() > 0:
+		out.append(["Season Pass", pass_claimable()])
+	if feature_unlocked("friends") and not bool(s["friends"]["hearts_sent"]):
+		out.append(["Friend Hearts", 1])
+	if feature_unlocked("guild") and in_guild() and int(s["guild"]["checkin_day"]) != day_key():
+		out.append(["Guild Check-in", 1])
+	if feature_unlocked("kitchen") and basket_ready():
+		out.append(["Kitchen Basket", 1])
+	if feature_unlocked("expedition") and expeditions_ready() > 0:
+		out.append(["Expeditions", expeditions_ready()])
+	return out
+
+## One tap: claims everything listed by collectables(). Returns {"rewards": total, "done": [labels]}.
+func collect_all() -> Dictionary:
+	var total := {}
+	var done: Array = []
+	var add := func(r: Dictionary) -> void:
+		for k in r.keys():
+			total[k] = int(total.get(k, 0)) + int(r[k])
+	for c in collectables():
+		done.append(str(c[0]))
+		match str(c[0]):
+			"AFK Rewards": add.call(claim_afk())
+			"Login Bonus": add.call(claim_login())
+			"Mail gifts":
+				for m in DB.MAIL:
+					add.call(claim_mail(m["id"]))
+			"Missions":
+				# two passes: claiming missions can complete the "claim missions" quest
+				for pass_i in 2:
+					for q in DB.DAILY_QUESTS:
+						if claim_quest(q):
+							add.call(q["give"])
+					for q in DB.WEEKLY_QUESTS:
+						if claim_weekly(q):
+							add.call(q["give"])
+			"Season Pass": add.call(claim_all_pass())
+			"Friend Hearts": add.call({"friend_point": send_hearts()})
+			"Guild Check-in": add.call(guild_checkin())
+			"Kitchen Basket": add.call(claim_basket())
+			"Expeditions":
+				for eid in s["expeditions"].keys().duplicate():
+					add.call(claim_expedition(str(eid)))
+	if not done.is_empty():
+		stat_add("collect_all")
+		mark_dirty()
+		save_game()
+		changed.emit()
+	return {"rewards": total, "done": done}
+
 func minigame_plays_left() -> int:
 	return DB.MINIGAME_REWARD_PLAYS - int(s["minigame"]["plays"])
 
