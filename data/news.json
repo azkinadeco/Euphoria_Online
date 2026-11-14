@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-14n",
+  "date": "2026-11-14",
+  "tag": "UPDATE",
+  "title": "Achievement Rank",
+  "body": "Achievements now add up to an Achievement Rank. Every achievement you claim is worth 10 points, and the Achievements tab in Missions shows your rank on a road from Bronze to Legend. Each rank pays a one-time chest, from Gems and Gold at Bronze up to 10 Summon Tickets and a Special Skin Ticket at Legend. Achievements you claimed before this update already count. Your rank is also shown in your Commander Profile."
+ },
+ {
   "id": "n2026-11-14m",
   "date": "2026-11-14",
   "tag": "UPDATE",

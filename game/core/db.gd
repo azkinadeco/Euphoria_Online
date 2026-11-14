@@ -1495,6 +1495,16 @@ const ACHIEVEMENTS := [
 	{"id": "days30", "name": "Log in on 30 days", "stat": "days", "target": 30, "give": {"gems": 1500, "summon_ticket": 10}},
 	{"id": "spend5m", "name": "Spend 5,000,000 Gold", "stat": "gold_spent", "target": 5000000, "give": {"gems": 800}},
 ]
+## Achievement Rank: every claimed achievement is worth ACH_POINTS; each rank pays once.
+const ACH_POINTS := 10
+const ACH_RANKS := [
+	{"name": "Bronze", "pts": 50, "color": "#d8945a", "give": {"gems": 300, "gold": 30000}},
+	{"name": "Silver", "pts": 120, "color": "#d0d4e4", "give": {"gems": 500, "summon_ticket": 3}},
+	{"name": "Gold", "pts": 220, "color": "#ffd27a", "give": {"gems": 800, "celestial_gem": 3, "skill_book": 3}},
+	{"name": "Platinum", "pts": 340, "color": "#b8f0d8", "give": {"gems": 1200, "summon_ticket": 5, "gear_chest_ssr": 1}},
+	{"name": "Diamond", "pts": 480, "color": "#7fe3ff", "give": {"gems": 1800, "oath_ring": 1, "star_stone": 20}},
+	{"name": "Legend", "pts": 640, "color": "#ff8af0", "give": {"gems": 3000, "summon_ticket": 10, "skin_ticket": 1}},
+]
 ## Achievement categories (filter chips in Missions) by stat.
 const ACH_CATS := ["STORY", "BATTLE", "HEROES", "BOND", "COLLECTION"]
 const ACH_CAT_OF := {

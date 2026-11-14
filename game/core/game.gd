@@ -1406,8 +1406,48 @@ func claim_achievement(a: Dictionary) -> bool:
 	give(a["give"])
 	return true
 
-func badge_quests() -> int:
+func ach_points() -> int:
 	var n := 0
+	for a in DB.ACHIEVEMENTS:
+		if s["achievements"].get(a["id"], false):
+			n += DB.ACH_POINTS
+	return n
+
+## Index of the highest rank reached (-1 = unranked).
+func ach_rank() -> int:
+	var r := -1
+	for i in DB.ACH_RANKS.size():
+		if ach_points() >= int(DB.ACH_RANKS[i]["pts"]):
+			r = i
+	return r
+
+func ach_rank_name() -> String:
+	return str(DB.ACH_RANKS[ach_rank()]["name"]) if ach_rank() >= 0 else "Unranked"
+
+## "claimed" | "ready" | "locked" for DB.ACH_RANKS[i].
+func ach_rank_state(i: int) -> String:
+	if (s.get("ach_ranks", []) as Array).has(i):
+		return "claimed"
+	return "ready" if ach_points() >= int(DB.ACH_RANKS[i]["pts"]) else "locked"
+
+func claim_ach_rank(i: int) -> Dictionary:
+	if i < 0 or i >= DB.ACH_RANKS.size() or ach_rank_state(i) != "ready":
+		return {}
+	var got: Array = s.get("ach_ranks", [])
+	got.append(i)
+	s["ach_ranks"] = got
+	var r: Dictionary = DB.ACH_RANKS[i]["give"]
+	give(r)
+	return r
+
+func ach_ranks_ready() -> int:
+	var n := 0
+	for i in DB.ACH_RANKS.size():
+		n += 1 if ach_rank_state(i) == "ready" else 0
+	return n
+
+func badge_quests() -> int:
+	var n := ach_ranks_ready()
 	for wq in DB.WEEKLY_QUESTS:
 		if weekly_state(wq) == "ready":
 			n += 1

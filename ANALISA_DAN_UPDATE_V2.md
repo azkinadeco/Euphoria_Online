@@ -1228,6 +1228,13 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fl. Update batch 160 — Achievement Rank
+
+- `DB.ACH_POINTS` (10 per achievement) dan `DB.ACH_RANKS` (Bronze 50, Silver 120, Gold 220, Platinum 340, Diamond 480, Legend 640 poin; tiap rank punya hadiah sekali klaim).
+- `Game.ach_points / ach_rank / ach_rank_name / ach_rank_state / claim_ach_rank / ach_ranks_ready`; klaim tersimpan di `s["ach_ranks"]`. Berlaku surut karena dihitung dari `s["achievements"]`.
+- `quests.gd::_rank_panel`: panel di atas filter kategori (rank, poin, sisa poin ke rank berikut, 6 tombol rank: CLAIM / ✓ / syarat poin; tap rank terkunci menampilkan hadiahnya). CLAIM ALL dan badge Missions ikut menghitung rank.
+- Commander Profile: baris "Achievements: <rank> • <poin> pts".
+
 ## 2fk. Update batch 159 — Arena Revenge
 
 - Mode battle baru `"revenge"` (param `k` = kunci laporan). Entri `def_log` kini menyimpan `k`; laporan lama tanpa `k` tidak punya tombol.

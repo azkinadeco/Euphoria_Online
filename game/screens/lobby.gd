@@ -1038,7 +1038,8 @@ func _open_profile() -> void:
 		["Story", "%d / %d stages" % [Game.stages_cleared(), DB.stage_count()]], ["Tower", "Floor %d" % maxi(0, best_tower)],
 		["Arena", "%d RP" % int(Game.s["arena"]["rp"])], ["Summons", Game.fmt(int(Game.s["gacha"]["total"]))],
 		["Oaths", str(Game.s["heroes"].values().filter(func(x): return bool(x["oath"])).size())],
-		["Titles", "%d / %d" % [DB.TITLES.filter(func(t): return Game.title_unlocked(t["id"])).size(), DB.TITLES.size()]]]
+		["Titles", "%d / %d" % [DB.TITLES.filter(func(t): return Game.title_unlocked(t["id"])).size(), DB.TITLES.size()]],
+		["Achievements", "%s  •  %d pts" % [Game.ach_rank_name(), Game.ach_points()]]]
 	var g := GridContainer.new()
 	g.columns = 2
 	g.add_theme_constant_override("h_separation", 16)

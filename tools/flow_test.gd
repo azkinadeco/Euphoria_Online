@@ -1739,6 +1739,23 @@ func _run() -> void:
 	check(G.revenge_block(4242) != "" and G.revenges_ready() == 0 and G.pay_battle({"mode": "revenge", "k": 4242}) != "", "one revenge match per report")
 	G.s = rv_save
 
+	print("[achievement rank]")
+	var ar_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	check(G.ach_points() == 0 and G.ach_rank() == -1 and G.ach_rank_name() == "Unranked" and G.ach_ranks_ready() == 0, "fresh save is unranked")
+	check(DB.ACHIEVEMENTS.size() * DB.ACH_POINTS >= int(DB.ACH_RANKS[-1]["pts"]), "the top rank is reachable")
+	for ari in 5:
+		G.s["achievements"][DB.ACHIEVEMENTS[ari]["id"]] = true
+	check(G.ach_points() == 50 and G.ach_rank() == 0 and G.ach_rank_state(0) == "ready" and G.ach_rank_state(1) == "locked", "five achievements reach Bronze")
+	var ar_g: int = G.amount("gems")
+	var ar_r: Dictionary = G.claim_ach_rank(0)
+	check(G.amount("gems") == ar_g + int(ar_r["gems"]) and G.claim_ach_rank(0).is_empty() and G.claim_ach_rank(1).is_empty(), "a rank chest pays once; locked ranks pay nothing")
+	for ark in DB.ACH_RANKS:
+		for arr in (ark["give"] as Dictionary).keys():
+			check(G.s["cur"].has(arr) or DB.ITEMS.has(arr), "rank %s pays a real reward (%s)" % [ark["name"], arr])
+	G.s = ar_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

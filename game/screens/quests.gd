@@ -164,7 +164,7 @@ func _render() -> void:
 	else:
 		sv.add_child(UI.label("READY TO CLAIM  (%d)" % ready_rows.size(), 13, UI.GOLD, 2))
 		sv.add_child(UI.reward_row(pend, 26, 13))
-	var any_ready := false
+	var any_ready := Game.ach_ranks_ready() > 0
 	for t in TABS.keys():
 		if _rows_of(t).any(func(r): return r[4] == "ready"):
 			any_ready = true
@@ -174,6 +174,7 @@ func _render() -> void:
 	# --- right: grouped list (ready, in progress, completed)
 	_rows = []
 	if _tab == "ACHIEVEMENTS":
+		_rank_panel()
 		_cat_chips(rows)
 	for r in rows:
 		if _tab == "ACHIEVEMENTS" and _ach_cat != "" and str(r[7]) != _ach_cat:
@@ -201,6 +202,52 @@ func _render() -> void:
 
 var _rows: Array = []
 var _ach_cat := ""
+
+## Achievement Rank: points, the road of ranks, and a chest for every rank reached.
+func _rank_panel() -> void:
+	var pts := Game.ach_points()
+	var ri := Game.ach_rank()
+	var col := Color(str(DB.ACH_RANKS[ri]["color"])) if ri >= 0 else UI.MUTED
+	var p := UI.styled_panel(Color(0.05, 0.03, 0.1, 0.92), Color(col, 0.7), 12, 1, 10)
+	p.set_meta("ach_rank", true)
+	_list.add_child(p)
+	var v := UI.vbox(6)
+	p.add_child(v)
+	var top := UI.hbox(10)
+	v.add_child(top)
+	top.add_child(UI.label("ACHIEVEMENT RANK", 12, UI.MUTED, 2))
+	top.add_child(UI.label("◆ " + Game.ach_rank_name().to_upper(), 17, col.lightened(0.15), 3))
+	var pl := UI.label("%d pts" % pts, 15, Color.WHITE, 2)
+	pl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	top.add_child(pl)
+	if ri + 1 < DB.ACH_RANKS.size():
+		var nx: Dictionary = DB.ACH_RANKS[ri + 1]
+		top.add_child(UI.label("%d pts to %s" % [int(nx["pts"]) - pts, nx["name"]], 13, UI.MUTED, 2))
+	else:
+		top.add_child(UI.label("Highest rank reached!", 13, UI.GOLD, 2))
+	var row := UI.hbox(6)
+	v.add_child(row)
+	for i in DB.ACH_RANKS.size():
+		var idx: int = i
+		var rk: Dictionary = DB.ACH_RANKS[i]
+		var st := Game.ach_rank_state(i)
+		var rc := Color(str(rk["color"]))
+		var b := UI.button("%s
+%s" % [rk["name"], "CLAIM" if st == "ready" else ("✓" if st == "claimed" else "%d pts" % int(rk["pts"]))], func():
+			var r := Game.claim_ach_rank(idx)
+			if r.is_empty():
+				main.toast(("%s rank: " % rk["name"]) + Game.reward_text(rk["give"]), rc)
+				return
+			main.show_rewards("%s RANK" % str(rk["name"]).to_upper(), r)
+			_render(), "GoldButton" if st == "ready" else "", Vector2(0, 50))
+		b.add_theme_font_size_override("font_size", 12)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.set_meta("rank", i)
+		if st != "ready":
+			b.add_theme_color_override("font_color", rc if st == "claimed" else rc.darkened(0.25))
+		if st == "locked":
+			b.modulate = Color(0.8, 0.8, 0.85)
+		row.add_child(b)
 
 ## Category filter above the achievement list (ALL + DB.ACH_CATS), each with done/total and a ready dot.
 func _cat_chips(rows: Array) -> void:
@@ -283,6 +330,10 @@ func _claim_all() -> void:
 			if ok:
 				for k in q["give"].keys():
 					total[k] = int(total.get(k, 0)) + int(q["give"][k])
+	for ri in DB.ACH_RANKS.size():
+		var rr2 := Game.claim_ach_rank(ri)
+		for k in rr2.keys():
+			total[k] = int(total.get(k, 0)) + int(rr2[k])
 	for lv in DB.road_levels():
 		if Game.claim_road(lv):
 			var rr := DB.road_reward(lv)
