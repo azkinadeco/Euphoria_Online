@@ -80,7 +80,7 @@ func _rows_of(tab: String) -> Array:
 		_:
 			for a in DB.ACHIEVEMENTS:
 				var prog := mini(Game.stat_value(a["stat"]), int(a["target"]))
-				out.append([a["name"], prog, int(a["target"]), a["give"], Game.achievement_state(a), func(): return Game.claim_achievement(a), str(DB.QUEST_ROUTE.get(a["stat"], ""))])
+				out.append([a["name"], prog, int(a["target"]), a["give"], Game.achievement_state(a), func(): return Game.claim_achievement(a), str(DB.QUEST_ROUTE.get(a["stat"], "")), DB.ach_cat(a)])
 	return out
 
 func _render() -> void:
@@ -173,7 +173,11 @@ func _render() -> void:
 	sv.add_child(ca)
 	# --- right: grouped list (ready, in progress, completed)
 	_rows = []
+	if _tab == "ACHIEVEMENTS":
+		_cat_chips(rows)
 	for r in rows:
+		if _tab == "ACHIEVEMENTS" and _ach_cat != "" and str(r[7]) != _ach_cat:
+			continue
 		_queue(r[0], r[1], r[2], r[3], r[4], r[5], r[6])
 	var order := {"ready": 0, "progress": 1, "locked": 1, "claimed": 2}
 	var heads := ["READY TO CLAIM", "IN PROGRESS", "COMPLETED"]
@@ -196,6 +200,25 @@ func _render() -> void:
 	UI.stagger(_list)
 
 var _rows: Array = []
+var _ach_cat := ""
+
+## Category filter above the achievement list (ALL + DB.ACH_CATS), each with done/total and a ready dot.
+func _cat_chips(rows: Array) -> void:
+	var h := UI.hbox(6)
+	_list.add_child(h)
+	for c in [""] + DB.ACH_CATS:
+		var cat: String = c
+		var mine: Array = rows.filter(func(r): return cat == "" or str(r[7]) == cat)
+		var done := mine.filter(func(r): return r[4] == "claimed").size()
+		var ready := mine.filter(func(r): return r[4] == "ready").size()
+		var b := UI.button("%s%s  %d/%d" % ["● " if ready > 0 else "", "ALL" if cat == "" else cat, done, mine.size()], func():
+			Game.sfx("ui_click")
+			_ach_cat = cat
+			_render(), "GoldButton" if cat == _ach_cat else "", Vector2(0, 38))
+		b.add_theme_font_size_override("font_size", 13)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.set_meta("ach_cat", cat)
+		h.add_child(b)
 
 func _queue(title: String, prog: int, target: int, give: Dictionary, state: String, claim: Callable, go: String = "") -> void:
 	_rows.append([title, prog, target, give, state, claim, go])
@@ -205,6 +228,8 @@ const ROUTE_ICON := {
 	"story": "icon_story", "gacha": "icon_gacha", "heroes": "icon_skills", "lobby": "icon_afk", "arena": "icon_arena",
 	"garden": "icon_garden", "messenger": "icon_messenger", "kitchen": "icon_kitchen", "guild": "icon_guild",
 	"dungeon": "icon_dungeon", "quests": "icon_quest", "tower": "icon_tower", "pass": "icon_pass", "road": "icon_crystal",
+	"bestiary": "icon_boss", "hunt": "icon_combat_target", "rift": "icon_awakening", "forge": "icon_equipment", "date": "icon_date",
+	"photo": "icon_codex", "wardrobe": "icon_heart", "shop": "icon_shop",
 }
 
 func _row(title: String, prog: int, target: int, give: Dictionary, state: String, claim: Callable, go: String = "") -> void:

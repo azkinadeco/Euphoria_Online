@@ -1219,6 +1219,10 @@ const QUEST_ROUTE := {
 	"stages_cleared": "story", "hard_cleared": "story", "heroes_owned": "gacha", "total_pulls": "gacha", "tower_floor": "tower",
 	"max_star": "heroes", "oaths": "heroes", "max_skill": "heroes", "memories": "heroes", "pass_level": "pass",
 	"chats": "messenger", "personal_chats": "messenger",
+	"battles": "story", "kills_total": "bestiary", "best_streak": "story", "flawless": "story", "arena_wins": "arena", "hunt_clears": "hunt",
+	"rift_best": "rift", "trials": "heroes", "commander_level": "story", "max_awaken": "heroes", "max_lb": "heroes", "gear_ssr": "forge",
+	"gear_max": "forge", "bond_max": "garden", "dates": "date", "perfect_dates": "date", "photos": "photo", "tamed": "bestiary",
+	"special_skins": "wardrobe", "guild_level": "guild", "days": "quests", "gold_spent": "shop",
 }
 ## Where an item comes from (Bag → OBTAIN FROM). Shop entries are added automatically from SHOP.
 ## Each entry: [label, screen, params].
@@ -1346,7 +1350,56 @@ const ACHIEVEMENTS := [
 	{"id": "chats10", "name": "Reply to 10 messages", "stat": "chats", "target": 10, "give": {"gems": 300, "bouquet": 3}},
 	{"id": "chats50", "name": "Reply to 50 messages", "stat": "chats", "target": 50, "give": {"gems": 800, "sweet_cake": 3}},
 	{"id": "personal", "name": "Read 10 personal chats", "stat": "personal_chats", "target": 10, "give": {"gems": 500, "celestial_gem": 2}},
+	# ---- batch 148: battle records, modes and collection
+	{"id": "bat100", "name": "Fight 100 battles", "stat": "battles", "target": 100, "give": {"gems": 300}},
+	{"id": "bat500", "name": "Fight 500 battles", "stat": "battles", "target": 500, "give": {"gems": 800, "summon_ticket": 5}},
+	{"id": "bat2000", "name": "Fight 2,000 battles (Veteran)", "stat": "battles", "target": 2000, "give": {"gems": 2000, "celestial_gem": 3}},
+	{"id": "kill500", "name": "Defeat 500 enemies", "stat": "kills_total", "target": 500, "give": {"gems": 400}},
+	{"id": "kill3000", "name": "Defeat 3,000 enemies", "stat": "kills_total", "target": 3000, "give": {"gems": 1000, "rune_chest": 2}},
+	{"id": "streak20", "name": "Win 20 battles in a row", "stat": "best_streak", "target": 20, "give": {"gems": 300}},
+	{"id": "streak50", "name": "Win 50 battles in a row", "stat": "best_streak", "target": 50, "give": {"gems": 800, "summon_ticket": 3}},
+	{"id": "flawless100", "name": "Win 100 battles with 3★", "stat": "flawless", "target": 100, "give": {"gems": 500, "star_stone": 10}},
+	{"id": "arena20", "name": "Win 20 Arena matches", "stat": "arena_wins", "target": 20, "give": {"gems": 400}},
+	{"id": "arena100", "name": "Win 100 Arena matches", "stat": "arena_wins", "target": 100, "give": {"gems": 1200, "summon_ticket": 5}},
+	{"id": "tower50", "name": "Reach Tower floor 50", "stat": "tower_floor", "target": 50, "give": {"gems": 1200, "gear_chest_ssr": 1}},
+	{"id": "tower100", "name": "Conquer Tower floor 100", "stat": "tower_floor", "target": 100, "give": {"gems": 3000, "oath_ring": 1}},
+	{"id": "hunt4", "name": "Clear 4 Boss Hunt difficulties", "stat": "hunt_clears", "target": 4, "give": {"gems": 500, "hunt_core": 20}},
+	{"id": "hunt12", "name": "Clear 12 Boss Hunt difficulties", "stat": "hunt_clears", "target": 12, "give": {"gems": 1500, "gear_chest_ssr": 1}},
+	{"id": "rift10", "name": "Reach Starlight Rift floor 10", "stat": "rift_best", "target": 10, "give": {"gems": 500}},
+	{"id": "rift25", "name": "Reach Starlight Rift floor 25", "stat": "rift_best", "target": 25, "give": {"gems": 1500, "rune_chest": 2}},
+	{"id": "trial5", "name": "Clear 5 Hero Trials", "stat": "trials", "target": 5, "give": {"gems": 400}},
+	{"id": "trial20", "name": "Clear 20 Hero Trials", "stat": "trials", "target": 20, "give": {"gems": 1200, "skill_book": 5}},
+	{"id": "cmd30", "name": "Reach Commander Lv.30", "stat": "commander_level", "target": 30, "give": {"gems": 500}},
+	{"id": "cmd60", "name": "Reach Commander Lv.60", "stat": "commander_level", "target": 60, "give": {"gems": 1000, "summon_ticket": 5}},
+	{"id": "cmd100", "name": "Reach Commander Lv.100", "stat": "commander_level", "target": 100, "give": {"gems": 3000, "celestial_gem": 5}},
+	{"id": "awaken5", "name": "Fully awaken a hero (A5)", "stat": "max_awaken", "target": 5, "give": {"gems": 1000, "star_stone": 20}},
+	{"id": "lb4", "name": "Limit Break a hero to the max", "stat": "max_lb", "target": 4, "give": {"gems": 1500}},
+	{"id": "gearssr5", "name": "Own 5 SSR equipment", "stat": "gear_ssr", "target": 5, "give": {"gems": 500, "forge_ember": 20}},
+	{"id": "gearmax3", "name": "Enhance 3 equipment to +10", "stat": "gear_max", "target": 3, "give": {"gems": 500}},
+	{"id": "bond3", "name": "Reach Bond Lv.10 with 3 heroes", "stat": "bond_max", "target": 3, "give": {"gems": 600, "celestial_gem": 2}},
+	{"id": "oath5", "name": "Swear 5 Oaths", "stat": "oaths", "target": 5, "give": {"gems": 1500, "oath_ring": 1}},
+	{"id": "date10", "name": "Go on 10 dates", "stat": "dates", "target": 10, "give": {"gems": 300, "bouquet": 3}},
+	{"id": "perfect10", "name": "Earn 10 PERFECT date records", "stat": "perfect_dates", "target": 10, "give": {"gems": 800, "perfume": 3}},
+	{"id": "photo10", "name": "Take 10 photos", "stat": "photos", "target": 10, "give": {"gems": 200}},
+	{"id": "tame3", "name": "Tame 3 foes", "stat": "tamed", "target": 3, "give": {"gems": 400}},
+	{"id": "tame10", "name": "Tame 10 foes", "stat": "tamed", "target": 10, "give": {"gems": 1200, "celestial_gem": 3}},
+	{"id": "skins3", "name": "Own 3 Special Skins", "stat": "special_skins", "target": 3, "give": {"gems": 800}},
+	{"id": "guild5", "name": "Raise your Guild to Lv.5", "stat": "guild_level", "target": 5, "give": {"gems": 600}},
+	{"id": "days7", "name": "Log in on 7 days", "stat": "days", "target": 7, "give": {"gems": 300}},
+	{"id": "days30", "name": "Log in on 30 days", "stat": "days", "target": 30, "give": {"gems": 1500, "summon_ticket": 10}},
+	{"id": "spend5m", "name": "Spend 5,000,000 Gold", "stat": "gold_spent", "target": 5000000, "give": {"gems": 800}},
 ]
+## Achievement categories (filter chips in Missions) by stat.
+const ACH_CATS := ["STORY", "BATTLE", "HEROES", "BOND", "COLLECTION"]
+const ACH_CAT_OF := {
+	"stages_cleared": "STORY", "hard_cleared": "STORY", "commander_level": "STORY", "days": "STORY",
+	"battles": "BATTLE", "kills_total": "BATTLE", "best_streak": "BATTLE", "flawless": "BATTLE", "arena_wins": "BATTLE", "tower_floor": "BATTLE",
+	"hunt_clears": "BATTLE", "rift_best": "BATTLE", "trials": "BATTLE",
+	"max_star": "HEROES", "max_skill": "HEROES", "max_awaken": "HEROES", "max_lb": "HEROES", "gear_ssr": "HEROES", "gear_max": "HEROES",
+	"oaths": "BOND", "memories": "BOND", "chats": "BOND", "personal_chats": "BOND", "bond_max": "BOND", "dates": "BOND", "perfect_dates": "BOND", "dishes": "BOND",
+}
+static func ach_cat(a: Dictionary) -> String:
+	return str(ACH_CAT_OF.get(a["stat"], "COLLECTION"))
 
 const MAIL := [
 	{"id": "arc11_frost", "title": "Arc 11: The Frostbound Crown", "body": "Snow is falling inside the cathedral! Four new story chapters (41-44) are open after Arc 10, where Valeria, Schylua, Micca and Aqua face the Winter Crown of Frostvale. Watch out for the new Frostbound bosses. A warm cup of supplies is attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},

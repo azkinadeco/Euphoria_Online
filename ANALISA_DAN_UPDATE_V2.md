@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ez. Update batch 148 — 37 achievement baru + filter kategori
+
+- `DB.ACHIEVEMENTS`: 37 entri baru (total 70) untuk sistem yang sebelumnya tanpa achievement: jumlah battle, win streak, 3★, Arena, Tower 50/100, Boss Hunt, Rift, Hero Trial, Commander Lv, Awaken A5, Limit Break, gear SSR/+10, Bond 10, 5 Oath, date, PERFECT date, foto, foe jinak, Special Skin, level Guild, hari login, Gold terpakai.
+- `Game.stat_value`: stat baru `battles`, `best_streak`, `flawless`, `days`, `gold_spent`, `photos` (dari Commander Records), `kills_total` (jumlah Bestiary, jadi berlaku surut), `arena_wins`, `hunt_clears`, `rift_best`, `trials`, `commander_level`, `max_awaken`, `max_lb`, `gear_ssr`, `gear_max`, `bond_max`, `dates`, `perfect_dates`, `tamed`, `special_skins`, `guild_level`.
+- `DB.ACH_CATS` / `ACH_CAT_OF` / `ach_cat()`: kategori per stat. `quests.gd::_cat_chips`: baris chip filter di atas daftar (ALL + 5 kategori) dengan `selesai/total` dan titik bila ada yang siap diklaim.
+- `DB.QUEST_ROUTE` + `ROUTE_ICON` dilengkapi supaya tiap achievement baru punya tombol GO dan ikon.
+- Target sengaja di luar jangkauan hari pertama, jadi ekonomi day-one tidak berubah (flow test PASS).
+
 ## 2ey. Update batch 147 — Commander Records (statistik seumur hidup)
 
 - **Tab RECORDS** di Commander Profile (`lobby.gd::_open_profile`, tab ketiga setelah TITLES/AVATAR): panel JOURNEY, BATTLE, ECONOMY dan BATTLES BY MODE dari `Game.records()`.

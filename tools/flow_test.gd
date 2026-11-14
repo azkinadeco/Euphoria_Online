@@ -1504,6 +1504,28 @@ func _run() -> void:
 	check(G.stat("streak") == 0 and G.stat("best_streak") >= 5, "defeat ends the streak, best is kept")
 	check(G.records().size() >= 3 and str(G.records()[1][0]) == "BATTLE", "records page has its sections")
 
+	print("[achievements 148]")
+	var ach_ids := {}
+	for ac2 in DB.ACHIEVEMENTS:
+		check(not ach_ids.has(ac2["id"]), "achievement id %s is unique" % ac2["id"])
+		ach_ids[ac2["id"]] = true
+		check(DB.ACH_CATS.has(DB.ach_cat(ac2)), "achievement %s has a category" % ac2["id"])
+		for rk in (ac2["give"] as Dictionary).keys():
+			check(G.s["cur"].has(rk) or DB.ITEMS.has(rk), "achievement %s pays a real reward (%s)" % [ac2["id"], rk])
+	var fresh_ach: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	var day1 := 0
+	for ac3 in DB.ACHIEVEMENTS:
+		day1 += 1 if G.achievement_state(ac3) == "ready" else 0
+	check(day1 == 0, "no achievement is ready on a fresh save")
+	G.s["arena"]["wins"] = 20
+	G.s["hunt"]["cleared"] = {"canopy": 1}
+	check(G.stat_value("arena_wins") == 20 and G.stat_value("hunt_clears") == 2, "arena wins and hunt clears are counted")
+	G.add_gear("weapon", "SSR")
+	check(G.stat_value("gear_ssr") == 1 and G.stat_value("gear_max") == 0, "SSR gear counted, none at +10")
+	G.s = fresh_ach
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

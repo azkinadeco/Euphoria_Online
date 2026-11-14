@@ -1262,6 +1262,53 @@ func stat_value(stat: String) -> int:
 					pc += 1 if str(k).begins_with("p") else 0
 			return pc
 		"hard_cleared": return (s["story"].get("hard", {}) as Dictionary).size()
+		"battles", "best_streak", "flawless", "days", "gold_spent", "photos": return stat(stat)
+		"kills_total":
+			var kt := 0
+			for v in s.get("bestiary", {}).values():
+				kt += int(v)
+			return kt
+		"arena_wins": return int(s["arena"]["wins"])
+		"hunt_clears":
+			var hc := 0
+			for v in s["hunt"]["cleared"].values():
+				hc += int(v) + 1
+			return hc
+		"rift_best": return int(s["rift"]["best"])
+		"trials": return trials_done()
+		"commander_level": return int(s["player"]["level"])
+		"max_awaken":
+			var ma := 0
+			for h in s["heroes"].values():
+				ma = maxi(ma, int(h.get("awaken", 0)))
+			return ma
+		"max_lb":
+			var ml := 0
+			for h in s["heroes"].values():
+				ml = maxi(ml, int(h.get("lb", 0)))
+			return ml
+		"gear_ssr": return s["gear"].filter(func(g): return str(g["rarity"]) == "SSR").size()
+		"gear_max": return s["gear"].filter(func(g): return int(g["lv"]) >= DB.GEAR_MAX_LV).size()
+		"bond_max": return s["heroes"].values().filter(func(h): return int(h["bond"]) >= DB.MAX_BOND).size()
+		"dates":
+			var dn := 0
+			for v in _date_state()["count"].values():
+				dn += int(v)
+			return dn
+		"perfect_dates":
+			var pd := 0
+			for hb in _date_state()["best"].values():
+				for v in (hb as Dictionary).values():
+					pd += 1 if int(v) == 0 else 0
+			return pd
+		"tamed": return tamed_count()
+		"special_skins":
+			var sk := 0
+			for hid in DB.SPECIAL_SKINS.keys():
+				if DB.special_index(hid) >= 0 and (s["skins_bought"].get(hid, []) as Array).any(func(x): return int(x) == DB.special_index(hid)):
+					sk += 1
+			return sk
+		"guild_level": return int(s["guild"]["level"]) if in_guild() else 0
 	return 0
 
 func achievement_state(a: Dictionary) -> String:
