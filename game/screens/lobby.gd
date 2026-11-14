@@ -1053,7 +1053,7 @@ func _open_profile() -> void:
 	h.add_child(right)
 	var tabs := UI.hbox(8)
 	right.add_child(tabs)
-	for tdef in [["titles", "TITLES"], ["avatar", "AVATAR"]]:
+	for tdef in [["titles", "TITLES"], ["avatar", "AVATAR"], ["records", "RECORDS"]]:
 		var key: String = tdef[0]
 		var tb := UI.button(tdef[1], func():
 			_prof_tab = key
@@ -1085,6 +1085,28 @@ func _open_profile() -> void:
 			else:
 				b.modulate = Color(0.55, 0.55, 0.6)
 			box.add_child(b)
+	elif _prof_tab == "records":
+		for sec in Game.records():
+			var sp := UI.styled_panel(Color(0.05, 0.03, 0.1, 0.8), Color(UI.GOLD, 0.35), 10, 1, 10)
+			sp.set_meta("records", str(sec[0]))
+			box.add_child(sp)
+			var sv := UI.vbox(4)
+			sp.add_child(sv)
+			sv.add_child(UI.label("✦ " + str(sec[0]), 14, UI.GOLD, 2))
+			var rg := GridContainer.new()
+			rg.columns = 2
+			rg.add_theme_constant_override("h_separation", 18)
+			rg.add_theme_constant_override("v_separation", 3)
+			sv.add_child(rg)
+			for row in sec[1]:
+				var rl := UI.label(str(row[0]), 14, UI.MUTED)
+				rl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				rg.add_child(rl)
+				var rv := UI.label(str(row[1]), 15, Color.WHITE, 2)
+				rv.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+				rg.add_child(rv)
+		box.add_child(UI.wrap_label("Records are counted from the day shown under Journey.", 12, UI.MUTED))
+		UI.stagger(box)
 	else:
 		var ag := GridContainer.new()
 		ag.columns = 6

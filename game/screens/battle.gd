@@ -1538,6 +1538,7 @@ func _finish(e: Dictionary) -> void:
 	Game.record_kills(Game.killed_enemies(sim))
 	var won: bool = e["won"] and not _retreat
 	var stars: int = e["stars"] if won else 0
+	Game.record_battle(str(params.get("mode", "")), won, stars, sim)
 	if _retreat:
 		e["reason"] = "retreat"
 	var rewards := {}

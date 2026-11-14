@@ -35,6 +35,7 @@ func _process(delta: float) -> void:
 	_tick_accum += delta
 	if _tick_accum >= 1.0:
 		_tick_accum = 0.0
+		stat_add("play_sec")
 		var before := int(s["cur"]["energy"])
 		_regen_energy()
 		if int(s["cur"]["energy"]) != before:
@@ -305,6 +306,9 @@ func _check_day() -> void:
 	if int(lg["last_day"]) != d:
 		lg["streak"] = int(lg["streak"]) % 7 + 1
 		lg["last_day"] = d
+		stat_add("days")
+	if not s["stats"].has("since"):
+		s["stats"]["since"] = d
 	var p := event_period()
 	DB.set_event_period(p)
 	if int(s["event"]["period"]) != p:
@@ -434,6 +438,8 @@ func give(rewards: Dictionary) -> void:
 			add_player_exp(n)
 		elif s["cur"].has(k):
 			s["cur"][k] = int(s["cur"][k]) + n
+			if n > 0 and (k == "gold" or k == "gems"):
+				stat_add(k + "_earned", n)
 		elif k.begins_with("shard:"):
 			var hid: String = k.substr(6)
 			s["shards"][hid] = int(s["shards"].get(hid, 0)) + n
@@ -463,6 +469,8 @@ func spend(key: String, n: int) -> bool:
 		return false
 	if s["cur"].has(key):
 		s["cur"][key] = int(s["cur"][key]) - n
+		if key in ["gold", "gems", "energy"]:
+			stat_add(key + "_spent", n)
 	else:
 		s["items"][key] = int(s["items"][key]) - n
 	mark_dirty()
@@ -1085,6 +1093,7 @@ func sweep_stage(index: int, times: int, hard: bool = false) -> Dictionary:
 		return {"error": "Not enough Energy."}
 	spend("energy", cost)
 	var total := {"gold": int(st["gold"]) * times, "hero_exp": int(st["hero_exp"]) * times, "player_exp": int(st["player_exp"]) * times}
+	stat_add("sweeps", times)
 	for i in times:
 		quest_progress("stage")
 	give(total)
@@ -1186,6 +1195,7 @@ func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 	if count >= 10:
 		s["gacha"]["first10_done"] = true
 	s["gacha"]["total"] = int(s["gacha"]["total"]) + count
+	stat_add("ssr_pulled", results.filter(func(x): return x["rarity"] == "SSR").size())
 	for i in count:
 		quest_progress("summon")
 	mark_dirty()
@@ -1503,6 +1513,7 @@ func quick_battle(params: Dictionary) -> Dictionary:
 	record_kills(killed_enemies(sim))
 	var won: bool = res["won"]
 	var stars: int = res["stars"]
+	record_battle(str(params.get("mode", "")), won, stars, sim)
 	var r: Dictionary = {}
 	match str(params.get("mode", "")):
 		"story":
@@ -1980,6 +1991,7 @@ func sweep_event(i: int, times: int) -> Dictionary:
 	spend("energy", cost)
 	var st := DB.event_stage(i)
 	var r := {"festival_token": (int(st["tokens"]) + 15) * times, "gold": (1000 + i * 800) * times}
+	stat_add("sweeps", times)
 	for k in times:
 		quest_progress("stage")
 	give(r)
@@ -2256,6 +2268,7 @@ func sweep_dungeon(id: String, diff: int) -> Dictionary:
 	var e := pay_battle({"mode": "dungeon", "dungeon": id, "diff": diff})
 	if e != "":
 		return {"error": e}
+	stat_add("sweeps")
 	return apply_dungeon_result(id, diff, true)
 
 # =================================================================== bond stories
@@ -2889,6 +2902,7 @@ func _sweep_hard(index: int, times: int) -> Dictionary:
 		return {"error": "Not enough Energy."}
 	spend("energy", cost)
 	var total := {"gold": int(st["gold"]) * times, "hero_exp": int(st["hero_exp"]) * times, "player_exp": int(st["player_exp"]) * times, "shard:" + str(st["shard_id"]): int(st["shards"]) * times}
+	stat_add("sweeps", times)
 	for i in times:
 		quest_progress("stage")
 	give(total)
@@ -3419,6 +3433,7 @@ func sweep_hunt(id: String, diff: int) -> Dictionary:
 	var e := pay_battle({"mode": "hunt", "hunt": id, "diff": diff})
 	if e != "":
 		return {"error": e}
+	stat_add("sweeps")
 	var r := apply_hunt_result(id, diff, true)
 	var ft := festival_drop("hunt")
 	if ft > 0:
@@ -3701,6 +3716,7 @@ func record_kills(ids: Array) -> void:
 		if DB.ENEMIES.has(id):
 			b[id] = int(b.get(id, 0)) + 1
 	s["bestiary"] = b
+	stat_add("kills", ids.size())
 
 func kills_of(id: String) -> int:
 	return int(s.get("bestiary", {}).get(id, 0))
@@ -3926,6 +3942,81 @@ static func killed_enemies(sim: BattleSim) -> Array:
 	for u in sim.units:
 		if u["side"] == 1 and not u["alive"]:
 			out.append(u["id"])
+	return out
+
+# =================================================================== lifetime records
+
+func stat(key: String) -> int:
+	return int(s["stats"].get(key, 0))
+
+func stat_add(key: String, n: int = 1) -> void:
+	s["stats"][key] = int(s["stats"].get(key, 0)) + n
+
+func stat_max(key: String, v: int) -> void:
+	if v > int(s["stats"].get(key, 0)):
+		s["stats"][key] = v
+
+## Called once for every battle that was actually fought (played or quick), after the sim ended.
+func record_battle(mode: String, won: bool, stars: int, sim: BattleSim) -> void:
+	stat_add("battles")
+	stat_add("m_" + mode)
+	if won:
+		stat_add("wins")
+		stat_add("streak")
+		stat_max("best_streak", stat("streak"))
+		if stars >= 3:
+			stat_add("flawless")
+	else:
+		s["stats"]["streak"] = 0
+	var dmg := 0
+	for ev in sim.events:
+		if ev["t"] in ["hit", "dot"] and sim.units[ev["uid"]]["side"] == 1:
+			dmg += int(ev["dmg"])
+	stat_add("damage", dmg)
+	stat_max("best_damage", dmg)
+	stat_max("best_power", team_power())
+	mark_dirty()
+
+## Sections of the Commander Records page: [title, [[label, value text], ...]].
+func records() -> Array:
+	var b := stat("battles")
+	var sec := stat("play_sec")
+	var since := int(s["stats"].get("since", day_key()))
+	var dt: Dictionary = Time.get_date_dict_from_unix_time(since * 86400)
+	var modes: Array = []
+	for m in [["story", "Story"], ["hard", "Hard Story"], ["arena", "Arena"], ["tower", "Tower"], ["dungeon", "Dungeon"], ["event", "Event"],
+			["hunt", "Boss Hunt"], ["rift", "Starlight Rift"], ["wboss", "World Boss"], ["raid", "Guild Raid"], ["trial", "Hero Trial"]]:
+		if stat("m_" + str(m[0])) > 0:
+			modes.append([m[1], fmt(stat("m_" + str(m[0])))])
+	var out: Array = [
+		["JOURNEY", [
+			["Recording since", "%04d-%02d-%02d" % [dt["year"], dt["month"], dt["day"]]],
+			["Days logged in", fmt(maxi(1, stat("days")))],
+			["Time played", "%dh %02dm" % [sec / 3600, (sec / 60) % 60]],
+			["Highest team power", fmt(maxi(stat("best_power"), team_power()))],
+		]],
+		["BATTLE", [
+			["Battles fought", fmt(b)],
+			["Victories", "%s  (%d%%)" % [fmt(stat("wins")), (stat("wins") * 100 / b) if b > 0 else 0]],
+			["3★ victories", fmt(stat("flawless"))],
+			["Best win streak", fmt(stat("best_streak"))],
+			["Enemies defeated", fmt(stat("kills"))],
+			["Total damage dealt", fmt(stat("damage"))],
+			["Most damage in one battle", fmt(stat("best_damage"))],
+			["Stages swept", fmt(stat("sweeps"))],
+		]],
+		["ECONOMY", [
+			["Gold earned", fmt(stat("gold_earned"))],
+			["Gold spent", fmt(stat("gold_spent"))],
+			["Gems earned", fmt(stat("gems_earned"))],
+			["Gems spent", fmt(stat("gems_spent"))],
+			["Energy used", fmt(stat("energy_spent"))],
+			["Summons", fmt(int(s["gacha"]["total"]))],
+			["SSR summoned", fmt(stat("ssr_pulled"))],
+		]],
+	]
+	if not modes.is_empty():
+		out.append(["BATTLES BY MODE", modes])
 	return out
 
 # =================================================================== dates

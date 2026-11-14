@@ -1485,6 +1485,25 @@ func _run() -> void:
 	G.s["story"]["cleared"] = sc_clear
 	G.s["story"]["chests"] = sc_chests
 
+	print("[records]")
+	var rc_b: int = G.stat("battles")
+	var rc_g: int = G.stat("gold_earned")
+	G.give({"gold": 500, "energy": 50})
+	check(G.stat("gold_earned") == rc_g + 500, "gold earned is recorded")
+	var rc_s: int = G.stat("gold_spent")
+	G.spend("gold", 200)
+	check(G.stat("gold_spent") == rc_s + 200, "gold spent is recorded")
+	var rc_sim := BattleSim.new()
+	rc_sim.setup(G.ally_team({}), G.enemies_for({"mode": "story", "stage": 0}), 1, {})
+	var rc_res: Dictionary = rc_sim.run()
+	G.s["stats"]["streak"] = 4
+	G.record_battle("story", rc_res["won"], rc_res["stars"], rc_sim)
+	check(G.stat("battles") == rc_b + 1 and G.stat("m_story") >= 1 and G.stat("damage") > 0, "battle counted with damage")
+	check(G.stat("streak") == 5 and G.stat("best_streak") >= 5, "win extends the streak")
+	G.record_battle("story", false, 0, rc_sim)
+	check(G.stat("streak") == 0 and G.stat("best_streak") >= 5, "defeat ends the streak, best is kept")
+	check(G.records().size() >= 3 and str(G.records()[1][0]) == "BATTLE", "records page has its sections")
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

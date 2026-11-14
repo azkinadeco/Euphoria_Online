@@ -1228,6 +1228,16 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ey. Update batch 147 — Commander Records (statistik seumur hidup)
+
+- **Tab RECORDS** di Commander Profile (`lobby.gd::_open_profile`, tab ketiga setelah TITLES/AVATAR): panel JOURNEY, BATTLE, ECONOMY dan BATTLES BY MODE dari `Game.records()`.
+- **Pencatatan** di `s["stats"]` lewat `Game.stat_add / stat_max / stat`:
+  - `Game.record_battle(mode, won, stars, sim)` dipanggil sekali per battle sungguhan (`battle.gd::_finish` dan `quick_battle`): `battles`, `wins`, `flawless` (3★), `streak`/`best_streak`, `damage`/`best_damage` (jumlah event hit/dot ke sisi musuh), `best_power`, `m_<mode>`.
+  - `give()` mencatat `gold_earned`/`gems_earned`; `spend()` mencatat `gold_spent`/`gems_spent`/`energy_spent`.
+  - `record_kills` → `kills`; `pull` → `ssr_pulled`; semua fungsi sweep → `sweeps`; `_check_day` → `days` dan `since` (hari pertama pencatatan); `_process` → `play_sec`.
+- Save lama: angka mulai dihitung sejak update ini (tanggalnya tampil di "Recording since").
+- Flow test: battle menambah battles/damage, kalah memutus streak, spend/give tercatat.
+
 ## 2ex. Update batch 146 — Ultimate & skill di battle tidak tersendat, sprite Ex-Nymph dikembalikan
 
 - **Ultimate backdrop di-batch**: `game/ui/ult_backdrop.gd` (baru) menggantikan closure `deco` di `battle.gd::_ultimate`. Bentuk & urutan gambar sama (AABatch), bagian diam (glow, 2 ring, halftone) dibangun sekali. Draw call 426 → 5; diff piksel maks 1/255 (~40 piksel).
