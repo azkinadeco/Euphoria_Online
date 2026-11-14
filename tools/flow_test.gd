@@ -1696,6 +1696,26 @@ func _run() -> void:
 	check(G.dungeon_tries("gold") == 0 and G.dungeon_tries("gear") == DB.DUNGEON_TRIES and G.dungeon_sweeps_ready() == 0, "the uncleared dungeon keeps its tries")
 	G.s = sd_save
 
+	print("[hero records]")
+	var hr_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	check(G.hall_of_fame().is_empty() and int(G.hero_record("shina")["b"]) == 0, "no service records on a fresh save")
+	var hr_sim := BattleSim.new()
+	hr_sim.setup(G.ally_team({}), G.enemies_for({"mode": "story", "stage": 0}), 7, {})
+	var hr_res: Dictionary = hr_sim.run()
+	G.record_battle("story", hr_res["won"], hr_res["stars"], hr_sim)
+	var hr_hof: Array = G.hall_of_fame()
+	var hr_sum := 0
+	var hr_mvp := 0
+	for hre in hr_hof:
+		hr_sum += int(hre["d"])
+		hr_mvp += int(hre["mvp"])
+	check(hr_hof.size() == 5 and hr_hof.all(func(e): return int(e["b"]) == 1), "every deployed hero has one battle on record")
+	check(hr_sum > 0 and hr_sum <= G.stat("damage") and int(hr_hof[0]["d"]) >= int(hr_hof[4]["d"]), "hall of fame is sorted and adds up to the team's hit damage")
+	check(hr_mvp == (1 if hr_res["won"] else 0) and int(hr_hof[0]["mvp"]) == hr_mvp, "the top damage dealer of a won battle is MVP")
+	G.s = hr_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

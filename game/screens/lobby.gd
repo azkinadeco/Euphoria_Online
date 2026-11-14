@@ -1105,6 +1105,37 @@ func _open_profile() -> void:
 				var rv := UI.label(str(row[1]), 15, Color.WHITE, 2)
 				rv.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 				rg.add_child(rv)
+		var hof := Game.hall_of_fame(8)
+		if not hof.is_empty():
+			var hp := UI.styled_panel(Color(0.05, 0.03, 0.1, 0.8), Color(UI.GOLD, 0.35), 10, 1, 10)
+			hp.set_meta("records", "HALL OF FAME")
+			box.add_child(hp)
+			var hv := UI.vbox(5)
+			hp.add_child(hv)
+			hv.add_child(UI.label("✦ HALL OF FAME  •  damage dealt", 14, UI.GOLD, 2))
+			var top_d := maxi(1, int(hof[0]["d"]))
+			for i in hof.size():
+				var e: Dictionary = hof[i]
+				var hh := UI.hbox(8)
+				hv.add_child(hh)
+				var rk := UI.label("#%d" % (i + 1), 14, UI.GOLD if i < 3 else UI.MUTED, 2)
+				rk.custom_minimum_size.x = 30
+				hh.add_child(rk)
+				var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(str(e["id"]))], 6, 1, 1)
+				fp.add_child(UI.face_rect(str(e["id"]), Vector2(34, 34)))
+				hh.add_child(fp)
+				var nv := UI.vbox(1)
+				nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				hh.add_child(nv)
+				nv.add_child(UI.label("%s   %s" % [DB.name_of(str(e["id"])).split(" ")[0], Game.fmt(int(e["d"]))], 14, Color.WHITE, 2))
+				var hb := UI.bar(int(e["d"]), top_d, "", 5)
+				hb.add_theme_stylebox_override("fill", UI.style(Color("#ff7b5c"), Color.TRANSPARENT, 3, 0, 0))
+				nv.add_child(hb)
+				var info := UI.label("%d battles  •  %d MVP  •  %d KO" % [int(e["b"]), int(e["mvp"]), int(e["ko"])], 12, UI.MUTED, 0)
+				info.custom_minimum_size.x = 190
+				info.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+				info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				hh.add_child(info)
 		box.add_child(UI.wrap_label("Records are counted from the day shown under Journey.", 12, UI.MUTED))
 		UI.stagger(box)
 	else:

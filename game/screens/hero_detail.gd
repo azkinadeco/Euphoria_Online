@@ -272,6 +272,13 @@ func _render_info() -> void:
 		i_br.add_child(UI.label("+%d%% stats" % ((h["bond"] - 1) * 2 + (10 if h["oath"] else 0)), 14, UI.GREEN))
 		if h.get("oath", false):
 			i_br.add_child(UI.label("💍 OATH", 13, Color("#ff8fb8"), 2))
+		var i_rec := Game.hero_record(id)
+		if int(i_rec["b"]) > 0:
+			var i_rl := UI.label("Service: %s battles  •  %s damage  •  %d MVP" % [Game.fmt(int(i_rec["b"])), Game.fmt(int(i_rec["d"])), int(i_rec["mvp"])], 12, UI.MUTED, 0)
+			i_rl.tooltip_text = "Best single battle: %s damage  •  Knocked out %d times" % [Game.fmt(int(i_rec["best"])), int(i_rec["ko"])]
+			i_rl.mouse_filter = Control.MOUSE_FILTER_PASS
+			i_rl.clip_text = true
+			v.add_child(i_rl)
 
 	var sk := DB.skill_of(id)
 	var sb := UI.panel("CardPanel")

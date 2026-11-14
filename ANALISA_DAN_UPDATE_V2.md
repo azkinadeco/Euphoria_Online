@@ -1228,6 +1228,12 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fj. Update batch 158 — Service record per hero + Hall of Fame
+
+- `Game._record_heroes(won, sim)` (dipanggil dari `record_battle`): per hero milik pemain di sisi sekutu mencatat `b` (battle), `d` (damage dari event `hit` ber-`src`), `best` (damage terbesar satu battle), `ko`, dan `mvp` (damage tertinggi di battle yang menang). Disimpan di `s["stats"]["hero"]`. Hero support milik teman tidak dicatat.
+- `Game.hero_record(id)` dan `Game.hall_of_fame(n)` (urut damage).
+- `lobby.gd` tab RECORDS: panel **HALL OF FAME** (peringkat, wajah, bar damage, battle / MVP / KO). `hero_detail.gd` tab INFO: baris "Service: … battles • … damage • … MVP" dengan tooltip best battle dan KO.
+
 ## 2fi. Update batch 157 — SWEEP ALL untuk Daily Dungeon
 
 - `Game.dungeon_sweeps_ready()`: jumlah sweep yang bisa dijalankan sekarang (sisa attempt semua dungeon yang sudah punya difficulty ter-clear).

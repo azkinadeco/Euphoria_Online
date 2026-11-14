@@ -4403,8 +4403,53 @@ func record_battle(mode: String, won: bool, stars: int, sim: BattleSim) -> void:
 			dmg += int(ev["dmg"])
 	stat_add("damage", dmg)
 	stat_max("best_damage", dmg)
+	_record_heroes(won, sim)
 	stat_max("best_power", team_power())
 	mark_dirty()
+
+## Per-hero service record: battles, damage dealt, MVP (top damage in a won battle), times knocked out.
+func _record_heroes(won: bool, sim: BattleSim) -> void:
+	var dealt := {}
+	for ev in sim.events:
+		if ev["t"] == "hit" and ev.has("src") and sim.units[ev["uid"]]["side"] == 1:
+			dealt[ev["src"]] = int(dealt.get(ev["src"], 0)) + int(ev["dmg"])
+	var book: Dictionary = s["stats"].get("hero", {})
+	var top := ""
+	var top_d := 0
+	for u in sim.units:
+		var id := str(u["id"])
+		if u["side"] != 0 or not owns(id):
+			continue
+		var d := int(dealt.get(u["uid"], 0))
+		var r: Dictionary = book.get(id, {"b": 0, "d": 0, "mvp": 0, "ko": 0, "best": 0})
+		r["b"] = int(r["b"]) + 1
+		r["d"] = int(r["d"]) + d
+		r["best"] = maxi(int(r.get("best", 0)), d)
+		if not u["alive"]:
+			r["ko"] = int(r["ko"]) + 1
+		book[id] = r
+		if d > top_d:
+			top_d = d
+			top = id
+	if won and top != "":
+		book[top]["mvp"] = int(book[top]["mvp"]) + 1
+	s["stats"]["hero"] = book
+
+func hero_record(id: String) -> Dictionary:
+	var r: Dictionary = s["stats"].get("hero", {}).get(id, {})
+	return {"b": int(r.get("b", 0)), "d": int(r.get("d", 0)), "mvp": int(r.get("mvp", 0)), "ko": int(r.get("ko", 0)), "best": int(r.get("best", 0))}
+
+## Heroes ranked by lifetime damage: [{id, b, d, mvp, ko, best}], at most n.
+func hall_of_fame(n: int = 8) -> Array:
+	var out: Array = []
+	for id in s["stats"].get("hero", {}).keys():
+		if not DB.HEROES.has(id):
+			continue
+		var r := hero_record(str(id))
+		r["id"] = str(id)
+		out.append(r)
+	out.sort_custom(func(a, b): return int(a["d"]) > int(b["d"]) or (int(a["d"]) == int(b["d"]) and str(a["id"]) < str(b["id"])))
+	return out.slice(0, n)
 
 ## Sections of the Commander Records page: [title, [[label, value text], ...]].
 func records() -> Array:

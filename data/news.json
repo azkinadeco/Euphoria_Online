@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-14l",
+  "date": "2026-11-14",
+  "tag": "UPDATE",
+  "title": "Hero Service Records",
+  "body": "Every hero now keeps a service record: battles fought, total damage dealt, MVP awards (top damage in a victory), best single battle and knock-outs. The RECORDS tab of your Commander Profile ranks your top 8 heroes by damage in a new Hall of Fame, and each hero's Info tab shows her own service line. Counting starts with this update."
+ },
+ {
   "id": "n2026-11-14k",
   "date": "2026-11-14",
   "tag": "UPDATE",
