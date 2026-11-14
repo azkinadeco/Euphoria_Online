@@ -1640,6 +1640,26 @@ func _run() -> void:
 	check(not bool(tr2["record"]) and G.training_best(tr_el, false) == tr0 + 5000 and G.training_best(tr_el, true) == 0, "a weaker run keeps it; sparring is tracked apart")
 	check(G.stat("battles") == tr_b and DB.TUTORIALS.has("training") and G.feature_req("training") == 4, "training does not count as a battle; unlocks at Lv.4")
 
+	print("[guild tech]")
+	var gt_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	G.s["cur"]["guild_coin"] = 1000
+	check(G.upgrade_guild_tech("edge") != "" and G.guild_tech_lv("edge") == 0, "guild tech needs a guild")
+	G.join_guild("Test Guild", 2)
+	var gt_atk0: float = float(G.stat_bonus("shina")["atk"])
+	check(G.upgrade_guild_tech("edge") == "" and G.amount("guild_coin") == 1000 - DB.guild_tech_cost(0), "first level costs %d coins" % DB.guild_tech_cost(0))
+	check(G.upgrade_guild_tech("edge") == "" and G.guild_tech_lv("edge") == 2 and G.amount("guild_coin") == 1000 - DB.guild_tech_cost(0) - DB.guild_tech_cost(1), "second level costs more")
+	check(G.upgrade_guild_tech("edge").contains("Guild Lv.3") and G.guild_tech_lv("edge") == 2, "tech is capped by the guild level")
+	check(is_equal_approx(float(G.stat_bonus("shina")["atk"]) - gt_atk0, 0.012), "two levels of Whetstone Rite give +1.2% ATK")
+	check(G.upgrade_guild_tech("focus") == "" and is_equal_approx(float(G.guild_tech_bonus()["crit"]), 0.004), "Hawk's Focus adds crit")
+	check(G.upgrade_guild_tech("nope") != "", "unknown tech is rejected")
+	G.s["cur"]["guild_coin"] = 0
+	check(G.upgrade_guild_tech("vigor").contains("Guild Coins"), "no coins, no upgrade")
+	G.leave_guild()
+	check(is_zero_approx(float(G.guild_tech_bonus()["atk"])) and G.guild_tech_lv("edge") == 2, "bonus pauses outside a guild, levels are kept")
+	G.s = gt_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

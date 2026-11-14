@@ -33,7 +33,7 @@ func _build_lobby() -> void:
 	lv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lv.add_child(UI.label("WHY JOIN A GUILD?", 16, UI.GOLD, 3))
 	lv.add_child(_perk(DB.icon("icon_boss"), "Guild Raid", "Fight a shared Raid Boss with your guildmates.", Color("#ff7a5c")))
-	lv.add_child(_perk(Game.reward_icon("guild_coin"), "Guild Coins", "Earn coins from check-ins and raids. Spend them in the Guild Shop.", UI.GOLD))
+	lv.add_child(_perk(Game.reward_icon("guild_coin"), "Guild Coins", "Earn coins from check-ins and raids. Spend them in the Guild Shop and on Guild Tech.", UI.GOLD))
 	lv.add_child(_perk(DB.icon("icon_awakening"), "Team Power", "Every guild level above 1 gives +1% ATK & HP to all your heroes.", UI.GREEN))
 	lv.add_child(UI.wrap_label("Guilds are offline for now, with AI members. Real guilds arrive with online mode.", 12, Color("#9fd0ff")))
 
@@ -270,7 +270,8 @@ func _build_hall() -> void:
 	rp.add_child(rr)
 	var tabs := UI.hbox(6)
 	rr.add_child(tabs)
-	for t in ["MEMBERS", "SHOP"]:
+	_tab = str(params.get("tab", _tab))
+	for t in ["MEMBERS", "SHOP", "TECH"]:
 		var key: String = t
 		var tb := UI.button(t, func(): _tab = key; _render_right(), "TabButton", Vector2(0, 40))
 		tb.toggle_mode = true
@@ -302,6 +303,54 @@ func _render_right() -> void:
 			h.add_child(v)
 			_right.add_child(h)
 			rank += 1
+	elif _tab == "TECH":
+		_right.add_child(UI.wrap_label("Permanent bonuses for every hero. A tech can't be higher than your Guild level (Lv.%d). Bonuses work while you are in a guild." % int(Game.s["guild"]["level"]), 12, UI.MUTED))
+		for t in DB.GUILD_TECH:
+			var tech: Dictionary = t
+			var tid: String = tech["id"]
+			var lv := Game.guild_tech_lv(tid)
+			var col := Color(str(tech["color"]))
+			var block := Game.guild_tech_block(tid)
+			var p := UI.styled_panel(Color(0.08, 0.05, 0.14, 0.92), Color(col, 0.6), 10, 1, 8)
+			_right.add_child(p)
+			var h := UI.hbox(8)
+			p.add_child(h)
+			var ic := UI.tex_rect(DB.icon(str(tech["icon"])), Vector2(38, 38))
+			ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			h.add_child(ic)
+			var v := UI.vbox(2)
+			v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			h.add_child(v)
+			v.add_child(UI.label("%s  Lv.%d" % [tech["name"], lv], 14, Color.WHITE, 2))
+			var now_pct := float(tech["per"]) * lv * 100.0
+			var nxt := "" if lv >= DB.GUILD_TECH_MAX else "  →  +%.1f%%" % (float(tech["per"]) * (lv + 1) * 100.0)
+			v.add_child(UI.label("%s +%.1f%%%s" % [str(tech["stat"]).to_upper(), now_pct, nxt], 12, col.lightened(0.2), 2))
+			var pb := UI.bar(lv, DB.GUILD_TECH_MAX, "", 5)
+			pb.add_theme_stylebox_override("fill", UI.style(col, Color.TRANSPARENT, 3, 0, 0))
+			v.add_child(pb)
+			if lv >= DB.GUILD_TECH_MAX:
+				var ml := UI.label("MAX", 14, UI.GOLD, 2)
+				ml.custom_minimum_size.x = 80
+				ml.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				ml.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				h.add_child(ml)
+			else:
+				var ub := UI.button(str(DB.guild_tech_cost(lv)), func():
+					var err := Game.upgrade_guild_tech(tid)
+					if err != "":
+						main.toast(err, UI.RED)
+					else:
+						Game.sfx("star_up")
+						main.toast("%s is now Lv.%d" % [tech["name"], Game.guild_tech_lv(tid)], UI.GREEN)
+					_render_right(), "GoldButton" if block == "" else "", Vector2(80, 40))
+				ub.icon = DB.icon("icon_guild")
+				ub.add_theme_constant_override("icon_max_width", 20)
+				ub.set_meta("tech", tid)
+				ub.tooltip_text = block if block != "" else "Upgrade"
+				ub.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				if block != "":
+					ub.modulate = Color(0.75, 0.75, 0.8)
+				h.add_child(ub)
 	else:
 		for item in DB.SHOP:
 			if item["cur"] != "guild_coin":

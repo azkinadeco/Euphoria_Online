@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-14i",
+  "date": "2026-11-14",
+  "tag": "UPDATE",
+  "title": "Guild Tech",
+  "body": "Guild Coins have a new use: Guild Tech. Open your Guild and tap the TECH tab to buy permanent bonuses for every hero: Banner of Vigor (HP), Whetstone Rite (ATK), Stone Bulwark (DEF) and Hawk's Focus (CRIT). Each tech has 10 levels, up to +6% HP, ATK and DEF and +4% CRIT. A tech cannot be higher than your Guild's level, so check in and donate to raise it. Tech levels stay with you if you change guild, and the bonuses work while you are in one."
+ },
+ {
   "id": "n2026-11-14h",
   "date": "2026-11-14",
   "tag": "UPDATE",

@@ -2244,6 +2244,16 @@ static func _bond_story_template(id: String, ep: int) -> Array:
 
 # ---------------------------------------------------------------- guild
 const GUILD_MAX_LV := 10
+## Guild Tech: permanent team bonuses bought with Guild Coins. A tech can't be higher than the guild's level.
+const GUILD_TECH := [
+	{"id": "vigor", "name": "Banner of Vigor", "stat": "hp", "per": 0.006, "icon": "icon_heart", "color": "#7fe0b0"},
+	{"id": "edge", "name": "Whetstone Rite", "stat": "atk", "per": 0.006, "icon": "icon_combat_target", "color": "#ff9a5a"},
+	{"id": "bulwark", "name": "Stone Bulwark", "stat": "def", "per": 0.006, "icon": "icon_formation", "color": "#9fd0ff"},
+	{"id": "focus", "name": "Hawk's Focus", "stat": "crit", "per": 0.004, "icon": "icon_awakening", "color": "#ffd479"},
+]
+const GUILD_TECH_MAX := 10
+static func guild_tech_cost(lv: int) -> int:
+	return 60 + 40 * lv   # coins for level lv -> lv + 1 (2,400 in total per tech)
 const GUILDS := [
 	{"name": "Eclipse Vanguard", "desc": "Top raiders. Daily raid attacks expected.", "lv": 6, "color": "#ff7a5c", "tags": ["RAID", "ACTIVE"], "members": 28, "activity": 0.92},
 	{"name": "Moonlight Garden", "desc": "Casual & friendly. Bond lovers welcome!", "lv": 3, "color": "#7fd8ff", "tags": ["CASUAL", "BOND"], "members": 17, "activity": 0.55},

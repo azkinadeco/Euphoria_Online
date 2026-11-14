@@ -676,6 +676,9 @@ func stat_bonus(id: String) -> Dictionary:
 	for r in s["runes"]:
 		if r.get("owner", "") == id:
 			b[DB.RUNES[r["type"]]["stat"]] = float(b.get(DB.RUNES[r["type"]]["stat"], 0.0)) + DB.rune_value(r)
+	var gt := guild_tech_bonus()
+	for k in gt.keys():
+		b[k] = float(b.get(k, 0.0)) + float(gt[k])
 	return b
 
 func hero_power(id: String) -> int:
@@ -2122,6 +2125,46 @@ func guild_bonus() -> float:
 	if not in_guild():
 		return 0.0
 	return 0.01 * float(int(s["guild"]["level"]) - 1)
+
+# ---- guild tech (kept when you change guild; only active while you are in one)
+func guild_tech_lv(id: String) -> int:
+	return int(s["guild"].get("tech", {}).get(id, 0))
+
+## "" when the tech can be upgraded now, otherwise the reason.
+func guild_tech_block(id: String) -> String:
+	if not in_guild():
+		return "Join a guild first."
+	var lv := guild_tech_lv(id)
+	if lv >= DB.GUILD_TECH_MAX:
+		return "Max level reached."
+	if lv >= int(s["guild"]["level"]):
+		return "Needs Guild Lv.%d." % (lv + 1)
+	if amount("guild_coin") < DB.guild_tech_cost(lv):
+		return "Not enough Guild Coins."
+	return ""
+
+func upgrade_guild_tech(id: String) -> String:
+	if not DB.GUILD_TECH.any(func(t): return t["id"] == id):
+		return "Unknown tech."
+	var err := guild_tech_block(id)
+	if err != "":
+		return err
+	var lv := guild_tech_lv(id)
+	spend("guild_coin", DB.guild_tech_cost(lv))
+	var tech: Dictionary = s["guild"].get("tech", {})
+	tech[id] = lv + 1
+	s["guild"]["tech"] = tech
+	mark_dirty()
+	return ""
+
+## {"hp": x, "atk": x, "def": x, "crit": x} from guild tech (zeros outside a guild).
+func guild_tech_bonus() -> Dictionary:
+	var b := {"hp": 0.0, "atk": 0.0, "def": 0.0, "crit": 0.0}
+	if not in_guild():
+		return b
+	for t in DB.GUILD_TECH:
+		b[t["stat"]] += float(t["per"]) * guild_tech_lv(t["id"])
+	return b
 
 func _add_guild_exp(n: int) -> void:
 	var gd: Dictionary = s["guild"]

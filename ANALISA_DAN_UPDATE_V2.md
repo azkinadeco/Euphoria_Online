@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fg. Update batch 155 — Guild Tech (bonus permanen dari Guild Coin)
+
+- `DB.GUILD_TECH` (4 tech: `vigor` HP, `edge` ATK, `bulwark` DEF masing-masing +0,6%/level, `focus` CRIT +0,4%/level), `GUILD_TECH_MAX` 10, `DB.guild_tech_cost(lv)` = 60 + 40 × lv Guild Coin (total 2.400 per tech).
+- `Game.guild_tech_lv / guild_tech_block / upgrade_guild_tech / guild_tech_bonus`. Level tech tidak boleh melebihi level guild. Disimpan di `s["guild"]["tech"]`: tetap ada saat pindah guild, bonus hanya aktif selama berada di guild.
+- `Game.stat_bonus()` menambahkan `guild_tech_bonus()` (hp/atk/def/crit), jadi ikut ke power, battle, arena, dan semua mode.
+- `guild.gd`: tab **TECH** di panel kanan (ikon, level, bonus sekarang → berikutnya, bar, tombol harga; tooltip alasan bila belum bisa). `guild:tab=TECH` bisa dipakai sebagai parameter.
+- Flow test: butuh guild, dibatasi level guild, biaya naik, bonus masuk `stat_bonus`, hilang saat keluar guild.
+
 ## 2ff. Update batch 154 — Arc 12: The Dreaming Lantern
 
 - **4 chapter baru (45–48, total 48 chapter / 288 stage)** di `DB.CHAPTERS`: The Sleeping Cathedral (bos Dreambound Glytta), The Field Without Endings (Kara), The Star That Stayed (Gemora), The Butterfly's Cradle (Lumeira). Tiap chapter punya intro, mid, mid2, boss_lines, outro, pilihan VN, dan field mod.
