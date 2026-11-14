@@ -127,6 +127,13 @@ func build() -> void:
 	var cb := UI.button("CLEAR", func(): Game.s["formation"].clear(); Game.mark_dirty(); _sel = ""; _render(), "", Vector2(0, 38 if _mode != "" else 50))
 	cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(cb)
+	var pb := UI.button("▲ BOOST", _power_up, "", Vector2(0, 38 if _mode != "" else 50))
+	pb.tooltip_text = "Quick Power-Up: level the team evenly and equip the best free gear and runes"
+	pb.add_theme_color_override("font_color", UI.GREEN)
+	pb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(pb)
+	for rb in [ab, cb, pb]:
+		rb.add_theme_font_size_override("font_size", 14)
 	var extra := UI.hbox(8)
 	btns.add_child(extra)
 	if _mode in ["story", "event", "tower", "dungeon", "hard", "hunt"]:
@@ -844,6 +851,65 @@ func _warm_jobs() -> Array:
 		var eid := str(en["id"])
 		jobs.append(["e:" + eid, DB.warm_battle_art.bind(eid, false, bool(en.get("boss", false)), 0)])
 	return jobs
+
+## Quick Power-Up: preview of what one tap will do, then apply.
+func _power_up() -> void:
+	if Game.formation().is_empty():
+		main.toast("Deploy at least one hero!", UI.RED)
+		return
+	var plan := Game.power_up_plan()
+	var v: VBoxContainer = main.popup("QUICK POWER-UP", 620)
+	v.add_child(UI.wrap_label("Levels your deployed heroes evenly (lowest first) with the Hero EXP and Gold you have, then equips the best free gear and runes.", 13, UI.MUTED))
+	var levels: Dictionary = plan["levels"]
+	var list := UI.vbox(6)
+	v.add_child(list)
+	for e in Game.formation():
+		var hid := str(e[0])
+		var h := UI.hbox(10)
+		list.add_child(h)
+		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(hid)], 6, 1, 1)
+		fp.add_child(UI.face_rect(hid, Vector2(38, 38), int(Game.hero(hid).get("skin", 0))))
+		h.add_child(fp)
+		var nl := UI.label(DB.name_of(hid), 15, Color.WHITE, 2)
+		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nl.clip_text = true
+		h.add_child(nl)
+		if levels.has(hid):
+			h.add_child(UI.label("Lv.%d  →  Lv.%d" % [int(levels[hid][0]), int(levels[hid][1])], 15, UI.GREEN, 2))
+		else:
+			var why := "Level cap" if int(Game.hero(hid)["level"]) >= Game.hero_cap(hid) else "No change"
+			h.add_child(UI.label("Lv.%d  •  %s" % [int(Game.hero(hid)["level"]), why], 14, UI.MUTED, 2))
+	var cost := UI.hbox(8)
+	cost.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(cost)
+	if levels.is_empty():
+		cost.add_child(UI.label("Not enough Hero EXP or Gold for another level. Gear and runes will still be checked.", 13, Color("#ffb86b"), 2))
+	else:
+		cost.add_child(UI.label("Cost:", 14, UI.MUTED, 2))
+		cost.add_child(UI.reward_row({"hero_exp": int(plan["exp"]), "gold": int(plan["gold"])}, 26, 14))
+	var row := UI.hbox(12)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("CANCEL", func(): main.close_popup(v), "", Vector2(150, 48)))
+	row.add_child(UI.button("POWER UP", func():
+		var res := Game.power_up_team()
+		main.close_popup(v)
+		var parts: Array = []
+		var lv_n := 0
+		for k in (res["levels"] as Dictionary).keys():
+			lv_n += int(res["levels"][k][1]) - int(res["levels"][k][0])
+		if lv_n > 0:
+			parts.append("+%d levels" % lv_n)
+		if int(res["gear"]) > 0:
+			parts.append("%d gear" % int(res["gear"]))
+		if int(res["runes"]) > 0:
+			parts.append("%d runes" % int(res["runes"]))
+		if parts.is_empty():
+			main.toast("Your team is already at its best with what you have.", UI.MUTED)
+		else:
+			Game.sfx("star_up")
+			main.toast("Team Power %s → %s  (%s)" % [Game.fmt(int(res["before"])), Game.fmt(int(res["after"])), ", ".join(parts)], UI.GREEN)
+		_render(), "GoldButton", Vector2(190, 48)))
 
 func _start() -> void:
 	if Game.formation().is_empty():

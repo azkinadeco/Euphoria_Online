@@ -1660,6 +1660,27 @@ func _run() -> void:
 	check(is_zero_approx(float(G.guild_tech_bonus()["atk"])) and G.guild_tech_lv("edge") == 2, "bonus pauses outside a guild, levels are kept")
 	G.s = gt_save
 
+	print("[quick power-up]")
+	var pu_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	G.s["cur"]["hero_exp"] = 30000
+	G.s["cur"]["gold"] = 200000
+	G.add_gear("weapon", "SR")
+	var pu_plan: Dictionary = G.power_up_plan()
+	check(int(G.hero("shina")["level"]) == 1 and G.amount("hero_exp") == 30000, "the preview changes nothing")
+	check((pu_plan["levels"] as Dictionary).size() == 5 and int(pu_plan["exp"]) <= 30000 and int(pu_plan["exp"]) > 0, "all five deployed heroes gain levels")
+	var pu_pw: int = G.team_power()
+	var pu_res: Dictionary = G.power_up_team()
+	check(G.amount("hero_exp") == 30000 - int(pu_plan["exp"]) and G.amount("gold") == 200000 - int(pu_plan["gold"]), "the real cost equals the previewed cost")
+	var pu_lv: Array = G.formation().map(func(e): return int(G.hero(str(e[0]))["level"]))
+	check(int(pu_lv.max()) - int(pu_lv.min()) <= 1 and int(pu_lv.min()) > 1, "levels are spread evenly (%s)" % str(pu_lv))
+	check(int(pu_res["gear"]) == 1 and int(pu_res["after"]) > pu_pw and int(pu_res["before"]) == pu_pw, "free gear is equipped and power rises")
+	G.s["cur"]["hero_exp"] = 0
+	var pu_again: Dictionary = G.power_up_team()
+	check((pu_again["levels"] as Dictionary).is_empty() and int(pu_again["gear"]) == 0 and int(pu_again["after"]) == int(pu_again["before"]), "nothing left to do without resources")
+	G.s = pu_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

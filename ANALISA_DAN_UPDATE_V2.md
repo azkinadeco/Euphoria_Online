@@ -1228,6 +1228,13 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fh. Update batch 156 — Quick Power-Up (tombol BOOST di Formation)
+
+- `Game.power_up_plan()`: simulasi tanpa mengubah save. Hero di formation dinaikkan merata (selalu yang level terendah dulu, berhenti di `hero_cap`) dengan Hero EXP dan Gold yang ada. Hasil `{levels: {id: [dari, ke]}, exp, gold}`.
+- `Game.power_up_team()`: menjalankan rencana itu lewat `level_up()`, lalu `auto_equip()` dan `auto_runes()` untuk tiap hero di formation. Hasil ditambah `gear`, `runes`, `before`, `after` (team power).
+- `formation.gd`: tombol **▲ BOOST** di samping AUTO / CLEAR (juga di Battle Prep) → popup QUICK POWER-UP berisi level tiap hero (dari → ke, atau "Level cap" / "No change"), biaya, lalu POWER UP / CANCEL. Setelahnya toast "Team Power A → B (+N levels, N gear, N runes)".
+- Flow test: rencana tidak mengubah save, biaya rencana = biaya nyata, level merata (selisih ≤ 1), panggilan kedua tanpa sumber daya tidak mengubah apa pun.
+
 ## 2fg. Update batch 155 — Guild Tech (bonus permanen dari Guild Coin)
 
 - `DB.GUILD_TECH` (4 tech: `vigor` HP, `edge` ATK, `bulwark` DEF masing-masing +0,6%/level, `focus` CRIT +0,4%/level), `GUILD_TECH_MAX` 10, `DB.guild_tech_cost(lv)` = 60 + 40 × lv Guild Coin (total 2.400 per tech).

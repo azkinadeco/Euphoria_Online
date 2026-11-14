@@ -731,6 +731,59 @@ func level_up(id: String, times: int = 1) -> int:
 		mark_dirty()
 	return done
 
+## Quick Power-Up preview: levels the formation evenly (always the lowest hero first) with the Hero EXP
+## and Gold on hand. Returns {"levels": {id: [from, to]}, "exp": spent, "gold": spent}. Changes nothing.
+func power_up_plan() -> Dictionary:
+	var lv := {}
+	for e in formation():
+		lv[str(e[0])] = int(hero(str(e[0]))["level"])
+	var from: Dictionary = lv.duplicate()
+	var hexp := amount("hero_exp")
+	var gold := amount("gold")
+	var used_exp := 0
+	var used_gold := 0
+	while true:
+		var pick := ""
+		for id in lv.keys():
+			if int(lv[id]) < hero_cap(id) and (pick == "" or int(lv[id]) < int(lv[pick])):
+				pick = id
+		if pick == "":
+			break
+		var ec := DB.exp_to_next(int(lv[pick]))
+		var gc := DB.gold_to_next(int(lv[pick]))
+		if hexp < ec or gold < gc:
+			break   # the lowest hero is the cheapest step: nobody else can level either
+		hexp -= ec
+		gold -= gc
+		used_exp += ec
+		used_gold += gc
+		lv[pick] = int(lv[pick]) + 1
+	var out := {}
+	for id in lv.keys():
+		if int(lv[id]) > int(from[id]):
+			out[id] = [int(from[id]), int(lv[id])]
+	return {"levels": out, "exp": used_exp, "gold": used_gold}
+
+## Applies power_up_plan(), then equips the best free gear and runes on every deployed hero.
+## Returns the plan plus {"gear": n, "runes": n, "before": power, "after": power}.
+func power_up_team() -> Dictionary:
+	var before := team_power()
+	var plan := power_up_plan()
+	for id in (plan["levels"] as Dictionary).keys():
+		level_up(str(id), int(plan["levels"][id][1]) - int(plan["levels"][id][0]))
+	var gear_n := 0
+	var rune_n := 0
+	for e in formation():
+		gear_n += auto_equip(str(e[0]))
+		rune_n += auto_runes(str(e[0]))
+	plan["gear"] = gear_n
+	plan["runes"] = rune_n
+	plan["before"] = before
+	plan["after"] = team_power()
+	mark_dirty()
+	changed.emit()
+	return plan
+
 func level_up_block_reason(id: String) -> String:
 	var h := hero(id)
 	if h["level"] >= hero_cap(id):

@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-14j",
+  "date": "2026-11-14",
+  "tag": "UPDATE",
+  "title": "Quick Power-Up",
+  "body": "The Formation and Battle Prep screens have a new BOOST button. One tap shows a preview and then levels your deployed heroes evenly, lowest first, with the Hero EXP and Gold you have, and equips the best free gear and runes on each of them. The preview lists every hero's new level and the exact cost before you confirm, and a toast shows your Team Power before and after."
+ },
+ {
   "id": "n2026-11-14i",
   "date": "2026-11-14",
   "tag": "UPDATE",
