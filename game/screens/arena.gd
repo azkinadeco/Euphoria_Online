@@ -348,7 +348,7 @@ func _render_defence() -> void:
 	var hv := UI.vbox(4)
 	head.add_child(hv)
 	hv.add_child(UI.label("DEFENSE RECORD   %d held  •  %d lost" % [held_n, lost_n], 16, UI.GOLD, 3))
-	hv.add_child(UI.wrap_label("While you are away, rival commanders challenge the team in your Formation (one attack every 3 hours, up to %d). Holding the line: +%d RP and %d Arena Coins. Losing: -%d RP. A stronger team defends better." % [Game.DEF_MAX, Game.DEF_HOLD_RP, Game.DEF_HOLD_COINS, Game.DEF_LOSE_RP], 13, UI.MUTED))
+	hv.add_child(UI.wrap_label("While you are away, rival commanders challenge the team in your Formation (one attack every 3 hours, up to %d). Holding the line: +%d RP and %d Arena Coins. Losing: -%d RP, but you get one free REVENGE match against her (+%d RP if you win)." % [Game.DEF_MAX, Game.DEF_HOLD_RP, Game.DEF_HOLD_COINS, Game.DEF_LOSE_RP, Game.REVENGE_RP], 13, UI.MUTED))
 	var eb := UI.button("EDIT DEFENSE TEAM", func(): main.go("formation"), "", Vector2(220, 40))
 	eb.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	hv.add_child(eb)
@@ -381,6 +381,24 @@ func _render_defence() -> void:
 		rp.custom_minimum_size.x = 80
 		rp.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		rh.add_child(rp)
+		if not held and e.has("k"):
+			var k := int(e["k"])
+			if bool(e.get("avenged", false)):
+				var al := UI.label("✓ AVENGED", 13, UI.GOLD, 2)
+				al.custom_minimum_size.x = 110
+				al.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				al.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				rh.add_child(al)
+			else:
+				var rb := UI.button("REVENGE", func(): main.go("formation", {"mode": "revenge", "k": k}), "GoldButton", Vector2(110, 40))
+				rb.disabled = Game.revenge_block(k) != ""
+				rb.tooltip_text = "One free rematch: win for +%d RP and %d Arena Coins" % [Game.REVENGE_RP, Game.REVENGE_COINS] if not rb.disabled else Game.revenge_block(k)
+				rb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				rh.add_child(rb)
+		else:
+			var pad := Control.new()
+			pad.custom_minimum_size.x = 110
+			rh.add_child(pad)
 	UI.stagger(_list, 0.02)
 	Game.defence_seen()
 	for tb in find_children("*", "Button", true, false):

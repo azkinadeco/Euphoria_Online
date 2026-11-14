@@ -1610,7 +1610,7 @@ func _run() -> void:
 		ad_d += int(ade["rp"])
 		ad_held += 1 if ade["held"] else 0
 	check(int(G.s["arena"]["rp"]) == ad_rp + ad_d, "RP change matches the log")
-	check(G.feature_badge("arena") == 2, "arena badge shows unseen attacks")
+	check(G.feature_badge("arena") == 2 + G.revenges_ready(), "arena badge shows unseen attacks and open revenges")
 	var ad_c: Dictionary = G.claim_defence()
 	check(int(ad_c.get("arena_coin", 0)) == ad_held * G.DEF_HOLD_COINS and G.claim_defence().is_empty(), "defence coins are paid once")
 	G.defence_seen()
@@ -1715,6 +1715,29 @@ func _run() -> void:
 	check(hr_sum > 0 and hr_sum <= G.stat("damage") and int(hr_hof[0]["d"]) >= int(hr_hof[4]["d"]), "hall of fame is sorted and adds up to the team's hit damage")
 	check(hr_mvp == (1 if hr_res["won"] else 0) and int(hr_hof[0]["mvp"]) == hr_mvp, "the top damage dealer of a won battle is MVP")
 	G.s = hr_save
+
+	print("[arena revenge]")
+	var rv_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	G.s["player"]["level"] = 10
+	G.s["arena"]["def_log"] = [{"name": "Rival", "hero": "kali", "power": 9000, "held": false, "rp": -8, "t": G.now(), "k": 4242},
+		{"name": "Weak", "hero": "rumi", "power": 3000, "held": true, "rp": 6, "t": G.now(), "k": 77}]
+	check(G.revenges_ready() == 1 and G.revenge_block(4242) == "" and G.revenge_block(77) != "" and G.revenge_block(1) != "", "only a lost defence can be avenged")
+	var rv_team: Array = G.revenge_team(4242)
+	var rv_pw := 0
+	var rv_cells := {}
+	for rvu in rv_team:
+		rv_pw += DB.power_of(DB.stats_for(rvu["id"], rvu["level"], rvu["star"]))
+		rv_cells[rvu["cell"]] = true
+	check(rv_team.size() == 5 and rv_cells.size() == 5 and str(rv_team[0]["id"]) == "kali" and absf(rv_pw - 9000.0) / 9000.0 < 0.2, "the attacker's team is rebuilt near her recorded power (%d)" % rv_pw)
+	check(G.revenge_team(4242) == rv_team and G.enemies_for({"mode": "revenge", "k": 4242}) == rv_team, "the rebuilt team is stable")
+	check(G.pay_battle({"mode": "revenge", "k": 4242}) == "" and G.battle_title({"mode": "revenge", "k": 4242}).contains("Rival"), "revenge is free and names the rival")
+	var rv_rp: int = int(G.s["arena"]["rp"])
+	var rv_r: Dictionary = G.apply_revenge_result(4242, true)
+	check(int(G.s["arena"]["rp"]) == rv_rp + G.REVENGE_RP and int(rv_r["arena_coin"]) == G.REVENGE_COINS, "a won revenge pays RP and coins")
+	check(G.revenge_block(4242) != "" and G.revenges_ready() == 0 and G.pay_battle({"mode": "revenge", "k": 4242}) != "", "one revenge match per report")
+	G.s = rv_save
 
 	print("[save / load]")
 	var path := "user://flow_test_save.json"

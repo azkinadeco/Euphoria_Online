@@ -1565,6 +1565,8 @@ func _finish(e: Dictionary) -> void:
 			rewards = Game.apply_hunt_result(str(params["hunt"]), int(params["diff"]), won)
 		"rift":
 			rewards = Game.apply_rift_result(won)
+		"revenge":
+			rewards = Game.apply_revenge_result(int(params["k"]), won)
 		"trial":
 			var thid := str(params["hero"])
 			var alive := false

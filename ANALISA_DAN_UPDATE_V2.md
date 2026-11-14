@@ -1228,6 +1228,12 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fk. Update batch 159 — Arena Revenge
+
+- Mode battle baru `"revenge"` (param `k` = kunci laporan). Entri `def_log` kini menyimpan `k`; laporan lama tanpa `k` tidak punya tombol.
+- `Game.revenge_block(k)` / `revenges_ready()` / `revenge_team(k)` (5 hero dari seed `k`, hero pertama = wajah di laporan, level dicari supaya power tim paling dekat dengan power yang tercatat) / `apply_revenge_result(k, won)`: menang +14 RP (`REVENGE_RP`) dan 30 Arena Coin; tiap laporan hanya satu kali percobaan (`tried`), tanpa tiket.
+- `arena.gd` tab DEFENSE: tombol **REVENGE** pada baris DEFEATED, label ✓ AVENGED setelah menang. `feature_badge("arena")` ikut menghitung revenge yang masih terbuka. Battle Prep menampilkan "One chance • +14 RP". Commander Records: mode "Arena Revenge".
+
 ## 2fj. Update batch 158 — Service record per hero + Hall of Fame
 
 - `Game._record_heroes(won, sim)` (dipanggil dari `record_battle`): per hero milik pemain di sisi sekutu mencatat `b` (battle), `d` (damage dari event `hit` ber-`src`), `best` (damage terbesar satu battle), `ko`, dan `mvp` (damage tertinggi di battle yang menang). Disimpan di `s["stats"]["hero"]`. Hero support milik teman tidak dicatat.

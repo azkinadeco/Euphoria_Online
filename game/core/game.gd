@@ -1543,6 +1543,8 @@ func enemies_for(params: Dictionary) -> Array:
 			return DB.trial_stage(str(params["hero"]), int(params["tier"]))["enemies"]
 		"wboss":
 			return [{"id": wboss()["id"], "cell": Vector2i(1, 1), "level": _avg_level() + 8, "boss": true, "raid": true, "elite": true, "star": 5}]
+		"revenge":
+			return revenge_team(int(params["k"]))
 		"training":
 			# an unkillable partner at your level; in a sparring match she hits back like a boss
 			var spar := bool(params.get("spar", false))
@@ -1576,6 +1578,8 @@ func battle_title(params: Dictionary) -> String:
 			return "STARLIGHT RIFT  •  FLOOR %d" % int(_rift()["floor"])
 		"trial":
 			return "HERO TRIAL  •  " + str(DB.trial_stage(str(params["hero"]), int(params["tier"]))["name"])
+		"revenge":
+			return "ARENA REVENGE  •  vs %s" % str(revenge_entry(int(params["k"])).get("name", "?"))
 		"training":
 			return "TRAINING GROUND  •  %s %s" % [str(params.get("elem", "FIRE")), "SPARRING" if bool(params.get("spar", false)) else "DUMMY"]
 		"dungeon":
@@ -1759,6 +1763,8 @@ func pay_battle(params: Dictionary) -> String:
 				return "No World Boss attempts left today."
 			s["wboss"]["tries"] = int(s["wboss"]["tries"]) - 1
 			mark_dirty()
+		"revenge":
+			return revenge_block(int(params["k"]))
 		"raid":
 			if int(s["guild"]["raid_tries"]) <= 0:
 				return "No raid attempts left today."
@@ -3035,7 +3041,7 @@ func arena_defend_away(secs: int) -> int:
 		else:
 			stat_add("def_losses")
 		log.push_front({"name": ARENA_NAMES[randi() % ARENA_NAMES.size()], "hero": ids[randi() % ids.size()], "power": int(mine * ratio),
-			"held": held, "rp": d, "t": now() - secs + (i + 1) * secs / (n + 1)})
+			"held": held, "rp": d, "t": now() - secs + (i + 1) * secs / (n + 1), "k": randi() % 1000000000})
 	if log.size() > DEF_LOG_MAX:
 		log.resize(DEF_LOG_MAX)
 	a["def_log"] = log
@@ -3053,6 +3059,84 @@ func defence_seen() -> void:
 	if defence_new() > 0:
 		s["arena"]["def_new"] = 0
 		mark_dirty()
+
+# ---- revenge: one free rematch against each attacker who beat your defence
+const REVENGE_RP := 14
+const REVENGE_COINS := 30
+
+func revenge_entry(k: int) -> Dictionary:
+	for e in defence_log():
+		if int(e.get("k", -1)) == k:
+			return e
+	return {}
+
+## "" when the attacker with key k can be challenged, otherwise the reason.
+func revenge_block(k: int) -> String:
+	var e := revenge_entry(k)
+	if e.is_empty():
+		return "That report is gone."
+	if bool(e["held"]):
+		return "You already won that fight."
+	if bool(e.get("tried", false)):
+		return "You already took your revenge match."
+	return ""
+
+func revenges_ready() -> int:
+	var n := 0
+	for e in defence_log():
+		if e.has("k") and revenge_block(int(e["k"])) == "":
+			n += 1
+	return n
+
+## The attacker's team, rebuilt from the report: five heroes at the level that best matches her recorded power.
+func revenge_team(k: int) -> Array:
+	var e := revenge_entry(k)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = k
+	var pool: Array = DB.HEROES.keys()
+	pool.erase(str(e.get("hero", "")))
+	var ids: Array = [str(e.get("hero", pool[0]))]
+	for i in 4:
+		ids.append(pool.pop_at(rng.randi_range(0, pool.size() - 1)))
+	var cells: Array = []
+	for x in 3:
+		for y in 3:
+			cells.append(Vector2i(x, y))
+	var stars := []
+	for i in 5:
+		stars.append(rng.randi_range(3, 5))
+	while cells.size() > 5:
+		cells.remove_at(rng.randi_range(0, cells.size() - 1))
+	var want := int(e.get("power", team_power()))
+	var best_lv := 1
+	var best_gap := -1
+	for lv in range(1, 121):
+		var pw := 0
+		for i in 5:
+			pw += DB.power_of(DB.stats_for(ids[i], lv, stars[i]))
+		var gap := absi(pw - want)
+		if best_gap < 0 or gap < best_gap:
+			best_gap = gap
+			best_lv = lv
+	var team: Array = []
+	for i in 5:
+		team.append({"id": ids[i], "cell": cells[i], "level": best_lv, "star": stars[i]})
+	return team
+
+func apply_revenge_result(k: int, won: bool) -> Dictionary:
+	var e := revenge_entry(k)
+	if e.is_empty():
+		return {}
+	e["tried"] = true
+	mark_dirty()
+	if not won:
+		return {}
+	e["avenged"] = true
+	s["arena"]["rp"] = int(s["arena"]["rp"]) + REVENGE_RP
+	stat_add("revenges")
+	var r := {"arena_coin": REVENGE_COINS}
+	give(r)
+	return r
 
 ## Arena Coins earned by successful defences; paid when the log is opened.
 func claim_defence() -> Dictionary:
@@ -3243,7 +3327,7 @@ func feature_badge(route: String) -> int:
 			for d in DB.DUNGEONS:
 				n += dungeon_tries(d["id"])
 		"guild": n = 1 if in_guild() and int(s["guild"]["checkin_day"]) != day_key() else 0
-		"arena": n = defence_new()
+		"arena": n = defence_new() + revenges_ready()
 		"garden": n = minigame_plays_left() if feature_unlocked("minigame") else 0
 	if (s.get("new_unlocks", []) as Array).has(route):
 		n = maxi(n, 1)
@@ -4459,7 +4543,7 @@ func records() -> Array:
 	var dt: Dictionary = Time.get_date_dict_from_unix_time(since * 86400)
 	var modes: Array = []
 	for m in [["story", "Story"], ["hard", "Hard Story"], ["arena", "Arena"], ["tower", "Tower"], ["dungeon", "Dungeon"], ["event", "Event"],
-			["hunt", "Boss Hunt"], ["rift", "Starlight Rift"], ["wboss", "World Boss"], ["raid", "Guild Raid"], ["trial", "Hero Trial"]]:
+			["hunt", "Boss Hunt"], ["rift", "Starlight Rift"], ["wboss", "World Boss"], ["raid", "Guild Raid"], ["trial", "Hero Trial"], ["revenge", "Arena Revenge"]]:
 		if stat("m_" + str(m[0])) > 0:
 			modes.append([m[1], fmt(stat("m_" + str(m[0])))])
 	var out: Array = [
