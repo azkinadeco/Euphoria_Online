@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fd. Update batch 152 — Arena Defense (serangan saat pemain pergi)
+
+- `Game.arena_defend_away(secs)` dipanggil di `_ready()` setelah `capture_away()`: 1 serangan per 3 jam absen (`DEF_EVERY_SEC`), maksimal `DEF_MAX` (5). Kekuatan penyerang 0,7–1,3× `team_power()`; peluang bertahan `defence_chance(ratio)` = 0,5 + (1 − ratio) × 1,6, dijepit 12%–90%.
+- Bertahan: +6 RP dan 12 Arena Coin (ditampung di `def_coins`, dibayar `claim_defence()` saat tab dibuka). Kalah: −8 RP (tidak bisa di bawah 0). Log `s["arena"]["def_log"]` maksimal 20 entri, `def_new` = belum dilihat. Statistik `def_wins` / `def_losses`.
+- `arena.gd`: tab **DEFENSE** (`_render_defence`) dengan rekor, aturan, tombol EDIT DEFENSE TEAM (ke Formation), dan daftar serangan (wajah, nama, power, waktu, DEFENDED/DEFEATED, ±RP). Badge jumlah serangan baru di tab; `arena:tab=DEFENSE` bisa dipakai sebagai parameter.
+- `feature_badge("arena")` = serangan yang belum dilihat. Welcome Back menambah baris ringkasan serangan.
+- Tidak aktif sebelum Arena terbuka (Lv.5) atau bila absen < 3 jam.
+
 ## 2fc. Update batch 151 — Wishlist di Standard Summon
 
 - `DB.WISH_MAX` (3) dan `DB.WISH_RATE` (0,5). `Game.wishlist()` / `toggle_wish(id)` menyimpan pilihan di `s["gacha"]["wish"]` (hanya SSR, id yang sudah tidak ada dibuang).

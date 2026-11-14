@@ -1587,6 +1587,33 @@ func _run() -> void:
 	check(wl_feat == 0, "rate-up banners ignore the wishlist")
 	G.s = wl_save
 
+	print("[arena defence]")
+	var ad_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	check(G.arena_defend_away(50000) == 0, "no attacks before the Arena unlocks")
+	G.s["player"]["level"] = 10
+	check(G.arena_defend_away(3600) == 0, "no attacks for a short absence")
+	var ad_rp: int = int(G.s["arena"]["rp"])
+	check(G.arena_defend_away(7 * 3600) == 2 and G.defence_new() == 2 and G.defence_log().size() == 2, "two attacks in seven hours away")
+	var ad_d := 0
+	var ad_held := 0
+	for ade in G.defence_log():
+		ad_d += int(ade["rp"])
+		ad_held += 1 if ade["held"] else 0
+	check(int(G.s["arena"]["rp"]) == ad_rp + ad_d, "RP change matches the log")
+	check(G.feature_badge("arena") == 2, "arena badge shows unseen attacks")
+	var ad_c: Dictionary = G.claim_defence()
+	check(int(ad_c.get("arena_coin", 0)) == ad_held * G.DEF_HOLD_COINS and G.claim_defence().is_empty(), "defence coins are paid once")
+	G.defence_seen()
+	check(G.defence_new() == 0, "log marked as seen")
+	check(G.arena_defend_away(100 * 3600) == G.DEF_MAX, "attacks per absence are capped")
+	for adi in 6:
+		G.arena_defend_away(100 * 3600)
+	check(G.defence_log().size() == G.DEF_LOG_MAX and int(G.s["arena"]["rp"]) >= 0, "log is capped and RP never negative")
+	check(G.defence_chance(0.7) > G.defence_chance(1.0) and G.defence_chance(1.0) > G.defence_chance(1.3) and is_equal_approx(G.defence_chance(1.0), 0.5), "stronger attackers win more often")
+	G.s = ad_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

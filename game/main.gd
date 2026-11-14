@@ -488,6 +488,9 @@ func _welcome_back(done: Callable) -> void:
 		col.add_child(UI.label("%d expedition(s) completed!" % Game.expeditions_ready(), 15, Color("#9fd0ff")))
 	if Game.badge_quests() > 0:
 		col.add_child(UI.label("%d mission reward(s) ready to claim" % Game.badge_quests(), 15, UI.GOLD))
+	if Game.defence_new() > 0:
+		var held: int = Game.defence_log().slice(0, Game.defence_new()).filter(func(e): return bool(e["held"])).size()
+		col.add_child(UI.label("Arena: %d attack(s) on your team — %d held, %d lost" % [Game.defence_new(), held, Game.defence_new() - held], 15, Color("#ff9a5a")))
 	var row := UI.hbox(12)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_child(row)

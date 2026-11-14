@@ -30,6 +30,7 @@ func _ready() -> void:
 	capture_away()
 	_check_day()
 	_regen_energy()
+	arena_defend_away(away_secs)
 
 func _process(delta: float) -> void:
 	_tick_accum += delta
@@ -2865,6 +2866,67 @@ func arena_season() -> int:
 func arena_season_ends_in() -> int:
 	return (arena_season() + 1) * DB.ARENA_SEASON_DAYS * 86400 - 7 * 3600 - now()
 
+# ---- arena defence: AI commanders attack your formation while you are away
+const DEF_EVERY_SEC := 3 * 3600   # one attack per 3 hours away
+const DEF_MAX := 5                # attacks per absence
+const DEF_LOG_MAX := 20
+const DEF_HOLD_RP := 6
+const DEF_LOSE_RP := 8
+const DEF_HOLD_COINS := 12
+
+## Chance that your team holds against an attacker of `ratio` x your power.
+static func defence_chance(ratio: float) -> float:
+	return clampf(0.5 + (1.0 - ratio) * 1.6, 0.12, 0.9)
+
+## Rolls the attacks for `secs` of absence. Returns how many happened.
+func arena_defend_away(secs: int) -> int:
+	if not feature_unlocked("arena") or secs < DEF_EVERY_SEC or formation().is_empty():
+		return 0
+	var a: Dictionary = s["arena"]
+	var n := mini(DEF_MAX, secs / DEF_EVERY_SEC)
+	var log: Array = a.get("def_log", [])
+	var mine := team_power()
+	var ids: Array = DB.HEROES.keys()
+	for i in n:
+		var ratio := randf_range(0.7, 1.3)
+		var held := randf() < defence_chance(ratio)
+		var d := DEF_HOLD_RP if held else -mini(DEF_LOSE_RP, int(a["rp"]))
+		a["rp"] = int(a["rp"]) + d
+		if held:
+			a["def_coins"] = int(a.get("def_coins", 0)) + DEF_HOLD_COINS
+			stat_add("def_wins")
+		else:
+			stat_add("def_losses")
+		log.push_front({"name": ARENA_NAMES[randi() % ARENA_NAMES.size()], "hero": ids[randi() % ids.size()], "power": int(mine * ratio),
+			"held": held, "rp": d, "t": now() - secs + (i + 1) * secs / (n + 1)})
+	if log.size() > DEF_LOG_MAX:
+		log.resize(DEF_LOG_MAX)
+	a["def_log"] = log
+	a["def_new"] = int(a.get("def_new", 0)) + n
+	mark_dirty()
+	return n
+
+func defence_log() -> Array:
+	return s["arena"].get("def_log", [])
+
+func defence_new() -> int:
+	return int(s["arena"].get("def_new", 0))
+
+func defence_seen() -> void:
+	if defence_new() > 0:
+		s["arena"]["def_new"] = 0
+		mark_dirty()
+
+## Arena Coins earned by successful defences; paid when the log is opened.
+func claim_defence() -> Dictionary:
+	var c := int(s["arena"].get("def_coins", 0))
+	if c <= 0:
+		return {}
+	s["arena"]["def_coins"] = 0
+	var r := {"arena_coin": c}
+	give(r)
+	return r
+
 func _check_arena_season() -> void:
 	var a: Dictionary = s["arena"]
 	var cur := arena_season()
@@ -3022,6 +3084,7 @@ func feature_badge(route: String) -> int:
 			for d in DB.DUNGEONS:
 				n += dungeon_tries(d["id"])
 		"guild": n = 1 if in_guild() and int(s["guild"]["checkin_day"]) != day_key() else 0
+		"arena": n = defence_new()
 		"garden": n = minigame_plays_left() if feature_unlocked("minigame") else 0
 	if (s.get("new_unlocks", []) as Array).has(route):
 		n = maxi(n, 1)

@@ -25,12 +25,15 @@ func build() -> void:
 	rp.add_child(rv)
 	var hh := UI.hbox(10)
 	rv.add_child(hh)
-	for tn in ["CHALLENGERS", "RANKING"]:
+	_tab = str(params.get("tab", _tab))
+	for tn in ["CHALLENGERS", "RANKING", "DEFENSE"]:
 		var tk: String = tn
 		var tb := UI.button(tn, func(): _tab = tk; _render(), "TabButton", Vector2(150, 40))
 		tb.toggle_mode = true
 		tb.set_meta("key", tn)
 		hh.add_child(tb)
+		if tn == "DEFENSE" and Game.defence_new() > 0:
+			UI.add_badge(tb, Game.defence_new())
 	hh.add_child(UI.spacer())
 	hh.add_child(UI.button("REFRESH", func():
 		Game.s["arena"]["refresh"] = int(Game.s["arena"]["refresh"]) + 1
@@ -137,6 +140,10 @@ func _render() -> void:
 	if _tab == "RANKING":
 		_foot.visible = false
 		_render_ranking()
+		return
+	if _tab == "DEFENSE":
+		_foot.visible = false
+		_render_defence()
 		return
 	_foot.visible = true
 	_render_foot()
@@ -330,6 +337,61 @@ func _render_foot() -> void:
 	h.add_child(UI.button("FORMATION", func(): main.go("formation"), "", Vector2(124, 40)))
 
 ## Ranking: podium for the top 3, then the list with tier chips; your row is highlighted.
+## Attacks made on your formation while you were away (newest first).
+func _render_defence() -> void:
+	var log: Array = Game.defence_log()
+	var fresh := Game.defence_new()
+	var held_n := Game.stat("def_wins")
+	var lost_n := Game.stat("def_losses")
+	var head := UI.styled_panel(Color(0.05, 0.03, 0.1, 0.92), Color(UI.GOLD, 0.35), 12, 1, 10)
+	_list.add_child(head)
+	var hv := UI.vbox(4)
+	head.add_child(hv)
+	hv.add_child(UI.label("DEFENSE RECORD   %d held  •  %d lost" % [held_n, lost_n], 16, UI.GOLD, 3))
+	hv.add_child(UI.wrap_label("While you are away, rival commanders challenge the team in your Formation (one attack every 3 hours, up to %d). Holding the line: +%d RP and %d Arena Coins. Losing: -%d RP. A stronger team defends better." % [Game.DEF_MAX, Game.DEF_HOLD_RP, Game.DEF_HOLD_COINS, Game.DEF_LOSE_RP], 13, UI.MUTED))
+	var eb := UI.button("EDIT DEFENSE TEAM", func(): main.go("formation"), "", Vector2(220, 40))
+	eb.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	hv.add_child(eb)
+	if log.is_empty():
+		var e := UI.wrap_label("No attacks yet. Come back after a few hours away and the reports will be here.", 14, UI.MUTED)
+		e.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_list.add_child(e)
+	for i in log.size():
+		var e: Dictionary = log[i]
+		var held: bool = e["held"]
+		var col := UI.GREEN if held else Color("#ff7a7a")
+		var row := UI.styled_panel(Color(0.08, 0.05, 0.14, 0.9), Color(col, 0.7 if i < fresh else 0.3), 8, 2 if i < fresh else 1, 6)
+		_list.add_child(row)
+		var rh := UI.hbox(10)
+		row.add_child(rh)
+		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(str(e["hero"]))], 6, 1, 1)
+		fp.add_child(UI.face_rect(str(e["hero"]), Vector2(40, 40)))
+		rh.add_child(fp)
+		var nv := UI.vbox(0)
+		nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rh.add_child(nv)
+		nv.add_child(UI.label(str(e["name"]) + ("   NEW" if i < fresh else ""), 16, Color.WHITE, 2))
+		var ago := maxi(0, Game.now() - int(e["t"]))
+		nv.add_child(UI.label("Power %s  •  %s ago" % [Game.fmt(int(e["power"])), Game.left_text(ago)], 12, UI.MUTED))
+		var res := UI.label("DEFENDED" if held else "DEFEATED", 15, col, 3)
+		res.custom_minimum_size.x = 110
+		res.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		rh.add_child(res)
+		var rp := UI.label("%+d RP" % int(e["rp"]), 16, col, 2)
+		rp.custom_minimum_size.x = 80
+		rp.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		rh.add_child(rp)
+	UI.stagger(_list, 0.02)
+	Game.defence_seen()
+	for tb in find_children("*", "Button", true, false):
+		if tb.has_meta("key") and str(tb.get_meta("key")) == "DEFENSE":
+			for c in tb.get_children():
+				if c is Panel:
+					c.queue_free()   # the "new attacks" badge
+	var coins := Game.claim_defence()
+	if not coins.is_empty():
+		main.show_rewards("DEFENSE REWARDS", coins)
+
 func _render_ranking() -> void:
 	var board: Array = Game.arena_leaderboard()
 	var pod := UI.hbox(8)

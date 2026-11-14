@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-14f",
+  "date": "2026-11-14",
+  "tag": "UPDATE",
+  "title": "Arena Defense",
+  "body": "The Arena has a new DEFENSE tab. While you are away, rival commanders challenge the team in your Formation: one attack every 3 hours, up to 5 per absence. Each successful defense earns +6 RP and 12 Arena Coins, and a loss costs 8 RP. A stronger team holds more often. The tab lists every attack with the rival's power and the result, and the Welcome Back screen sums up what happened."
+ },
+ {
   "id": "n2026-11-14e",
   "date": "2026-11-14",
   "tag": "UPDATE",
