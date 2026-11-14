@@ -44,12 +44,13 @@ const MAX_SKILL_LV := 5
 
 ## Feature gating by player level (progressive disclosure for new players).
 const FEATURE_UNLOCK := {"garden": 2, "minigame": 2, "gallery": 2, "dungeon": 3, "pass": 3, "friends": 4, "event": 4,
-	"arena": 5, "worldboss": 5, "festival": 2, "bestiary": 2, "date": 4, "hunt": 12, "rift": 15, "room": 3, "photo": 2, "forge": 6, "tower": 6, "expedition": 6, "guild": 7, "messenger": 2, "kitchen": 3}
+	"arena": 5, "worldboss": 5, "festival": 2, "bestiary": 2, "date": 4, "hunt": 12, "rift": 15, "room": 3, "photo": 2, "forge": 6, "tower": 6, "expedition": 6, "guild": 7, "messenger": 2, "kitchen": 3, "training": 4}
 ## Grid shown in the lobby MENU (route, icon, label).
 const MENU_FEATURES := [
 	["shop", "icon_shop", "Shop"], ["bag", "icon_bag", "Bag"], ["pass", "icon_pass", "Season Pass"],
 	["dungeon", "icon_dungeon", "Dungeon"], ["arena", "icon_arena", "Arena"], ["tower", "icon_tower", "Tower"],
 	["worldboss", "icon_boss", "World Boss"], ["hunt", "icon_combat_target", "Boss Hunt"], ["rift", "icon_awakening", "Starlight Rift"],
+	["training", "icon_formation", "Training Ground"],
 	["event", "icon_live_ops", "Event"], ["festival", "icon_festival", "Festival"], ["bestiary", "icon_boss", "Bestiary"],
 	["expedition", "icon_afk", "Expedition"], ["garden", "icon_garden", "Garden"], ["room", "icon_room", "Private Room"], ["date", "icon_date", "Date"],
 	["wardrobe", "icon_heart", "Wardrobe"], ["guild", "icon_guild", "Guild"], ["friends", "icon_friends", "Friends"], ["gallery", "icon_codex", "Gallery"], ["settings", "icon_settings", "Settings"],
@@ -58,7 +59,7 @@ const MENU_FEATURES := [
 ## MENU sections (route lists, in display order).
 const MENU_SECTIONS := [
 	["BATTLE", ["dungeon", "arena", "tower", "worldboss", "hunt", "rift"]],
-	["EVENTS", ["event", "festival", "pass"]],
+	["EVENTS & PRACTICE", ["event", "festival", "pass", "training"]],
 	["HEROES & BOND", ["messenger", "date", "room", "photo", "garden", "kitchen", "expedition", "gallery", "bestiary"]],
 	["SHOP & SOCIAL", ["shop", "forge", "wardrobe", "bag", "guild", "friends", "settings"]],
 ]
@@ -1766,6 +1767,8 @@ const FIRST_STEPS := [
 
 # ---------------------------------------------------------------- first-visit tutorials
 const TUTORIALS := {
+	"training": [["fidelia", "The Training Ground. These partners can't be defeated, so strike with everything you have."],
+		["fidelia", "TRAIN measures your damage. SPAR lets her hit back. Use it to test a formation before a real fight."]],
 	"messenger": [["lumeira", "We can text you now! Every day a few of us will send you a message."],
 		["lumeira", "Pick a reply. Some answers make us happier than others... and that means more Bond~"]],
 	"forge": [["shina", "The Forge! Salvage old gear for Embers, then REFORGE a piece into the set you want."],
@@ -2705,6 +2708,22 @@ static func wb_rank_reward(rank: int) -> Dictionary:
 
 static func raid_max_hp(lv: int) -> int:
 	return 120000 * lv + 60000 * lv * lv
+
+## Training Ground: one unkillable sparring partner per element group ({elem, id}), in ELEMENT order.
+static func training_dummies() -> Array:
+	var out: Array = []
+	for g in ["FIRE", "WATER", "WIND", "EARTH", "LIGHT", "DARK"]:
+		for id in ENEMIES.keys():
+			if str(ELEMENT_GROUP.get(element_of(id), element_of(id))) == g:
+				out.append({"elem": g, "id": id})
+				break
+	return out
+
+static func training_dummy(elem: String) -> String:
+	for d in training_dummies():
+		if d["elem"] == elem:
+			return d["id"]
+	return str(training_dummies()[0]["id"])
 
 static func raid_boss(lv: int) -> Array:
 	return [{"id": "ygg_naar", "cell": Vector2i(1, 1), "level": 6 + lv * 7, "boss": true, "raid": true}]

@@ -1614,6 +1614,24 @@ func _run() -> void:
 	check(G.defence_chance(0.7) > G.defence_chance(1.0) and G.defence_chance(1.0) > G.defence_chance(1.3) and is_equal_approx(G.defence_chance(1.0), 0.5), "stronger attackers win more often")
 	G.s = ad_save
 
+	print("[training ground]")
+	var tr_d: Array = DB.training_dummies()
+	check(tr_d.size() >= 4 and tr_d.all(func(d): return DB.ENEMIES.has(d["id"])), "one training partner per element with enemies")
+	var tr_b: int = G.stat("battles")
+	var tr_e: Array = G.enemies_for({"mode": "training", "elem": str(tr_d[0]["elem"])})
+	check(tr_e.size() == 1 and bool(tr_e[0]["raid"]) and G.pay_battle({"mode": "training", "elem": "FIRE"}) == "", "training is a free fight against one unkillable partner")
+	var tr_sim := BattleSim.new()
+	tr_sim.setup(G.ally_team({}), tr_e, 3, {})
+	var tr_res: Dictionary = tr_sim.run()
+	check(not tr_res["won"] and tr_sim.side_units(1).size() == 1, "the partner survives all rounds")
+	var tr_el := str(tr_d[0]["elem"])
+	var tr0: int = G.training_best(tr_el, false)
+	var tr1: Dictionary = G.apply_training_result(tr_el, false, tr0 + 5000)
+	check(bool(tr1["record"]) and G.training_best(tr_el, false) == tr0 + 5000, "a better run sets the record")
+	var tr2: Dictionary = G.apply_training_result(tr_el, false, 10)
+	check(not bool(tr2["record"]) and G.training_best(tr_el, false) == tr0 + 5000 and G.training_best(tr_el, true) == 0, "a weaker run keeps it; sparring is tracked apart")
+	check(G.stat("battles") == tr_b and DB.TUTORIALS.has("training") and G.feature_req("training") == 4, "training does not count as a battle; unlocks at Lv.4")
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

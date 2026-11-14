@@ -1487,6 +1487,11 @@ func enemies_for(params: Dictionary) -> Array:
 			return DB.trial_stage(str(params["hero"]), int(params["tier"]))["enemies"]
 		"wboss":
 			return [{"id": wboss()["id"], "cell": Vector2i(1, 1), "level": _avg_level() + 8, "boss": true, "raid": true, "elite": true, "star": 5}]
+		"training":
+			# an unkillable partner at your level; in a sparring match she hits back like a boss
+			var spar := bool(params.get("spar", false))
+			return [{"id": DB.training_dummy(str(params.get("elem", "FIRE"))), "cell": Vector2i(1, 1), "level": _avg_level() + (3 if spar else 0),
+				"boss": true, "raid": true, "atk_mult": 1.3 if spar else 0.02, "star": 3}]
 		"dungeon":
 			return DB.dungeon_stage(str(params["dungeon"]), int(params["diff"]))["enemies"]
 	return []
@@ -1515,6 +1520,8 @@ func battle_title(params: Dictionary) -> String:
 			return "STARLIGHT RIFT  •  FLOOR %d" % int(_rift()["floor"])
 		"trial":
 			return "HERO TRIAL  •  " + str(DB.trial_stage(str(params["hero"]), int(params["tier"]))["name"])
+		"training":
+			return "TRAINING GROUND  •  %s %s" % [str(params.get("elem", "FIRE")), "SPARRING" if bool(params.get("spar", false)) else "DUMMY"]
 		"dungeon":
 			return "DAILY DUNGEON  •  " + str(DB.dungeon_stage(str(params["dungeon"]), int(params["diff"]))["name"])
 	return "BATTLE"
@@ -2926,6 +2933,28 @@ func claim_defence() -> Dictionary:
 	var r := {"arena_coin": c}
 	give(r)
 	return r
+
+# ---- training ground: free damage tests against an unkillable partner
+func _training() -> Dictionary:
+	if not s.has("training"):
+		s["training"] = {"best": {}, "runs": 0}
+	return s["training"]
+
+static func training_key(elem: String, spar: bool) -> String:
+	return elem + (":spar" if spar else "")
+
+func training_best(elem: String, spar: bool) -> int:
+	return int(_training()["best"].get(training_key(elem, spar), 0))
+
+## Stores a run. Returns {"prev": old best, "record": true if beaten}.
+func apply_training_result(elem: String, spar: bool, dmg: int) -> Dictionary:
+	var t := _training()
+	var prev := training_best(elem, spar)
+	t["runs"] = int(t["runs"]) + 1
+	if dmg > prev:
+		t["best"][training_key(elem, spar)] = dmg
+	mark_dirty()
+	return {"prev": prev, "record": dmg > prev and dmg > 0}
 
 func _check_arena_season() -> void:
 	var a: Dictionary = s["arena"]
@@ -4603,7 +4632,7 @@ func active_meal() -> Dictionary:
 ## Called when a real battle starts (not sweeps). Uses one charge of the active meal.
 func meal_consume(params: Dictionary) -> void:
 	_meal_bonus = {}
-	if str(params.get("mode", "")) == "arena":
+	if str(params.get("mode", "")) in ["arena", "training"]:
 		return
 	var m := active_meal()
 	if m.is_empty():

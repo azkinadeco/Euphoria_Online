@@ -1228,6 +1228,15 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fe. Update batch 153 — Training Ground (uji damage tim)
+
+- Mode battle baru `"training"` (params `elem`, `spar`): `Game.enemies_for` mengembalikan satu partner ber-flag `raid` (HP tak habis) dari `DB.training_dummy(elem)`, level = rata-rata tim; DUMMY `atk_mult` 0,02, SPARRING `atk_mult` 1,3 dan +3 level.
+- `DB.training_dummies()`: satu musuh per kelompok elemen yang punya musuh (saat ini FIRE, WATER, WIND, EARTH, DARK).
+- `Game.apply_training_result(elem, spar, dmg)` → `{prev, record}`; rekor di `s["training"]["best"]` per `elem[:spar]`, `training_best()`. Gratis: tidak ada `pay_battle`, tidak memakai meal (`meal_consume`), tidak masuk `record_battle` (supaya achievement jumlah battle tidak bisa di-farm).
+- `battle.gd`: cabang `"training"` di `_finish` + `_show_training_result` (total damage, NEW RECORD, bar kontribusi per hero, TRAIN AGAIN / CONTINUE).
+- `game/screens/training.gd` (baru): aturan + tim di kiri, kartu partner per elemen (kelemahan, rekor DUMMY/SPARRING, tombol TRAIN / SPAR). Terdaftar di `main.gd SCREENS`, `DB.MENU_FEATURES` / `MENU_SECTIONS` (EVENTS & PRACTICE), `FEATURE_UNLOCK` Lv.4, tutorial `training`.
+- `tools/smoke.sh`: layar `training` dan satu battle training sampai CONTINUE.
+
 ## 2fd. Update batch 152 — Arena Defense (serangan saat pemain pergi)
 
 - `Game.arena_defend_away(secs)` dipanggil di `_ready()` setelah `capture_away()`: 1 serangan per 3 jam absen (`DEF_EVERY_SEC`), maksimal `DEF_MAX` (5). Kekuatan penyerang 0,7–1,3× `team_power()`; peluang bertahan `defence_chance(ratio)` = 0,5 + (1 − ratio) × 1,6, dijepit 12%–90%.

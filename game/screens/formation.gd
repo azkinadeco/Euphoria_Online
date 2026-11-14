@@ -171,6 +171,8 @@ func build() -> void:
 			cost_txt = "\n1 Attempt (%d left)" % int(Game.s["wboss"]["tries"])
 		elif _mode == "raid":
 			cost_txt = "\n1 Attempt (%d left)" % int(Game.s["guild"]["raid_tries"])
+		elif _mode == "training":
+			cost_txt = "\nFree practice"
 		# the dock is 156px tall inside: three rows must fit, so REPEAT sits beside START
 		var start_row := UI.hbox(8)
 		btns.add_child(start_row)

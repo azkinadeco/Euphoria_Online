@@ -1538,7 +1538,8 @@ func _finish(e: Dictionary) -> void:
 	Game.record_kills(Game.killed_enemies(sim))
 	var won: bool = e["won"] and not _retreat
 	var stars: int = e["stars"] if won else 0
-	Game.record_battle(str(params.get("mode", "")), won, stars, sim)
+	if str(params.get("mode", "")) != "training":
+		Game.record_battle(str(params.get("mode", "")), won, stars, sim)
 	if _retreat:
 		e["reason"] = "retreat"
 	var rewards := {}
@@ -1597,6 +1598,16 @@ func _finish(e: Dictionary) -> void:
 			Game.save_game()
 			Game.sfx("victory")
 			_show_raid_result(dmg, rewards)
+			return
+		"training":
+			var tdmg := _tactic_damage()
+			for ev in sim.events:
+				if ev["t"] in ["hit", "dot"] and sim.units[ev["uid"]]["side"] == 1:
+					tdmg += int(ev["dmg"])
+			var tres := Game.apply_training_result(str(params.get("elem", "FIRE")), bool(params.get("spar", false)), tdmg)
+			Game.save_game()
+			Game.sfx("victory")
+			_show_training_result(tdmg, tres)
 			return
 	if won:
 		var ft := Game.festival_drop(str(params.get("mode", "")))
@@ -1833,6 +1844,57 @@ func _show_raid_result(dmg: int, rewards: Dictionary) -> void:
 	var ok := UI.button("CONTINUE", func(): _leave_result(v), "GoldButton", Vector2(200, 52))
 	ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	v.add_child(ok)
+
+## Training Ground result: total damage, record, and who dealt it.
+func _show_training_result(dmg: int, res: Dictionary) -> void:
+	var v: VBoxContainer = main.popup("TRAINING COMPLETE", 680, false)
+	v.get_meta("layer").set_meta("no_back", true)
+	var l := UI.label("Total damage in %d rounds" % DB.MAX_ROUNDS, 16, UI.MUTED)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(l)
+	var d := UI.label("0", 52, UI.GOLD, 8)
+	d.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(d)
+	UI.count_to(d, 0, dmg, func(x): return Game.fmt(x), 1.0)
+	var prev := int(res["prev"])
+	var bl := UI.label(("★ NEW RECORD ★" + ("   (was %s)" % Game.fmt(prev) if prev > 0 else "")) if bool(res["record"]) else "Best  %s" % Game.fmt(prev), 15, Color("#ff8fb8") if bool(res["record"]) else Color.WHITE, 3)
+	bl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(bl)
+	var allies := sim.side_units(0, false)
+	allies.sort_custom(func(a, b): return int(_damage.get(a["uid"], 0)) > int(_damage.get(b["uid"], 0)))
+	var mx := 1
+	for u in allies:
+		mx = maxi(mx, int(_damage.get(u["uid"], 0)))
+	for u in allies:
+		var val := int(_damage.get(u["uid"], 0))
+		var h := UI.hbox(8)
+		v.add_child(h)
+		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR.get(DB.rarity_of(u["id"]), UI.ACCENT), 6, 1, 1)
+		var face := UI.tex_rect(DB.face(u["id"]), Vector2(34, 34), true)
+		if not u["alive"]:
+			face.modulate = Color(0.4, 0.4, 0.4)
+		fp.add_child(face)
+		h.add_child(fp)
+		var nl := UI.label(DB.name_of(u["id"]).split(" ")[0] + ("" if u["alive"] else " (KO)"), 13, Color.WHITE, 2)
+		nl.custom_minimum_size = Vector2(110, 0)
+		nl.clip_text = true
+		h.add_child(nl)
+		var b := UI.bar(val, mx, "", 10)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		b.add_theme_stylebox_override("fill", UI.style(Color("#ff7b5c"), Color.TRANSPARENT, 4, 0, 0))
+		h.add_child(b)
+		var vl := UI.label("%s  (%d%%)" % [Game.fmt(val), int(100.0 * val / maxf(1.0, dmg))], 13, UI.GOLD, 2)
+		vl.custom_minimum_size = Vector2(130, 0)
+		vl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		h.add_child(vl)
+	var row := UI.hbox(12)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("TRAIN AGAIN", func():
+		main.close_popup(v)
+		main.replace("formation", params), "", Vector2(180, 50)))
+	row.add_child(UI.button("CONTINUE", func(): _leave_result(v), "GoldButton", Vector2(180, 50)))
 
 func _show_stats() -> void:
 	var v: VBoxContainer = main.popup("BATTLE STATS", 720)
