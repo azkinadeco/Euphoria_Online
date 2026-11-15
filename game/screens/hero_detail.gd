@@ -780,6 +780,7 @@ func _render_upgrade() -> void:
 			lbv.add_child(lbb)
 
 func _do_level(times: int) -> void:
+	var before := Game.hero_stats(id)
 	var n := Game.level_up(id, times)
 	if n == 0:
 		main.toast(Game.level_up_block_reason(id), UI.RED)
@@ -787,17 +788,52 @@ func _do_level(times: int) -> void:
 	Game.sfx("star_up")
 	main.toast("%s reached Lv.%d!" % [DB.name_of(id), Game.hero(id)["level"]], UI.GREEN)
 	_upgrade_fx("LEVEL UP!  Lv.%d" % Game.hero(id)["level"], UI.GREEN, "LIGHT")
+	_stat_gain(before)
 	_render()
 
 func _do_star() -> void:
+	var before := Game.hero_stats(id)
 	var err := Game.star_up(id)
 	if err != "":
 		main.toast(err, UI.RED)
 		return
 	Game.sfx("awakening")
 	_upgrade_fx("★ STAR UP ★", UI.GOLD, "LIGHT")
+	_stat_gain(before)
 	_celebrate("★ STAR UP ★", "%s is now %d★!" % [DB.name_of(id), Game.hero(id)["star"]])
 	_render()
+
+## What the upgrade actually gave: "+HP 120  +ATK 14  +DEF 6" rises under the big text, so the player
+## sees the gain without comparing numbers in the panel.
+func _stat_gain(before: Dictionary) -> void:
+	var after := Game.hero_stats(id)
+	var parts: Array = []
+	for k in [["hp", "HP", Color("#7dffb0")], ["atk", "ATK", Color("#ff9a7a")], ["def", "DEF", Color("#8fc8ff")]]:
+		var d := int(after.get(k[0], 0)) - int(before.get(k[0], 0))
+		if d > 0:
+			parts.append([("+%s %s" % [Game.fmt(d), k[1]]), k[2]])
+	if parts.is_empty():
+		return
+	var row := UI.hbox(14)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.z_index = 31
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for pp in parts:
+		var l := UI.label(str(pp[0]), 22, pp[1] as Color, 6)
+		row.add_child(l)
+	add_child(row)
+	var c := _art.get_global_rect().get_center() - get_global_rect().position
+	row.size = Vector2(600, 30)
+	row.position = c + Vector2(-300, 10)
+	row.modulate.a = 0.0
+	var tw := row.create_tween()
+	tw.tween_interval(0.15)
+	tw.tween_property(row, "modulate:a", 1.0, 0.15)
+	tw.parallel().tween_property(row, "position:y", row.position.y - 24, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_interval(0.9)
+	tw.tween_property(row, "modulate:a", 0.0, 0.4)
+	tw.parallel().tween_property(row, "position:y", row.position.y - 60, 0.4)
+	tw.tween_callback(row.queue_free)
 
 ## Upgrade feedback on the hero art: element burst, rising sparkles, big pop text, hop.
 func _upgrade_fx(text: String, col: Color, elem: String = "LIGHT") -> void:

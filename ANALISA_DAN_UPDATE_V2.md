@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gy. Update batch 197 — Kenaikan stat terlihat saat upgrade
+
+- `hero_detail.gd::_stat_gain(before)`: setelah Level Up / Star Up, selisih HP / ATK / DEF (warna masing-masing) naik di bawah teks besar lalu memudar.
+
 ## 2gx. Update batch 195 — Avatar seragam di Arena & Guild
 
 - `arena.gd`: baris peringkat (#4 dst.) dan log pertahanan memakai `UI.avatar`; baris "(You)" memakai `Game.avatar_id()` dengan bingkai hijau.
