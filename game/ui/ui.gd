@@ -830,3 +830,28 @@ static func fit_tall(p: PanelContainer, head: int, max_h: float) -> bool:
 		var rest: float = p.get_combined_minimum_size().y
 		sc.custom_minimum_size.y = maxf(120.0, max_h - rest - float(v.get_theme_constant("separation")))
 	return true
+
+# ----------------------------------------------------------------- scrim
+## A soft dark fade for text that sits on artwork. `from_top`: dark at the top edge fading down, else dark
+## at the bottom fading up. Anchored to that edge of its parent, `height` px tall; add it BEFORE the text.
+static func scrim(from_top: bool, height: float, alpha: float = 0.8, tint: Color = Color(0.03, 0.01, 0.07)) -> TextureRect:
+	var g := Gradient.new()
+	g.set_color(0, Color(tint, alpha))
+	g.set_color(1, Color(tint, 0.0))
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.width = 4
+	gt.height = 64
+	gt.fill_from = Vector2(0, 0) if from_top else Vector2(0, 1)
+	gt.fill_to = Vector2(0, 1) if from_top else Vector2(0, 0)
+	var t := TextureRect.new()
+	t.texture = gt
+	t.stretch_mode = TextureRect.STRETCH_SCALE
+	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	t.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE if from_top else Control.PRESET_BOTTOM_WIDE)
+	if from_top:
+		t.offset_bottom = height
+	else:
+		t.offset_top = -height
+	return t

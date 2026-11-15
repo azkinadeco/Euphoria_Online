@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fv. Update batch 170 — Keterbacaan: Training Ground, Festival, World Boss, Date
+
+Batch perbaikan (tanpa fitur baru).
+
+- **Training Ground**: grid 3×2 yang mengisi seluruh area (dulu 3+2 kartu dengan lubang dan sisa kosong di bawah). Tiap mode (DUMMY / SPARRING) jadi strip sendiri; ubin keenam "YOUR RECORDS" menampilkan rekor tertinggi dari data yang sudah ada + jumlah run.
+- **`UI.scrim(from_top, height, alpha)`**: gradasi gelap untuk teks di atas artwork.
+- **Festival**: scrim di belakang judul dan teks aturan (dulu tertimpa art hero). **World Boss**: scrim atas & bawah. **Date**: scrim di bawah nama Date Spot.
+
 ## 2fu. Update batch 169 — Popup yang selalu muat di layar
 
 Batch perbaikan (tanpa fitur baru). Ditemukan lewat audit layout pada 40+ popup.

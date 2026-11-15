@@ -37,6 +37,14 @@ func build() -> void:
 		UI.live(art, col.lightened(0.3))
 		left.add_child(art)
 		UI.fade_in(art, 0.6 + i * 0.2, Vector2(-40 if i == 0 else 40, 0))
+	# fades behind the title and the rules text: both sit on top of the hero art
+	var s_top := UI.scrim(true, 130, 0.85)
+	s_top.offset_left = -16
+	left.add_child(s_top)
+	var s_bot := UI.scrim(false, 230, 0.92)
+	s_bot.offset_left = -16
+	s_bot.offset_bottom = 16
+	left.add_child(s_bot)
 	var top := UI.vbox(0)
 	top.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	left.add_child(top)

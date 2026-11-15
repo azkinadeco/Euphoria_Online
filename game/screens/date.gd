@@ -77,6 +77,7 @@ func _build_go(b: Control) -> void:
 		nl.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 		nl.offset_top = -24
 		nl.offset_left = 8
+		fr.add_child(UI.scrim(false, 40, 0.9))   # the name was hard to read on bright pictures
 		fr.add_child(nl)
 		if open and _hero != "":
 			var ri := Game.date_best(_hero, key)

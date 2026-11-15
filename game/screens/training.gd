@@ -29,7 +29,6 @@ func build() -> void:
 		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(str(e[0]))], 6, 1, 1)
 		fp.add_child(UI.face_rect(str(e[0]), Vector2(38, 38)))
 		faces.add_child(fp)
-	tv.add_child(UI.label("Training runs: %d" % int(Game._training()["runs"]), 12, UI.MUTED))
 	lv.add_child(UI.button("EDIT FORMATION", func(): main.go("formation"), "", Vector2(0, 44)))
 	# ---- right: one card per element
 	var rp := Control.new()
@@ -37,22 +36,24 @@ func build() -> void:
 	rp.anchor_right = 1.0
 	rp.anchor_bottom = 1.0
 	b.add_child(rp)
+	# 3 x 2 tiles that share the whole area: five partners and a records tile (no ragged last row)
 	var g := GridContainer.new()
 	g.columns = 3
 	g.add_theme_constant_override("h_separation", 10)
 	g.add_theme_constant_override("v_separation", 10)
-	var sc := UI.scroll(g)
-	sc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	rp.add_child(sc)
+	g.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	rp.add_child(g)
 	for d in DB.training_dummies():
 		g.add_child(_card(str(d["elem"]), str(d["id"])))
+	g.add_child(_records_tile())
 	UI.stagger(g, 0.05)
 	tutorial("training")
 
 func _card(elem: String, id: String) -> Control:
 	var col: Color = DB.ELEMENT_COLOR.get(elem, UI.GOLD)
-	var p := UI.styled_panel(Color(0.07, 0.05, 0.13, 0.94), Color(col, 0.7), 12, 2, 8)
+	var p := UI.styled_panel(Color(0.07, 0.05, 0.13, 0.94), Color(col, 0.7), 12, 2, 10)
 	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	p.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	p.set_meta("elem", elem)
 	var v := UI.vbox(6)
 	p.add_child(v)
@@ -81,15 +82,57 @@ func _card(elem: String, id: String) -> Control:
 	for spar in [false, true]:
 		var sp: bool = spar
 		var best := Game.training_best(elem, sp)
+		# each mode is its own strip; the two strips share the height left under the portrait
+		var strip := UI.styled_panel(Color(0, 0, 0, 0.32), Color(col, 0.22), 8, 1, 8)
+		strip.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		v.add_child(strip)
 		var r := UI.hbox(6)
-		v.add_child(r)
+		strip.add_child(r)
 		var bv := UI.vbox(0)
+		bv.alignment = BoxContainer.ALIGNMENT_CENTER
 		bv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		r.add_child(bv)
 		bv.add_child(UI.label("SPARRING BEST" if sp else "DUMMY BEST", 10, UI.MUTED, 0))
 		bv.add_child(UI.label(Game.fmt(best) if best > 0 else "—", 16, UI.GOLD if best > 0 else UI.MUTED, 2))
 		var btn := UI.button("SPAR" if sp else "TRAIN", func():
 			main.go("formation", {"mode": "training", "elem": elem, "spar": sp}), "" if sp else "GoldButton", Vector2(92, 40))
+		btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		btn.set_meta("train", DB.ELEMENT_GROUP.get(elem, elem) + (":spar" if sp else ""))
 		r.add_child(btn)
+	return p
+
+## Sixth tile: your best results across all partners.
+func _records_tile() -> Control:
+	var p := UI.styled_panel(Color(0.1, 0.07, 0.03, 0.94), Color(UI.GOLD, 0.6), 12, 2, 10)
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	p.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var v := UI.vbox(6)
+	p.add_child(v)
+	var hh := UI.hbox(6)
+	hh.add_child(UI.tex_rect(DB.icon("icon_arena"), Vector2(22, 22)))
+	hh.add_child(UI.label("YOUR RECORDS", 15, UI.GOLD, 3))
+	v.add_child(hh)
+	for spar in [false, true]:
+		var top := 0
+		var top_elem := ""
+		for d in DB.training_dummies():
+			var b := Game.training_best(str(d["elem"]), spar)
+			if b > top:
+				top = b
+				top_elem = str(d["elem"])
+		var strip := UI.styled_panel(Color(0, 0, 0, 0.32), Color(UI.GOLD, 0.2), 8, 1, 8)
+		strip.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		v.add_child(strip)
+		var bv := UI.vbox(0)
+		bv.alignment = BoxContainer.ALIGNMENT_CENTER
+		strip.add_child(bv)
+		bv.add_child(UI.label("TOP SPARRING" if spar else "TOP DUMMY HIT", 10, UI.MUTED, 0))
+		var rh := UI.hbox(6)
+		bv.add_child(rh)
+		rh.add_child(UI.label(Game.fmt(top) if top > 0 else "—", 18, UI.GOLD if top > 0 else UI.MUTED, 2))
+		if top_elem != "":
+			var el := UI.label("vs " + top_elem, 11, DB.ELEMENT_COLOR.get(top_elem, UI.MUTED), 2)
+			el.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			rh.add_child(el)
+	v.add_child(UI.label("Training runs: %d" % int(Game._training()["runs"]), 12, UI.MUTED))
 	return p

@@ -342,7 +342,10 @@ func _next() -> void:
 			for kv in parts[1].split("&"):
 				var p := kv.split("=")
 				params[p[0]] = (Array(p[1].split(";")) if ";" in p[1] else (p[1] if not p[1].is_valid_int() else int(p[1])))
+		var t0 := Time.get_ticks_usec()
 		main_node.call("go", parts[0], params)
+		if OS.get_environment("TIMING") != "":
+			print("TIMING %5.1f ms  %s" % [(Time.get_ticks_usec() - t0) / 1000.0, v])
 
 ## True while the control sits in a popup that is fading out.
 func _closing(n: Node) -> bool:

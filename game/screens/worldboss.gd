@@ -34,6 +34,8 @@ func build() -> void:
 	bob.tween_property(art, "position:y", art.position.y - 8.0, 1.8).set_trans(Tween.TRANS_SINE)
 	bob.tween_property(art, "position:y", art.position.y, 1.8).set_trans(Tween.TRANS_SINE)
 
+	lp.add_child(UI.scrim(true, 120, 0.85))
+	lp.add_child(UI.scrim(false, 210, 0.9))
 	var top := UI.vbox(2)
 	top.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	top.offset_left = 18
