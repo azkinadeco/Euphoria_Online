@@ -70,7 +70,9 @@ func refresh() -> void:
 
 func _render() -> void:
 	var b: Dictionary = DB.BANNERS[_banner_i]
-	_bg_rect.texture = DB.bg(b["bg"])
+	# the featured hero's own realm when she has one, else the banner's map
+	var feat_bg := str(b.get("featured", ""))
+	_bg_rect.texture = DB.bg(DB.hero_bg_key(feat_bg) if feat_bg != "" and DB.has_hero_bg(feat_bg) else str(b["bg"]))
 	for c in _list.get_children():
 		c.queue_free()
 	for i in DB.BANNERS.size():

@@ -2250,6 +2250,7 @@ static func profile(id: String) -> Dictionary:
 
 ## Lobby backgrounds: unlocked by story progress (stages cleared).
 const LOBBY_SCENES := [
+	{"key": "partner", "name": "Her Realm", "req": 0},
 	{"key": "lobby", "name": "Moonlit Cathedral", "req": 0}, {"key": "forest", "name": "Whispering Woods", "req": 6},
 	{"key": "aqua", "name": "Sunken Reef", "req": 12}, {"key": "hell", "name": "Infernal Citadel", "req": 18},
 	{"key": "ice", "name": "Frostvale", "req": 24}, {"key": "galaxy", "name": "Void Rift", "req": 30},
@@ -3640,7 +3641,32 @@ static func live_rig(tex: Texture2D) -> Dictionary:
 		_auto_rig[p] = {"depth": dp, "generic": true, "strength": 0.011, "chest": Vector2(0.5, 0.36)} if ResourceLoader.exists(dp) else {}
 	return _auto_rig[p]
 
+## Each hero's own backdrop (her realm). New files dropped into this folder as bg_<hero id>.jpg are picked up
+## automatically; a hero without one falls back to the map of her element.
+const HERO_BG_DIR := "res://backround image/new backround hero/hero_backgrounds/"
+
+static func hero_bg_path(id: String) -> String:
+	id = base_id(id)
+	for suffix in ["", "_special_skin"]:
+		var p := "%sbg_%s%s.jpg" % [HERO_BG_DIR, id, suffix]
+		if ResourceLoader.exists(p):
+			return p
+	return ""
+
+static func has_hero_bg(id: String) -> bool:
+	return hero_bg_path(id) != ""
+
+## Background key for a hero: usable anywhere a bg key is (set_bg, dialogue, DB.bg).
+static func hero_bg_key(id: String) -> String:
+	return "hero:" + base_id(id)
+
 static func bg(key: String) -> Texture2D:
+	if key.begins_with("hero:"):
+		var hid := key.substr(5)
+		var hp := hero_bg_path(hid)
+		if hp != "":
+			return tex(hp)
+		key = str(ELEM_BG.get(ELEMENT_GROUP.get(element_of(hid), "LIGHT"), "lobby"))
 	return tex(BG.get(key, BG["lobby"]))
 
 static func _db() -> Dictionary:

@@ -43,11 +43,14 @@ func on_back() -> bool:
 
 # ----------------------------------------------------------------- helpers
 
+var bg_rect: TextureRect   # the backdrop picture (LiveRig can slide it for depth)
+
 func set_bg(key: String, dim: float = 0.45) -> void:
 	var t := UI.tex_rect(DB.bg(key), Vector2.ZERO, true)
 	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(t)
 	move_child(t, 0)
+	bg_rect = t
 	var d := ColorRect.new()
 	d.color = Color(0.02, 0.01, 0.06, dim)
 	d.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

@@ -48,6 +48,7 @@ func build() -> void:
 	if not Game.owns(_hero):
 		_hero = Game.s["heroes"].keys()[0]
 	_skin = int(Game.hero(_hero).get("skin", 0))
+	_bg_keys.push_front("hero")   # the current model's own realm, first in the list
 	_bg_i = maxi(0, _bg_keys.find(str(Game.s.get("lobby_bg", "lobby"))))
 	# ---- stage (what ends up in the photo)
 	_stage = Control.new()
@@ -178,7 +179,7 @@ func _cycle_skin(d: int) -> void:
 	_apply_all()
 
 func _apply_all() -> void:
-	_bgt.texture = DB.bg(_bg_keys[_bg_i])
+	_bgt.texture = DB.bg(DB.hero_bg_key(_hero) if str(_bg_keys[_bg_i]) == "hero" else str(_bg_keys[_bg_i]))
 	_art.texture = DB.art(_hero, _skin)
 	_art.flip_h = _flip
 	var gm := _grade.material as ShaderMaterial
@@ -206,7 +207,7 @@ func _apply_all() -> void:
 	_info.text = _outfit_name()
 	_face.texture = DB.face(_hero)
 	var nsk := DB.art_list(_hero).size()
-	var vt := {"OUTFIT": "%s  (%d/%d)" % [_outfit_name(), _skin + 1, nsk], "BACKGROUND": "%s  (%d/%d)" % [_bg_keys[_bg_i].capitalize(), _bg_i + 1, _bg_keys.size()],
+	var vt := {"OUTFIT": "%s  (%d/%d)" % [_outfit_name(), _skin + 1, nsk], "BACKGROUND": "%s  (%d/%d)" % ["Her Realm" if str(_bg_keys[_bg_i]) == "hero" else _bg_keys[_bg_i].capitalize(), _bg_i + 1, _bg_keys.size()],
 		"FILTER": "%s  (%d/%d)" % [FILTERS[_filter_i][0], _filter_i + 1, FILTERS.size()], "FRAME": "%s  (%d/%d)" % [FRAMES[_frame_i], _frame_i + 1, FRAMES.size()]}
 	for k in _vals.keys():
 		(_vals[k] as Label).text = vt.get(k, "")

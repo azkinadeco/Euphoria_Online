@@ -31,7 +31,10 @@ var _enemy := ""          # discovered enemy shown instead of the hero secretary
 var _erig: CharRig
 
 func build() -> void:
-	set_bg(str(Game.s.get("lobby_bg", "lobby")), 0.18)
+	var lbg := str(Game.s.get("lobby_bg", "lobby"))
+	if lbg == "partner":
+		lbg = DB.hero_bg_key(str(Game.s["lobby_hero"]))   # "Her Realm": follows whoever is your partner
+	set_bg(lbg, 0.18)
 	ambient(Color(0.85, 0.7, 1.0), 40)
 	var fest := Game.festival()
 	if not fest.is_empty():
@@ -1306,7 +1309,7 @@ func _pick_scene() -> void:
 		fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 		fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(fr)
-		var th := UI.tex_rect(DB.bg(key), Vector2.ZERO, true)
+		var th := UI.tex_rect(DB.bg(DB.hero_bg_key(str(Game.s["lobby_hero"])) if key == "partner" else key), Vector2.ZERO, true)
 		th.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		if not open:
 			th.modulate = Color(0.25, 0.25, 0.3)

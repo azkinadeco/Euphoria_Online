@@ -17,13 +17,15 @@ BG_DIR = 'backround image'
 SLIDES = [
     ('shina', 'evo1', 'new backround maps/dragon fire maps.jpg'),
     ('angela', 'lobby', 'maps assgard.jpg'),
-    ('abadonia', 'evo1', 'new backround maps/abadon city maps1.jpg'),
-    ('mei', 'evo1', 'maps forest.jpg'),
-    ('zennyo', 'evo1', 'maps big tree world.jpg'),
+    ('valeria', 'evo1', 'maps es.jpg'),
+    ('xylia', 'evo1', 'maps galaxy.jpg'),
+    ('lumeira', 'evo1', 'maps big tree world.jpg'),
     ('morana', 'evo1', 'new backround maps/necro maps.jpg'),
-    ('ninger', 'lobby', 'backround black market.jpg'),
+    ('kali', 'evo1', 'maps forest.jpg'),
     ('atalanta', 'evo1', 'maps galaxy.jpg'),
 ]
+# a hero's own backdrop wins over the map listed above
+HERO_BG = 'backround image/new backround hero/hero_backgrounds/bg_%s.jpg'
 BG_W = 1280
 HERO_H = 1000
 
@@ -43,7 +45,8 @@ def main():
     q = quotes()
     rows = []
     for i, (hid, state, bg) in enumerate(SLIDES):
-        im = Image.open(os.path.join(BG_DIR, bg)).convert('RGB')
+        own = HERO_BG % hid
+        im = Image.open(own if os.path.exists(own) else os.path.join(BG_DIR, bg)).convert('RGB')
         im = im.resize((BG_W, round(im.height * BG_W / im.width)), Image.Resampling.LANCZOS)
         bg_name = 'bg_%s.jpg' % hid
         im.save(os.path.join(OUT, bg_name), quality=72, optimize=True, progressive=True)

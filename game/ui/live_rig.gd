@@ -9,6 +9,10 @@ var _live_mat: Material
 var _rig_mat: ShaderMaterial
 var _last_tex: Texture2D
 var _tilt := Vector2.ZERO
+## Optional backdrop picture: it slides a few pixels AGAINST the tilt, so the figure and the scene behind
+## her move apart like two layers at different distances.
+var backdrop: Control
+var backdrop_px := 14.0
 var _t := 0.0
 
 func _ready() -> void:
@@ -63,9 +67,15 @@ func _process(delta: float) -> void:
 	_t += delta
 	# target: pointer relative to the art centre, else a slow figure-eight orbit
 	var r := _rect.get_global_rect()
-	var target := Vector2(sin(_t * 0.45) * 0.55, sin(_t * 0.9) * 0.25)
+	# idle: a slow, slightly irregular orbit, so the turn and the moving light are always gently alive
+	var target := Vector2(sin(_t * 0.45) * 0.6 + sin(_t * 0.17 + 1.3) * 0.2, sin(_t * 0.9) * 0.28 + sin(_t * 0.23) * 0.1)
 	var mp := _rect.get_global_mouse_position()
 	if r.grow(r.size.x * 0.5).has_point(mp) and (Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or not (OS.has_feature("mobile") or OS.has_feature("web_ios") or OS.has_feature("web_android"))):
 		target = ((mp - r.get_center()) / (r.size * 0.5)).clamp(Vector2(-1, -1), Vector2(1, 1))
 	_tilt = _tilt.lerp(target, clampf(delta * 3.0, 0.0, 1.0))
 	_rig_mat.set_shader_parameter("tilt", _tilt)
+	if backdrop != null and is_instance_valid(backdrop):
+		var k: float = 0.35 if Game.reduce_fx() else 1.0
+		backdrop.pivot_offset = backdrop.size * 0.5
+		backdrop.scale = Vector2(1.05, 1.05)
+		backdrop.position = -_tilt * backdrop_px * k

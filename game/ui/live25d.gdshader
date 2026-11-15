@@ -7,6 +7,9 @@ uniform float strength = 0.018;
 uniform float aspect = 0.857;
 uniform float calm = 1.0;            // 0.35 with reduce-fx
 uniform bool generic = false;        // auto depth map: parallax + breathing + 3D light only
+uniform float turn = 1.0;            // pseudo 3D turn of the whole figure with the tilt (0 = off)
+uniform float volume = 1.0;          // strength of the sculpted light: key light, gloss, edge light, cast shadow
+uniform vec4 shadow_color : source_color = vec4(0.02, 0.0, 0.06, 0.42);
 // corrupted / variant look (mirror, hollow, echo, ashen, feral) — same as corrupt.gdshader
 uniform bool corrupt_on = false;
 uniform float hue_shift = 0.72;
@@ -51,11 +54,22 @@ vec2 rot_about(vec2 uv, vec2 piv, float a) {
 void fragment() {
 	float t = TIME;
 	vec2 uv = UV;
-	// --- 1) parallax: shift by depth (3 refinement steps so near layers don't smear)
-	vec2 off = tilt * strength;
-	for (int i = 0; i < 3; i++) {
+	// --- 0) turn: the picture behaves like a card rotating a few degrees toward the pointer. The far side
+	// gets a little shorter (keystone) and the whole figure narrows a hair, as a real turned body would.
+	vec2 pc = UV - vec2(0.5);
+	float yaw = tilt.x * 0.085 * turn * calm;
+	float pitch = tilt.y * 0.05 * turn * calm;
+	pc.x *= 1.0 + abs(yaw) * 0.35;
+	pc.y *= 1.0 + pc.x * yaw * 1.6;
+	pc.x *= 1.0 + pc.y * pitch * 0.9;
+	vec2 base_uv = pc + vec2(0.5);
+	uv = base_uv;
+	// --- 1) parallax: near parts slide further than far parts. Six refinement steps keep edges clean at
+	// almost twice the old travel (the old 3-step version smeared when pushed this far).
+	vec2 off = tilt * strength * 1.8;
+	for (int i = 0; i < 6; i++) {
 		float d = texture(depth_tex, uv).r;
-		uv = UV - off * (d - 0.45);
+		uv = mix(uv, base_uv - off * (d - 0.45), 0.75);
 	}
 	float dep = texture(depth_tex, uv).r;
 	float girl = smoothstep(0.62, 0.85, dep);
@@ -128,14 +142,35 @@ void fragment() {
 		float pulse_v = 0.55 + 0.45 * sin(TIME * 3.0);
 		c = mix(vec4(variant_glow.rgb, edge_v * pulse_v), c, c.a);
 	}
-	// --- 10) 3D light: shading from the depth slope, light follows the tilt
+	// --- 10) sculpted light: the depth map becomes a surface, lit by a key light that follows the tilt
 	float e = 0.006;
 	float dx = texture(depth_tex, uv + vec2(e, 0.0)).r - texture(depth_tex, uv - vec2(e, 0.0)).r;
 	float dy = texture(depth_tex, uv + vec2(0.0, e)).r - texture(depth_tex, uv - vec2(0.0, e)).r;
-	vec2 n = vec2(dx, dy) * 6.0;
-	vec2 L = normalize(vec2(-0.6, -0.8) + tilt * 0.9);
-	float lit = clamp(-dot(n, L), -1.0, 1.0);
-	c.rgb += rim_color.rgb * max(lit, 0.0) * 0.22 * c.a;
-	c.rgb *= 1.0 + min(lit, 0.0) * 0.12;
+	vec3 nrm = normalize(vec3(-dx * 7.0, -dy * 7.0, 1.0));
+	vec2 L2 = normalize(vec2(-0.6, -0.8) + tilt * 0.9);
+	vec3 L = normalize(vec3(L2 * 0.9, 0.75));
+	float ndl = dot(nrm, L);
+	float key = clamp(ndl - 0.64, -0.5, 0.5) * 2.0;               // 0 on a flat surface
+	c.rgb += rim_color.rgb * max(key, 0.0) * 0.30 * volume * c.a;
+	c.rgb *= 1.0 + min(key, 0.0) * 0.22 * volume;
+	// gloss: a tight highlight where the surface faces halfway between light and viewer
+	vec3 H = normalize(L + vec3(0.0, 0.0, 1.0));
+	float spec = pow(max(dot(nrm, H), 0.0), 48.0) * smoothstep(0.35, 0.8, dep);
+	c.rgb += mix(vec3(1.0), rim_color.rgb, 0.4) * spec * 0.16 * volume * c.a;
+	// far parts sit a little deeper in shade (depth cue)
+	c.rgb *= mix(1.0 - 0.10 * volume, 1.0, smoothstep(0.15, 0.7, dep));
+	// edge light: the silhouette edge that faces the light catches it
+	float a_lit = texture(TEXTURE, uv + L2 * 0.011).a;
+	float edge_l = clamp(c.a - a_lit, 0.0, 1.0);
+	c.rgb += rim_color.rgb * edge_l * 0.55 * volume;
+	// cast shadow: a soft copy of the silhouette behind the figure, pushed away from the light, so she
+	// stands in front of the background instead of being printed on it
+	vec2 so = -L2 * 0.022 + vec2(0.0, 0.006);
+	float sh = texture(TEXTURE, uv + so).a * 0.4
+		+ texture(TEXTURE, uv + so * 1.5 + vec2(0.006, 0.0)).a * 0.2
+		+ texture(TEXTURE, uv + so * 1.5 - vec2(0.006, 0.0)).a * 0.2
+		+ texture(TEXTURE, uv + so * 2.0).a * 0.2;
+	float sa = sh * shadow_color.a * volume * (1.0 - c.a);
+	c = vec4(mix(shadow_color.rgb, c.rgb, c.a / max(c.a + sa, 0.0001)), c.a + sa);
 	COLOR = c * mod_color;
 }

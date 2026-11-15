@@ -12,7 +12,7 @@ var _holder: Control
 func build() -> void:
 	id = str(params.get("id", Game.s["lobby_hero"]))
 	_tab = str(params.get("tab", "INFO")) if Game.owns(id) else "INFO"
-	set_bg("lobby", 0.7)
+	set_bg(DB.hero_bg_key(id), 0.58)   # her own realm (or her element's map)
 	var tint := ColorRect.new()
 	tint.color = Color(DB.theme_color(id), 0.12)
 	tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -34,6 +34,9 @@ func build() -> void:
 	_holder.add_child(_art)
 	_art.resized.connect(func(): _art.pivot_offset = Vector2(_art.size.x * 0.5, _art.size.y))
 	UI.live(_art, DB.theme_color(id).lightened(0.5))
+	var lrig := _art.get_node_or_null("LiveRig") as LiveRig
+	if lrig != null:
+		lrig.backdrop = bg_rect   # her realm slides behind her as she turns
 	_art.mouse_filter = Control.MOUSE_FILTER_STOP
 	_art.gui_input.connect(_gesture)
 	_pinch = PinchZoom.new(func(f: float, c: Vector2): _pinch_zoom(f, c))
