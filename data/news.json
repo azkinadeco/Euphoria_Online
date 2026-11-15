@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15b4",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "See who can Star Up",
+  "body": "Hero cards in the Heroes list show a small green \"▲★\" when that hero can Star Up right now, so you no longer have to open every hero to find out."
+ },
+ {
   "id": "n2026-11-15b3",
   "date": "2026-11-15",
   "tag": "UPDATE",

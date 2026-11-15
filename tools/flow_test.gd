@@ -1917,6 +1917,22 @@ func _run() -> void:
 	for us_n in ["open", "close", "tab", "error", "reward", "confirm"]:
 		check(ResourceLoader.exists("res://audio/ui/%s.wav" % us_n), "ui sound %s exists" % us_n)
 
+	print("[star up ready mark]")
+	var sr_id: String = G.s["heroes"].keys()[0]
+	var sr_keep: Dictionary = {"gold": G.amount("gold"), "stone": G.amount("star_stone"), "sh": int(G.s["shards"].get(sr_id, 0)), "star": int(G.s["heroes"][sr_id]["star"])}
+	G.s["heroes"][sr_id]["star"] = 1
+	G.s["shards"][sr_id] = 0
+	G.s["items"]["star_stone"] = 0
+	check(not G.star_up_ready(sr_id), "no Star Up mark without shards")
+	G.s["shards"][sr_id] = int(G.star_up_cost(sr_id)["shards"])
+	G.s["cur"]["gold"] = int(G.star_up_cost(sr_id)["gold"])
+	check(G.star_up_ready(sr_id), "Star Up mark when shards and gold are enough")
+	check(G.s["heroes"][sr_id]["star"] == 1 and G.amount("gold") == int(G.star_up_cost(sr_id)["gold"]), "the check spends nothing")
+	G.s["heroes"][sr_id]["star"] = sr_keep["star"]
+	G.s["shards"][sr_id] = sr_keep["sh"]
+	G.s["items"]["star_stone"] = sr_keep["stone"]
+	G.s["cur"]["gold"] = sr_keep["gold"]
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

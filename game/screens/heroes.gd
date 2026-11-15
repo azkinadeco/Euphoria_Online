@@ -336,7 +336,7 @@ func _rebuild() -> void:
 		return Game.hero_power(a) > Game.hero_power(b))
 	for id in ids:
 		var hid: String = id
-		var card := HeroCard.new(hid, Vector2(_card_w, _card_w * 1.3), {"skin": true, "lazy": true})
+		var card := HeroCard.new(hid, Vector2(_card_w, _card_w * 1.3), {"skin": true, "lazy": true, "star_ready": Game.star_up_ready(hid)})
 		card.pressed.connect(func():
 			Game.sfx("ui_click")
 			main.go("hero_detail", {"id": hid, "list": ids}))

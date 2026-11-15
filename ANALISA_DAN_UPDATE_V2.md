@@ -1253,6 +1253,11 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hc. Update batch 201 — Tanda Star Up siap di kartu hero
+
+- `Game.star_up_ready(id)` (hanya membaca: shard + Star Stone universal + Gold cukup, belum bintang maks.).
+- `HeroCard` opsi `star_ready`: pil hijau "▲★" berdenyut di kanan kartu; dipakai di daftar Heroes.
+
 ## 2hb. Update batch 200 — AUTO dialog diingat
 
 - `vn_dialogue.gd`: `static var _auto_pref`; adegan berikutnya (non-tutorial) mulai dengan AUTO aktif bila terakhir dinyalakan.

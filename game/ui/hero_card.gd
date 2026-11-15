@@ -208,6 +208,19 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 			np.modulate = Color(0.6, 0.6, 0.65)
 		add_child(np)
 
+	if opts.get("star_ready", false):
+		# Star Up is affordable: a small pulsing green arrow in the top-right corner
+		var up := UI.styled_panel(Color(0.04, 0.2, 0.1, 0.92), UI.GREEN, 10, 1, 0)
+		up.add_child(UI.margin(UI.label("▲ ★", 11, UI.GREEN, 2), 5, 1, 5, 1))
+		up.position = Vector2(card_size.x - 44, card_size.y * 0.42)
+		up.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		up.tooltip_text = "Star Up ready"
+		add_child(up)
+		if not Game.reduce_fx():
+			var ut := up.create_tween().set_loops()
+			ut.tween_property(up, "modulate:a", 0.55, 0.7).set_trans(Tween.TRANS_SINE)
+			ut.tween_property(up, "modulate:a", 1.0, 0.7).set_trans(Tween.TRANS_SINE)
+
 	if opts.has("badge"):
 		var b := Panel.new()
 		b.add_theme_stylebox_override("panel", UI.style(Color("#ffd479"), Color("#2a1600"), 12, 2, 0))

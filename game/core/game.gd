@@ -968,6 +968,14 @@ func star_up_cost(id: String) -> Dictionary:
 	var h := hero(id)
 	return {"shards": DB.shards_for_star(h["star"]), "gold": 5000 * int(h["star"])}
 
+## True when Star Up can be done right now (enough shards + universal stones and gold). Read-only.
+func star_up_ready(id: String) -> bool:
+	var h := hero(id)
+	if h.is_empty() or int(h["star"]) >= DB.MAX_STAR:
+		return false
+	var c := star_up_cost(id)
+	return int(s["shards"].get(id, 0)) + amount("star_stone") >= int(c["shards"]) and amount("gold") >= int(c["gold"])
+
 func star_up(id: String) -> String:
 	var h := hero(id)
 	if h["star"] >= DB.MAX_STAR:
