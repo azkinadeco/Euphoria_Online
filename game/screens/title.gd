@@ -213,7 +213,7 @@ func build() -> void:
 	add_child(tap)
 
 	# NOTICES (on top of the tap catcher, top right)
-	var nb := UI.button("📜 NOTICES", func():
+	var nb := UI.button("✉ NOTICES", func():
 		Game.sfx("ui_click")
 		main.show_news(0), "", Vector2(140, 40))
 	nb.add_theme_font_size_override("font_size", 14)

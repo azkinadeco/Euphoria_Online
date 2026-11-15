@@ -199,7 +199,7 @@ func _row(m: Dictionary) -> Control:
 		dot.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 		dot.add_theme_stylebox_override("panel", UI.style(Color("#ff5c6c"), Color.TRANSPARENT, 5, 0, 0))
 		right.add_child(dot)
-		right.add_child(UI.label("🎁 %d" % (m["give"] as Dictionary).size(), 11, UI.GOLD, 0))
+		right.add_child(UI.label("◆ %d" % (m["give"] as Dictionary).size(), 11, UI.GOLD, 0))
 	btn.pressed.connect(func():
 		Game.sfx("ui_click")
 		if _select_mode:

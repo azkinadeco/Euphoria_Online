@@ -240,7 +240,7 @@ func _thumb(k: int) -> Control:
 		b.pressed.connect(func(): Game.sfx("ui_click"); _open(k))
 	else:
 		t.modulate = Color(0.05, 0.05, 0.08)
-		var lk := UI.label("🔒", 40, Color(1, 1, 1, 0.35), 0)
+		var lk := UI.label("✕", 40, Color(1, 1, 1, 0.35), 0)
 		lk.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		lk.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lk.vertical_alignment = VERTICAL_ALIGNMENT_CENTER

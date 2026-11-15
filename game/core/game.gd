@@ -24,6 +24,7 @@ var _save_dirty := false
 var persist := true   # false in automated tests: never touch the real save file
 
 func _ready() -> void:
+	_install_symbol_font()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_setup_audio()
 	load_game()
@@ -5149,3 +5150,22 @@ func _ingredient_drop(rewards: Dictionary, boss: bool) -> void:
 		return
 	var k: String = ["ing_flour", "ing_meat", "ing_meat", "ing_flour", "ing_herb"][randi() % 5]
 	rewards[k] = int(rewards.get(k, 0)) + (2 if boss else 1)
+
+## The built-in font (Open Sans) has no ★ ♥ ✦ ▶ ✓ ⚔ … symbols. A desktop borrows them from a system font,
+## but a browser has none, so the web build drew every one of them as a little box with its code in it.
+## A small bundled symbol font (DejaVu Sans Bold subset, art/fonts) is added as fallback.
+func _install_symbol_font() -> void:
+	var ff := ThemeDB.fallback_font as FontFile
+	var path := "res://art/fonts/symbols_dejavu_bold.ttf"
+	if ff == null or not ResourceLoader.exists(path):
+		return
+	var sym := load(path) as Font
+	var fb: Array[Font] = ff.fallbacks
+	if sym != null and not fb.has(sym):
+		fb.append(sym)
+		ff.fallbacks = fb
+	if OS.get_environment("NOSYSFONT") != "":
+		# test switch: draw text exactly like the web build (no system fonts)
+		ff.allow_system_fallback = false
+		if sym is FontFile:
+			(sym as FontFile).allow_system_fallback = false

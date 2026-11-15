@@ -685,7 +685,7 @@ func toast(text: String, color: Color = UI.GOLD) -> void:
 func _toast_glyph(text: String, color: Color) -> String:
 	var u := text.to_upper()
 	if u.contains("UNLOCKS AT") or u.contains("LOCKED"):
-		return "🔒"
+		return "✕"
 	if u.contains("UNLOCK") or u.contains("NEW "):
 		return "✦"
 	if u.contains("LEVEL") or u.contains("LV.") or u.contains("RANK"):

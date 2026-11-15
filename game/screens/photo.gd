@@ -143,7 +143,7 @@ func _build_panel() -> void:
 	_cap_edit.text_changed.connect(func(tx): _caption.text = tx)
 	v.add_child(_cap_edit)
 	v.add_child(UI.wrap_label("Drag her to move • pinch / wheel to resize", 11, UI.MUTED))
-	v.add_child(UI.button("📷  SNAP", _snap, "GoldButton", Vector2(0, 52)))
+	v.add_child(UI.button("◉  SNAP", _snap, "GoldButton", Vector2(0, 52)))
 	v.add_child(UI.button("ALBUM (%d)" % _photo_files().size(), _album, "", Vector2(0, 38)))
 
 func _stepper(title: String, cb: Callable) -> Control:

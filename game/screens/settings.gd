@@ -168,7 +168,7 @@ func _profile(parent: Control) -> void:
 		main.toast("Name changed to %s" % n)
 		main.replace("settings"), "", Vector2(110, 42)))
 	v.add_child(nh)
-	var hp := UI.button("📖 HOW TO PLAY", func(): main.show_how_to_play(), "GoldButton", Vector2(0, 44))
+	var hp := UI.button("? HOW TO PLAY", func(): main.show_how_to_play(), "GoldButton", Vector2(0, 44))
 	hp.tooltip_text = "Battlefield, ranges, roles, elements, growth and daily routine"
 	v.add_child(hp)
 	var ga := UI.button("GUIDE ARCHIVE", _show_guides, "", Vector2(0, 40))

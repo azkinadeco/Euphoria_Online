@@ -290,7 +290,7 @@ func _render_info() -> void:
 		i_br.add_child(UI.label("Lv.%d" % h["bond"], 16, Color.WHITE, 2))
 		i_br.add_child(UI.label("+%d%% stats" % ((h["bond"] - 1) * 2 + (10 if h["oath"] else 0)), 14, UI.GREEN))
 		if h.get("oath", false):
-			i_br.add_child(UI.label("💍 OATH", 13, Color("#ff8fb8"), 2))
+			i_br.add_child(UI.label("♥ OATH", 13, Color("#ff8fb8"), 2))
 		var i_rec := Game.hero_record(id)
 		if int(i_rec["b"]) > 0:
 			var i_rl := UI.label("Service: %s battles  •  %s damage  •  %d MVP" % [Game.fmt(int(i_rec["b"])), Game.fmt(int(i_rec["d"])), int(i_rec["mvp"])], 12, UI.MUTED, 0)
@@ -1132,7 +1132,7 @@ func _render_outfits() -> void:
 				fr.mouse_filter = Control.MOUSE_FILTER_PASS
 				g.add_child(b)
 				continue
-			var ib := UI.button("UNLOCK %d💎" % DB.costume_price(i), func():
+			var ib := UI.button("UNLOCK  %d Gems" % DB.costume_price(i), func():
 				main.confirm("Unlock outfit %d of %s now for %d Gems?" % [idx + 1, DB.name_of(id), DB.costume_price(idx)], func():
 					var err := Game.buy_costume(id, idx)
 					if err != "":

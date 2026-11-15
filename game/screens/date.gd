@@ -73,7 +73,7 @@ func _build_go(b: Control) -> void:
 		th.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		th.modulate = Color(0.8, 0.8, 0.85) if open else Color(0.25, 0.25, 0.3)
 		fr.add_child(th)
-		var nl := UI.label(str(sp["name"]) if open else "🔒  %s  •  %d / %d stages" % [str(sp["name"]).split(" ")[0], mini(Game.stages_cleared(), int(sp["req"])), int(sp["req"])], 13, Color.WHITE if open else UI.MUTED, 4)
+		var nl := UI.label(str(sp["name"]) if open else "%s  •  %d / %d stages" % [str(sp["name"]).split(" ")[0], mini(Game.stages_cleared(), int(sp["req"])), int(sp["req"])], 13, Color.WHITE if open else UI.MUTED, 4)
 		nl.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 		nl.offset_top = -24
 		nl.offset_left = 8
@@ -188,12 +188,12 @@ func _build_go(b: Control) -> void:
 	var tip := UI.hbox(6)
 	pv.add_child(tip)
 	if Game.date_count(_hero) > 0:
-		tip.add_child(UI.label("💡 %s" % str(style[0]), 12, UI.GOLD, 2))
+		tip.add_child(UI.label("✦ %s" % str(style[0]), 12, UI.GOLD, 2))
 		var tl := UI.wrap_label("She loves %s." % str(style[1]), 12, UI.TEXT)
 		tl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tip.add_child(tl)
 	else:
-		var tl2 := UI.wrap_label("💡 Go on a first date to learn what she likes.", 12, UI.MUTED)
+		var tl2 := UI.wrap_label("✦ Go on a first date to learn what she likes.", 12, UI.MUTED)
 		tl2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tip.add_child(tl2)
 	# rank rewards

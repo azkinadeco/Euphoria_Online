@@ -219,7 +219,7 @@ func _render_detail() -> void:
 	_detail.add_child(UI.label("Skill: " + str(sk["name"]), 14, UI.GOLD, 2))
 	_detail.add_child(UI.label("Defeated: %s" % Game.fmt(Game.kills_of(id)), 16, UI.GREEN, 3))
 	var in_lobby := Game.lobby_enemy() == id and Game.lobby_enemy_form() == _form
-	var lb := UI.button("🏠 IN LOBBY ✓" if in_lobby else "🏠 SET AS LOBBY", func():
+	var lb := UI.button("IN LOBBY ✓" if in_lobby else "SET AS LOBBY", func():
 		if in_lobby:
 			Game.set_lobby_enemy("")
 			main.toast("Your hero is back in the lobby.", UI.MUTED)
@@ -515,7 +515,7 @@ func _render_tame(id: String) -> void:
 		info.add_child(UI.label("%d. %s" % [epi + 1, DB.PET_STORY_TITLES[epi]], 12, Color.WHITE if st != "locked" else UI.MUTED, 2))
 		info.add_child(UI.label("Bond Lv.%d" % DB.PET_STORY_REQ[epi] if st == "locked" else ("✓ read — tap to replay" if st == "read" else "NEW!"), 10, UI.GREEN if st == "ready" else UI.MUTED, 2))
 		row.add_child(info)
-		var rb := UI.button("READ" if st == "ready" else ("REPLAY" if st == "read" else "🔒"), func():
+		var rb := UI.button("READ" if st == "ready" else ("REPLAY" if st == "read" else "LOCKED"), func():
 			main.dialogue(DB.pet_story(id, epi), func():
 				var g := Game.read_pet_story(id, epi)
 				if not g.is_empty():

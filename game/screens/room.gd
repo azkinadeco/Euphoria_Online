@@ -159,7 +159,7 @@ func _bond_card(hid: String, h: Dictionary) -> Control:
 	var sub := "♥ Bond Lv.%d" % lv + ("  •  MAX" if maxed else "   %d / %d" % [int(h["bond_exp"]), need])
 	hv.add_child(UI.label(sub, 13, PINK, 3))
 	if bool(h.get("oath", false)):
-		hrow.add_child(UI.label("💍", 20, UI.GOLD, 0))
+		hrow.add_child(UI.label("♥", 20, UI.GOLD, 0))
 	var bar := UI.bar(need if maxed else int(h["bond_exp"]), need, "", 8)
 	bar.add_theme_stylebox_override("fill", UI.style(PINK, Color.TRANSPARENT, 4, 0, 0))
 	bar.add_theme_stylebox_override("background", UI.style(Color(1, 1, 1, 0.08), Color.TRANSPARENT, 4, 0, 0))
