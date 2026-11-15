@@ -41,11 +41,21 @@ html, body, #canvas {
 	border: 0;
 }
 
+html, body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
 body {
+	position: fixed;
+	top: 0;
+	left: 0;
 	color: white;
 	background-color: #07040e;
-	overflow: hidden;
 	touch-action: none;
+	-webkit-text-size-adjust: 100%;
 }
 
 #canvas {
@@ -372,6 +382,48 @@ html.short #ld-caption {
 	display: none;
 }
 
+/* ---------- "tap to enter" after the download ---------- */
+#ld-enter {
+	display: none;
+	margin: calc(var(--lh) * 0.03) auto 0;
+	padding: 0.7em 2.6em;
+	border: 1px solid #ffe3a0;
+	border-radius: 40px;
+	background: linear-gradient(#ffd77a, #e09a2c);
+	color: #3a1d05;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(15px, calc(var(--lh) * 0.045), 22px);
+	font-weight: 700;
+	letter-spacing: 2px;
+	cursor: pointer;
+	box-shadow: 0 0 22px rgba(255, 200, 110, 0.55);
+	animation: ld-breathe 1.6s ease-in-out infinite;
+}
+
+@keyframes ld-breathe {
+	0%, 100% { transform: scale(1); box-shadow: 0 0 16px rgba(255, 200, 110, 0.45); }
+	50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 210, 130, 0.85); }
+}
+
+#ld-ios {
+	display: none;
+	margin-top: calc(var(--lh) * 0.012);
+	color: #cfc2ea;
+	font-size: clamp(9px, calc(var(--lh) * 0.026), 12px);
+	text-align: center;
+}
+
+#status.ready #ld-enter {
+	display: block;
+}
+
+#status.ready .ld-foot,
+#status.ready #status-progress,
+#status.ready #status-detail,
+#status.ready #status-tip {
+	display: none;
+}
+
 #status-retry {
 	display: block;
 	margin: 0.8rem auto 0.2rem;
@@ -415,11 +467,20 @@ window.__eoRot = function () {
 	const touch = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || ('ontouchstart' in window);
 	return touch && window.innerHeight > window.innerWidth;
 };
+// The landscape frame in CSS px: [width, height]. The engine sizes its canvas from it too
+// (tools/web_landscape_patch.py), so page and game always agree.
+window.__eoFrame = function () {
+	const vv = window.visualViewport;
+	const w = Math.round(vv ? vv.width : window.innerWidth);
+	const h = Math.round(vv ? vv.height : window.innerHeight);
+	return window.__eoRot() ? [h, w] : [w, h];
+};
 function eoFit() {
 	const r = window.__eoRot();
 	const de = document.documentElement;
-	const lw = r ? window.innerHeight : window.innerWidth;
-	const lh = r ? window.innerWidth : window.innerHeight;
+	const fr = window.__eoFrame();
+	const lw = fr[0];
+	const lh = fr[1];
 	de.classList.toggle('rot', r);
 	de.classList.toggle('short', lh <= 330);
 	de.style.setProperty('--lw', lw + 'px');
@@ -427,20 +488,10 @@ function eoFit() {
 }
 eoFit();
 window.addEventListener('resize', eoFit);
+if (window.visualViewport) {
+	window.visualViewport.addEventListener('resize', eoFit);
+}
 window.addEventListener('orientationchange', function () { setTimeout(eoFit, 60); });
-// Android: the first tap goes full screen and locks the screen to landscape (iOS has no such API: the
-// page stays turned instead).
-document.addEventListener('pointerdown', function () {
-	const de = document.documentElement;
-	if (!window.matchMedia || !window.matchMedia('(pointer: coarse)').matches || !de.requestFullscreen || document.fullscreenElement) {
-		return;
-	}
-	de.requestFullscreen({ navigationUI: 'hide' }).then(function () {
-		if (screen.orientation && screen.orientation.lock) {
-			screen.orientation.lock('landscape').catch(function () {});
-		}
-	}).catch(function () {});
-}, { once: true, capture: true });
 		</script>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="Euphoria_v2.icon.png" />
 <link rel="apple-touch-icon" href="Euphoria_v2.apple-touch-icon.png"/>
@@ -481,6 +532,8 @@ document.addEventListener('pointerdown', function () {
 					<div id="status-progress" class="busy"><div id="status-fill"></div></div>
 					<div id="status-detail">Memuat data game...</div>
 					<div id="status-tip"></div>
+					<button id="ld-enter" type="button">KETUK UNTUK MASUK</button>
+					<div id="ld-ios">Layar penuh di iPhone: tombol Bagikan → <b>Tambahkan ke Layar Utama</b>, lalu buka dari ikonnya.</div>
 					<div class="ld-foot">
 						<span id="ld-dots"></span>
 						<span id="ld-hint">Ketuk layar untuk ganti hero</span>
@@ -751,7 +804,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // serviceWorker dimatikan: Safari iOS tidak sanggup cache .pck ratusan MB di CacheStorage
-const GODOT_CONFIG = Object.assign({"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"Euphoria_v2","experimentalVK":false,"fileSizes":{"Euphoria_v2.pck":137721948,"Euphoria_v2.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4,"serviceWorker":"Euphoria_v2.service.worker.js"}, { serviceWorker: '' });
+const GODOT_CONFIG = Object.assign({"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"Euphoria_v2","experimentalVK":false,"fileSizes":{"Euphoria_v2.pck":137774692,"Euphoria_v2.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4,"serviceWorker":"Euphoria_v2.service.worker.js"}, { serviceWorker: '' });
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -1005,8 +1058,50 @@ const engine = new Engine(GODOT_CONFIG);
 				}
 			},
 		}).then(() => {
+			// Ready. One tap enters the game: browsers only allow sound, full screen and the landscape lock
+			// after the player touches the page, and the studio logo waits for it (studio_intro.gd).
 			clearInterval(tipTimer);
-			setStatusMode('hidden');
+			statusOverlay.classList.add('ready');
+			pctEl.textContent = '100%';
+			statusText.textContent = 'Siap! Dunia Euphoria menunggumu.';
+			const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+			const standalone = window.navigator.standalone === true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+			if (ios && !standalone) {
+				document.getElementById('ld-ios').style.display = 'block';
+			}
+			let entered = false;
+			const enter = function (ev) {
+				if (entered) {
+					return;
+				}
+				if (ev && ev.target && ev.target.closest && ev.target.closest('#status-notice')) {
+					return;
+				}
+				entered = true;
+				// sound: wake the engine's audio inside this tap (iOS requires it here)
+				try {
+					const ga = window.__eoAudio && window.__eoAudio();
+					if (ga && ga.ctx && ga.ctx.state !== 'running') {
+						ga.ctx.resume();
+					}
+				} catch (e) { /* ignore */ }
+				// Android / desktop touch: real full screen and a landscape lock
+				const de = document.documentElement;
+				const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+				if (coarse && de.requestFullscreen && !document.fullscreenElement) {
+					de.requestFullscreen({ navigationUI: 'hide' }).then(function () {
+						if (screen.orientation && screen.orientation.lock) {
+							screen.orientation.lock('landscape').catch(function () {});
+						}
+					}).catch(function () {});
+				}
+				window.__eoEntered = true;
+				statusOverlay.style.transition = 'opacity 0.45s ease';
+				statusOverlay.style.opacity = '0';
+				setTimeout(function () { setStatusMode('hidden'); }, 470);
+			};
+			statusOverlay.addEventListener('click', enter);
+			document.getElementById('ld-enter').addEventListener('click', enter);
 		}, displayFailureNotice);
 	}
 }());
