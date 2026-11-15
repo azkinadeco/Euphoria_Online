@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gw. Update batch 194 — Daftar penghuni Garden
+
+- `garden.gd::_render_hud`: potongan wajah diganti `UI.avatar` (sprite full body, bingkai warna tema hero); hati terpakai merah muda penuh, sisa berupa garis tipis (dulu semuanya satu warna).
+
 ## 2gv. Update batch 193 — Daftar Boss Hunt terbaca
 
 - `hunt.gd`: gradasi gelap dari kiri di tiap kartu target (di bawah nama, status dan hadiah).

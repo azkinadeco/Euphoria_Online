@@ -67,7 +67,7 @@ func _render_hud() -> void:
 	for id in ids:
 		var r := UI.hbox(8)
 		v.add_child(r)
-		r.add_child(UI.tex_rect(DB.face(id), Vector2(32, 32), true))
+		r.add_child(UI.avatar(id, 32, Color(DB.theme_color(id), 0.8), 1))   # same full-body avatar as everywhere else
 		var rv := UI.vbox(0)
 		rv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		r.add_child(rv)
@@ -76,7 +76,11 @@ func _render_hud() -> void:
 		nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		rv.add_child(nm)
 		var used := _taps(id)
-		rv.add_child(UI.label("♥".repeat(mini(used, DB.GARDEN_TAPS_PER_DAY)) + "♡".repeat(maxi(0, DB.GARDEN_TAPS_PER_DAY - used)), 12, Color("#ff8fb8") if used < DB.GARDEN_TAPS_PER_DAY else UI.MUTED, 0))
+		# taps used today: filled pink hearts, the ones still available as outlines
+		var hr := UI.hbox(0)
+		hr.add_child(UI.label("♥".repeat(mini(used, DB.GARDEN_TAPS_PER_DAY)), 13, Color("#ff8fb8"), 0))
+		hr.add_child(UI.label("♡".repeat(maxi(0, DB.GARDEN_TAPS_PER_DAY - used)), 13, Color(1, 0.75, 0.85, 0.55), 0))
+		rv.add_child(hr)
 	if ids.is_empty():
 		v.add_child(UI.label("Nobody lives here yet.", 12, UI.MUTED, 0))
 
