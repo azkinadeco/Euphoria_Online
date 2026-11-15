@@ -14,6 +14,27 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<link rel="preload" as="image" href="loading/logo.webp">
 		<style>
+/* Landscape only, like a mobile game: when a phone is held upright the whole page (canvas + loading
+   screen) is turned 90 degrees so the game is always landscape. --lw / --lh are the landscape frame,
+   set by eoFit() below; the engine is patched to match (tools/web_landscape_patch.py). */
+:root {
+	--lw: 100vw;
+	--lh: 100vh;
+}
+
+html.rot #canvas,
+html.rot #status {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: auto;
+	bottom: auto;
+	width: var(--lw) !important;
+	height: var(--lh) !important;
+	transform-origin: 0 0;
+	transform: translateX(var(--lh)) rotate(90deg);
+}
+
 html, body, #canvas {
 	margin: 0;
 	padding: 0;
@@ -93,14 +114,14 @@ body {
 
 #ld-hero {
 	position: absolute;
-	right: 5vw;
+	right: calc(var(--lw) * 0.05);
 	bottom: 0;
-	height: 97vh;
-	width: 50vw;
+	height: calc(var(--lh) * 0.97);
+	width: calc(var(--lw) * 0.5);
 	object-fit: contain;
 	object-position: 50% 100%;
 	opacity: 0;
-	transform: translate3d(4vw, 0, 0);
+	transform: translate3d(calc(var(--lw) * 0.04), 0, 0);
 	transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 	filter: drop-shadow(0 0 26px rgba(10, 4, 24, 0.75));
 	pointer-events: none;
@@ -113,9 +134,9 @@ body {
 
 #ld-logo {
 	position: absolute;
-	top: 3.5vh;
-	left: max(4vw, env(safe-area-inset-left, 0px));
-	width: 26vw;
+	top: calc(var(--lh) * 0.035);
+	left: max(calc(var(--lw) * 0.04), env(safe-area-inset-left, 0px));
+	width: calc(var(--lw) * 0.26);
 	max-width: 330px;
 	min-width: 150px;
 	height: auto;
@@ -124,10 +145,10 @@ body {
 }
 
 #ld-caption {
-	position: fixed;
-	left: max(5vw, env(safe-area-inset-left, 0px));
+	position: absolute;
+	left: max(calc(var(--lw) * 0.05), env(safe-area-inset-left, 0px));
 	top: 46%;
-	width: 42vw;
+	width: calc(var(--lw) * 0.42);
 	max-width: 560px;
 	transform: translateY(-50%);
 	opacity: 0;
@@ -146,16 +167,16 @@ body {
 	border-radius: 20px;
 	border: 1px solid currentColor;
 	background: rgba(7, 4, 14, 0.55);
-	font-size: clamp(9px, 1.9vh, 12px);
+	font-size: clamp(9px, calc(var(--lh) * 0.019), 12px);
 	font-weight: 700;
 	letter-spacing: 2px;
 	text-shadow: none;
 }
 
 #ld-name {
-	margin-top: 1vh;
+	margin-top: calc(var(--lh) * 0.01);
 	font-family: Georgia, "Times New Roman", serif;
-	font-size: clamp(24px, 8.4vh, 58px);
+	font-size: clamp(24px, calc(var(--lh) * 0.084), 58px);
 	font-weight: 700;
 	line-height: 1.05;
 	color: #fff4d6;
@@ -163,20 +184,20 @@ body {
 }
 
 #ld-title {
-	margin-top: 0.6vh;
-	font-size: clamp(9px, 2.1vh, 14px);
+	margin-top: calc(var(--lh) * 0.006);
+	font-size: clamp(9px, calc(var(--lh) * 0.021), 14px);
 	font-weight: 700;
 	letter-spacing: 3px;
 	color: #e8be62;
 }
 
 #ld-quote {
-	margin-top: 1.8vh;
+	margin-top: calc(var(--lh) * 0.018000000000000002);
 	padding-left: 12px;
 	border-left: 2px solid rgba(232, 190, 98, 0.8);
 	font-family: Georgia, "Times New Roman", serif;
 	font-style: italic;
-	font-size: clamp(11px, 2.9vh, 18px);
+	font-size: clamp(11px, calc(var(--lh) * 0.028999999999999998), 18px);
 	line-height: 1.4;
 	color: #efe6ff;
 }
@@ -190,7 +211,7 @@ body {
 	flex-direction: column;
 	align-items: center;
 	/* notch phones (viewport-fit=cover): never under the camera cut-out or the home bar */
-	padding: 0 max(5vw, env(safe-area-inset-right, 0px)) calc(2.6vh + env(safe-area-inset-bottom, 0px)) max(5vw, env(safe-area-inset-left, 0px));
+	padding: 0 max(calc(var(--lw) * 0.05), env(safe-area-inset-right, 0px)) calc(calc(var(--lh) * 0.026000000000000002) + env(safe-area-inset-bottom, 0px)) max(calc(var(--lw) * 0.05), env(safe-area-inset-left, 0px));
 	z-index: 10;
 }
 
@@ -210,7 +231,7 @@ body {
 	flex: 1;
 	min-width: 0;
 	color: #ffd479;
-	font-size: clamp(11px, 2.5vh, 14px);
+	font-size: clamp(11px, calc(var(--lh) * 0.025), 14px);
 	font-weight: 600;
 	letter-spacing: 0.3px;
 	text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
@@ -221,7 +242,7 @@ body {
 #status-pct {
 	color: #ffe9b0;
 	font-family: Georgia, "Times New Roman", serif;
-	font-size: clamp(20px, 6vh, 36px);
+	font-size: clamp(20px, calc(var(--lh) * 0.06), 36px);
 	font-weight: 700;
 	line-height: 1;
 	text-shadow: 0 0 14px rgba(255, 200, 110, 0.6), 0 2px 0 #3a1f00;
@@ -232,7 +253,7 @@ body {
 #status-progress {
 	position: relative;
 	width: 100%;
-	height: clamp(8px, 1.9vh, 12px);
+	height: clamp(8px, calc(var(--lh) * 0.019), 12px);
 	margin-top: 6px;
 	border-radius: 8px;
 	overflow: hidden;
@@ -283,20 +304,20 @@ body {
 #status-detail {
 	margin-top: 6px;
 	color: #cfc2ea;
-	font-size: clamp(9px, 2.1vh, 12px);
+	font-size: clamp(9px, calc(var(--lh) * 0.021), 12px);
 	text-align: left;
 	text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
 }
 
 #status-tip {
-	margin-top: 1.6vh;
+	margin-top: calc(var(--lh) * 0.016);
 	padding: 7px 14px;
 	min-height: 2.2em;
 	border-radius: 10px;
 	background: rgba(42, 23, 72, 0.72);
 	border: 1px solid rgba(232, 190, 98, 0.35);
 	color: #e8dcff;
-	font-size: clamp(10px, 2.4vh, 13px);
+	font-size: clamp(10px, calc(var(--lh) * 0.024), 13px);
 	line-height: 1.35;
 	text-align: center;
 	transition: opacity 0.45s;
@@ -311,9 +332,9 @@ body {
 	align-items: center;
 	justify-content: center;
 	gap: 12px;
-	margin-top: 1.3vh;
+	margin-top: calc(var(--lh) * 0.013000000000000001);
 	color: #9d8fc0;
-	font-size: clamp(8px, 1.9vh, 11px);
+	font-size: clamp(8px, calc(var(--lh) * 0.019), 11px);
 }
 
 #ld-dots {
@@ -334,143 +355,14 @@ body {
 	transform: scale(1.35);
 }
 
-#ld-rotate {
-	display: none;
-}
-
-/* portrait phones: hero in the middle, everything centred */
-@media (max-aspect-ratio: 1/1) {
-	.ld-shade {
-		background:
-			linear-gradient(0deg, rgba(7, 4, 14, 0.97) 0%, rgba(7, 4, 14, 0.85) 30%, rgba(7, 4, 14, 0) 58%),
-			linear-gradient(180deg, rgba(7, 4, 14, 0.75) 0%, rgba(7, 4, 14, 0) 20%);
-	}
-	#ld-logo {
-		top: calc(2.5vh + env(safe-area-inset-top, 0px));
-		left: 50%;
-		width: 58vw;
-		max-width: 320px;
-		transform: translateX(-50%);
-	}
-	#ld-hero {
-		left: 0;
-		right: 0;
-		bottom: 30vh;
-		width: 100vw;
-		height: 56vh;
-		transform: translate3d(0, 2vh, 0);
-	}
-	#ld-caption {
-		position: static;
-		width: auto;
-		max-width: none;
-		margin-bottom: 2vh;
-		transform: none;
-		text-align: center;
-	}
-	#status-container {
-		padding-left: 6vw;
-		padding-right: 6vw;
-	}
-	#ld-name {
-		font-size: clamp(24px, 4.6vh, 44px);
-	}
-	#ld-title {
-		font-size: clamp(9px, 1.4vh, 13px);
-	}
-	#ld-elem {
-		font-size: clamp(9px, 1.3vh, 12px);
-	}
-	#ld-quote {
-		margin-top: 1vh;
-		padding-left: 0;
-		border-left: 0;
-		font-size: clamp(11px, 1.8vh, 16px);
-	}
-	#status-text { font-size: clamp(11px, 1.6vh, 14px); }
-	#status-pct { font-size: clamp(22px, 3.6vh, 36px); }
-	#status-detail { font-size: clamp(9px, 1.4vh, 12px); }
-	#status-tip { font-size: clamp(10px, 1.6vh, 13px); margin-top: 1.2vh; }
-	.ld-foot { font-size: clamp(8px, 1.3vh, 11px); margin-top: 1vh; }
-	#ld-rotate { display: inline; }
-	#ld-hint { display: none; }
-}
-
 /* very low landscape screens (phones): drop the extras so nothing overlaps */
-@media (min-aspect-ratio: 1/1) and (max-height: 330px) {
-	#status-detail, .ld-foot { display: none; }
-	#ld-caption { top: 42%; }
-}
-
-/* ---------- "rotate your phone" (after loading; the game is landscape only) ---------- */
-#rotate-hint {
+html.short #status-detail,
+html.short .ld-foot {
 	display: none;
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	z-index: 50;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 22px;
-	padding: 24px;
-	text-align: center;
-	background: radial-gradient(ellipse at 50% 40%, #2a1748 0%, #120a22 55%, #07040e 100%);
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-	color: #efe6ff;
 }
 
-#rotate-hint img {
-	width: 62vw;
-	max-width: 300px;
-	height: auto;
-}
-
-.rh-phone {
-	width: 64px;
-	height: 112px;
-	border: 3px solid #e8be62;
-	border-radius: 12px;
-	box-shadow: 0 0 22px rgba(255, 200, 110, 0.35);
-	animation: rh-turn 2.4s ease-in-out infinite;
-}
-
-.rh-phone::after {
-	content: "";
-	display: block;
-	width: 18px;
-	height: 3px;
-	margin: 98px auto 0;
-	border-radius: 2px;
-	background: #e8be62;
-}
-
-@keyframes rh-turn {
-	0%, 20% { transform: rotate(0deg); }
-	60%, 100% { transform: rotate(-90deg); }
-}
-
-.rh-title {
-	font-family: Georgia, "Times New Roman", serif;
-	font-size: 22px;
-	font-weight: 700;
-	color: #ffe9b0;
-}
-
-.rh-text {
-	max-width: 300px;
-	font-size: 14px;
-	line-height: 1.5;
-	color: #cfc2ea;
-}
-
-/* only on touch screens held upright, and only once the game is running */
-@media (orientation: portrait) and (pointer: coarse) {
-	body.game-on #rotate-hint {
-		display: flex;
-	}
+html.short #ld-caption {
+	top: 42%;
 }
 
 /* an error box is showing: clear the middle of the screen for it */
@@ -517,6 +409,39 @@ body {
 	cursor: default;
 }
 		</style>
+		<script>
+// Turn the page when a touch device is held upright (the game is landscape only).
+window.__eoRot = function () {
+	const touch = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || ('ontouchstart' in window);
+	return touch && window.innerHeight > window.innerWidth;
+};
+function eoFit() {
+	const r = window.__eoRot();
+	const de = document.documentElement;
+	const lw = r ? window.innerHeight : window.innerWidth;
+	const lh = r ? window.innerWidth : window.innerHeight;
+	de.classList.toggle('rot', r);
+	de.classList.toggle('short', lh <= 330);
+	de.style.setProperty('--lw', lw + 'px');
+	de.style.setProperty('--lh', lh + 'px');
+}
+eoFit();
+window.addEventListener('resize', eoFit);
+window.addEventListener('orientationchange', function () { setTimeout(eoFit, 60); });
+// Android: the first tap goes full screen and locks the screen to landscape (iOS has no such API: the
+// page stays turned instead).
+document.addEventListener('pointerdown', function () {
+	const de = document.documentElement;
+	if (!window.matchMedia || !window.matchMedia('(pointer: coarse)').matches || !de.requestFullscreen || document.fullscreenElement) {
+		return;
+	}
+	de.requestFullscreen({ navigationUI: 'hide' }).then(function () {
+		if (screen.orientation && screen.orientation.lock) {
+			screen.orientation.lock('landscape').catch(function () {});
+		}
+	}).catch(function () {});
+}, { once: true, capture: true });
+		</script>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="Euphoria_v2.icon.png" />
 <link rel="apple-touch-icon" href="Euphoria_v2.apple-touch-icon.png"/>
 <link rel="manifest" href="Euphoria_v2.manifest.json">
@@ -541,14 +466,14 @@ body {
 			<img id="ld-hero" alt="">
 			<div class="ld-shade"></div>
 			<img id="ld-logo" src="loading/logo.webp" alt="Euphoria Online" onerror="this.style.display='none'">
+			<div id="ld-caption">
+				<span id="ld-elem"></span>
+				<div id="ld-name"></div>
+				<div id="ld-title"></div>
+				<div id="ld-quote"></div>
+			</div>
 			<div id="status-container">
 				<div class="ld-panel">
-					<div id="ld-caption">
-						<span id="ld-elem"></span>
-						<div id="ld-name"></div>
-						<div id="ld-title"></div>
-						<div id="ld-quote"></div>
-					</div>
 					<div class="ld-row">
 						<div id="status-text">Menyiapkan Euphoria Online...</div>
 						<div id="status-pct">0%</div>
@@ -558,21 +483,14 @@ body {
 					<div id="status-tip"></div>
 					<div class="ld-foot">
 						<span id="ld-dots"></span>
-						<span id="ld-hint">Ketuk layar untuk ganti hero</span><span id="ld-rotate">Putar ponsel ke landscape untuk bermain</span>
+						<span id="ld-hint">Ketuk layar untuk ganti hero</span>
 					</div>
 				</div>
 			</div>
 			<div id="status-notice"></div>
 		</div>
 
-		<div id="rotate-hint">
-			<img src="loading/logo.webp" alt="Euphoria Online" onerror="this.style.display='none'">
-			<div class="rh-phone"></div>
-			<div class="rh-title">Putar ponselmu</div>
-			<div class="rh-text">Euphoria Online dimainkan dalam mode landscape. Putar ponsel ke samping untuk melanjutkan — permainanmu tetap berjalan.</div>
-		</div>
-
-		<script>
+<script>
 // Tombol "Coba Lagi": muat ulang halaman (unduhan yang sudah selesai diambil lagi dari cache browser).
 function addRetryButton() {
 	const errDiv = document.getElementById('status-notice');
@@ -975,7 +893,6 @@ const engine = new Engine(GODOT_CONFIG);
 		if (mode === 'hidden') {
 			stopSlides();
 			statusOverlay.remove();
-			document.body.classList.add('game-on');
 			initializing = false;
 			return;
 		}

@@ -1236,6 +1236,14 @@ tools/
 - `game/ui/studio_intro.gd` + `studio_intro.gdshader`: jeda 0,35 dtk, sapuan cahaya 0,95 dtk (hanya mencerahkan bagian krom), zoom halus, pudar 0,55 dtk; total ±2,5 dtk; ketuk untuk lewati; Reduce effects = tanpa sapuan. Ditambahkan di `main._ready` di atas layar judul yang sudah siap.
 - Tes: `shot_runner` melewati intro (meta `no_intro`); `INTRO=1` untuk menampilkannya.
 
+## 2gn. Web: landscape saja (tanpa tampilan portrait)
+
+- Semua tampilan portrait di shell web dihapus: layout loading portrait (`@media (max-aspect-ratio: 1/1)`), layar "Putar ponselmu" (`#rotate-hint`) dan teks `#ld-rotate`.
+- **Halaman diputar 90°** saat perangkat sentuh dipegang tegak (`html.rot`, `eoFit()` di `<head>`): canvas dan layar loading memakai bingkai landscape `--lw × --lh` lalu di-`rotate(90deg)`. Ukuran di CSS loading kini memakai `--lw/--lh` (bukan `vw/vh`), sehingga proporsinya sama di layar tegak maupun miring; layar pendek (≤ 330 px) memakai kelas `html.short`.
+- **`tools/web_landscape_patch.py`** (dijalankan `publish_web.sh`) menambal engine hasil export di 3 titik: ukuran canvas mengikuti bingkai landscape, posisi tap/sentuh dan gerak relatif dipetakan balik lewat rotasi. Skrip gagal keras bila kode engine berubah setelah upgrade Godot.
+- Android: ketukan pertama meminta fullscreen + `screen.orientation.lock('landscape')`. iOS tidak punya API itu, jadi halaman tetap diputar.
+- Logo ONIX, layar judul dan game memakai stretch `canvas_items` + `expand`, jadi otomatis pas di rasio landscape apa pun.
+
 ## 2gl. Update batch 186 — Pemeriksaan akhir dan publish
 
 - `tools/flow_test.gd` PASS, `tools/smoke.sh` PASS, `tools/audit.sh` PASS di 1280×720, kanvas sempit (1,23) dan 1560×720 X-LARGE, `tools/check_refs.py` bersih (81 ikon, 373 suara, 27 background).

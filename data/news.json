@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zo",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Landscape only, like a mobile game",
+  "body": "The web version is now landscape only, like a mobile game. Holding your phone upright no longer shows a \"rotate your phone\" screen: the whole game, from the download screen through the studio logo to the title, simply turns sideways and fills the screen, and taps land exactly where you touch. On Android the first tap also switches to full screen and locks landscape."
+ },
+ {
   "id": "n2026-11-15zn",
   "date": "2026-11-15",
   "tag": "UPDATE",

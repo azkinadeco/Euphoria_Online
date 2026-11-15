@@ -43,3 +43,5 @@ for p in ('web/index.html', 'web/Euphoria_v2.html'):
     open(p, 'w').write(s)
 PY
 echo "web loader injected"
+# landscape-only web build: the engine follows the turned page (see the shell)
+python3 tools/web_landscape_patch.py web/Euphoria_v2.js
