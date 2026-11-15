@@ -1880,6 +1880,35 @@ func _run() -> void:
 	for fg_i in ["sweet_cake", "perfume", "rune_pouch", "gold_bag"]:
 		check(DB.item_sources(fg_i).size() >= 1, "%s lists where to get it (%d)" % [fg_i, DB.item_sources(fg_i).size()])
 
+	print("[auto formation composition]")
+	var af_keep: Dictionary = G.s["heroes"].duplicate(true)
+	var af_form: Array = (G.s["formation"] as Array).duplicate(true)
+	# a roster of six: five strong damage dealers and one slightly weaker healer
+	G.s["heroes"] = {}
+	var af_dps: Array = DB.hero_ids().filter(func(h): return DB.role_of(h) in ["WARRIOR", "ASSASSIN", "RANGER", "MAGE", "WARLOCK"]).slice(0, 5)
+	var af_heal: String = DB.hero_ids().filter(func(h): return DB.role_of(h) in ["HEALER", "BUFFER"])[0]
+	var af_tank: String = DB.hero_ids().filter(func(h): return DB.role_of(h) in ["TANK", "PALADIN", "KNIGHT"])[0]
+	for afh in af_dps:
+		G.add_hero(afh)
+		G.s["heroes"][afh]["level"] = 40
+	G.add_hero(af_heal)
+	G.s["heroes"][af_heal]["level"] = 36
+	G.add_hero(af_tank)
+	G.s["heroes"][af_tank]["level"] = 36
+	G.auto_formation()
+	var af_ids: Array = G.formation().map(func(e): return e[0])
+	check(af_ids.size() == DB.MAX_DEPLOY, "auto team is full (%d)" % af_ids.size())
+	check(af_ids.has(af_heal), "auto team makes room for a support who is nearly as strong")
+	check(af_ids.has(af_tank), "auto team makes room for a front-liner who is nearly as strong")
+	# ...but not for one who is far too weak
+	G.s["heroes"][af_heal]["level"] = 1
+	G.s["heroes"][af_tank]["level"] = 1
+	G.auto_formation()
+	af_ids = G.formation().map(func(e): return e[0])
+	check(not af_ids.has(af_heal) and not af_ids.has(af_tank), "auto team does not field a far weaker hero just for her role")
+	G.s["heroes"] = af_keep
+	G.s["formation"] = af_form
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

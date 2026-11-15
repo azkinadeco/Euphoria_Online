@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zg",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "AUTO builds a sounder team",
+  "body": "The AUTO button in Formation builds a sounder team. It still picks your strongest heroes, but if that leaves you with nobody to take hits or nobody to heal, a front-liner or a support who is nearly as strong takes the last slot. A hero who is far too weak is never fielded just for her role."
+ },
+ {
   "id": "n2026-11-15zf",
   "date": "2026-11-15",
   "tag": "UPDATE",

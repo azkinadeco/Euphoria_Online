@@ -1157,7 +1157,30 @@ func auto_formation(prefer: String = "") -> void:
 	var score := func(id: String) -> float:
 		return hero_power(id) * (1.3 if prefer != "" and DB.ELEMENT_GROUP.get(DB.element_of(id), "") == prefer else 1.0)
 	ids.sort_custom(func(a, b): return score.call(a) > score.call(b))
+	var ranked: Array = ids
 	ids = ids.slice(0, DB.MAX_DEPLOY)
+	# A team of the five strongest can end up with nobody to take hits or nobody to heal. If the roster has
+	# a front-liner / a support who is not much weaker than the weakest pick, she takes that slot.
+	if ranked.size() > DB.MAX_DEPLOY:
+		for need in [[["TANK", "PALADIN", "KNIGHT"], 0.6], [["HEALER", "BUFFER"], 0.55]]:
+			var roles: Array = need[0]
+			if ids.any(func(x): return DB.role_of(x) in roles):
+				continue
+			# weakest pick that is not itself the only member of the other needed group
+			var out_i := -1
+			for i in range(ids.size() - 1, -1, -1):
+				var ro := DB.role_of(ids[i])
+				var only_tank: bool = ro in ["TANK", "PALADIN", "KNIGHT"] and ids.filter(func(x): return DB.role_of(x) in ["TANK", "PALADIN", "KNIGHT"]).size() == 1
+				var only_sup: bool = ro in ["HEALER", "BUFFER"] and ids.filter(func(x): return DB.role_of(x) in ["HEALER", "BUFFER"]).size() == 1
+				if not only_tank and not only_sup:
+					out_i = i
+					break
+			if out_i < 0:
+				continue
+			for cand in ranked.slice(DB.MAX_DEPLOY):
+				if DB.role_of(cand) in roles and float(score.call(cand)) >= float(score.call(ids[out_i])) * float(need[1]):
+					ids[out_i] = cand
+					break
 	var front: Array = []
 	var mid: Array = []
 	var back: Array = []

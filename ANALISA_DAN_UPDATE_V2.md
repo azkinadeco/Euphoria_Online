@@ -1228,6 +1228,13 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ge. Update batch 179 — AUTO formation yang memperhatikan komposisi
+
+Batch perbaikan gameplay (tanpa fitur baru).
+
+- `Game.auto_formation`: setelah memilih 5 hero terkuat, bila tidak ada TANK/PALADIN/KNIGHT atau tidak ada HEALER/BUFFER, hero dengan peran itu menggantikan pilihan terlemah asalkan skornya ≥ 60% (front-liner) / 55% (support) dari yang digantikan. Satu-satunya tank/support tidak pernah jadi korban tukar.
+- Flow test: roster 5 DPS + healer + tank yang sedikit lebih lemah → keduanya masuk; bila jauh lebih lemah → tidak.
+
 ## 2gd. Update batch 178 — Kartu gacha diantar jejak cahaya
 
 Batch perbaikan (tanpa fitur baru).
