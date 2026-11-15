@@ -1228,6 +1228,20 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gc. Update batch 177 — Realm tiap hero, 2.5D lebih dalam, info elemen di layar hero
+
+Batch perbaikan (tanpa fitur baru). Termasuk pekerjaan pra-batch atas permintaan user.
+
+- **Font simbol** (`art/fonts/symbols_dejavu_bold.ttf`, `Game._install_symbol_font`): font bawaan tidak punya ★ ♥ ✦ ▶ ✓ ⚔ dll. (42 simbol); di web tampil sebagai kotak berisi kode ("kotak-kotak" di bawah nama hero = baris bintang). Subset DejaVu Sans Bold 42 KB jadi fallback; 9 emoji diganti. Tes: `NOSYSFONT=1`.
+- **Background hero** (`DB.hero_bg_key`, `bg("hero:<id>")`): file `bg_<id>.jpg` di `backround image/new backround hero/hero_backgrounds/` terbaca otomatis (15 hero; lainnya pakai map elemen). Dipakai di layar hero, memori & talk, banner rate-up, splash SSR, Photo Studio, scene lobby "Her Realm", slideshow loading.
+- **2.5D** (`live25d.gdshader`): putaran pseudo-3D, parallax 6 langkah, cahaya kunci dari normal depth, kilau, cahaya tepi, bayangan jatuh; `LiveRig.backdrop` menggeser background berlawanan arah.
+- **Lobby**: area sentuh hero tanpa kotak gelap; cahaya volumetrik (`light_shafts.gdshader`) menggantikan 4 batang miring.
+- **Battle**: cut-in ultimate di-frame pada wajah (`DB.face_focus`).
+- **Avatar** (`UI.avatar`): sprite full body seragam di lobby, profil, pemilih avatar, Friends, Settings.
+- **Gacha**: gerbang summon baru (`SummonFX`, `summon_core.gdshader`).
+- Layar hero: chip STRONG VS / WEAK TO di bawah bintang, cuaca elemen (`FestivalFX`).
+- Sprite Eurnipha ★5: pola kotak transparan yang ikut tergambar dihapus.
+
 ## 2gb. Update batch 176 — Halaman web: layar loading baru, kartu pratinjau, safe area
 
 Batch perbaikan (tanpa fitur baru).

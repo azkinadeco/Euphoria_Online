@@ -971,7 +971,7 @@ func talk(id: String) -> void:
 	if lines.is_empty():
 		toast("No talks left today. Come back tomorrow!", UI.MUTED)
 		return
-	dialogue(lines)
+	dialogue(lines, Callable(), DB.hero_bg_key(id) if DB.has_hero_bg(id) else "")
 
 # ---------------------------------------------------------------- bond level up celebration
 var _bond_queue: Array = []

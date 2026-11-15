@@ -18,7 +18,18 @@ func build() -> void:
 	tint.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	tint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(tint)
-	ambient(DB.theme_color(id).lightened(0.4), 30)
+	ambient(DB.theme_color(id).lightened(0.4), 18)
+	# weather of her element drifting through the scene
+	var amb: Array = {"FIRE": ["firefly", Color("#ffa24a")], "WATER": ["rain", Color("#9fd8ff")], "WIND": ["leaf", Color("#8fe39a")],
+		"EARTH": ["petal", Color("#e8c58a")], "LIGHT": ["firefly", Color("#fff1b0")], "DARK": ["firefly", Color("#c79bff")]}.get(
+		str(DB.ELEMENT_GROUP.get(DB.element_of(id), "LIGHT")), ["firefly", Color.WHITE])
+	if DB.element_of(id) == "ICE":
+		amb = ["snow", Color("#e8f6ff")]
+	if not Game.reduce_fx():
+		var wfx := FestivalFX.new(str(amb[0]), amb[1] as Color, 16 if str(amb[0]) != "rain" else 22)
+		wfx.modulate.a = 0.75
+		add_child(wfx)
+		move_child(wfx, 3)
 	header("HERO")
 
 	# art
@@ -166,6 +177,25 @@ func _render() -> void:
 	if int(h.get("awaken", 0)) > 0:
 		srow.add_child(UI.label("A%d" % int(h["awaken"]), 22, Color("#ffcf4a"), 5))
 	_name_box.add_child(srow)
+	# quick facts under the stars: who she beats, who beats her, and her skill's reach
+	var el: String = DB.ELEMENT_GROUP.get(DB.element_of(id), DB.element_of(id))
+	var beats := str(DB.ELEMENT_BEATS.get(el, ""))
+	var weak := ""
+	for ek in DB.ELEMENT_BEATS.keys():
+		if str(DB.ELEMENT_BEATS[ek]) == el:
+			weak = str(ek)
+	var facts := UI.hbox(6)
+	for fact in [["STRONG VS", beats, UI.GREEN], ["WEAK TO", weak, Color("#ff8a9a")]]:
+		if str(fact[1]) == "":
+			continue
+		var chip := UI.styled_panel(Color(0.03, 0.01, 0.07, 0.62), Color(fact[2] as Color, 0.55), 9, 1, 0)
+		var ch := UI.hbox(4)
+		chip.add_child(UI.margin(ch, 8, 3, 8, 3))
+		ch.add_child(UI.label(str(fact[0]), 11, fact[2] as Color, 2))
+		ch.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(str(fact[1]), "elem_light")), Vector2(16, 16)))
+		ch.add_child(UI.label(str(fact[1]), 11, DB.ELEMENT_COLOR.get(str(fact[1]), Color.WHITE), 2))
+		facts.add_child(chip)
+	_name_box.add_child(facts)
 	if h.get("oath", false):
 		_name_box.add_child(UI.label("♥ OATH SWORN", 16, Color("#ff8fb8"), 4))
 	for t in _tabs:
@@ -1161,7 +1191,7 @@ func _read_memory(ep: int) -> void:
 		var r := Game.read_bond_story(id, ep)
 		if not r.is_empty():
 			main.show_rewards("MEMORY UNLOCKED", r)
-		_render(), "lobby", false, id if ep == 2 else "", "%s_3" % id)
+		_render(), DB.hero_bg_key(id), false, id if ep == 2 else "", "%s_3" % id)   # memories play in her own realm
 
 func _render_bond() -> void:
 	var h := Game.hero(id)
