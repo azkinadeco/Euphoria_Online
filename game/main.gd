@@ -852,6 +852,32 @@ func _close_all_popups() -> void:
 var _fly_src: Array = []
 const BurstFx := preload("res://game/ui/burst_fx.gd")
 
+## A few icons arc from `from` (global position) up to the currency bar: what you just got "goes in".
+func fly_from(textures: Array, from: Vector2) -> void:
+	if Game.reduce_fx():
+		return
+	var dest := Vector2(get_viewport_rect().size.x - 240, 40)
+	var k := 0
+	for tex in textures.slice(0, 4):
+		var f := UI.tex_rect(tex, Vector2(48, 48))
+		f.size = Vector2(48, 48)
+		f.position = from - Vector2(24, 24) + Vector2(k * 18 - 18, 0)
+		f.z_index = 200
+		f.pivot_offset = Vector2(24, 24)
+		f.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		overlay.add_child(f)
+		var start := f.position
+		var mid := (start + dest) * 0.5 + Vector2(0, -140)
+		f.scale = Vector2(0.4, 0.4)
+		var tw := f.create_tween()
+		tw.tween_interval(k * 0.07)
+		tw.tween_property(f, "scale", Vector2(1.15, 1.15), 0.12).set_trans(Tween.TRANS_BACK)
+		tw.tween_method(func(p: float):
+			f.position = start.lerp(mid, p).lerp(mid.lerp(dest, p), p), 0.0, 1.0, 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		tw.parallel().tween_property(f, "scale", Vector2(0.45, 0.45), 0.5)
+		tw.tween_callback(f.queue_free)
+		k += 1
+
 ## Reward icons fly from the popup to the currency bar at the top-right.
 func _fly_icons() -> void:
 	var dest := Vector2(get_viewport_rect().size.x - 240, 40)

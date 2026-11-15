@@ -378,8 +378,10 @@ func _item_card(it: Dictionary) -> Control:
 		if err != "":
 			main.toast(err, UI.RED)
 		else:
-			Game.sfx("star_up")
+			Game.sfx("ui/reward")
 			main.toast("Purchased %s!" % it["name"], UI.GREEN)
+			var icons: Array = (it["give"] as Dictionary).keys().map(func(k): return Game.reward_icon(str(k)))
+			main.fly_from(icons, main.get_global_mouse_position())   # from where the buy button was tapped
 			_render(), "GoldButton" if (afford and not sold) else "", Vector2(0, 46))
 	if not free and not sold:
 		b.icon = Game.reward_icon(str(it["cur"]))

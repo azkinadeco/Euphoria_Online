@@ -1253,6 +1253,11 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2he. Update batch 203 — Pembelian di Shop terasa
+
+- `main.fly_from(textures, from)`: ikon melengkung dari titik ketuk ke bar mata uang (dipakai ulang dari animasi hadiah).
+- `shop.gd`: setelah membeli, ikon barang terbang + suara `ui/reward`.
+
 ## 2hd. Update batch 202 — Tombol ✕ di setiap popup
 
 - `main.popup()`: popup yang bisa ditutup mendapat tombol bulat ✕ (40 px) di pojok kanan atas, mengikuti posisi, skala dan alpha panel (termasuk animasi pop), dijaga tetap di dalam layar.
