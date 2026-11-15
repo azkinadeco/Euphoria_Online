@@ -42,7 +42,7 @@ const SCREENS := {
 }
 
 const BGM := {"story": "bgm_story", "formation": "bgm_story", "event": "bgm_story", "dungeon": "bgm_story", "tower": "bgm_story",
-	"arena": "bgm_story", "guild": "bgm_story", "worldboss": "bgm_story", "hunt": "bgm_story", "rift": "bgm_story", "training": "bgm_story", "room": "bgm_lobby", "date": "bgm_lobby", "photo": "bgm_lobby", "messenger": "bgm_lobby", "kitchen": "bgm_lobby", "gacha": "bgm_gacha", "title": "bgm_lobby"}
+	"arena": "bgm_story", "guild": "bgm_story", "worldboss": "bgm_story", "hunt": "bgm_story", "rift": "bgm_story", "training": "bgm_story", "room": "bgm_lobby", "date": "bgm_lobby", "photo": "bgm_lobby", "messenger": "bgm_lobby", "kitchen": "bgm_lobby", "gacha": "bgm_gacha", "title": ""}
 
 var host: Control
 var overlay: Control
@@ -80,8 +80,7 @@ func _ready() -> void:
 	Game.bond_up.connect(_on_bond_up)
 	Game.toast.connect(toast)
 	get_tree().set_auto_accept_quit(false)
-	Game.play_bgm()
-	go("title", {}, false)
+	go("title", {}, false)   # no music yet: the title and the studio logo are quiet (see BGM["title"])
 	# studio logo first (ONIX Studio), then the title screen that is already waiting underneath
 	if not get_tree().root.has_meta("no_intro"):
 		add_child(StudioIntro.new())
@@ -581,7 +580,11 @@ func go(name: String, params: Dictionary = {}, push: bool = true) -> void:
 	current_name = name
 	host.add_child(scr)
 	if name != "battle":
-		Game.play_bgm(BGM.get(name, "bgm_lobby"))
+		var song := str(BGM.get(name, "bgm_lobby"))
+		if song == "":
+			Game.stop_bgm()
+		else:
+			Game.play_bgm(song)
 	scr.build()
 	scr.modulate.a = 0.0
 	var dir := -1.0 if _going_back else 1.0

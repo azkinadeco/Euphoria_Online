@@ -88,7 +88,48 @@ def main():
     chime = mix(*[at(tone(f, 0.42, 0.003, 0.4, ((1, 1.0), (2, 0.35), (4, 0.12))), d) for f, d in notes])
     save('reward', mix(chime, at(tone(2637, 0.3, 0.002, 0.28) * 0.25, 0.2)), 0.5)
     # confirm / important action: one warm bell
+    save('studio_open', studio_open(), 0.62)
     save('confirm', mix(tone(660, 0.3, 0.003, 0.28, ((1, 1.0), (2, 0.4), (3, 0.15))), at(tone(990, 0.26, 0.003, 0.24) * 0.5, 0.05)), 0.45)
+
+
+def studio_open():
+    """ONIX Studio logo sting (~2.6 s): a soft low swell, a glassy open-fifth chord that blooms with the
+    light sweep, a few high sparkles and a long airy tail. Minimal: no melody, no drums."""
+    dur = 2.8
+    n = int(SR * dur)
+    t = np.arange(n) / SR
+    # sub swell: 55 Hz + 110 Hz, rising for 0.5 s then decaying
+    swell = (np.sin(2 * np.pi * 55 * t) * 0.6 + np.sin(2 * np.pi * 110 * t) * 0.3)
+    swell *= np.clip(t / 0.5, 0, 1) ** 2 * np.exp(-np.clip(t - 0.5, 0, None) * 1.6)
+    # glassy chord (A3, E4, A4, E5 with slight detune) entering at 0.35 s, bell-like decay
+    chord = np.zeros(n)
+    for f, a in [(220.0, 0.5), (329.6, 0.45), (440.0, 0.4), (659.3, 0.28), (880.0, 0.12)]:
+        for det in (-0.6, 0.6):
+            ph = 2 * np.pi * (f + det) * t
+            chord += a * (np.sin(ph) + 0.18 * np.sin(2 * ph) + 0.06 * np.sin(3.01 * ph))
+    st = 0.35
+    env_c = np.clip((t - st) / 0.06, 0, 1) * np.exp(-np.clip(t - st, 0, None) * 1.35)
+    chord *= env_c * 0.22
+    # sparkles: short high pings scattered over the bloom
+    rng = np.random.default_rng(3)
+    spark = np.zeros(n)
+    for k in range(9):
+        t0 = 0.45 + k * 0.11 + rng.uniform(0, 0.05)
+        f = rng.choice([1760.0, 2217.5, 2637.0, 3520.0])
+        e = np.clip((t - t0) / 0.004, 0, 1) * np.exp(-np.clip(t - t0, 0, None) * 9.0) * (t >= t0)
+        spark += np.sin(2 * np.pi * f * t) * e * (0.5 - k * 0.04)
+    spark *= 0.12
+    # airy tail: filtered noise that breathes in with the chord and fades out slowly
+    air = noise_sweep(dur, 3200, 1400, 0.35)
+    air *= np.clip((t - 0.3) / 0.5, 0, 1) * np.exp(-np.clip(t - 0.8, 0, None) * 1.2) * 0.35
+    y = swell * 0.55 + chord + spark + air
+    # gentle stereo-free reverb: a few decaying echoes
+    out = y.copy()
+    for d, g in [(0.061, 0.28), (0.113, 0.2), (0.187, 0.14), (0.293, 0.09)]:
+        k = int(SR * d)
+        out[k:] += y[:-k] * g
+    fade = np.clip((dur - t) / 0.4, 0, 1)
+    return out * fade
 
 
 if __name__ == '__main__':

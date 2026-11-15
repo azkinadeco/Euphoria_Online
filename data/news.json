@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zp",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Tap to enter, a logo sound, a quiet title",
+  "body": "Entering the game is smoother. When the download finishes, one tap on \"TAP TO ENTER\" takes you in: on Android that tap also switches to full screen and locks landscape, and on every device it lets the ONIX Studio logo play with its own short opening sound. The title screen is now quiet; the lobby music starts once you are actually in the game. On iPhone the loading screen explains how to get full screen (Add to Home Screen), and the turned page no longer bounces or leaves gaps when the browser bars move."
+ },
+ {
   "id": "n2026-11-15zo",
   "date": "2026-11-15",
   "tag": "UPDATE",

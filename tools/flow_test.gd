@@ -1913,6 +1913,10 @@ func _run() -> void:
 	for us_n in ["open", "close", "tab", "error", "reward", "confirm"]:
 		check(ResourceLoader.exists("res://audio/ui/%s.wav" % us_n), "ui sound %s exists" % us_n)
 
+	print("[ui sounds]")
+	for us_n in ["open", "close", "tab", "error", "reward", "confirm"]:
+		check(ResourceLoader.exists("res://audio/ui/%s.wav" % us_n), "ui sound %s exists" % us_n)
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

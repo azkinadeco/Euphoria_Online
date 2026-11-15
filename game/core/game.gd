@@ -449,6 +449,17 @@ func play_bgm(name: String = "bgm_lobby") -> void:
 	_bgm.volume_db = linear_to_db(maxf(0.001, float(s["settings"]["bgm"]) * 0.7))
 	_bgm.play()
 
+## Silence the music (title screen and studio logo: the lobby song only starts once you are in the game).
+func stop_bgm(fade: float = 0.6) -> void:
+	if not _bgm.playing:
+		return
+	var tw := create_tween()
+	tw.tween_property(_bgm, "volume_db", -40.0, fade)
+	tw.tween_callback(func():
+		_bgm.stop()
+		_bgm.stream = null
+		refresh_volume())
+
 ## Accessibility: no screen flashes, shakes or camera punches.
 func reduce_fx() -> bool:
 	return bool(s["settings"].get("reduce_fx", false))

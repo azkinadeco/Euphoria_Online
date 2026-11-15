@@ -25,11 +25,13 @@ PATCHES = [
      'const turned=' + ROT + ';const rw=turned?canvas.width/rect.height:canvas.width/rect.width;'
      'const rh=turned?canvas.height/rect.width:canvas.height/rect.height;'
      'const rel_pos_x=(turned?evt.movementY:evt.movementX)*rw;const rel_pos_y=(turned?-evt.movementX:evt.movementY)*rh;'),
-    # canvas size: the landscape frame
+    # canvas size: the landscape frame the page uses (window.__eoFrame, from the visual viewport)
     ('if(isFullscreen||wantsFullWindow){width=Math.floor(window.innerWidth*scale);height=Math.floor(window.innerHeight*scale)}',
-     'if(isFullscreen||wantsFullWindow){const turned=' + ROT + ';'
-     'width=Math.floor((turned?window.innerHeight:window.innerWidth)*scale);'
-     'height=Math.floor((turned?window.innerWidth:window.innerHeight)*scale)}'),
+     'if(isFullscreen||wantsFullWindow){const fr=window.__eoFrame?window.__eoFrame():[window.innerWidth,window.innerHeight];'
+     'width=Math.floor(fr[0]*scale);height=Math.floor(fr[1]*scale)}'),
+    # the shell's "tap to enter" wakes the audio inside that tap (sound for the studio logo)
+    ('function _godot_audio_resume(){',
+     'window.__eoAudio=function(){return GodotAudio};function _godot_audio_resume(){'),
 ]
 
 

@@ -1244,6 +1244,15 @@ tools/
 - Android: ketukan pertama meminta fullscreen + `screen.orientation.lock('landscape')`. iOS tidak punya API itu, jadi halaman tetap diputar.
 - Logo ONIX, layar judul dan game memakai stretch `canvas_items` + `expand`, jadi otomatis pas di rasio landscape apa pun.
 
+## 2go. Masuk game: gerbang "KETUK UNTUK MASUK", suara logo, judul tanpa musik
+
+- **Gerbang setelah unduhan** (shell web): saat engine siap, layar loading menampilkan "Siap!" dan tombol **KETUK UNTUK MASUK** (atau ketuk di mana saja). Ketukan itu: (1) membangunkan audio engine di dalam gestur (`window.__eoAudio`, ditambal oleh `web_landscape_patch.py`), (2) di Android meminta fullscreen + mengunci landscape, (3) menyetel `window.__eoEntered` — `studio_intro.gd` menunggu flag ini (`JavaScriptBridge.eval`) sebelum logo muncul. Browser melarang suara/fullscreen tanpa sentuhan pengguna, itu sebabnya logo dulu senyap dan HP tegak tidak bisa layar penuh.
+- iPhone (Safari, bukan mode Layar Utama): catatan cara layar penuh (Bagikan → Tambahkan ke Layar Utama). iOS tidak punya API fullscreen/kunci orientasi untuk halaman.
+- **Bingkai landscape dari `visualViewport`** (`window.__eoFrame`), dipakai halaman dan engine; halaman dikunci `position: fixed` + `overscroll-behavior: none` supaya tidak memantul / bergeser saat bar browser bergerak.
+- **Suara pembuka logo**: `audio/ui/studio_open.wav` (2,8 dtk; swell rendah, akord kaca A–E, kilau tinggi, ekor udara) dari `tools/gen_ui_audio.py`.
+- **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
+- Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
+
 ## 2gl. Update batch 186 — Pemeriksaan akhir dan publish
 
 - `tools/flow_test.gd` PASS, `tools/smoke.sh` PASS, `tools/audit.sh` PASS di 1280×720, kanvas sempit (1,23) dan 1560×720 X-LARGE, `tools/check_refs.py` bersih (81 ikon, 373 suara, 27 background).
