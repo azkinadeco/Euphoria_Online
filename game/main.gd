@@ -758,6 +758,35 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 	v.set_meta("layer", layer)
 	layer.set_meta("panel", p)
 	UI.pop(p)
+	if closable:
+		# a visible close button in the corner (tapping outside also closes; not everyone knows that)
+		var xb := Button.new()
+		xb.text = "✕"
+		xb.focus_mode = Control.FOCUS_NONE
+		xb.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		xb.custom_minimum_size = Vector2(40, 40)
+		xb.size = Vector2(40, 40)
+		xb.add_theme_font_size_override("font_size", 18)
+		xb.add_theme_color_override("font_color", Color("#ffe9b0"))
+		for st in ["normal", "hover", "pressed"]:
+			xb.add_theme_stylebox_override(st, UI.style(Color(0.12, 0.06, 0.2, 0.95 if st != "hover" else 1.0), Color(UI.GOLD, 0.7 if st == "normal" else 1.0), 20, 2, 0))
+		xb.tooltip_text = "Close"
+		xb.pressed.connect(func(): close_popup(layer))
+		layer.add_child(xb)
+		var place := func():
+			if is_instance_valid(xb) and is_instance_valid(p):
+				var r := p.get_global_rect()
+				var vr := get_viewport_rect().size
+				xb.global_position = Vector2(minf(r.end.x - 26, vr.x - 44), maxf(r.position.y - 14, 4.0))
+				xb.scale = p.scale
+				xb.modulate.a = p.modulate.a
+		p.item_rect_changed.connect(place)
+		var xt := Timer.new()
+		xt.wait_time = 0.05
+		xt.timeout.connect(place)
+		layer.add_child(xt)
+		xt.start()
+		place.call_deferred()
 	Game.sfx("ui/open")
 	# Safety net: a popup taller than the screen (long lists, big UI size) had its lower rows and its
 	# CLOSE button below the edge with no way to reach them. Its content scrolls instead.

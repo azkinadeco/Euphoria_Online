@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15b5",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "A close button on every popup",
+  "body": "Every popup that can be closed now has a round ✕ button in its top-right corner. Tapping outside still works, but not everyone knows that."
+ },
+ {
   "id": "n2026-11-15b4",
   "date": "2026-11-15",
   "tag": "UPDATE",

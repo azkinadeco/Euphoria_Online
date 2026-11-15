@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hd. Update batch 202 — Tombol ✕ di setiap popup
+
+- `main.popup()`: popup yang bisa ditutup mendapat tombol bulat ✕ (40 px) di pojok kanan atas, mengikuti posisi, skala dan alpha panel (termasuk animasi pop), dijaga tetap di dalam layar.
+
 ## 2hc. Update batch 201 — Tanda Star Up siap di kartu hero
 
 - `Game.star_up_ready(id)` (hanya membaca: shard + Star Stone universal + Gold cukup, belum bintang maks.).
