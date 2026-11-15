@@ -2891,6 +2891,45 @@ func fusable(type: String, tier: int) -> Array:
 			out.append(r)
 	return out
 
+## What FUSE ALL would do with the free runes and Gold on hand, lowest tier first (new runes are fused onward).
+## Returns {"steps": [[type, tier, times], ...], "fusions": n, "gold": cost}. Changes nothing.
+func fuse_all_plan() -> Dictionary:
+	var gold := amount("gold")
+	var steps: Array = []
+	var n_all := 0
+	var cost_all := 0
+	for type in DB.RUNES.keys():
+		var carry := 0
+		for tier in range(1, DB.RUNE_MAX_TIER):
+			var have := fusable(str(type), tier).size() + carry
+			var times := mini(have / 3, gold / (2000 * tier))
+			carry = times
+			if times <= 0:
+				continue
+			gold -= times * 2000 * tier
+			cost_all += times * 2000 * tier
+			n_all += times
+			steps.append([str(type), tier, times])
+	return {"steps": steps, "fusions": n_all, "gold": cost_all}
+
+## Runs fuse_all_plan(). Returns the plan plus {"made": {rune label: count}} for the runes left at the end.
+func fuse_all_runes() -> Dictionary:
+	var plan := fuse_all_plan()
+	var top := {}   # uid -> rune, the newest result of each chain
+	for st in plan["steps"]:
+		for i in int(st[2]):
+			var r := fuse_runes(str(st[0]), int(st[1]))
+			if r.is_empty():
+				break
+			top[int(r["uid"])] = r
+	var made := {}
+	for uid in top.keys():
+		if not rune_by_uid(int(uid)).is_empty():   # not consumed by a later fusion
+			var lab := DB.rune_label(top[uid])
+			made[lab] = int(made.get(lab, 0)) + 1
+	plan["made"] = made
+	return plan
+
 ## Combines 3 unequipped runes of the same type & tier into 1 of the next tier.
 func fuse_runes(type: String, tier: int) -> Dictionary:
 	if tier >= DB.RUNE_MAX_TIER:

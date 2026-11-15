@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15r",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Fuse All Runes",
+  "body": "The Bag has a FUSE ALL RUNES button on the Runes tab. It fuses every set of 3 free runes, lowest tier first, and keeps fusing the results upward as far as your Gold allows. A confirmation shows the number of fusions and the exact Gold cost before anything happens. Runes equipped on heroes are never used."
+ },
+ {
   "id": "n2026-11-15q",
   "date": "2026-11-15",
   "tag": "UPDATE",

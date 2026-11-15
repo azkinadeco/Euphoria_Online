@@ -1800,6 +1800,29 @@ func _run() -> void:
 	check(G.pins() == ["arena"], "pins of removed features are dropped")
 	G.s["pins"] = pn_save
 
+	print("[fuse all runes]")
+	var fr_save: Dictionary = G.s
+	G.s = G.new_state()
+	G._check_day()
+	var fr_type := str(DB.RUNES.keys()[0])
+	for fri in 9:
+		G.add_rune(fr_type, 1)
+	G.add_rune(fr_type, 2)
+	var fr_eq: Dictionary = G.add_rune(fr_type, 1)
+	G.equip_rune(int(fr_eq["uid"]), "shina", 0)
+	G.s["cur"]["gold"] = 100000
+	var fr_plan: Dictionary = G.fuse_all_plan()
+	check(int(fr_plan["fusions"]) == 4 and int(fr_plan["gold"]) == 3 * 2000 + 1 * 4000 and G.s["runes"].size() == 11, "plan: nine T1 make three T2, which with the spare T2 make one T3")
+	var fr_res: Dictionary = G.fuse_all_runes()
+	check(G.amount("gold") == 100000 - int(fr_plan["gold"]) and G.s["runes"].size() == 3, "fuse all spends the planned Gold and leaves T3 + T2 + the equipped rune")
+	check(G.s["runes"].filter(func(r): return int(r["tier"]) == 3).size() == 1 and not G.rune_by_uid(int(fr_eq["uid"])).is_empty() and str(G.rune_by_uid(int(fr_eq["uid"]))["owner"]) == "shina", "equipped runes are never used")
+	check((fr_res["made"] as Dictionary).size() == 2 and int(G.fuse_all_plan()["fusions"]) == 0, "result lists the runes made; nothing left to fuse")
+	for fri in 3:
+		G.add_rune(fr_type, 1)
+	G.s["cur"]["gold"] = 1000
+	check(int(G.fuse_all_plan()["fusions"]) == 0, "no Gold, no fusion")
+	G.s = fr_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

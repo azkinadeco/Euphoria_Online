@@ -421,6 +421,21 @@ func _render_detail() -> void:
 			_detail.add_child(fb)
 		else:
 			_detail.add_child(UI.label("Maximum tier!", 15, UI.GREEN))
+		var fplan := Game.fuse_all_plan()
+		var fa := UI.button("FUSE ALL RUNES  (%d)" % int(fplan["fusions"]), func():
+			main.confirm("Fuse every set of 3 free runes, lowest tier first?\n%d fusions for %s Gold. Equipped runes are not touched." % [int(fplan["fusions"]), Game.fmt(int(fplan["gold"]))], func():
+				var res := Game.fuse_all_runes()
+				Game.sfx("awakening")
+				_fuse_fx()
+				var parts: Array = []
+				for lab in (res["made"] as Dictionary).keys():
+					parts.append("%s ×%d" % [lab, int(res["made"][lab])])
+				main.toast("Fused: " + ", ".join(parts), UI.GOLD)
+				_sel = ""
+				_render(), "FUSE"), "", Vector2(0, 44))
+		fa.disabled = int(fplan["fusions"]) == 0
+		fa.tooltip_text = "Fuses all free runes upward, as far as your Gold allows"
+		_detail.add_child(fa)
 		if ro != "":
 			_detail.add_child(UI.button("VIEW HERO", func(): main.go("hero_detail", {"id": ro, "tab": "GEAR"}), "", Vector2(0, 44)))
 		return

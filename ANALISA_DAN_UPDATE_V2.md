@@ -1228,6 +1228,12 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fp. Update batch 164 — FUSE ALL untuk rune
+
+- `Game.fuse_all_plan()`: simulasi per tipe rune dari tier 1 ke atas; hasil fusi ikut dihitung untuk tier berikutnya, dibatasi Gold. Hasil `{steps: [[type, tier, times]], fusions, gold}` tanpa mengubah save.
+- `Game.fuse_all_runes()`: menjalankan rencana itu lewat `fuse_runes()`; `made` berisi rune hasil akhir. Rune yang sedang dipakai hero tidak disentuh (`fusable` hanya rune bebas).
+- `bag.gd` tab RUNES: tombol **FUSE ALL RUNES (n)** di panel detail, dengan konfirmasi jumlah fusi dan biaya Gold.
+
 ## 2fo. Update batch 163 — Arc 13: The Jade Masquerade
 
 - **4 chapter baru (49–52, total 52 chapter / 312 stage)**: The Thousand-Coin Ball (bos Masked Ning Er), The Endless Duel (Mei), The Hall of Verdicts (Angela), Maskmaker's Grotto (Scylla). Struktur sama dengan arc sebelumnya (intro, mid, mid2, boss_lines, outro, pilihan VN, field mod).
