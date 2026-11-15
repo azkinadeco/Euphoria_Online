@@ -473,6 +473,13 @@ body {
 	}
 }
 
+/* an error box is showing: clear the middle of the screen for it */
+#status.has-error #ld-caption,
+#status.has-error #status-tip,
+#status.has-error .ld-foot {
+	display: none;
+}
+
 #status-retry {
 	display: block;
 	margin: 0.8rem auto 0.2rem;
@@ -595,6 +602,7 @@ console.error = function() {
 			return String(a);
 		}).join(' ');
 		errDiv.style.display = 'block';
+		if (statusOverlay) { statusOverlay.classList.add('has-error'); }
 		errDiv.innerHTML += '<br><strong>⚠️ Log Error:</strong><br><pre style="font-size:10px; max-height:100px; overflow:auto;">' + args + '</pre>';
 	}
 	if (statusOverlay) {
@@ -613,6 +621,7 @@ window.onerror = function(msg, url, line, col, error) {
 	const statusOverlay = document.getElementById('status');
 	if (errDiv) {
 		errDiv.style.display = 'block';
+		if (statusOverlay) { statusOverlay.classList.add('has-error'); }
 		let detail = msg;
 		if (error && error.message) {
 			detail += '<br>Detail: ' + error.message;
@@ -632,6 +641,7 @@ window.addEventListener('unhandledrejection', function(event) {
 	const statusOverlay = document.getElementById('status');
 	if (errDiv) {
 		errDiv.style.display = 'block';
+		if (statusOverlay) { statusOverlay.classList.add('has-error'); }
 		const reason = event.reason ? (event.reason.stack || event.reason.message || event.reason) : 'Promise Rejection';
 		errDiv.innerHTML = '<strong>⚠️ Web Engine Rejection:</strong><br><pre style="font-size:10px; max-height:100px; overflow:auto;">' + reason + '</pre>';
 		addRetryButton();
@@ -826,6 +836,7 @@ const engine = new Engine(GODOT_CONFIG);
 			setStatusNotice('An unknown error occurred.');
 		}
 		setStatusMode('notice');
+		statusOverlay.classList.add('has-error');
 		addRetryButton();
 		initializing = false;
 	}

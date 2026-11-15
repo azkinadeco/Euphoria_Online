@@ -4,6 +4,15 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
 		<title>Euphoria Online</title>
+		<meta name="description" content="Euphoria Online — RPG gacha taktis: kumpulkan hero, susun formasi 3x3, dan taklukkan 52 chapter cerita. Main langsung di browser, tanpa instalasi.">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="Euphoria Online">
+		<meta property="og:description" content="RPG gacha taktis di browser: kumpulkan hero, susun formasi, taklukkan 52 chapter cerita.">
+		<meta property="og:image" content="loading/share.jpg">
+		<meta property="og:image:width" content="1200">
+		<meta property="og:image:height" content="630">
+		<meta name="twitter:card" content="summary_large_image">
+		<link rel="preload" as="image" href="loading/logo.webp">
 		<style>
 html, body, #canvas {
 	margin: 0;
@@ -13,7 +22,7 @@ html, body, #canvas {
 
 body {
 	color: white;
-	background-color: black;
+	background-color: #07040e;
 	overflow: hidden;
 	touch-action: none;
 }
@@ -26,128 +35,449 @@ body {
 	outline: none;
 }
 
-#status, #status-splash, #status-progress {
-	position: absolute;
-	left: 0;
-	right: 0;
-}
-
-#status, #status-splash {
-	top: 0;
-	bottom: 0;
-}
-
+/* ---------- loading screen ---------- */
 #status {
-	background: radial-gradient(ellipse at 50% 40%, #2a1748 0%, #120a22 55%, #07040e 100%);
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: hidden;
 	visibility: hidden;
+	background: radial-gradient(ellipse at 50% 40%, #2a1748 0%, #120a22 55%, #07040e 100%);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+	-webkit-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent;
+	cursor: pointer;
 }
 
-#status-splash {
-	max-height: 100%;
-	max-width: 100%;
-	margin: auto;
+#status * {
+	box-sizing: border-box;
 }
 
-#status-splash.show-image--false {
-	display: none;
+.ld-bg {
+	position: absolute;
+	top: -3%;
+	right: -3%;
+	bottom: -3%;
+	left: -3%;
+	background-size: cover;
+	background-position: center;
+	opacity: 0;
+	transition: opacity 1.4s ease;
+	animation: ld-drift 26s ease-in-out infinite alternate;
+	will-change: opacity, transform;
 }
 
-#status-splash.fullsize--true {
-	height: 100%;
-	width: 100%;
+.ld-bg.on {
+	opacity: 1;
+}
+
+@keyframes ld-drift {
+	from { transform: scale(1) translate3d(-1%, 0, 0); }
+	to { transform: scale(1.07) translate3d(1%, -1%, 0); }
+}
+
+.ld-shade {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background:
+		linear-gradient(90deg, rgba(7, 4, 14, 0.88) 0%, rgba(7, 4, 14, 0.55) 34%, rgba(7, 4, 14, 0) 62%),
+		linear-gradient(0deg, rgba(7, 4, 14, 0.96) 0%, rgba(7, 4, 14, 0.7) 20%, rgba(7, 4, 14, 0) 46%),
+		linear-gradient(180deg, rgba(7, 4, 14, 0.6) 0%, rgba(7, 4, 14, 0) 22%);
+}
+
+#ld-hero {
+	position: absolute;
+	right: 5vw;
+	bottom: 0;
+	height: 97vh;
+	width: 50vw;
 	object-fit: contain;
+	object-position: 50% 100%;
+	opacity: 0;
+	transform: translate3d(4vw, 0, 0);
+	transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+	filter: drop-shadow(0 0 26px rgba(10, 4, 24, 0.75));
+	pointer-events: none;
 }
 
-#status-splash.use-filter--false {
-	image-rendering: pixelated;
+#ld-hero.on {
+	opacity: 1;
+	transform: translate3d(0, 0, 0);
 }
 
-#status-progress, #status-notice {
-	display: none;
+#ld-logo {
+	position: absolute;
+	top: 3.5vh;
+	left: max(4vw, env(safe-area-inset-left, 0px));
+	width: 26vw;
+	max-width: 330px;
+	min-width: 150px;
+	height: auto;
+	filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.7));
+	pointer-events: none;
+}
+
+#ld-caption {
+	position: fixed;
+	left: max(5vw, env(safe-area-inset-left, 0px));
+	top: 46%;
+	width: 42vw;
+	max-width: 560px;
+	transform: translateY(-50%);
+	opacity: 0;
+	transition: opacity 0.7s ease;
+	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+	pointer-events: none;
+}
+
+#ld-caption.on {
+	opacity: 1;
+}
+
+#ld-elem {
+	display: inline-block;
+	padding: 3px 12px;
+	border-radius: 20px;
+	border: 1px solid currentColor;
+	background: rgba(7, 4, 14, 0.55);
+	font-size: clamp(9px, 1.9vh, 12px);
+	font-weight: 700;
+	letter-spacing: 2px;
+	text-shadow: none;
+}
+
+#ld-name {
+	margin-top: 1vh;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(24px, 8.4vh, 58px);
+	font-weight: 700;
+	line-height: 1.05;
+	color: #fff4d6;
+	letter-spacing: 1px;
+}
+
+#ld-title {
+	margin-top: 0.6vh;
+	font-size: clamp(9px, 2.1vh, 14px);
+	font-weight: 700;
+	letter-spacing: 3px;
+	color: #e8be62;
+}
+
+#ld-quote {
+	margin-top: 1.8vh;
+	padding-left: 12px;
+	border-left: 2px solid rgba(232, 190, 98, 0.8);
+	font-family: Georgia, "Times New Roman", serif;
+	font-style: italic;
+	font-size: clamp(11px, 2.9vh, 18px);
+	line-height: 1.4;
+	color: #efe6ff;
 }
 
 #status-container {
 	position: absolute;
-	bottom: 8%;
-	left: 5%;
-	right: 5%;
+	left: 0;
+	right: 0;
+	bottom: 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	/* notch phones (viewport-fit=cover): never under the camera cut-out or the home bar */
+	padding: 0 max(5vw, env(safe-area-inset-right, 0px)) calc(2.6vh + env(safe-area-inset-bottom, 0px)) max(5vw, env(safe-area-inset-left, 0px));
 	z-index: 10;
 }
 
+.ld-panel {
+	width: 100%;
+	max-width: 640px;
+}
+
+.ld-row {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+#status-text {
+	flex: 1;
+	min-width: 0;
+	color: #ffd479;
+	font-size: clamp(11px, 2.5vh, 14px);
+	font-weight: 600;
+	letter-spacing: 0.3px;
+	text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+	text-align: left;
+	padding-bottom: 3px;
+}
+
+#status-pct {
+	color: #ffe9b0;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: clamp(20px, 6vh, 36px);
+	font-weight: 700;
+	line-height: 1;
+	text-shadow: 0 0 14px rgba(255, 200, 110, 0.6), 0 2px 0 #3a1f00;
+	letter-spacing: 1px;
+	white-space: nowrap;
+}
+
 #status-progress {
-	width: 80%;
-	max-width: 420px;
-	height: 12px;
-	border-radius: 6px;
+	position: relative;
+	width: 100%;
+	height: clamp(8px, 1.9vh, 12px);
+	margin-top: 6px;
+	border-radius: 8px;
 	overflow: hidden;
-	appearance: none;
-	-webkit-appearance: none;
-	border: 1px solid rgba(232, 190, 98, 0.75);
+	border: 1px solid rgba(232, 190, 98, 0.8);
 	background: rgba(20, 10, 34, 0.85);
 	box-shadow: 0 0 18px rgba(255, 200, 110, 0.25);
 }
 
-#status-progress::-webkit-progress-bar {
-	background: rgba(20, 10, 34, 0.85);
-}
-
-#status-progress::-webkit-progress-value {
-	background: linear-gradient(90deg, #8a4fd8, #e8be62, #fff1c4);
-	border-radius: 6px;
+#status-fill {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 0%;
+	border-radius: 8px;
+	background: linear-gradient(90deg, #8a4fd8, #e8be62 70%, #fff1c4);
 	box-shadow: 0 0 10px #ffd479;
+	transition: width 0.35s ease-out;
 }
-#status-progress::-moz-progress-bar {
-	background: linear-gradient(90deg, #8a4fd8, #e8be62, #fff1c4);
-}
-#status-pct {
-	color: #ffe9b0;
-	font-family: Georgia, "Times New Roman", serif;
-	font-size: 34px;
-	font-weight: 700;
-	margin-bottom: 8px;
-	text-shadow: 0 0 14px rgba(255, 200, 110, 0.6), 0 2px 0 #3a1f00;
-	letter-spacing: 1px;
-}
-#status-tip {
-	color: #e8dcff;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-	font-size: 13px;
-	margin-top: 14px;
-	max-width: 520px;
-	text-align: center;
-	min-height: 2.6em;
-	transition: opacity 0.5s;
-	padding: 8px 14px;
-	border-radius: 10px;
-	background: rgba(42, 23, 72, 0.6);
-	border: 1px solid rgba(232, 190, 98, 0.35);
-}
-#status-tip b { color: #ffd479; }
 
-#status-text {
-	color: #ffd479;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-	font-size: 13px;
-	font-weight: 600;
-	margin-top: 10px;
-	letter-spacing: 0.5px;
-	text-shadow: 0 0 10px rgba(255, 200, 110, 0.45);
-	text-align: center;
+#status-fill::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 90px;
+	background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0));
+	animation: ld-shine 1.8s linear infinite;
+}
+
+@keyframes ld-shine {
+	from { transform: translateX(-100px); }
+	to { transform: translateX(660px); }
+}
+
+#status-progress.busy #status-fill {
+	width: 34% !important;
+	transition: none;
+	animation: ld-busy 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes ld-busy {
+	from { left: 0%; }
+	to { left: 66%; }
 }
 
 #status-detail {
-	color: #b8a8d8;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-	font-size: 11px;
-	margin-top: 4px;
+	margin-top: 6px;
+	color: #cfc2ea;
+	font-size: clamp(9px, 2.1vh, 12px);
+	text-align: left;
+	text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+#status-tip {
+	margin-top: 1.6vh;
+	padding: 7px 14px;
+	min-height: 2.2em;
+	border-radius: 10px;
+	background: rgba(42, 23, 72, 0.72);
+	border: 1px solid rgba(232, 190, 98, 0.35);
+	color: #e8dcff;
+	font-size: clamp(10px, 2.4vh, 13px);
+	line-height: 1.35;
 	text-align: center;
+	transition: opacity 0.45s;
+}
+
+#status-tip b {
+	color: #ffd479;
+}
+
+.ld-foot {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 1.3vh;
+	color: #9d8fc0;
+	font-size: clamp(8px, 1.9vh, 11px);
+}
+
+#ld-dots {
+	display: flex;
+	gap: 5px;
+}
+
+#ld-dots i {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.28);
+	transition: background 0.4s, transform 0.4s;
+}
+
+#ld-dots i.on {
+	background: #ffd479;
+	transform: scale(1.35);
+}
+
+#ld-rotate {
+	display: none;
+}
+
+/* portrait phones: hero in the middle, everything centred */
+@media (max-aspect-ratio: 1/1) {
+	.ld-shade {
+		background:
+			linear-gradient(0deg, rgba(7, 4, 14, 0.97) 0%, rgba(7, 4, 14, 0.85) 30%, rgba(7, 4, 14, 0) 58%),
+			linear-gradient(180deg, rgba(7, 4, 14, 0.75) 0%, rgba(7, 4, 14, 0) 20%);
+	}
+	#ld-logo {
+		top: calc(2.5vh + env(safe-area-inset-top, 0px));
+		left: 50%;
+		width: 58vw;
+		max-width: 320px;
+		transform: translateX(-50%);
+	}
+	#ld-hero {
+		left: 0;
+		right: 0;
+		bottom: 30vh;
+		width: 100vw;
+		height: 56vh;
+		transform: translate3d(0, 2vh, 0);
+	}
+	#ld-caption {
+		position: static;
+		width: auto;
+		max-width: none;
+		margin-bottom: 2vh;
+		transform: none;
+		text-align: center;
+	}
+	#status-container {
+		padding-left: 6vw;
+		padding-right: 6vw;
+	}
+	#ld-name {
+		font-size: clamp(24px, 4.6vh, 44px);
+	}
+	#ld-title {
+		font-size: clamp(9px, 1.4vh, 13px);
+	}
+	#ld-elem {
+		font-size: clamp(9px, 1.3vh, 12px);
+	}
+	#ld-quote {
+		margin-top: 1vh;
+		padding-left: 0;
+		border-left: 0;
+		font-size: clamp(11px, 1.8vh, 16px);
+	}
+	#status-text { font-size: clamp(11px, 1.6vh, 14px); }
+	#status-pct { font-size: clamp(22px, 3.6vh, 36px); }
+	#status-detail { font-size: clamp(9px, 1.4vh, 12px); }
+	#status-tip { font-size: clamp(10px, 1.6vh, 13px); margin-top: 1.2vh; }
+	.ld-foot { font-size: clamp(8px, 1.3vh, 11px); margin-top: 1vh; }
+	#ld-rotate { display: inline; }
+	#ld-hint { display: none; }
+}
+
+/* very low landscape screens (phones): drop the extras so nothing overlaps */
+@media (min-aspect-ratio: 1/1) and (max-height: 330px) {
+	#status-detail, .ld-foot { display: none; }
+	#ld-caption { top: 42%; }
+}
+
+/* ---------- "rotate your phone" (after loading; the game is landscape only) ---------- */
+#rotate-hint {
+	display: none;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 50;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 22px;
+	padding: 24px;
+	text-align: center;
+	background: radial-gradient(ellipse at 50% 40%, #2a1748 0%, #120a22 55%, #07040e 100%);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+	color: #efe6ff;
+}
+
+#rotate-hint img {
+	width: 62vw;
+	max-width: 300px;
+	height: auto;
+}
+
+.rh-phone {
+	width: 64px;
+	height: 112px;
+	border: 3px solid #e8be62;
+	border-radius: 12px;
+	box-shadow: 0 0 22px rgba(255, 200, 110, 0.35);
+	animation: rh-turn 2.4s ease-in-out infinite;
+}
+
+.rh-phone::after {
+	content: "";
+	display: block;
+	width: 18px;
+	height: 3px;
+	margin: 98px auto 0;
+	border-radius: 2px;
+	background: #e8be62;
+}
+
+@keyframes rh-turn {
+	0%, 20% { transform: rotate(0deg); }
+	60%, 100% { transform: rotate(-90deg); }
+}
+
+.rh-title {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 22px;
+	font-weight: 700;
+	color: #ffe9b0;
+}
+
+.rh-text {
+	max-width: 300px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #cfc2ea;
+}
+
+/* only on touch screens held upright, and only once the game is running */
+@media (orientation: portrait) and (pointer: coarse) {
+	body.game-on #rotate-hint {
+		display: flex;
+	}
+}
+
+/* an error box is showing: clear the middle of the screen for it */
+#status.has-error #ld-caption,
+#status.has-error #status-tip,
+#status.has-error .ld-foot {
+	display: none;
 }
 
 #status-retry {
@@ -164,20 +494,27 @@ body {
 }
 
 #status-notice {
-	background-color: rgba(91, 57, 67, 0.95);
-	border-radius: 0.5rem;
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 86%;
+	max-width: 520px;
+	max-height: 80%;
+	overflow: auto;
+	background-color: rgba(60, 30, 48, 0.96);
+	border-radius: 12px;
 	border: 1px solid #ff4b6e;
 	color: #fff;
-	font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 	line-height: 1.4;
-	margin: 1rem;
-	max-width: 90%;
 	padding: 1rem;
 	text-align: left;
 	font-size: 12px;
 	word-break: break-word;
 	z-index: 20;
-	box-shadow: 0 4px 20px rgba(255, 75, 110, 0.4);
+	box-shadow: 0 4px 24px rgba(255, 75, 110, 0.4);
+	cursor: default;
 }
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="Euphoria_v2.icon.png" />
@@ -199,15 +536,40 @@ body {
 		</noscript>
 
 		<div id="status">
-			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="Euphoria_v2.png" alt="">
+			<div class="ld-bg" id="ld-bg-a"></div>
+			<div class="ld-bg" id="ld-bg-b"></div>
+			<img id="ld-hero" alt="">
+			<div class="ld-shade"></div>
+			<img id="ld-logo" src="loading/logo.webp" alt="Euphoria Online" onerror="this.style.display='none'">
 			<div id="status-container">
-				<div id="status-pct">0%</div>
-				<progress id="status-progress"></progress>
-				<div id="status-text">Menyiapkan Euphoria Online...</div>
-				<div id="status-detail">Memuat data game...</div>
-				<div id="status-tip"></div>
+				<div class="ld-panel">
+					<div id="ld-caption">
+						<span id="ld-elem"></span>
+						<div id="ld-name"></div>
+						<div id="ld-title"></div>
+						<div id="ld-quote"></div>
+					</div>
+					<div class="ld-row">
+						<div id="status-text">Menyiapkan Euphoria Online...</div>
+						<div id="status-pct">0%</div>
+					</div>
+					<div id="status-progress" class="busy"><div id="status-fill"></div></div>
+					<div id="status-detail">Memuat data game...</div>
+					<div id="status-tip"></div>
+					<div class="ld-foot">
+						<span id="ld-dots"></span>
+						<span id="ld-hint">Ketuk layar untuk ganti hero</span><span id="ld-rotate">Putar ponsel ke landscape untuk bermain</span>
+					</div>
+				</div>
 			</div>
 			<div id="status-notice"></div>
+		</div>
+
+		<div id="rotate-hint">
+			<img src="loading/logo.webp" alt="Euphoria Online" onerror="this.style.display='none'">
+			<div class="rh-phone"></div>
+			<div class="rh-title">Putar ponselmu</div>
+			<div class="rh-text">Euphoria Online dimainkan dalam mode landscape. Putar ponsel ke samping untuk melanjutkan — permainanmu tetap berjalan.</div>
 		</div>
 
 		<script>
@@ -243,6 +605,7 @@ console.error = function() {
 			return String(a);
 		}).join(' ');
 		errDiv.style.display = 'block';
+		if (statusOverlay) { statusOverlay.classList.add('has-error'); }
 		errDiv.innerHTML += '<br><strong>⚠️ Log Error:</strong><br><pre style="font-size:10px; max-height:100px; overflow:auto;">' + args + '</pre>';
 	}
 	if (statusOverlay) {
@@ -261,6 +624,7 @@ window.onerror = function(msg, url, line, col, error) {
 	const statusOverlay = document.getElementById('status');
 	if (errDiv) {
 		errDiv.style.display = 'block';
+		if (statusOverlay) { statusOverlay.classList.add('has-error'); }
 		let detail = msg;
 		if (error && error.message) {
 			detail += '<br>Detail: ' + error.message;
@@ -280,6 +644,7 @@ window.addEventListener('unhandledrejection', function(event) {
 	const statusOverlay = document.getElementById('status');
 	if (errDiv) {
 		errDiv.style.display = 'block';
+		if (statusOverlay) { statusOverlay.classList.add('has-error'); }
 		const reason = event.reason ? (event.reason.stack || event.reason.message || event.reason) : 'Promise Rejection';
 		errDiv.innerHTML = '<strong>⚠️ Web Engine Rejection:</strong><br><pre style="font-size:10px; max-height:100px; overflow:auto;">' + reason + '</pre>';
 		addRetryButton();
@@ -468,13 +833,134 @@ if ('serviceWorker' in navigator) {
 }
 
 // serviceWorker dimatikan: Safari iOS tidak sanggup cache .pck ratusan MB di CacheStorage
-const GODOT_CONFIG = Object.assign({"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"Euphoria_v2","experimentalVK":false,"fileSizes":{"Euphoria_v2.pck":133730228,"Euphoria_v2.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4,"serviceWorker":"Euphoria_v2.service.worker.js"}, { serviceWorker: '' });
+const GODOT_CONFIG = Object.assign({"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"Euphoria_v2","experimentalVK":false,"fileSizes":{"Euphoria_v2.pck":133749636,"Euphoria_v2.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4,"serviceWorker":"Euphoria_v2.service.worker.js"}, { serviceWorker: '' });
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
 (function () {
 	const statusOverlay = document.getElementById('status');
 	const statusProgress = document.getElementById('status-progress');
+	const statusFill = document.getElementById('status-fill');
+	const statusContainer = document.getElementById('status-container');
+
+	// ---- slideshow: an in-game map with a hero in front of it, so the wait is not a blank bar ----
+	const SLIDES = [
+		{ id: 'shina', name: 'Shina', title: 'DRAGONIC FLAME MONARCH', elem: 'FIRE', quote: 'The dragon flame inside me burns for you alone, Commander.' },
+		{ id: 'angela', name: 'Angela', title: 'SERAPHIC VALKYRIE', elem: 'LIGHT', quote: 'The heavens sent me to guard you. ...I volunteered, actually.' },
+		{ id: 'abadonia', name: 'Abadonia', title: 'ABYSSAL LION QUEEN', elem: 'DARK', quote: 'Kneel before the Lion Queen... or ride beside her.' },
+		{ id: 'mei', name: 'Mei', title: 'CRIMSON BLADE BUNNY', elem: 'FIRE', quote: 'Don\'t stare at the ears. Stare at the sword. It\'s sharper.' },
+		{ id: 'zennyo', name: 'Zennyo Ryuo', title: 'DRAGON KING\'S DAUGHTER', elem: 'FIRE', quote: 'My little dragons like you. That\'s rare.' },
+		{ id: 'morana', name: 'Morana', title: 'THE BLACK PRIESTESS', elem: 'DARK', quote: 'Confess, Commander. ...No, not your sins. Your feelings.' },
+		{ id: 'ninger', name: 'Ning Er', title: 'PRINCESS OF A THOUSAND COINS', elem: 'EARTH', quote: 'Every coin I own says you\'ll have a lucky day!' },
+		{ id: 'atalanta', name: 'Atalanta', title: 'THUNDERSTEP HUNTRESS', elem: 'LIGHTNING', quote: 'Try to keep up, Commander! Ah, too slow~' },
+	];
+	const ELEM_COLOR = { FIRE: '#ff6b4a', WATER: '#4ab3ff', ICE: '#9fe3ff', WIND: '#5ee39a', LIGHTNING: '#b78cff', EARTH: '#d9a35b', LIGHT: '#ffe27a', DARK: '#b072ff', CHAOS: '#ff5fb4' };
+	const SLIDE_MS = 7000;
+	const bgs = [document.getElementById('ld-bg-a'), document.getElementById('ld-bg-b')];
+	const heroEl = document.getElementById('ld-hero');
+	const capEl = document.getElementById('ld-caption');
+	const dotsEl = document.getElementById('ld-dots');
+	let slideIdx = Math.floor(Math.random() * SLIDES.length);
+	let bgTurn = 0;
+	let slideTimer = null;
+	let slideBusy = false;
+	let slidesStopped = false;
+
+	SLIDES.forEach(function () { dotsEl.appendChild(document.createElement('i')); });
+
+	function loadImage(src) {
+		return new Promise(function (resolve) {
+			const im = new Image();
+			im.onload = function () { resolve(true); };
+			im.onerror = function () { resolve(false); };
+			im.src = src;
+		});
+	}
+
+	function showSlide(i) {
+		if (slideBusy || slidesStopped) {
+			return;
+		}
+		slideBusy = true;
+		const sl = SLIDES[i];
+		const bgSrc = 'loading/bg_' + sl.id + '.jpg';
+		const heroSrc = 'loading/hero_' + sl.id + '.webp';
+		Promise.all([loadImage(bgSrc), loadImage(heroSrc)]).then(function (ok) {
+			if (slidesStopped) {
+				return;
+			}
+			heroEl.classList.remove('on');
+			capEl.classList.remove('on');
+			if (ok[0]) {
+				const next = bgs[bgTurn % 2];
+				const prev = bgs[(bgTurn + 1) % 2];
+				next.style.backgroundImage = 'url("' + bgSrc + '")';
+				next.classList.add('on');
+				prev.classList.remove('on');
+				bgTurn++;
+			}
+			setTimeout(function () {
+				if (slidesStopped) {
+					return; // the game started meanwhile: the loading screen is gone
+				}
+				if (ok[1]) {
+					heroEl.src = heroSrc;
+					heroEl.classList.add('on');
+				}
+				const col = ELEM_COLOR[sl.elem] || '#ffe27a';
+				const elemEl = document.getElementById('ld-elem');
+				elemEl.textContent = sl.elem;
+				elemEl.style.color = col;
+				document.getElementById('ld-name').textContent = sl.name;
+				document.getElementById('ld-title').textContent = sl.title;
+				document.getElementById('ld-quote').textContent = '“' + sl.quote + '”';
+				capEl.classList.add('on');
+				for (let d = 0; d < dotsEl.children.length; d++) {
+					dotsEl.children[d].className = d === i ? 'on' : '';
+				}
+				slideBusy = false;
+				// warm the cache for the next one
+				const nx = SLIDES[(i + 1) % SLIDES.length];
+				loadImage('loading/bg_' + nx.id + '.jpg');
+				loadImage('loading/hero_' + nx.id + '.webp');
+			}, 520);
+		});
+	}
+
+	function nextSlide() {
+		if (slideBusy) {
+			return;
+		}
+		slideIdx = (slideIdx + 1) % SLIDES.length;
+		showSlide(slideIdx);
+		clearInterval(slideTimer);
+		slideTimer = setInterval(nextSlide, SLIDE_MS);
+	}
+
+	function startSlides() {
+		showSlide(slideIdx);
+		slideTimer = setInterval(nextSlide, SLIDE_MS);
+		statusOverlay.addEventListener('click', function (ev) {
+			if (ev.target && ev.target.closest && ev.target.closest('#status-notice')) {
+				return;
+			}
+			nextSlide();
+		});
+	}
+
+	function stopSlides() {
+		slidesStopped = true;
+		clearInterval(slideTimer);
+	}
+
+	function setBar(frac) {
+		if (frac === null) {
+			statusProgress.classList.add('busy');
+			return;
+		}
+		statusProgress.classList.remove('busy');
+		statusFill.style.width = (Math.max(0, Math.min(1, frac)) * 100).toFixed(1) + '%';
+	}
 	const statusNotice = document.getElementById('status-notice');
 	const statusText = document.getElementById('status-text');
 	const statusDetail = document.getElementById('status-detail');
@@ -487,14 +973,14 @@ const engine = new Engine(GODOT_CONFIG);
 			return;
 		}
 		if (mode === 'hidden') {
+			stopSlides();
 			statusOverlay.remove();
+			document.body.classList.add('game-on');
 			initializing = false;
 			return;
 		}
 		statusOverlay.style.visibility = 'visible';
-		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
-		if (statusText) statusText.style.display = mode === 'progress' ? 'block' : 'none';
-		if (statusDetail) statusDetail.style.display = mode === 'progress' ? 'block' : 'none';
+		statusContainer.style.display = mode === 'progress' ? 'flex' : 'none';
 		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
 		statusMode = mode;
 	}
@@ -520,6 +1006,7 @@ const engine = new Engine(GODOT_CONFIG);
 			setStatusNotice('An unknown error occurred.');
 		}
 		setStatusMode('notice');
+		statusOverlay.classList.add('has-error');
 		addRetryButton();
 		initializing = false;
 	}
@@ -533,7 +1020,8 @@ const engine = new Engine(GODOT_CONFIG);
 		displayFailureNotice(missingMsg + missing.join('\n'));
 	} else {
 		setStatusMode('progress');
-		statusProgress.removeAttribute('value');
+		setBar(null);
+		startSlides();
 		statusText.textContent = 'Memulai unduhan aset game...';
 		statusDetail.textContent = 'Pertama kali agak lama — berikutnya jauh lebih cepat (tersimpan di cache).';
 		// rotating gameplay tips while loading
@@ -547,6 +1035,13 @@ const engine = new Engine(GODOT_CONFIG);
 			'<b>Tip:</b> Di <b>Starlight Rift</b>, Blessing menumpuk sepanjang run. Satu kekalahan mengakhiri run.',
 			'<b>Tip:</b> Setiap hero punya <b>ruangan favorit</b> di Private Room — Bond dua kali lipat di sana.',
 			'<b>Tip:</b> Ketuk cincin <b>TODAY</b> di lobby untuk melihat semua aktivitas harian.',
+			'<b>Tip:</b> <b>COLLECT ALL</b> di Today\'s Board mengambil semua hadiah yang siap sekaligus.',
+			'<b>Tip:</b> Pasang <b>Wishlist</b> di banner Standard — SSR pilihanmu lebih sering muncul.',
+			'<b>Tip:</b> Coba tim barumu di <b>Training Ground</b> dulu: gratis, tanpa stamina.',
+			'<b>Tip:</b> Tombol <b>▲ BOOST</b> di Formation menaikkan level seluruh tim sekali ketuk.',
+			'<b>Tip:</b> Kalah bertahan di Arena? Balas lewat <b>REVENGE</b> — gratis dan memberi RP ekstra.',
+			'<b>Tip:</b> Save-mu dicadangkan otomatis tiap hari. Lihat <b>Automatic Backups</b> di Settings.',
+			'<b>Tip:</b> Tekan ☆ pada menu favoritmu untuk <b>menyematkannya</b> di baris teratas MENU.',
 		];
 		const tipEl = document.getElementById('status-tip');
 		let tipIdx = Math.floor(Math.random() * TIPS.length);
@@ -555,8 +1050,11 @@ const engine = new Engine(GODOT_CONFIG);
 			setTimeout(function () { tipEl.innerHTML = TIPS[tipIdx % TIPS.length]; tipIdx++; tipEl.style.opacity = 1; }, 450);
 		}
 		nextTip();
-		const tipTimer = setInterval(nextTip, 4000);
+		const tipTimer = setInterval(nextTip, 6000);
 		const pctEl = document.getElementById('status-pct');
+		function pct100(current, total) {
+			return Math.min(100, Math.round((current / total) * 100));
+		}
 		let reconnecting = false;
 		if (window.__euphoriaNet) {
 			window.__euphoriaNet.onRetry = function (hidden, fails) {
@@ -572,8 +1070,7 @@ const engine = new Engine(GODOT_CONFIG);
 		engine.startGame({
 			'onProgress': function (current, total) {
 				if (current > 0 && total > 0) {
-					statusProgress.value = current;
-					statusProgress.max = total;
+					setBar(pct100(current, total) >= 100 ? null : current / total);
 					const pct = Math.min(100, Math.round((current / total) * 100));
 					const curMB = (current / (1024 * 1024)).toFixed(1);
 					const totMB = (total / (1024 * 1024)).toFixed(1);
@@ -587,8 +1084,7 @@ const engine = new Engine(GODOT_CONFIG);
 						statusDetail.textContent = 'Memulai engine grafis, mohon tunggu beberapa detik...';
 					}
 				} else {
-					statusProgress.removeAttribute('value');
-					statusProgress.removeAttribute('max');
+					setBar(null);
 				}
 			},
 		}).then(() => {
