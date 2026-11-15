@@ -14,8 +14,8 @@ config/name="Euphoria Online"
 run/main_scene="res://game/main.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://art/brand/app_icon_256.png"
-boot_splash/bg_color=Color(0.027, 0.016, 0.051, 1)
-boot_splash/image="res://art/brand/boot_splash.png"
+boot_splash/bg_color=Color(0.035, 0.035, 0.051, 1)
+boot_splash/image="res://art/brand/onix_intro.png"
 boot_splash/fullsize=true
 boot_splash/use_filter=true
 

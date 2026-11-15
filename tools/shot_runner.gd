@@ -25,6 +25,8 @@ func _process(_d: float) -> bool:
 			var g: Node = load("res://game/core/game.gd").new()
 			g.name = "Game"
 			root.add_child(g)
+		if OS.get_environment("INTRO") == "":
+			root.set_meta("no_intro", true)   # tests start on the title screen; INTRO=1 keeps the studio logo
 		main_node = load("res://game/main.tscn").instantiate()
 		root.add_child(main_node)
 	if frame == 30:

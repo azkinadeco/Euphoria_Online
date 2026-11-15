@@ -82,6 +82,9 @@ func _ready() -> void:
 	get_tree().set_auto_accept_quit(false)
 	Game.play_bgm()
 	go("title", {}, false)
+	# studio logo first (ONIX Studio), then the title screen that is already waiting underneath
+	if not get_tree().root.has_meta("no_intro"):
+		add_child(StudioIntro.new())
 
 ## Called by the title screen.
 func enter_game() -> void:
@@ -536,6 +539,7 @@ func _notification(what: int) -> void:
 		back()
 
 const TapFX = preload("res://game/ui/tap_fx.gd")
+const StudioIntro = preload("res://game/ui/studio_intro.gd")
 var _tap_fx: Control
 
 ## Every tap leaves a small spark where the finger landed (cosmetic; input is not consumed).

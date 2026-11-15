@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gm. Intro logo studio (ONIX Studio)
+
+- Urutan masuk: unduhan (shell web) → boot splash engine → **intro ONIX Studio** → layar judul.
+- `art/brand/onix_intro.png` (1280×720): logo versi gelap dari `ONIX/onix studio logo aps/BLACK_ONIX_LANSCAPE.JPG`, dipotong ke area logo, lebar 640 px (50% layar), tepi dilebur ke warna datar `#09090d`.
+- Boot splash engine memakai gambar dan warna latar yang sama, jadi tidak ada lompatan antara splash dan intro. Splash lama disimpan sebagai `art/brand/boot_splash_euphoria_backup.png`.
+- `game/ui/studio_intro.gd` + `studio_intro.gdshader`: jeda 0,35 dtk, sapuan cahaya 0,95 dtk (hanya mencerahkan bagian krom), zoom halus, pudar 0,55 dtk; total ±2,5 dtk; ketuk untuk lewati; Reduce effects = tanpa sapuan. Ditambahkan di `main._ready` di atas layar judul yang sudah siap.
+- Tes: `shot_runner` melewati intro (meta `no_intro`); `INTRO=1` untuk menampilkannya.
+
 ## 2gl. Update batch 186 — Pemeriksaan akhir dan publish
 
 - `tools/flow_test.gd` PASS, `tools/smoke.sh` PASS, `tools/audit.sh` PASS di 1280×720, kanvas sempit (1,23) dan 1560×720 X-LARGE, `tools/check_refs.py` bersih (81 ikon, 373 suara, 27 background).
