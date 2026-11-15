@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15t",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Hero Class Filter",
+  "body": "The Heroes screen has a class filter next to the element filter: ANY, TANK, DPS, MAGE and SUPPORT. It combines with the rarity tabs, the element filter and sorting, so you can ask for things like \"owned Water supports\" in two taps. Hold over a class to see which roles it covers."
+ },
+ {
   "id": "n2026-11-15s",
   "date": "2026-11-15",
   "tag": "UPDATE",

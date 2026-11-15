@@ -100,6 +100,13 @@ const PASSIVES := {
 }
 
 ## Plain-language battle role for each class: [category tag, colour, one-line job description].
+## Four broad classes for the Heroes filter.
+const ROLE_GROUPS := ["TANK", "DPS", "MAGE", "SUPPORT"]
+const ROLE_GROUP := {"TANK": "TANK", "KNIGHT": "TANK", "PALADIN": "TANK", "WARRIOR": "DPS", "ASSASSIN": "DPS", "RANGER": "DPS",
+	"MAGE": "MAGE", "WARLOCK": "MAGE", "HEALER": "SUPPORT", "BUFFER": "SUPPORT"}
+static func role_group(id: String) -> String:
+	return str(ROLE_GROUP.get(role_of(id), "DPS"))
+
 const ROLE_INFO := {
 	"TANK": ["TANK", "#7fb8ff", "Front-line wall: soaks hits and protects the team."],
 	"KNIGHT": ["TANK", "#7fb8ff", "Armoured guard: holds the line and shields allies."],

@@ -4,6 +4,7 @@ extends Screen
 var _grid: GridContainer
 var _filter := "ALL"
 var _elem := ""
+var _role := ""
 var _elem_bar: HBoxContainer
 var _sort := "power"
 var _tabs: Array = []
@@ -63,6 +64,16 @@ func build() -> void:
 			eb.tooltip_text = el
 		eb.pressed.connect(func(): Game.sfx("ui_click"); _elem = e2; _rebuild())
 		_elem_bar.add_child(eb)
+	# class filter on the same row, right side
+	_elem_bar.add_child(UI.spacer())
+	for rg in [""] + DB.ROLE_GROUPS:
+		var rkey: String = rg
+		var rb := UI.button("ANY" if rg == "" else rg, func(): Game.sfx("ui_click"); _role = rkey; _rebuild(), "TabButton", Vector2(60 if rg == "" else 82, 38))
+		rb.tooltip_text = "Any class" if rg == "" else {"TANK": "Tank, Knight, Paladin", "DPS": "Warrior, Assassin, Ranger", "MAGE": "Mage, Warlock", "SUPPORT": "Healer, Buffer"}[rg]
+		rb.toggle_mode = true
+		rb.add_theme_font_size_override("font_size", 13)
+		rb.set_meta("role", rg)
+		_elem_bar.add_child(rb)
 	_grid = GridContainer.new()
 	_grid.add_theme_constant_override("h_separation", 14)
 	_grid.add_theme_constant_override("v_separation", 14)
@@ -270,7 +281,10 @@ func _rebuild() -> void:
 		t.button_pressed = t.text == _filter
 	if is_instance_valid(_elem_bar):
 		for eb in _elem_bar.get_children():
-			eb.button_pressed = str(eb.get_meta("elem")) == _elem
+			if eb.has_meta("elem"):
+				eb.button_pressed = str(eb.get_meta("elem")) == _elem
+			elif eb.has_meta("role"):
+				eb.button_pressed = str(eb.get_meta("role")) == _role
 	for c in _grid.get_children():
 		c.queue_free()
 	var ids: Array = []
@@ -281,6 +295,8 @@ func _rebuild() -> void:
 		if _filter in ["SSR", "SR", "R"] and DB.rarity_of(id) != _filter:
 			continue
 		if _elem != "" and DB.ELEMENT_GROUP.get(DB.element_of(id), "") != _elem:
+			continue
+		if _role != "" and DB.role_group(id) != _role:
 			continue
 		ids.append(id)
 	ids.sort_custom(func(a, b):
@@ -302,4 +318,7 @@ func _rebuild() -> void:
 			main.go("hero_detail", {"id": hid, "list": ids}))
 		_grid.add_child(card)
 	_count.text = "Owned %d / %d" % [Game.s["heroes"].size(), DB.HEROES.size()]
+	if ids.is_empty():
+		_grid.add_child(UI.label("No heroes match these filters.", 15, UI.MUTED, 2))
+
 	UI.stagger(_grid, 0.025)

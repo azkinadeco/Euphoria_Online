@@ -1228,6 +1228,11 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fr. Update batch 166 — Filter kelas di layar Heroes
+
+- `DB.ROLE_GROUPS` / `ROLE_GROUP` / `role_group(id)`: 10 role dikelompokkan jadi TANK (Tank, Knight, Paladin), DPS (Warrior, Assassin, Ranger), MAGE (Mage, Warlock), SUPPORT (Healer, Buffer).
+- `heroes.gd`: tombol ANY / TANK / DPS / MAGE / SUPPORT di kanan baris filter elemen (`_role`), digabung dengan filter rarity, elemen dan sort. Pesan "No heroes match these filters." bila hasil kosong.
+
 ## 2fq. Update batch 165 — Guide Archive
 
 - `settings.gd::_show_guides`: popup daftar semua `DB.TUTORIALS` (2 kolom, urut nama), tap untuk memutar ulang lewat `main.dialogue(..., compact)` lalu kembali ke daftar. Tutorial yang belum pernah muncul (`tips_seen`) diberi tanda NEW; memutar dari arsip tidak menandainya sebagai sudah dilihat, jadi tetap muncul saat mode dibuka pertama kali.

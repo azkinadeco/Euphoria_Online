@@ -1832,6 +1832,13 @@ func _run() -> void:
 		check(ResourceLoader.exists("res://art/icons/%s.png" % DB.tutorial_icon(str(gak))), "guide %s has an icon" % gak)
 		check(DB.HEROES.has(str(DB.TUTORIALS[gak][0][0])), "guide %s is spoken by a hero" % gak)
 
+	print("[class filter]")
+	var cf_n := {}
+	for cfh in DB.hero_ids():
+		check(DB.ROLE_GROUP.has(DB.role_of(cfh)), "%s has a role with a class (%s)" % [cfh, DB.role_of(cfh)])
+		cf_n[DB.role_group(cfh)] = int(cf_n.get(DB.role_group(cfh), 0)) + 1
+	check(cf_n.size() == DB.ROLE_GROUPS.size() and DB.ROLE_GROUPS.all(func(g): return int(cf_n.get(g, 0)) >= 3), "every class has heroes %s" % str(cf_n))
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)
