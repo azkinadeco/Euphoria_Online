@@ -484,10 +484,35 @@ func redeem(code: String) -> Dictionary:
 	mark_dirty()
 	return {"give": r}
 
+## Narrowest canvas (in UI pixels) the screens are laid out for. A bigger UI size is capped so the canvas
+## never gets narrower than this: on a 16:9 window X-LARGE used to squeeze it to 985 px and the right end of
+## many screens (BATTLE, SUMMON x10, tab rows) fell off the edge.
+const UI_MIN_WIDTH := 1040.0
+
+## The scale really used: the chosen size, capped by what the window has room for.
+func effective_ui_scale(win: Vector2 = Vector2.ZERO) -> float:
+	var want := ui_scale()
+	if win.x <= 0.0 or win.y <= 0.0:
+		var tree := get_tree()
+		if tree == null:
+			return want
+		win = Vector2(tree.root.size)
+	if win.x <= 0.0 or win.y <= 0.0:
+		return want
+	# stretch mode canvas_items + aspect expand: the base canvas is 1280x720 grown along the longer side
+	var base_w: float = win.x / minf(win.x / 1280.0, win.y / 720.0)
+	return clampf(minf(want, base_w / UI_MIN_WIDTH), 1.0, want)
+
+var _ui_scale_hooked := false
+
 func apply_ui_scale() -> void:
 	var tree := get_tree()
 	if tree:
-		tree.root.content_scale_factor = ui_scale()
+		tree.root.content_scale_factor = effective_ui_scale()
+		if not _ui_scale_hooked:
+			_ui_scale_hooked = true
+			# the cap depends on the window shape: follow resizes and phone rotation
+			tree.root.size_changed.connect(func(): get_tree().root.content_scale_factor = effective_ui_scale())
 
 func refresh_volume() -> void:
 	_bgm.volume_db = linear_to_db(maxf(0.001, float(s["settings"]["bgm"]) * 0.7))

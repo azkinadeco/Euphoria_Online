@@ -1839,6 +1839,19 @@ func _run() -> void:
 		cf_n[DB.role_group(cfh)] = int(cf_n.get(DB.role_group(cfh), 0)) + 1
 	check(cf_n.size() == DB.ROLE_GROUPS.size() and DB.ROLE_GROUPS.all(func(g): return int(cf_n.get(g, 0)) >= 3), "every class has heroes %s" % str(cf_n))
 
+	print("[ui scale cap]")
+	var us_keep: float = float(G.s["settings"].get("ui_scale", -1.0))
+	G.s["settings"]["ui_scale"] = 1.3
+	check(absf(G.effective_ui_scale(Vector2(1280, 720)) - 1280.0 / G.UI_MIN_WIDTH) < 0.001, "X-LARGE is capped on a 16:9 window (%.3f)" % G.effective_ui_scale(Vector2(1280, 720)))
+	check(is_equal_approx(G.effective_ui_scale(Vector2(1560, 720)), 1.3), "X-LARGE is full size on a wide phone")
+	check(is_equal_approx(G.effective_ui_scale(Vector2(2560, 1440)), G.effective_ui_scale(Vector2(1280, 720))), "the cap depends on the window shape, not its pixel size")
+	check(1280.0 / G.effective_ui_scale(Vector2(1024, 768)) >= G.UI_MIN_WIDTH - 0.5, "a 4:3 window never gets a canvas narrower than the design width")
+	G.s["settings"]["ui_scale"] = 1.0
+	check(is_equal_approx(G.effective_ui_scale(Vector2(1280, 720)), 1.0), "NORMAL is never scaled up")
+	G.s["settings"]["ui_scale"] = -1.0
+	check(is_equal_approx(G.effective_ui_scale(Vector2(1280, 720)), 1.15), "AUTO keeps the default size on 16:9")
+	G.s["settings"]["ui_scale"] = us_keep
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

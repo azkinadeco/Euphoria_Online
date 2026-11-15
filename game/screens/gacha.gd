@@ -190,7 +190,7 @@ func _price(count: int) -> String:
 	return tickets if tk == count else "%s + %s" % [tickets, gems]
 
 func _pull_btn(text: String, count: int, pay: String) -> Button:
-	var b := UI.button(text, func(): _pull(count, pay), "GoldButton" if count == 10 or pay == "free" else "", Vector2(230, 92))
+	var b := UI.button(text, func(): _pull(count, pay), "GoldButton" if count == 10 or pay == "free" else "", Vector2(216, 92))
 	b.add_theme_font_size_override("font_size", 19)
 	if pay != "free":
 		b.icon = DB.icon("icon_ticket") if Game.amount("summon_ticket") >= count else DB.icon("icon_gem")

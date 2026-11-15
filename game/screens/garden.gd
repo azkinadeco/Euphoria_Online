@@ -112,7 +112,7 @@ func _spawn() -> void:
 
 func _rand_point(sz: Vector2) -> Vector2:
 	var s := _area.size
-	return Vector2(randf_range(0, maxf(10.0, s.x - sz.x)), randf_range(0, maxf(10.0, s.y - sz.y)))
+	return Vector2(randf_range(0, maxf(10.0, s.x - sz.x)), randf_range(0, maxf(10.0, s.y - sz.y - 24.0)))   # 24: the name under the sprite
 
 func _process(delta: float) -> void:
 	for w in _walkers:

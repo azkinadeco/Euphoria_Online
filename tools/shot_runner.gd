@@ -451,6 +451,8 @@ func _audit_node(n: Node, step: String, vp: Rect2, seen: Dictionary) -> void:
 				q = q.get_parent()
 			if not inside:
 				_audit_report("OFF", step, c, "panel rect %s" % [str(Rect2i(r))], seen)
+				if r.end.x > vp.end.x + 6.0:
+					print("AUDIT   widest: [%s] %s" % [step, _audit_widest(c)])
 	for ch in n.get_children():
 		_audit_node(ch, step, vp, seen)
 
@@ -487,3 +489,30 @@ func _audit_collect(n: Node, clip: Rect2, out: Array) -> void:
 					out.append([tr, c])
 	for ch in n.get_children():
 		_audit_collect(ch, my_clip, out)
+
+## Follows the child with the largest minimum width: shows what makes a panel wider than the screen.
+func _audit_widest(c: Control) -> String:
+	var out := ""
+	var cur := c
+	for i in 9:
+		var best: Control = null
+		var bw := 0.0
+		for ch in cur.get_children():
+			if ch is Control and (ch as Control).visible:
+				var w: float = (ch as Control).get_combined_minimum_size().x
+				if w > bw:
+					bw = w
+					best = ch
+		if best == null:
+			break
+		var t := _audit_text(best).left(18)
+		out += " > %s%s %d" % [best.get_class().replace("Container", "C"), (" \"%s\"" % t) if t != "" else "", int(bw)]
+		if best is HBoxContainer or best is HFlowContainer or best is GridContainer:
+			var parts: Array = []
+			for ch in best.get_children():
+				if ch is Control and (ch as Control).visible:
+					parts.append("%s%d" % [(_audit_text(ch).left(10) + ":") if _audit_text(ch) != "" else "", int((ch as Control).get_combined_minimum_size().x)])
+			out += " [" + ", ".join(parts) + "]"
+			break
+		cur = best
+	return out

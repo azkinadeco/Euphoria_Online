@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15v",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "X-LARGE UI size now fits every screen",
+  "body": "UI size X-LARGE no longer pushes buttons off the screen. The size is now as large as your screen has room for: full size on wide phones, slightly smaller on 16:9 screens, where BATTLE, SUMMON x10 and several tab rows used to fall off the right edge. Screen headers also tighten themselves when space is short, and the Private Room list and Garden name tags stay inside the screen."
+ },
+ {
   "id": "n2026-11-15u",
   "date": "2026-11-15",
   "tag": "UPDATE",

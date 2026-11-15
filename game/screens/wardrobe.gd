@@ -96,7 +96,10 @@ func build() -> void:
 	rp.add_child(v)
 	v.add_child(UI.label("✦ SPECIAL SKIN ✦", 14, UI.GOLD, 3))
 	v.add_child(UI.wrap_label(DB.SPECIAL_SKINS[_sel], 24, Color.WHITE))
-	v.add_child(UI.label(DB.name_of(_sel) + "  •  " + DB.title_of(_sel), 13, Color("#d4b8ff"), 2))
+	var who := UI.label(DB.name_of(_sel) + "  •  " + DB.title_of(_sel), 13, Color("#d4b8ff"), 2)
+	who.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	who.custom_minimum_size.x = 120
+	v.add_child(who)
 	v.add_child(UI.wrap_label("Exclusive outfit — not available from Star Up or Bond.", 13, UI.MUTED))
 	var bon := UI.hbox(6)
 	v.add_child(bon)

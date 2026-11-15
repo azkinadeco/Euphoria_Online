@@ -51,7 +51,8 @@ func build() -> void:
 		var btn := Button.new()
 		btn.theme_type_variation = "FlatButton"
 		btn.focus_mode = Control.FOCUS_NONE
-		btn.custom_minimum_size = Vector2(0, 92)
+		btn.custom_minimum_size = Vector2(0, 70)
+		btn.size_flags_vertical = Control.SIZE_EXPAND_FILL   # five rooms always share the column height
 		var fr := Panel.new()
 		fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		fr.add_theme_stylebox_override("panel", UI.style(Color.BLACK, UI.GOLD if key == _loc else Color("#4a3a6e"), 10, 3 if key == _loc else 1, 0))

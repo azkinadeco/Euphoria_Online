@@ -6,6 +6,12 @@ extends Control
 var main: Node          # game/main.gd
 var params: Dictionary = {}
 var _chips: Array = []
+# header parts, kept so the bar can tighten itself when the screen is too narrow (_fit_header)
+var _hdr_bar: HBoxContainer
+var _hdr_title: Label
+var _hdr_icon: Control
+var _hdr_nav: Array = []
+var _hdr_level := 0
 
 func build() -> void:
 	pass
@@ -14,10 +20,18 @@ func _ready() -> void:
 	# safety net for big UI sizes / short windows (see _fit_scan)
 	var t := Timer.new()
 	t.wait_time = 0.3
-	t.timeout.connect(func(): _fit_scan(self, 0))
+	t.timeout.connect(func():
+		_fit_header()
+		_fit_scan(self, 0))
 	add_child(t)
 	t.start()
-	(func(): _fit_scan(self, 0)).call_deferred()
+	resized.connect(func():
+		_hdr_level = 0
+		_hdr_apply()
+		_fit_header())
+	(func():
+		_fit_header()
+		_fit_scan(self, 0)).call_deferred()
 
 ## Called by Main when Game.changed fires while this screen is visible.
 func refresh() -> void:
@@ -125,6 +139,8 @@ func header(title: String, chips: Array = ["gold", "gems", "energy"]) -> HBoxCon
 	var back := UI.button("◀", func(): main.back(), "", Vector2(56, 48))
 	back.add_theme_font_size_override("font_size", 22)
 	bar.add_child(back)
+	_hdr_bar = bar
+	_hdr_nav = [back]
 	# HOME: jump straight back to the lobby from any feature screen
 	var home := UI.button("", func():
 		Game.sfx("ui_click")
@@ -135,10 +151,12 @@ func header(title: String, chips: Array = ["gold", "gems", "energy"]) -> HBoxCon
 	home.add_theme_constant_override("icon_max_width", 30)
 	home.tooltip_text = "Home"
 	bar.add_child(home)
+	_hdr_nav.append(home)
 	if HEADER_ICONS.has(title):
 		var hi := UI.tex_rect(DB.icon(HEADER_ICONS[title]), Vector2(40, 40))
 		hi.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		bar.add_child(hi)
+		_hdr_icon = hi
 		var it := hi.create_tween().set_loops()
 		it.tween_property(hi, "modulate", Color(1.25, 1.2, 1.0), 1.2).set_trans(Tween.TRANS_SINE)
 		it.tween_property(hi, "modulate", Color.WHITE, 1.2).set_trans(Tween.TRANS_SINE)
@@ -146,6 +164,7 @@ func header(title: String, chips: Array = ["gold", "gems", "energy"]) -> HBoxCon
 	t.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	t.size_flags_vertical = Control.SIZE_FILL
 	bar.add_child(t)
+	_hdr_title = t
 	bar.add_child(UI.spacer())
 	for k in chips:
 		bar.add_child(_chip(k))
@@ -211,6 +230,7 @@ func _chip_pulse(c: Dictionary, delta: int) -> void:
 func _chip(key: String) -> Control:
 	var p := UI.styled_panel(Color(0, 0, 0, 0.55), Color("#5b4790"), 22, 1, 8)
 	p.custom_minimum_size = Vector2(150, 44)
+	p.set_meta("hdr_chip", true)
 	var h := UI.hbox(6)
 	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p.add_child(h)
@@ -219,7 +239,7 @@ func _chip(key: String) -> Control:
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	h.add_child(l)
-	_chips.append({"key": key, "label": l})
+	_chips.append({"key": key, "label": l, "panel": p})
 	if key in ["gems", "energy"]:
 		var plus := UI.button("+", func(): main.go("shop"), "FlatButton", Vector2(26, 26))
 		plus.add_theme_font_size_override("font_size", 18)
@@ -320,3 +340,32 @@ func _fit_panel(p: PanelContainer) -> bool:
 	v.add_child(sc)
 	v.move_child(sc, 0)
 	return true
+
+## The header holds back, home, icon, title, the screen's own buttons and the currency chips. On a narrow
+## window or a big UI size that row gets wider than the screen and its right end (often a button) is lost.
+## Tighten it step by step until it fits: drop the icon, slim the chips, shrink the title, then trim it.
+func _fit_header() -> void:
+	if _hdr_bar == null or not is_instance_valid(_hdr_bar) or size.x < 100.0:
+		return
+	while _hdr_level < 4 and _hdr_bar.get_combined_minimum_size().x > size.x - 32.0 + 1.0:
+		_hdr_level += 1
+		_hdr_apply()
+
+func _hdr_apply() -> void:
+	if _hdr_bar == null or not is_instance_valid(_hdr_bar):
+		return
+	var lv := _hdr_level
+	if _hdr_icon != null and is_instance_valid(_hdr_icon):
+		_hdr_icon.visible = lv < 1
+	for c in _chips:
+		if c.has("panel") and is_instance_valid(c["panel"]):
+			(c["panel"] as Control).custom_minimum_size.x = 150.0 if lv < 2 else 112.0
+	_hdr_bar.add_theme_constant_override("separation", 10 if lv < 2 else 6)
+	if _hdr_title != null and is_instance_valid(_hdr_title):
+		_hdr_title.add_theme_font_size_override("font_size", 26 if lv < 3 else 20)
+		_hdr_title.clip_text = lv >= 4
+		_hdr_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS if lv >= 4 else TextServer.OVERRUN_NO_TRIMMING
+		_hdr_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL if lv >= 4 else Control.SIZE_FILL
+	for b in _hdr_nav:
+		if is_instance_valid(b):
+			(b as Control).custom_minimum_size.x = 56.0 if lv < 3 else 46.0

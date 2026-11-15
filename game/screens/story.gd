@@ -690,9 +690,13 @@ func _render_detail() -> void:
 		var times: int = n
 		var b := UI.button("SWEEP x%d" % n, func(): _sweep(times), "", Vector2(0, 44))
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.add_theme_font_size_override("font_size", 14)
 		b.disabled = stars < 3
 		sw.add_child(b)
-	var fb := UI.button("FORMATION", func(): main.go("formation"), "", Vector2(0, 44))
+	# "TEAM", not "FORMATION": the three buttons together were wider than the panel on narrow screens
+	var fb := UI.button("TEAM", func(): main.go("formation"), "", Vector2(0, 44))
+	fb.tooltip_text = "Open Formation"
+	fb.add_theme_font_size_override("font_size", 14)
 	fb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sw.add_child(fb)
 

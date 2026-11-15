@@ -217,7 +217,8 @@ func _opp_card(o: Dictionary, oi: int, can_fight: bool) -> Control:
 	clip.add_child(stripe)
 	# name, tier, power comparison
 	var v := UI.vbox(3)
-	v.custom_minimum_size = Vector2(176, 0)
+	v.custom_minimum_size = Vector2(150, 0)
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	h.add_child(v)
 	var nh := UI.hbox(6)
@@ -259,10 +260,10 @@ func _opp_card(o: Dictionary, oi: int, can_fight: bool) -> Control:
 		fp.tooltip_text = "%s  •  %s  •  %d★" % [DB.name_of(u["id"]), DB.element_of(u["id"]).capitalize(), int(u["star"])]
 		fp.mouse_filter = Control.MOUSE_FILTER_PASS
 		var fc := Control.new()
-		fc.custom_minimum_size = Vector2(40, 40)
+		fc.custom_minimum_size = Vector2(36, 36)
 		fc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		fp.add_child(fc)
-		var ft := UI.face_rect(u["id"], Vector2(40, 40))
+		var ft := UI.face_rect(u["id"], Vector2(36, 36))
 		ft.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		fc.add_child(ft)
 		var el := UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(u["id"]), "elem_light")), Vector2(14, 14))
@@ -291,7 +292,7 @@ func _opp_card(o: Dictionary, oi: int, can_fight: bool) -> Control:
 	wr.add_child(UI.label("60", 12, Color.WHITE, 2))
 	wr.add_child(UI.tex_rect(DB.icon("icon_gold"), Vector2(18, 18)))
 	wr.add_child(UI.label("3K", 12, Color.WHITE, 2))
-	var btn := UI.button("BATTLE", func(): main.go("formation", {"mode": "arena", "opp": oi}), "GoldButton", Vector2(124, 44))
+	var btn := UI.button("BATTLE", func(): main.go("formation", {"mode": "arena", "opp": oi}), "GoldButton", Vector2(108, 44))
 	btn.disabled = not can_fight
 	if not can_fight:
 		btn.tooltip_text = "No tickets left today"

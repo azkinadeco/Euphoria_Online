@@ -1228,6 +1228,16 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ft. Update batch 168 — UI X-LARGE yang benar-benar muat
+
+Batch perbaikan (tanpa fitur baru).
+
+- **`Game.effective_ui_scale()` + `UI_MIN_WIDTH` 1040**: skala UI dibatasi agar lebar kanvas tidak pernah di bawah lebar desain. Di 16:9 X-LARGE dulu membuat kanvas 985 px sehingga BATTLE (Story), SUMMON x10, baris tab hero detail, kartu Arena/Dungeon/Event keluar dari tepi kanan. Sekarang 16:9 → 1,23; ponsel lebar (19,5:9) tetap 1,3. Mengikuti resize jendela/rotasi (`root.size_changed`).
+- **Header adaptif** (`Screen._fit_header/_hdr_apply`): bila baris header lebih lebar dari layar, ikon disembunyikan → chip dirampingkan → judul diperkecil → judul dipotong "…". Kembali normal saat layar melebar.
+- Story: SWEEP x1 / x5 / TEAM (font 14) muat di panel sempit. Arena: kolom nama fleksibel, wajah tim 36 px, tombol BATTLE 108. Summon: tombol pull 216. Wardrobe: nama + gelar membungkus. Private Room: lima ruangan berbagi tinggi kolom. Garden: nama hero tidak lagi turun di bawah layar.
+- Alat audit menampilkan anak dengan lebar minimum terbesar (`AUDIT widest`) untuk panel yang terlalu lebar.
+- Hasil audit: 0 temuan di 1280×720 (LARGE), 1280×720 skala 1,23, dan 1560×720 X-LARGE.
+
 ## 2fs. Update batch 167 — Perapian layout: audit otomatis, auto-fit panel, Heroes & Tower
 
 Batch perbaikan (tanpa fitur baru).
