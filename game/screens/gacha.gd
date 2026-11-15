@@ -395,62 +395,32 @@ func _play_reveal(results: Array) -> void:
 	var motes := FestivalFX.new("firefly", col.lightened(0.3), 40)
 	_reveal.add_child(motes)
 
-	# --- gate
+	# --- gate: charge -> rarity tell -> burst (game/ui/summon_fx.gd)
 	Game.sfx("gacha_gate")
-	var circle := UI.tex_rect(DB.tex("res://art/vfx/vfx_magic_circle.png"), Vector2(520, 520))
-	circle.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	circle.offset_left = -260
-	circle.offset_top = -260
-	circle.offset_right = 260
-	circle.offset_bottom = 260
-	circle.pivot_offset = Vector2(260, 260)
-	circle.modulate = Color(col.r, col.g, col.b, 0.0)
-	circle.scale = Vector2(0.3, 0.3)
-	var add := CanvasItemMaterial.new()
-	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-	circle.material = add
-	_reveal.add_child(circle)
-	var inner := UI.tex_rect(DB.tex("res://art/vfx/vfx_magic_circle.png"), Vector2(300, 300))
-	inner.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	inner.offset_left = -150
-	inner.offset_top = -150
-	inner.offset_right = 150
-	inner.offset_bottom = 150
-	inner.pivot_offset = Vector2(150, 150)
-	inner.modulate = Color(1, 0.95, 0.85, 0.0)
-	inner.material = add
-	_reveal.add_child(inner)
-	var itw := inner.create_tween().set_parallel(true)
-	itw.tween_property(inner, "modulate:a", 0.8, 0.5).set_delay(0.3)
-	itw.tween_property(inner, "rotation", -TAU, 1.6)
+	var gate := SummonFX.new()
+	_reveal.add_child(gate)
 	var skip := [false]
 	dark.gui_input.connect(func(e):
 		if e is InputEventMouseButton and e.pressed:
 			skip[0] = true)
-	var tw := circle.create_tween().set_parallel(true)
-	tw.tween_property(circle, "modulate:a", 1.0, 0.4)
-	tw.tween_property(circle, "scale", Vector2(1.2, 1.2), 1.3).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
-	tw.tween_property(circle, "rotation", TAU * 0.75, 1.5)
-	for k in 14:
+	var tier: int = {"R": 0, "SR": 1, "SSR": 2}[best]
+	gate.charge(1.2)
+	for k in 12:
 		if skip[0] or not is_inside_tree():
 			break
 		await get_tree().create_timer(0.1).timeout
 	if not is_inside_tree() or not is_instance_valid(_reveal):
 		return
-	# rarity tell: light pillars rise (1 blue / 2 purple / 3 gold)
+	# the tell: the core takes the colour of the best card (blue / purple / gold) and the rays open
 	if not skip[0]:
-		var fxp := SkillFX.new()
-		_reveal.add_child(fxp)
-		var n_p: int = {"R": 1, "SR": 2, "SSR": 3}[best]
-		var c0 := _reveal.size * Vector2(0.5, 0.62)
-		for k in n_p:
-			var off := (k - (n_p - 1) * 0.5) * 140.0
-			fxp.pillar(c0 + Vector2(off, 0), col.lightened(0.2), 120.0, k * 0.18)
-		fxp.wave(c0, col, 700.0)
+		gate.tell(col.lightened(0.15), tier, 0.9)
 		if best == "SSR":
 			Game.sfx("battle/light")
 			if not Game.reduce_fx():
-				_reveal.create_tween().tween_property(_reveal, "position", Vector2(6, 0), 0.04).set_trans(Tween.TRANS_SINE)
+				var sh := _reveal.create_tween().set_loops(6)
+				sh.tween_property(_reveal, "position", Vector2(5, -3), 0.05)
+				sh.tween_property(_reveal, "position", Vector2(-4, 3), 0.05)
+				sh.tween_property(_reveal, "position", Vector2.ZERO, 0.05)
 		for k in 9:
 			if skip[0] or not is_inside_tree():
 				break
@@ -458,16 +428,20 @@ func _play_reveal(results: Array) -> void:
 		if not is_inside_tree() or not is_instance_valid(_reveal):
 			return
 		_reveal.position = Vector2.ZERO
-		get_tree().create_timer(1.5).timeout.connect(fxp.queue_free)
+	gate.burst(0.7)
+	Game.sfx("star_up" if best == "SSR" else "ui_click")
 	var flash := ColorRect.new()
 	flash.color = col.lightened(0.5) if not Game.reduce_fx() else Color(0, 0, 0, 0)
 	flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_reveal.add_child(flash)
-	flash.create_tween().tween_property(flash, "modulate:a", 0.0, 0.5)
-	circle.queue_free()
-	inner.queue_free()
+	flash.modulate.a = 0.75
+	flash.create_tween().tween_property(flash, "modulate:a", 0.0, 0.55)
 	motes.queue_free()
+	# let the shock ring open before the cards land
+	await get_tree().create_timer(0.28).timeout
+	if not is_inside_tree() or not is_instance_valid(_reveal):
+		return
 
 	# --- cards
 	var center := CenterContainer.new()
@@ -611,11 +585,13 @@ func _ssr_splash(r: Dictionary) -> void:
 	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	layer.mouse_filter = Control.MOUSE_FILTER_STOP
 	_reveal.add_child(layer)
-	var bg := UI.tex_rect(DB.bg("galaxy"), Vector2.ZERO, true)
+	# she arrives in front of her own realm when she has one
+	var own_bg: bool = DB.has_hero_bg(str(r["id"]))
+	var bg := UI.tex_rect(DB.bg(DB.hero_bg_key(str(r["id"])) if own_bg else "galaxy"), Vector2.ZERO, true)
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	layer.add_child(bg)
 	var dim := ColorRect.new()
-	dim.color = Color(0.2, 0.12, 0.0, 0.45)
+	dim.color = Color(0.06, 0.03, 0.1, 0.4) if own_bg else Color(0.2, 0.12, 0.0, 0.45)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(dim)
