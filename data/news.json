@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zs",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Battle Prep tags stay readable",
+  "body": "In Battle Prep the \"YOUR TEAM\" and \"ENEMY FRONT LINE\" tags sit on small dark pills above the units, so a tall hero in the back row no longer hides them."
+ },
+ {
   "id": "n2026-11-15zr",
   "date": "2026-11-15",
   "tag": "UPDATE",

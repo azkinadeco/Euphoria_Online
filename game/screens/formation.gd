@@ -74,9 +74,7 @@ func build() -> void:
 	_board.cell_pressed.connect(_on_cell)
 	_board.resized.connect(_layout_units)
 	_board.set_drag_forwarding(_board_get_drag, _board_can_drop, _board_drop)
-	var lbl := UI.label("YOUR TEAM   •   FRONT LINE ▶", 13, UI.GOLD, 3)
-	lbl.position = Vector2(0, -20)
-	_board.add_child(lbl)
+	_board.add_child(_side_tag("YOUR TEAM   •   FRONT LINE ▶", UI.GOLD))
 
 	if _enemies.is_empty():
 		_build_tips(area)
@@ -90,9 +88,7 @@ func build() -> void:
 		_enemy_board.anchor_bottom = 1.0
 		area.add_child(_enemy_board)
 		_enemy_board.resized.connect(_layout_enemies)
-		var el := UI.label("◀ ENEMY FRONT LINE", 13, Color("#ff8a9a"), 3)
-		el.position = Vector2(0, -20)
-		_enemy_board.add_child(el)
+		_enemy_board.add_child(_side_tag("◀ ENEMY FRONT LINE", Color("#ff8a9a")))
 		var vs := UI.label("VS", 40, Color("#ff5c6c"), 8)
 		vs.anchor_left = 0.5
 		vs.anchor_right = 0.5
@@ -927,3 +923,13 @@ func _start() -> void:
 	Game.meal_consume(params)
 	Game.save_game()
 	main.replace("battle", params)
+
+## Small tag above a board. Drawn above the units (a tall sprite in the back row used to hide it) on a dark
+## pill so it stays readable over any background.
+func _side_tag(text: String, col: Color) -> Control:
+	var p := UI.styled_panel(Color(0.03, 0.01, 0.07, 0.72), Color(col, 0.45), 10, 1, 0)
+	p.add_child(UI.margin(UI.label(text, 12, col, 2), 9, 2, 9, 2))
+	p.position = Vector2(0, -24)
+	p.z_index = 20
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return p

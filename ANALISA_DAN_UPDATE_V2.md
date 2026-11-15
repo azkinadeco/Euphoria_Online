@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gr. Update batch 189 — Label papan Battle Prep tidak tertutup unit
+
+- `formation.gd::_side_tag`: label "YOUR TEAM • FRONT LINE ▶" dan "◀ ENEMY FRONT LINE" kini di atas pil gelap dengan `z_index` 20; sebelumnya sprite tinggi di baris belakang menutupinya.
+
 ## 2gq. Update batch 188 — Ukuran ikon seragam
 
 - `tools/fit_icons.py`: ikon yang gambarnya hanya memakai < 80% kanvas di-crop dan diskalakan ke 94%; asli disimpan di `_recut_backup/icons_small/`. Terkena: `icon_festival` (50%) dan `item_season_token` (49%), keduanya 256 px sehingga tetap tajam.
