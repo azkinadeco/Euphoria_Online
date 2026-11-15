@@ -696,6 +696,12 @@ func toast(text: String, color: Color = UI.GOLD) -> void:
 		tw.tween_property(gl, "rotation", TAU, 0.5).from(-0.6).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		gl.resized.connect(func(): gl.pivot_offset = gl.size * 0.5)
 		tw.set_parallel(false)
+		if color == UI.RED:
+			# "no": a quick head-shake (rotation only - the VBox owns the position)
+			var shk := p.create_tween()
+			shk.tween_interval(0.12)
+			for ang in [0.035, -0.03, 0.022, -0.014, 0.0]:
+				shk.tween_property(p, "rotation", ang, 0.05).set_trans(Tween.TRANS_SINE)
 	tw.tween_interval(2.4)
 	tw.tween_property(p, "modulate:a", 0.0, 0.35)
 	if not Game.reduce_fx():

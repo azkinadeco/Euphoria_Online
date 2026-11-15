@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15c3",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "A no that looks like a no",
+  "body": "Messages that say \"no\" (not enough, locked, can't do that) now give a quick head-shake as they appear, so they read differently from good news at a glance."
+ },
+ {
   "id": "n2026-11-15c2",
   "date": "2026-11-15",
   "tag": "UPDATE",

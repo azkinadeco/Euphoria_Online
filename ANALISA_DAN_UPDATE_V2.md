@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hj. Update batch 209 — Toast penolakan bergoyang
+
+- `main.toast`: toast merah bergoyang singkat (rotasi, 5 langkah × 0,05 dtk) setelah muncul; selain itu suara `ui/error` + getar dari batch sebelumnya.
+
 ## 2hi. Update batch 208 — Titik merah di tab hero
 
 - `Game.bond_stories_new_for(id)`; `hero_detail.gd`: titik merah di pojok kanan atas tab UPGRADE (Star Up siap) dan BOND (memori belum dibaca).
