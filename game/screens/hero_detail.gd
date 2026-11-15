@@ -1375,8 +1375,14 @@ func _source_row(parent: Control, title: String, item: String, list: Array = [])
 	if list.is_empty():
 		for e in DB.item_sources(item):
 			list.append([str(e[0]).to_upper(), str(e[1]), e[2]])
-	var row := UI.hbox(8)
-	row.add_child(UI.label(title, 12, UI.MUTED, 0))
+	# a flow row: the buttons wrap to a second line when the panel is narrow (a straight row made the
+	# whole Upgrade panel wider than the screen)
+	var row := HFlowContainer.new()
+	row.add_theme_constant_override("h_separation", 8)
+	row.add_theme_constant_override("v_separation", 6)
+	var tl := UI.label(title, 12, UI.MUTED, 0)
+	tl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(tl)
 	var n := 0
 	for src in list:
 		var route: String = src[1]

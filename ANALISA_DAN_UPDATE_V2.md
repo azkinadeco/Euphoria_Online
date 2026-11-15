@@ -1255,7 +1255,7 @@ tools/
 
 ## 2hp. Update batch 215 — Sumber Skill Book & helper `_source_row`
 
-- `hero_detail.gd::_source_row(parent, title, item, list)`: baris tombol GO dari daftar eksplisit atau `DB.item_sources(item)` (maks. 3, fitur terkunci/lobby dilewati). Dipakai untuk shard (Star Up) dan Skill Book (Skill Up yang terkunci).
+- `hero_detail.gd::_source_row(parent, title, item, list)`: baris tombol GO dari daftar eksplisit atau `DB.item_sources(item)` (maks. 3, fitur terkunci/lobby dilewati). Dipakai untuk shard (Star Up) dan Skill Book (Skill Up yang terkunci). Baris memakai `HFlowContainer` agar tombol membungkus ke baris kedua di layar sempit (versi pertama membuat panel lebih lebar dari layar — tertangkap `tools/audit.sh`).
 
 ## 2ho. Update batch 214 — Tombol sumber shard di Star Up
 
