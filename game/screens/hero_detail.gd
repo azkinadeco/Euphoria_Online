@@ -746,7 +746,21 @@ func _render_upgrade() -> void:
 		var b2 := UI.button("STAR UP ★", _do_star, "GoldButton", Vector2(0, 50))
 		b2.disabled = own + uni < c["shards"]
 		sv.add_child(b2)
-		sv.add_child(UI.wrap_label("Get shards from duplicate summons, story drops and the Arena Shop.", 12, UI.MUTED))
+		if own + uni < c["shards"]:
+			# where shards come from, as buttons instead of a sentence
+			var srow := UI.hbox(8)
+			sv.add_child(srow)
+			srow.add_child(UI.label("GET SHARDS:", 12, UI.MUTED, 0))
+			for src in [["SUMMON", "gacha", {}], ["BLACK MARKET", "shop", {"tab": "market"}], ["BOSS HUNT", "hunt", {}]]:
+				var route: String = src[1]
+				if route == "hunt" and Game.feature_req("hunt") > int(Game.s["player"]["level"]):
+					continue
+				var sparams: Dictionary = src[2]
+				var sbtn := UI.button(str(src[0]) + " ▶", func(): main.go(route, sparams), "", Vector2(0, 30))
+				sbtn.add_theme_font_size_override("font_size", 12)
+				srow.add_child(sbtn)
+		else:
+			sv.add_child(UI.wrap_label("Shards come from duplicate summons, the Black Market and Boss Hunts.", 12, UI.MUTED))
 
 	# --- Awakening (after max stars)
 	var ap := UI.panel("CardPanel")

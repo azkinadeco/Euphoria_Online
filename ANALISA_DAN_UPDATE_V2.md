@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2ho. Update batch 214 — Tombol sumber shard di Star Up
+
+- `hero_detail.gd`: bila shard kurang, baris "GET SHARDS:" dengan SUMMON ▶ / BLACK MARKET ▶ / BOSS HUNT ▶ (Boss Hunt hanya bila sudah terbuka) menggantikan kalimat petunjuk.
+
 ## 2hn. Update batch 213 — Tautan "GET EXP / GOLD" di tab Upgrade
 
 - `hero_detail.gd`: bila EXP atau Gold kurang untuk level berikutnya (dan Dungeon sudah terbuka), tombol kecil di baris biaya membuka Daily Dungeon pada Crystal Sanctum / Golden Vault.
