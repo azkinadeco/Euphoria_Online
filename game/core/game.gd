@@ -520,6 +520,14 @@ func refresh_volume() -> void:
 
 var _sfx_last := {}
 
+## A short buzz on phones for moments that should be felt: a critical hit, a summon bursting open, an error.
+## Does nothing on desktop, with Reduce effects on, or where the browser has no vibration (iOS Safari).
+func haptic(ms: int) -> void:
+	if reduce_fx() or ms <= 0:
+		return
+	if OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios"):
+		Input.vibrate_handheld(clampi(ms, 5, 200))
+
 func sfx(name: String) -> void:
 	var path := "res://audio/%s.wav" % name
 	if not ResourceLoader.exists(path) or float(s["settings"]["sfx"]) <= 0.01:

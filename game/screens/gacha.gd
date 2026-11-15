@@ -429,6 +429,7 @@ func _play_reveal(results: Array) -> void:
 			return
 		_reveal.position = Vector2.ZERO
 	gate.burst(0.7)
+	Game.haptic(120 if best == "SSR" else (60 if best == "SR" else 30))
 	Game.sfx("star_up" if best == "SSR" else "ui_click")
 	var flash := ColorRect.new()
 	flash.color = col.lightened(0.5) if not Game.reduce_fx() else Color(0, 0, 0, 0)

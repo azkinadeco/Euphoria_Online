@@ -1228,6 +1228,13 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gi. Update batch 183 — Percikan sentuh dan getaran
+
+Batch perbaikan interaksi (tanpa fitur baru).
+
+- `game/ui/tap_fx.gd` + `main._input`: cincin kecil dan 6 percikan di titik sentuh (kosmetik, tidak memakan input, maks. 7 sekaligus).
+- `Game.haptic(ms)`: `Input.vibrate_handheld` di mobile / web Android untuk crit (22 ms), ledakan summon (30/60/120 ms menurut rarity), reward (18 ms), toast error (28 ms). Tidak aktif di desktop dan saat Reduce effects.
+
 ## 2gh. Update batch 182 — Realm hero di belakang ultimate
 
 Batch perbaikan animasi (tanpa fitur baru).

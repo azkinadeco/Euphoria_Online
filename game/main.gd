@@ -535,6 +535,17 @@ func _notification(what: int) -> void:
 	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		back()
 
+const TapFX = preload("res://game/ui/tap_fx.gd")
+var _tap_fx: Control
+
+## Every tap leaves a small spark where the finger landed (cosmetic; input is not consumed).
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT and not Game.reduce_fx():
+		if _tap_fx == null or not is_instance_valid(_tap_fx):
+			_tap_fx = TapFX.new()
+			add_child(_tap_fx)
+		_tap_fx.burst(_tap_fx.get_global_transform().affine_inverse() * (event as InputEventMouseButton).global_position)
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		back()
@@ -616,6 +627,7 @@ static func _toast_group(text: String) -> String:
 func toast(text: String, color: Color = UI.GOLD) -> void:
 	if color == UI.RED:
 		Game.sfx("ui/error")   # "not enough", "locked", "can't do that"
+		Game.haptic(28)
 	var grp := _toast_group(text)
 	# "NEW FEATURE UNLOCKED: A!" + "...: B!" → one toast listing both
 	var join := grp == text and text.find(": ") > 0
@@ -833,6 +845,7 @@ func _fly_icons() -> void:
 func show_rewards(title: String, rewards: Dictionary, after: Callable = Callable()) -> void:
 	_fly_src.clear()
 	Game.sfx("ui/reward")   # a chime of its own (star_up stays for level and star gains)
+	Game.haptic(18)
 	var v := popup(title, 560)
 	if rewards.is_empty():
 		v.add_child(UI.wrap_label("Nothing to collect yet.", 16))

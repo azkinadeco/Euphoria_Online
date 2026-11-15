@@ -734,6 +734,8 @@ func _play_action(e: Dictionary, group: Array) -> void:
 		_bsfx("crit" if crit_any else "hit")
 		_shake(6.0 if crit_any else (4.0 if group.size() > 2 else 2.5))
 		if crit_any:
+			Game.haptic(22)
+		if crit_any:
 			_punch(1.035)
 			await _hitstop(0.09)
 		if hit_n >= 2:
