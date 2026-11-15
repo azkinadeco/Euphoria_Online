@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15b2",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "A lobby with depth on phones",
+  "body": "On phones the lobby now has depth too: when you are not touching the screen, the hero and the room behind her sway gently against each other, the same parallax a mouse gives on a computer."
+ },
+ {
   "id": "n2026-11-15b1",
   "date": "2026-11-15",
   "tag": "UPDATE",
