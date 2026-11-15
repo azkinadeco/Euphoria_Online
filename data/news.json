@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zt",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Tidier Season Pass cells",
+  "body": "Season Pass cells with two rewards now show them side by side instead of stacked on top of each other, and locked Premium cells carry a small mark in the corner instead of a \"LOCKED\" line. The Expedition hint no longer runs over the top of its bar."
+ },
+ {
   "id": "n2026-11-15zs",
   "date": "2026-11-15",
   "tag": "UPDATE",

@@ -241,16 +241,30 @@ func _cell(lv: int, premium: bool) -> Control:
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	btn.add_child(v)
+	# rewards side by side (two stacked rewards used to crowd the cell and run into its status line)
 	var isz := 40.0 if r.size() == 1 else 30.0
+	var row := UI.hbox(4)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(row)
 	for k in r.keys():
-		var ic := UI.tex_rect(Game.reward_icon(k), Vector2(0, isz))
+		var one := UI.vbox(0)
+		one.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var ic := UI.tex_rect(Game.reward_icon(k), Vector2(isz, isz))
 		if claimed or not owned:
 			ic.modulate = Color(1, 1, 1, 0.35)
-		v.add_child(ic)
-		var al := UI.label("x" + Game.fmt(int(r[k])), 12, Color.WHITE if not claimed else UI.MUTED, 3)
+		one.add_child(ic)
+		var al := UI.label("x" + Game.fmt(int(r[k])), 12 if r.size() == 1 else 11, Color.WHITE if not claimed else UI.MUTED, 3)
 		al.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		v.add_child(al)
-	var txt := "✔ CLAIMED" if claimed else ("CLAIM!" if unlocked else ("LOCKED" if premium and not owned else ""))
+		one.add_child(al)
+		row.add_child(one)
+	# a locked premium cell shows a small lock in its corner instead of a "LOCKED" line
+	if premium and not owned and not claimed:
+		var lk := UI.label("✕", 12, Color(1, 1, 1, 0.5), 2)
+		lk.tooltip_text = "Premium"
+		lk.position = Vector2(COL_W - 20, 8)
+		btn.add_child(lk)
+	var txt := "✔ CLAIMED" if claimed else ("CLAIM!" if unlocked else "")
 	if txt != "":
 		var st := UI.label(txt, 11, UI.GREEN if ready or claimed else UI.MUTED, 3)
 		st.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

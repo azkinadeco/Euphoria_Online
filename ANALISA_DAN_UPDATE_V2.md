@@ -1253,6 +1253,11 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gs. Update batch 190 — Sel Season Pass & petunjuk Expedition
+
+- `pass.gd::_cell`: hadiah berdampingan (ikon + jumlah per hadiah) alih-alih bertumpuk; sel Premium terkunci memakai tanda kecil di pojok, baris status hanya untuk CLAIM! / ✔ CLAIMED.
+- `expedition.gd`: petunjuk dipendekkan jadi dua baris (yang lama membungkus tiga baris dan keluar di atas bar ringkasan).
+
 ## 2gr. Update batch 189 — Label papan Battle Prep tidak tertutup unit
 
 - `formation.gd::_side_tag`: label "YOUR TEAM • FRONT LINE ▶" dan "◀ ENEMY FRONT LINE" kini di atas pil gelap dengan `z_index` 20; sebelumnya sprite tinggi di baris belakang menutupinya.

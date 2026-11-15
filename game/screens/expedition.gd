@@ -66,7 +66,8 @@ func _render_summary() -> void:
 	_summary.add_child(_stat("ACTIVE", "%d / %d" % [running, DB.EXPEDITIONS.size()], Color("#7fd8ff")))
 	_summary.add_child(_stat("READY", str(ready), UI.GREEN if ready > 0 else UI.MUTED))
 	_summary.add_child(_stat("HEROES OUT", str(out), UI.GOLD))
-	var tip := UI.wrap_label("Heroes on expeditions can still fight. Every finished expedition gives +10 Bond EXP to each hero sent.", 12, UI.MUTED)
+	# two short lines: the long sentence wrapped to three and ran over the top of the summary bar
+	var tip := UI.wrap_label("Heroes away can still fight.\nEach return: +10 Bond per hero.", 12, UI.MUTED)
 	tip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_summary.add_child(tip)
