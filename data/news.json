@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15b7",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Drink a flask and fight",
+  "body": "Out of Energy but carrying Energy Flasks? The Story screen now offers to drink one on the spot and goes straight into the battle, instead of sending you to the Bag."
+ },
+ {
   "id": "n2026-11-15b6",
   "date": "2026-11-15",
   "tag": "UPDATE",

@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hf. Update batch 204 — Pakai Energy Flask langsung dari Story
+
+- `story.gd::_offer_flask`: bila Energy kurang dan pemain punya Energy Flask, muncul popup "OUT OF ENERGY" dengan USE FLASK & FIGHT (memakai `Game.use_item`, lalu langsung ke battle) atau NOT NOW. Tanpa flask tetap toast seperti dulu.
+
 ## 2he. Update batch 203 — Pembelian di Shop terasa
 
 - `main.fly_from(textures, from)`: ikon melengkung dari titik ketuk ke bar mata uang (dipakai ulang dari animasi hadiah).

@@ -728,7 +728,10 @@ func _battle() -> void:
 		return
 	var st := _st(_sel)
 	if Game.amount("energy") < int(st["energy"]):
-		main.toast("Not enough Energy. Buy Energy Flasks in the Shop or wait for it to refill.", UI.RED)
+		if Game.amount("energy_potion") > 0:
+			_offer_flask(int(st["energy"]))
+		else:
+			main.toast("Not enough Energy. Buy Energy Flasks in the Shop or wait for it to refill.", UI.RED)
 		return
 	var seen: Array = Game.s["story"].get("seen", [])
 	var key := ""
@@ -890,3 +893,24 @@ class StageShade extends Control:
 			b.rect(Rect2(o + Vector2(-10, -6), Vector2(20, 15)), lc)
 			b.circle(o + Vector2(0, 1), 2.5, Color(0.1, 0.08, 0.14))
 		b.flush(self)
+
+## Out of Energy but holding Energy Flasks: offer to drink one right here instead of a dead-end message.
+func _offer_flask(need: int) -> void:
+	var v: VBoxContainer = main.popup("OUT OF ENERGY", 520)
+	var h := UI.hbox(14)
+	v.add_child(h)
+	h.add_child(UI.tex_rect(DB.icon("item_energy_potion"), Vector2(72, 72)))
+	var tv := UI.vbox(4)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(tv)
+	tv.add_child(UI.label("Energy %d / %d needed" % [Game.amount("energy"), need], 16, Color("#ff8a9a"), 2))
+	tv.add_child(UI.wrap_label("Drink an Energy Flask (+60 Energy)? You have %d." % Game.amount("energy_potion"), 14, UI.TEXT))
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("NOT NOW", func(): main.close_popup(v), "", Vector2(150, 48)))
+	row.add_child(UI.button("USE FLASK & FIGHT", func():
+		main.close_popup(v)
+		if Game.use_item("energy_potion", 1):
+			Game.sfx("ui/reward")   # use_item already shows "Used Energy Flask"
+			_battle(), "GoldButton", Vector2(230, 48)))
