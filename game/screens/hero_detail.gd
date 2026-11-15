@@ -722,6 +722,8 @@ func _render_upgrade() -> void:
 			_render(), "GoldButton", Vector2(0, 44))
 		kb.disabled = Game.amount("skill_book") < int(kc["skill_book"])
 		kv.add_child(kb)
+		if kb.disabled:
+			_source_row(kv, "GET SKILL BOOKS:", "skill_book")
 	else:
 		kv.add_child(UI.label("Skill mastered! (+48% power)", 14, UI.GREEN))
 
@@ -748,17 +750,7 @@ func _render_upgrade() -> void:
 		sv.add_child(b2)
 		if own + uni < c["shards"]:
 			# where shards come from, as buttons instead of a sentence
-			var srow := UI.hbox(8)
-			sv.add_child(srow)
-			srow.add_child(UI.label("GET SHARDS:", 12, UI.MUTED, 0))
-			for src in [["SUMMON", "gacha", {}], ["BLACK MARKET", "shop", {"tab": "market"}], ["BOSS HUNT", "hunt", {}]]:
-				var route: String = src[1]
-				if route == "hunt" and Game.feature_req("hunt") > int(Game.s["player"]["level"]):
-					continue
-				var sparams: Dictionary = src[2]
-				var sbtn := UI.button(str(src[0]) + " ▶", func(): main.go(route, sparams), "", Vector2(0, 30))
-				sbtn.add_theme_font_size_override("font_size", 12)
-				srow.add_child(sbtn)
+			_source_row(sv, "GET SHARDS:", "", [["SUMMON", "gacha", {}], ["BLACK MARKET", "shop", {"tab": "market"}], ["BOSS HUNT", "hunt", {}]])
 		else:
 			sv.add_child(UI.wrap_label("Shards come from duplicate summons, the Black Market and Boss Hunts.", 12, UI.MUTED))
 
@@ -1376,3 +1368,26 @@ func _render_bond() -> void:
 			_ceremony(func(): main.dialogue([[id, DB.VOICE["oath"][0]], [id, DB.voice(id, "bond")["en"]]], Callable(), "", false, id, "%s_oath" % id)), "GoldButton", Vector2(0, 50))
 		ob.disabled = h["bond"] < DB.MAX_BOND or Game.amount("oath_ring") <= 0
 		ov.add_child(ob)
+
+## A row of small GO buttons to where an upgrade material comes from. Either an explicit list of
+## [label, route, params] or the item's sources from DB.item_sources(item). Locked features are left out.
+func _source_row(parent: Control, title: String, item: String, list: Array = []) -> void:
+	if list.is_empty():
+		for e in DB.item_sources(item):
+			list.append([str(e[0]).to_upper(), str(e[1]), e[2]])
+	var row := UI.hbox(8)
+	row.add_child(UI.label(title, 12, UI.MUTED, 0))
+	var n := 0
+	for src in list:
+		var route: String = src[1]
+		if route == "" or route == "lobby" or Game.feature_req(route) > int(Game.s["player"]["level"]):
+			continue
+		var sparams: Dictionary = src[2]
+		var sbtn := UI.button(str(src[0]) + " ▶", func(): main.go(route, sparams), "", Vector2(0, 30))
+		sbtn.add_theme_font_size_override("font_size", 12)
+		row.add_child(sbtn)
+		n += 1
+		if n >= 3:
+			break
+	if n > 0:
+		parent.add_child(row)

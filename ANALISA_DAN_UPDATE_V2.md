@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hp. Update batch 215 — Sumber Skill Book & helper `_source_row`
+
+- `hero_detail.gd::_source_row(parent, title, item, list)`: baris tombol GO dari daftar eksplisit atau `DB.item_sources(item)` (maks. 3, fitur terkunci/lobby dilewati). Dipakai untuk shard (Star Up) dan Skill Book (Skill Up yang terkunci).
+
 ## 2ho. Update batch 214 — Tombol sumber shard di Star Up
 
 - `hero_detail.gd`: bila shard kurang, baris "GET SHARDS:" dengan SUMMON ▶ / BLACK MARKET ▶ / BOSS HUNT ▶ (Boss Hunt hanya bila sudah terbuka) menggantikan kalimat petunjuk.
