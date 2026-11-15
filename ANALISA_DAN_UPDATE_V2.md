@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2ga. Update batch 175 — Naskah Arc 13: Scylla sesuai art-nya
+
+Batch perbaikan (tanpa fitur baru).
+
+- Ch.52 `boss_lines` (Gala): "you have EIGHT arms" → lelucon tentang seratus topeng tanpa gaun yang serasi.
+- Interlude i13 (Scylla): "A child asked to ride on a tentacle" → anak itu minta memegang sabitnya, lalu tangannya. Art Scylla tidak punya tentakel; yang bertentakel adalah Cthollia (barisnya tidak diubah).
+- Sapuan proofreading otomatis atas semua string di `db.gd`, `news.json`, `memories.json`, `voice_lines.json`, `profiles.json` (kata berulang, spasi sebelum tanda baca, koma tanpa spasi, salah eja umum, "a" + vokal): tidak ada temuan nyata.
+
 ## 2fz. Update batch 174 — Panduan pertama untuk mode lama yang terlewat
 
 Batch perbaikan (tanpa fitur baru). Ditemukan lewat sapuan konsistensi data (hero, item, musuh, fitur).
