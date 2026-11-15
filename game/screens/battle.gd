@@ -1016,19 +1016,44 @@ func _ultimate(u: Dictionary) -> float:
 	band.polygon = PackedVector2Array([Vector2(-50, vs.y * 0.62), Vector2(vs.x + 50, vs.y * 0.3), Vector2(vs.x + 50, vs.y * 0.52), Vector2(-50, vs.y * 0.86)])
 	band.color = Color(ec.lightened(0.3), 0.22)
 	root.add_child(band)
-	# the full illustration sweeps in from the left and drifts
-	var art := UI.tex_rect(DB.art(hid, int(Game.hero(hid).get("skin", 0))) if Game.owns(hid) else DB.art(hid, 0))
-	art.set_anchors_preset(Control.PRESET_FULL_RECT)
-	art.anchor_left = 0.02
-	art.anchor_right = 0.5
-	art.anchor_top = -0.04
-	art.anchor_bottom = 1.08
-	root.add_child(art)
-	art.resized.connect(func(): art.pivot_offset = art.size * Vector2(0.5, 0.35))
-	art.position.x -= 420
-	art.scale = Vector2(1.18, 1.18)
+	# A close-up framed on the FACE sweeps in from the left and drifts. (The whole illustration used to be
+	# fitted into the frame, so the letterbox bars cut through the head and the feet.)
+	var art_tex: Texture2D = DB.art(hid, int(Game.hero(hid).get("skin", 0))) if Game.owns(hid) else DB.art(hid, 0)
+	var frame := Control.new()
+	frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+	frame.anchor_right = 0.54
+	frame.clip_contents = true
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(frame)
+	var art := TextureRect.new()
+	art.texture = art_tex
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_SCALE
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(art)
+	var place_art := func():
+		if art_tex == null or frame.size.y < 10.0:
+			return
+		var ff := DB.face_focus(art_tex)
+		var tw0 := float(art_tex.get_width())
+		var th0 := float(art_tex.get_height())
+		# zoom so the face is about a quarter of the frame height, but never smaller than "fills the frame"
+		var face_h: float = maxf(0.05, ff.z * tw0 / th0)          # face height as a fraction of the art height
+		var art_h: float = clampf(frame.size.y * 0.27 / face_h, frame.size.y * 1.05, frame.size.y * 2.3)
+		var art_w: float = art_h * tw0 / th0
+		art.size = Vector2(art_w, art_h)
+		# face centre at 42% of the frame height, horizontally in the middle
+		var px: float = frame.size.x * 0.5 - ff.x * art_w
+		var py: float = frame.size.y * 0.42 - ff.y * art_h
+		py = minf(py, 64.0)   # no gap between the top bar and the top of the picture
+		art.position = Vector2(px, py)
+		art.pivot_offset = Vector2(ff.x * art_w, ff.y * art_h)
+	place_art.call()
+	frame.resized.connect(place_art)
+	art.scale = Vector2(1.16, 1.16)
 	var at := art.create_tween().set_parallel(true)
-	at.tween_property(art, "position:x", art.position.x + 420, 0.32).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	at.tween_property(frame, "offset_left", 0.0, 0.32).from(-420.0).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	at.tween_property(frame, "offset_right", 0.0, 0.32).from(-420.0).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	at.tween_property(art, "scale", Vector2.ONE, 1.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	# text block
 	var tv := UI.vbox(2)

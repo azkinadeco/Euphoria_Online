@@ -24,7 +24,7 @@ func build() -> void:
 	lp.add_child(lv)
 	var me := UI.hbox(10)
 	lv.add_child(me)
-	me.add_child(_avatar(str(Game.s["lobby_hero"]), 60, Color("#ffcf5a"), true))
+	me.add_child(_avatar(Game.avatar_id(), 60, Color("#ffcf5a"), true))
 	var mv := UI.vbox(1)
 	mv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	me.add_child(mv)
@@ -179,23 +179,7 @@ func _card(f: Dictionary, sent: bool) -> Control:
 
 ## Round portrait with a coloured ring.
 func _avatar(hid: String, sz: int, ring: Color, glow: bool) -> Control:
-	var c := Control.new()
-	c.custom_minimum_size = Vector2(sz, sz)
-	c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	var clip := Panel.new()
-	clip.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
-	clip.add_theme_stylebox_override("panel", UI.style(Color.WHITE, Color.TRANSPARENT, sz / 2, 0, 0))
-	clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	c.add_child(clip)
-	var t := UI.face_rect(hid, Vector2.ZERO)
-	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	clip.add_child(t)
-	var ring_p := Panel.new()
-	ring_p.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, ring, sz / 2, 2 if glow else 1, 0))
-	ring_p.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	ring_p.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	c.add_child(ring_p)
-	return c
+	return UI.avatar(hid, sz, ring, 2 if glow else 1)
 
 func _fit_cols(sc: Control) -> void:
 	if is_instance_valid(_grid):

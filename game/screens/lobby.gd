@@ -97,6 +97,9 @@ func build() -> void:
 	tap.anchor_top = 0.12
 	tap.anchor_bottom = 0.7
 	tap.focus_mode = Control.FOCUS_NONE
+	# an invisible touch area: the button styles drew a dark translucent box behind the hero on press / hover
+	for st in ["normal", "hover", "pressed", "focus", "disabled"]:
+		tap.add_theme_stylebox_override(st, StyleBoxEmpty.new())
 	tap.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	tap.gui_input.connect(func(e): _gesture(e, tap))
 	# hero action row: all secretary actions in one aligned strip
@@ -180,10 +183,7 @@ func _build_top_bar() -> void:
 	add_child(p)
 	var h := UI.hbox(10)
 	p.add_child(h)
-	var av := UI.styled_panel(Color.BLACK, UI.GOLD, 32, 2, 2)
-	av.custom_minimum_size = Vector2(64, 64)
-	av.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
-	av.add_child(UI.tex_rect(DB.face(Game.avatar_id()), Vector2(60, 60), true))
+	var av := UI.avatar(Game.avatar_id(), 64)
 	av.mouse_filter = Control.MOUSE_FILTER_STOP
 	av.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	av.tooltip_text = "Commander Profile"
@@ -752,6 +752,8 @@ func _draw_ring() -> void:
 ## Lighting that follows the device clock (WIB): dawn gold, day clear, dusk orange, night blue + stars.
 func _time_of_day() -> void:
 	var hr: int = int(Time.get_datetime_dict_from_system()["hour"])
+	if OS.get_environment("LOBBY_HOUR") != "":
+		hr = int(OS.get_environment("LOBBY_HOUR"))   # test switch for screenshots
 	var tint := Color(0, 0, 0, 0)
 	var rays := true
 	var stars := false
@@ -771,39 +773,28 @@ func _time_of_day() -> void:
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(tr)
 	move_child(tr, 3)
-	if rays:
-		var rl := Control.new()
-		rl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		rl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var m := CanvasItemMaterial.new()
-		m.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-		rl.material = m
-		add_child(rl)
-		move_child(rl, 4)
-		for i in 4:
-			var ray := TextureRect.new()
-			var g := Gradient.new()
-			g.set_color(0, Color(tint.r, tint.g, tint.b * 0.8, 0.22))
-			g.set_color(1, Color(1, 1, 1, 0.0))
-			var gt := GradientTexture2D.new()
-			gt.gradient = g
-			gt.fill_from = Vector2(0.5, 0)
-			gt.fill_to = Vector2(0.5, 1)
-			ray.texture = gt
-			ray.stretch_mode = TextureRect.STRETCH_SCALE
-			ray.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			ray.size = Vector2(90 + i * 30, 900)
-			ray.position = Vector2(180 + i * 170, -120)
-			ray.rotation = -0.45
-			ray.pivot_offset = Vector2(ray.size.x * 0.5, 0)
-			ray.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			rl.add_child(ray)
-			var tw := ray.create_tween().set_loops()
-			tw.tween_property(ray, "modulate:a", 0.35, randf_range(2.5, 4.0)).set_trans(Tween.TRANS_SINE)
-			tw.tween_property(ray, "modulate:a", 1.0, randf_range(2.5, 4.0)).set_trans(Tween.TRANS_SINE)
-			var sw := ray.create_tween().set_loops()
-			sw.tween_property(ray, "rotation", -0.38, randf_range(4.0, 6.0)).set_trans(Tween.TRANS_SINE)
-			sw.tween_property(ray, "rotation", -0.5, randf_range(4.0, 6.0)).set_trans(Tween.TRANS_SINE)
+	# volumetric light: sun shafts by day, a fainter cool moonbeam at night (game/ui/light_shafts.gdshader)
+	var shafts := ColorRect.new()
+	shafts.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shafts.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sm := ShaderMaterial.new()
+	sm.shader = load("res://game/ui/light_shafts.gdshader")
+	var lc := Color(1.0, 0.9, 0.72) if rays else Color(0.62, 0.74, 1.0)
+	if hr >= 5 and hr < 9:
+		lc = Color(1.0, 0.8, 0.5)
+	elif hr >= 16 and hr < 19:
+		lc = Color(1.0, 0.62, 0.38)
+	sm.set_shader_parameter("tint", lc)
+	sm.set_shader_parameter("strength", 0.85 if rays else 0.5)
+	sm.set_shader_parameter("dust", 1.0 if rays else 0.5)
+	shafts.material = sm
+	add_child(shafts)
+	move_child(shafts, 4)
+	var fit_aspect := func(): sm.set_shader_parameter("aspect", size.x / maxf(1.0, size.y))
+	fit_aspect.call()
+	resized.connect(fit_aspect)
+	if Game.reduce_fx():
+		sm.set_shader_parameter("dust", 0.0)
 	if stars:
 		var a := AmbientFX.new(Color(0.8, 0.9, 1.0), 50)
 		add_child(a)
@@ -1035,10 +1026,7 @@ func _open_profile() -> void:
 	h.add_child(left)
 	var top := UI.hbox(12)
 	left.add_child(top)
-	var av := UI.styled_panel(Color.BLACK, UI.GOLD, 60, 3, 2)
-	av.custom_minimum_size = Vector2(112, 112)
-	av.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
-	av.add_child(UI.tex_rect(DB.face(Game.avatar_id()), Vector2(108, 108), true))
+	var av := UI.avatar(Game.avatar_id(), 112, UI.GOLD, 3)
 	top.add_child(av)
 	var idv := UI.vbox(4)
 	top.add_child(idv)
@@ -1167,20 +1155,36 @@ func _open_profile() -> void:
 		box.add_child(UI.wrap_label("Records are counted from the day shown under Journey.", 12, UI.MUTED))
 		UI.stagger(box)
 	else:
-		var ag := GridContainer.new()
-		ag.columns = 6
-		ag.add_theme_constant_override("h_separation", 8)
-		ag.add_theme_constant_override("v_separation", 8)
+		# every choice is shown exactly as it will look: full-body sprite in the avatar frame
+		box.add_child(UI.label("Pick the hero shown as your Commander avatar.", 12, UI.MUTED))
+		var ag := HFlowContainer.new()
+		ag.add_theme_constant_override("h_separation", 10)
+		ag.add_theme_constant_override("v_separation", 10)
 		box.add_child(ag)
 		for id in Game.s["heroes"].keys():
 			var hid: String = id
-			var card := HeroCard.new(hid, Vector2(80, 100), {"skin": true, "show_level": false})
-			card.set_selected(hid == Game.avatar_id())
-			card.pressed.connect(func():
+			var cur: bool = hid == Game.avatar_id()
+			var tile := Button.new()
+			tile.theme_type_variation = "FlatButton"
+			tile.focus_mode = Control.FOCUS_NONE
+			tile.custom_minimum_size = Vector2(86, 106)
+			tile.tooltip_text = DB.name_of(hid)
+			var tv := UI.vbox(2)
+			tv.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			tv.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			tile.add_child(tv)
+			tv.add_child(UI.avatar(hid, 82, UI.GOLD if cur else Color("#5b4790"), 3 if cur else 1))
+			var nl := UI.label(DB.name_of(hid).split(" ")[0], 12, UI.GOLD if cur else UI.TEXT, 2)
+			nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			nl.clip_text = true
+			nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			tv.add_child(nl)
+			tile.pressed.connect(func():
+				Game.sfx("ui_click")
 				Game.set_avatar(hid)
 				main.close_popup(v)
 				main.replace("lobby"))
-			ag.add_child(card)
+			ag.add_child(tile)
 
 ## Hairly the fortune teller (animated pivot-rig NPC): one tarot card per day.
 func _open_fortune() -> void:

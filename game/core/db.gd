@@ -3816,6 +3816,16 @@ static func bust(id: String, skin: int = -1) -> Texture2D:
 	_tex_cache[key] = at
 	return at
 
+## Centre of the face in an illustration, as a fraction of its size (x, y), plus the face width fraction (z).
+## Used to frame close-ups (ultimate cut-in, avatars) on the face instead of the middle of the picture.
+static func face_focus(tex: Texture2D) -> Vector3:
+	if tex == null:
+		return Vector3(0.5, 0.2, 0.3)
+	var fc: Array = _face_crops().get(tex.resource_path, [])
+	if fc.size() == 4:
+		return Vector3(float(fc[0]) + float(fc[2]) * 0.5, float(fc[1]) + float(fc[3]) * 0.5, float(fc[2]))
+	return Vector3(0.5, 0.2, 0.3)
+
 static var _face_crop_json: Dictionary = {}
 static var _face_crop_loaded := false
 

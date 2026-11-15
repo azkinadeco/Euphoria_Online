@@ -855,3 +855,64 @@ static func scrim(from_top: bool, height: float, alpha: float = 0.8, tint: Color
 	else:
 		t.offset_top = -height
 	return t
+
+# ----------------------------------------------------------------- avatar
+## One avatar look for the whole game: the hero's full-body battle sprite on a soft backdrop in her colour,
+## inside a rounded frame. (Avatars used to be face crops of the illustration, which came out differently
+## for every hero: some a face, some a shoulder, some half a wing.) Heroes without a sprite fall back to the face.
+static func avatar(id: String, sz: float, ring: Color = GOLD, ring_w: int = 2) -> Control:
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(sz, sz)
+	c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var rad := int(sz * 0.22)
+	var clip := Panel.new()
+	clip.clip_children = CanvasItem.CLIP_CHILDREN_ONLY
+	clip.add_theme_stylebox_override("panel", style(Color.WHITE, Color.TRANSPARENT, rad, 0, 0))
+	clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	c.add_child(clip)
+	var tc: Color = DB.theme_color(id)
+	var g := Gradient.new()
+	g.set_color(0, tc.lerp(Color(0.16, 0.1, 0.26), 0.45))
+	g.set_color(1, Color(0.05, 0.03, 0.1))
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.42)
+	gt.fill_to = Vector2(1.0, 1.0)
+	gt.width = 32
+	gt.height = 32
+	var bg := TextureRect.new()
+	bg.texture = gt
+	bg.stretch_mode = TextureRect.STRETCH_SCALE
+	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	clip.add_child(bg)
+	var star := 1
+	var skin := -1
+	if Game.owns(id):
+		star = int(Game.hero(id).get("star", 1))
+		skin = int(Game.hero(id).get("skin", 0))
+	var sp: Texture2D = DB.sprite(id, star, skin)
+	var pic: TextureRect
+	if sp != null:
+		pic = tex_rect(sp)          # whole body, aspect kept
+		pic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		var m := sz * 0.05
+		pic.offset_left = m
+		pic.offset_top = m
+		pic.offset_right = -m
+		pic.offset_bottom = -m
+	else:
+		pic = tex_rect(DB.face(id), Vector2.ZERO, true)
+		pic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	clip.add_child(pic)
+	var ring_p := Panel.new()
+	ring_p.add_theme_stylebox_override("panel", style(Color.TRANSPARENT, ring, rad, ring_w, 0))
+	ring_p.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ring_p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	c.add_child(ring_p)
+	return c

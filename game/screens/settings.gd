@@ -111,21 +111,7 @@ func _profile(parent: Control) -> void:
 	p.add_child(v)
 	var top := UI.hbox(12)
 	v.add_child(top)
-	var av := Control.new()
-	av.custom_minimum_size = Vector2(84, 84)
-	var clip := Panel.new()
-	clip.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
-	clip.add_theme_stylebox_override("panel", UI.style(Color.WHITE, Color.TRANSPARENT, 42, 0, 0))
-	clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	av.add_child(clip)
-	var face := UI.tex_rect(DB.face(lh), Vector2.ZERO, true)
-	face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	clip.add_child(face)
-	var ring := Panel.new()
-	ring.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, UI.GOLD, 42, 2, 0))
-	ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	av.add_child(ring)
+	var av := UI.avatar(Game.avatar_id(), 84)
 	top.add_child(av)
 	var nv := UI.vbox(2)
 	nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL

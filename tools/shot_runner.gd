@@ -331,6 +331,13 @@ func _next() -> void:
 			if c.has_method("_show_log"):
 				c._advance()
 				c._advance()
+	elif v.begins_with("ult:"):
+		# ult:shina -> play that unit's ultimate cut-in on the battle screen
+		var bs = main_node.current
+		for bu in bs.sim.units:
+			if str(bu["id"]) == v.substr(4):
+				bs._ultimate(bu)
+				break
 	elif v == "wait":
 		pass
 	elif v == "close":
