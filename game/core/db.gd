@@ -1983,6 +1983,25 @@ const FIRST_STEPS := [
 	{"id": "chapter1", "text": "Clear Chapter 1", "route": "story", "give": {"summon_ticket": 2, "gems": 200}},
 ]
 
+## Display name of a tutorial key for the Guide Archive (MENU label when the key is a screen).
+const TUTORIAL_NAMES := {"temper": "Forge: Temper", "tactics": "Commander Tactics", "limit_break": "Limit Break", "formation": "Formation",
+	"gacha": "Summon", "hero_detail": "Hero Details", "worldboss": "World Boss", "hunt": "Boss Hunt", "rift": "Starlight Rift", "room": "Private Room"}
+static func tutorial_name(key: String) -> String:
+	if TUTORIAL_NAMES.has(key):
+		return str(TUTORIAL_NAMES[key])
+	for f in MENU_FEATURES:
+		if str(f[0]) == key:
+			return str(f[2])
+	return key.capitalize()
+
+## Icon of a tutorial key (the MENU icon of its screen, or a book).
+static func tutorial_icon(key: String) -> String:
+	var route := {"temper": "forge", "tactics": "", "limit_break": "", "formation": "", "gacha": "", "hero_detail": ""}.get(key, key) as String
+	for f in MENU_FEATURES:
+		if str(f[0]) == route:
+			return str(f[1])
+	return {"formation": "icon_formation", "gacha": "icon_gacha", "hero_detail": "icon_skills", "tactics": "icon_skill_tactical", "limit_break": "icon_awakening"}.get(key, "icon_codex") as String
+
 # ---------------------------------------------------------------- first-visit tutorials
 const TUTORIALS := {
 	"training": [["fidelia", "The Training Ground. These partners can't be defeated, so strike with everything you have."],

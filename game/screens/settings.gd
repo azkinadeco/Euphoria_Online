@@ -171,6 +171,9 @@ func _profile(parent: Control) -> void:
 	var hp := UI.button("📖 HOW TO PLAY", func(): main.show_how_to_play(), "GoldButton", Vector2(0, 44))
 	hp.tooltip_text = "Battlefield, ranges, roles, elements, growth and daily routine"
 	v.add_child(hp)
+	var ga := UI.button("GUIDE ARCHIVE", _show_guides, "", Vector2(0, 40))
+	ga.tooltip_text = "Replay the short guides your heroes gave you for each mode"
+	v.add_child(ga)
 
 func _data(parent: Control) -> void:
 	var v := _card(parent, "SAVE DATA", "icon_codex", Color("#7ee08a"))
@@ -324,6 +327,40 @@ func _show_backups() -> void:
 				main.home(), "RESTORE"), "", Vector2(120, 40))
 		rb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		h.add_child(rb)
+	var c := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
+	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(c)
+
+## Every first-visit guide, replayable. Guides for modes you have not opened yet are marked NEW.
+func _show_guides() -> void:
+	var v: VBoxContainer = main.popup("GUIDE ARCHIVE", 760)
+	var seen: Array = Game.s.get("tips_seen", [])
+	var keys: Array = DB.TUTORIALS.keys()
+	keys.sort_custom(func(a, b): return DB.tutorial_name(str(a)) < DB.tutorial_name(str(b)))
+	v.add_child(UI.wrap_label("Short guides from your heroes, one for each mode. Tap one to hear it again.  %d / %d seen." % [keys.filter(func(k): return seen.has(k)).size(), keys.size()], 13, UI.MUTED))
+	var g := GridContainer.new()
+	g.columns = 2
+	g.add_theme_constant_override("h_separation", 8)
+	g.add_theme_constant_override("v_separation", 8)
+	var sc := UI.scroll(g)
+	sc.custom_minimum_size = Vector2(0, 380)
+	v.add_child(sc)
+	for k in keys:
+		var key: String = k
+		var was_seen := seen.has(key)
+		var b := UI.button("  " + DB.tutorial_name(key) + ("" if was_seen else "   • NEW"), func():
+			main.close_popup(v)
+			main.dialogue(DB.TUTORIALS[key], _show_guides, "", true), "", Vector2(0, 46))
+		b.icon = DB.icon(DB.tutorial_icon(key))
+		b.add_theme_constant_override("icon_max_width", 28)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.set_meta("guide", key)
+		if not was_seen:
+			b.add_theme_color_override("font_color", UI.GOLD)
+		var guide_hero := str(DB.TUTORIALS[key][0][0])
+		b.tooltip_text = "Explained by %s" % DB.name_of(guide_hero).split(" ")[0]
+		g.add_child(b)
 	var c := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
 	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	v.add_child(c)

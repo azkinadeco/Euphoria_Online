@@ -1823,6 +1823,15 @@ func _run() -> void:
 	check(int(G.fuse_all_plan()["fusions"]) == 0, "no Gold, no fusion")
 	G.s = fr_save
 
+	print("[guide archive]")
+	var ga_names := {}
+	for gak in DB.TUTORIALS.keys():
+		var gan: String = DB.tutorial_name(str(gak))
+		check(gan != "" and not ga_names.has(gan), "guide %s has a unique name (%s)" % [gak, gan])
+		ga_names[gan] = true
+		check(ResourceLoader.exists("res://art/icons/%s.png" % DB.tutorial_icon(str(gak))), "guide %s has an icon" % gak)
+		check(DB.HEROES.has(str(DB.TUTORIALS[gak][0][0])), "guide %s is spoken by a hero" % gak)
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

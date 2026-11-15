@@ -1228,6 +1228,11 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fq. Update batch 165 — Guide Archive
+
+- `settings.gd::_show_guides`: popup daftar semua `DB.TUTORIALS` (2 kolom, urut nama), tap untuk memutar ulang lewat `main.dialogue(..., compact)` lalu kembali ke daftar. Tutorial yang belum pernah muncul (`tips_seen`) diberi tanda NEW; memutar dari arsip tidak menandainya sebagai sudah dilihat, jadi tetap muncul saat mode dibuka pertama kali.
+- `DB.tutorial_name(key)` / `tutorial_icon(key)`: nama dan ikon dari `MENU_FEATURES`, dengan pengecualian di `TUTORIAL_NAMES`.
+
 ## 2fp. Update batch 164 — FUSE ALL untuk rune
 
 - `Game.fuse_all_plan()`: simulasi per tipe rune dari tier 1 ke atas; hasil fusi ikut dihitung untuk tier berikutnya, dibatasi Gold. Hasil `{steps: [[type, tier, times]], fusions, gold}` tanpa mengubah save.
