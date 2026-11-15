@@ -1228,6 +1228,13 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gg. Update batch 181 — Layar judul di realm hero
+
+Batch perbaikan (tanpa fitur baru).
+
+- `title.gd`: background = realm hero yang tampil (bila ada), ditambah `UI.light_shafts()` berwarna tema hero.
+- `UI.light_shafts(tint, strength, origin)`: pembungkus shader cahaya volumetrik agar bisa dipakai layar lain.
+
 ## 2gf. Update batch 180 — Set suara UI
 
 Batch perbaikan interaksi (tanpa fitur baru).

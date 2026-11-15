@@ -67,11 +67,15 @@ class StartPlate extends Control:
 			draw_colored_polygon(PackedVector2Array([Vector2(sx2 - 18, 6), Vector2(sx2 + 10, 6), Vector2(sx2 - 10, h - 6), Vector2(sx2 - 38, h - 6)]), Color(1, 1, 1, 0.12))
 
 func build() -> void:
-	set_bg("lobby", 0.35)
-	ambient(Color(1.0, 0.8, 1.0), 60)
 	var owned: Array = Game.s["heroes"].keys()
 	var hid: String = Game.s["lobby_hero"] if randf() < 0.5 or owned.is_empty() else owned[randi() % owned.size()]
 	var tc: Color = DB.theme_color(hid)
+	# the hero on the title stands in her own realm (when she has one), lit from the top left
+	set_bg(DB.hero_bg_key(hid) if DB.has_hero_bg(hid) else "lobby", 0.42)
+	ambient(Color(1.0, 0.8, 1.0), 60)
+	var shafts := UI.light_shafts(tc.lightened(0.6), 0.6)
+	add_child(shafts)
+	move_child(shafts, 3)
 
 	# glow of the hero's theme colour behind the art
 	var halo := Rays.new()

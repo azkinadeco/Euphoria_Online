@@ -916,3 +916,22 @@ static func avatar(id: String, sz: float, ring: Color = GOLD, ring_w: int = 2) -
 	ring_p.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	c.add_child(ring_p)
 	return c
+
+# ----------------------------------------------------------------- light shafts
+## Full-screen volumetric light (game/ui/light_shafts.gdshader). Add it right above a backdrop.
+static func light_shafts(tint: Color = Color(1.0, 0.9, 0.72), strength: float = 0.7, origin: Vector2 = Vector2(0.08, -0.35)) -> ColorRect:
+	var r := ColorRect.new()
+	r.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sm := ShaderMaterial.new()
+	sm.shader = load("res://game/ui/light_shafts.gdshader")
+	sm.set_shader_parameter("tint", tint)
+	sm.set_shader_parameter("strength", strength)
+	sm.set_shader_parameter("origin", origin)
+	sm.set_shader_parameter("dust", 0.0 if Game.reduce_fx() else 1.0)
+	r.material = sm
+	var fit := func():
+		if r.size.y > 1.0:
+			sm.set_shader_parameter("aspect", r.size.x / r.size.y)
+	r.resized.connect(fit)
+	return r
