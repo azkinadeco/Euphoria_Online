@@ -1228,6 +1228,13 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fo. Update batch 163 — Arc 13: The Jade Masquerade
+
+- **4 chapter baru (49–52, total 52 chapter / 312 stage)**: The Thousand-Coin Ball (bos Masked Ning Er), The Endless Duel (Mei), The Hall of Verdicts (Angela), Maskmaker's Grotto (Scylla). Struktur sama dengan arc sebelumnya (intro, mid, mid2, boss_lines, outro, pilihan VN, field mod).
+- **Varian baru `jade`** (prefix `jade:`, nama "Masked X"): `UI.corrupt` (desat 0,6, tone 0,78/1,36/0,98, halo hijau pucat), `DB.base_id` / `name_of` / `theme_color`, `vn_dialogue.gd`, label MASKED + modulate hijau di `battle.gd`, `DB.RIFT_VARIANTS`.
+- Penutup Arc 12 jadi pengantar Arc 13. Interlude `i13` "The Unmasked Ball" (req 312), title `unmasked`, achievement `ch52`, Story Link `faces` (Scylla + Angela + Mei), mail `arc13_jade`.
+- `story.gd`: tab ARC 13 (chapter 48+). Flow test diperluas ke chapter 45–52.
+
 ## 2fn. Update batch 162 — Shortcut yang di-pin di MENU
 
 - `Game.pins()` / `toggle_pin(route)` (maksimal `PIN_MAX` = 6, disimpan di `s["pins"]`, route yang sudah tidak ada dibuang).

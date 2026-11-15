@@ -1116,7 +1116,95 @@ const CHAPTERS := [
 			["glytta", "Hey. We all stayed in there because part of us wanted to. You don't get to carry that alone."],
 			["lumeira", "...Then next time, I'll wish for something smaller. Like breakfast. With everyone. Awake."],
 			["rumi", "Breakfast is on the Commander. It's in the contract. I wrote it down."],
-			["nar", "— END OF ARC 12: THE DREAMING LANTERN —   Thank you for playing, Commander. More stories are coming."]]},
+			["nar", "— END OF ARC 12: THE DREAMING LANTERN —   A week later, an invitation arrived, sealed in green wax."]]},
+	# ---- Arc 13: The Jade Masquerade (Ning Er, Mei, Angela, Scylla; Atalanta, Gala, Seraph and Morana crash the ball)
+	{"name": "The Thousand-Coin Ball", "bg": "blackmarket", "pool": ["voodoo", "hairly", "scomantis", "svormentis"], "boss": "ninger", "variant": "jade", "mirror": true, "boss_hp": 3.0, "boss_atk": 1.35,
+		"mod": {"elem": "WIND", "atk": 0.3, "name": "Whirling Waltz: WIND units +30% ATK"},
+		"intro": [["nar", "The invitation read: 'A masquerade at the Thousand-Coin Bazaar. Every guest receives a mask of jade. Every guest becomes who they wish to be.'"],
+			["gala", "Darling, a masked ball! I have nine gowns and a moral duty to wear all of them."],
+			["morana", "It is signed by Ning Er. ...It is not her handwriting. Ning Er dots every 'i' with a coin."],
+			["atalanta", "I ran there and back already! Guests go in. Nobody comes out. And the music hasn't stopped for two days."],
+			["commander", "Then we accept the invitation. Nobody puts on a mask."],
+			["?", "gala", ["You may wear all nine gowns.", "Stay close to me in there.", "No mask, Gala. Not even a pretty one."],
+				["...All nine? At once? Darling, you understand me better than my tailor.", "...Oh? Is that an order or an invitation? Either way, yes.", "...Not even the one with feathers? ...Fine. I'm already dazzling."], [30, 40, 35]]],
+		"mid": [["nar", "Inside, a hundred guests danced in perfect circles. Behind every jade mask, the eyes were open, and not looking at anything."],
+			["seraph", "I see them with all my eyes. Each one is acting a part. The baker is a duke. The duke is a pirate. None of them remember their names."],
+			["atalanta", "That one is supposed to be the fastest runner in the world. HEY. That's MY part."]],
+		"mid2": [["nar", "On a throne of coin chests sat the hostess, in a mask carved like a smiling fox."],
+			["jade:ninger", "Welcome, welcome! Tonight I am not a merchant. Tonight I am a princess who never has to count anything again!"],
+			["?", "ninger", ["You love counting, Ning Er.", "Who gave you that mask?", "A princess still pays her staff."],
+				["...Counting... one, two... no! Princesses don't count! ...Do they?", "...A lady from the sea. She said every face is for sale. ...Why did I buy it?", "...S-staff? Wages! Overtime! Oh no, oh no, the ledger...!"], [35, 30, 40]],
+			["jade:ninger", "No more ledgers! Guards, coins, chandeliers — the princess commands a thousand of everything!"]],
+		"boss_lines": [["jade:ninger", "Thousand-Coin Decree — shower them in gold!"], ["gala", "A fox mask, darling? With THAT gown? Let me fix it — permanently."],
+			["commander", "Aim for the mask, not the girl!"]],
+		"outro": [["nar", "The fox mask cracked down the middle, and Ning Er sat down very suddenly among her coin chests."],
+			["ninger", "...Commander? Why am I on a throne? Thrones are a terrible investment. No resale value."],
+			["morana", "Who sold you the mask, child?"],
+			["ninger", "A tall lady in a veil, smelling of salt. She paid in black pearls. She has three more masks. For 'the proud ones', she said."],
+			["nar", "Somewhere above the bazaar, steel rang against steel, again and again, like a clock that could not stop."]]},
+	{"name": "The Endless Duel", "bg": "dragonfire", "pool": ["skelinch", "ymir", "gumi_wolf", "serpentia"], "boss": "mei", "variant": "jade", "mirror": true, "boss_hp": 2.2, "boss_atk": 1.65,
+		"mod": {"elem": "WATER", "atk": 0.3, "name": "Cool Heads: WATER units +30% ATK"},
+		"intro": [["nar", "The duelling hall above the bazaar was full of broken swords. In the middle stood one girl in a rabbit mask, still in her stance."],
+			["atalanta", "That's Mei! She's beaten forty challengers since yesterday. I counted the swords. She hasn't sat down once."],
+			["seraph", "Her part is 'the swordswoman who has never lost'. The mask will not let her rest, because resting is how one loses."],
+			["ninger", "I'm coming too. I sold tickets to this without knowing it. I intend to refund every one."]],
+		"mid": [["nar", "Each defeated guest bowed, picked up a new sword and joined the back of the line again."],
+			["gala", "They'll duel her forever, and she'll win forever. That's not a legend, darling. That's a treadmill."],
+			["atalanta", "A race with no finish line. ...Okay, I get it now. That's actually horrible."]],
+		"mid2": [["jade:mei", "Next. ...Commander? You too? Draw. I can't lose. I'm not allowed to lose. Next. Next. Next."],
+			["?", "mei", ["You named every blade. Which one is this?", "You can lose to me. I won't tell.", "Mei, your hands are shaking."],
+				["...This one is... is... I can't remember her name. I always remember their names...", "...Lose? ...What happens to a girl who loses? ...I forgot that too.", "...They're not. A master's hands never — ...they are. Why are they...?"], [40, 35, 30]],
+			["jade:mei", "Enough talking! A blade that hesitates is a blade that breaks. Crimson Moon — draw!"]],
+		"boss_lines": [["jade:mei", "Crimson Blade — one thousand and one victories!"], ["atalanta", "Bet I can dodge all thousand! Thunderstep!"],
+			["ninger", "Full refund for everybody! Starting with you, Mei!"]],
+		"outro": [["nar", "The rabbit mask fell in two halves. Mei's sword followed it to the floor, and she sat down for the first time in two days."],
+			["mei", "...I lost. ...Huh. The sky didn't fall. My ears are still on. ...Commander, I'm so hungry."],
+			["ninger", "Carrots. On the house. I am never saying those words again, so enjoy them."],
+			["mei", "The veiled lady watched me fight. She said the next mask was for 'the one who judges everyone but herself'."],
+			["seraph", "...Angela. Sister, no."]]},
+	{"name": "The Hall of Verdicts", "bg": "asgard", "pool": ["lizamorph", "octra", "eroghost", "evy_blood_sage"], "boss": "angela", "variant": "jade", "mirror": true, "boss_hp": 3.4, "boss_atk": 1.3,
+		"mod": {"elem": "DARK", "atk": 0.3, "name": "Honest Shadows: DARK units +30% ATK"},
+		"intro": [["nar", "The ballroom's upper gallery had become a courtroom. Masked guests stood in rows, each waiting to be told what they were guilty of."],
+			["seraph", "Angela is the kindest of the Valkyries. But she has always believed kindness must be earned. The mask has only removed the kindness."],
+			["morana", "A judge who cannot doubt. I have buried people who were sentenced by such judges."],
+			["mei", "She sentenced a man for stepping on someone's foot in a waltz. A hundred years of polishing floors."]],
+		"mid": [["nar", "A guest was dragged forward for the crime of laughing too loudly. The gavel fell before he could speak."],
+			["gala", "Darling, if loud laughter is a crime, I'm facing several lifetimes."],
+			["seraph", "I have a thousand eyes, and I still cannot see where my sister went behind that mask."]],
+		"mid2": [["jade:angela", "Commander. You stand accused of leniency. Of forgiving the lazy, the loud and the late. How do you plead?"],
+			["?", "angela", ["Guilty. And I'd forgive you too.", "Who judges the judge, Angela?", "You once cried over a broken bird."],
+				["...Forgive... me? I have done nothing that requires — ...have I?", "...No one. No one may. ...That is the rule. ...Who made that rule?", "...It had a broken wing. I held it all night. ...That is not relevant to this court!"], [40, 30, 35]],
+			["jade:angela", "Objection overruled. All objections overruled. The sentence is light itself — Seraphic Verdict!"]],
+		"boss_lines": [["jade:angela", "Seraphic Valkyrie — judgement without appeal!"], ["seraph", "Sister, I appeal. On behalf of everyone you love."],
+			["morana", "Let the Black Priestess speak for the defence."]],
+		"outro": [["nar", "The owl mask shattered on the courtroom floor, and the rows of the condemned blinked, and began to remember their own names."],
+			["angela", "...I sentenced a man for laughing. Seraph, I sentenced a man for LAUGHING."],
+			["seraph", "And you will apologise to him yourself. That is my verdict. It comes with a hug."],
+			["angela", "The veiled one stood beside my chair the whole time. She whispered each sentence before I spoke it."],
+			["morana", "Then the last mask is her own. Commander — the lowest cellar of the bazaar opens onto the sea."]]},
+	{"name": "Maskmaker's Grotto", "bg": "aqua", "pool": ["slarkoi", "serpentia", "octra", "lizamorph"], "boss": "scylla", "variant": "jade", "mirror": true, "boss_hp": 1.6, "boss_atk": 0.9,
+		"mod": {"elem": "EARTH", "atk": 0.35, "name": "Solid Footing: EARTH units +35% ATK"},
+		"intro": [["nar", "Below the bazaar, the sea had carved a grotto. On every wall hung faces of jade: smiling, weeping, proud. In the middle, a workbench, and a veiled woman carving one more."],
+			["angela", "Scylla. The Kraken Queen. But she guards the deep trenches. She has not come ashore in years."],
+			["morana", "Because the last time she did, a village rang its bells and ran from her. I conducted the apology service. Nobody attended."],
+			["?", "morana", ["Then she never got her apology.", "A mask so no one would run.", "Let me speak to her first."],
+				["...No. She did not. I have thought about that empty chapel many times.", "...Yes. I believe that is exactly what she is carving.", "...Go gently, Commander. Monsters have the thinnest skin of all of us."], [35, 40, 30]]],
+		"mid": [["nar", "The masks on the walls whispered as they passed, each in a stolen voice: a baker, a duke, a girl who had wanted to be brave."],
+			["ninger", "She wasn't selling masks. She was buying faces. Every guest who wore one left a little of theirs behind."],
+			["mei", "To build one face nobody would run from. ...That's the loneliest shopping list I've ever heard."]],
+		"mid2": [["jade:scylla", "You broke my ball. My beautiful ball, where everyone was someone lovely, and no one screamed when I walked in."],
+			["jade:scylla", "Look. It is nearly finished. A face made from a hundred kind faces. When I wear it, no bell will ever ring for me again."],
+			["?", "scylla", ["I'm not running. Look at me.", "A borrowed face can't be loved for you.", "Take off the veil. Let me see you."],
+				["...You are not. ...Your knees are shaking, but you are not. ...Why?", "...Then what is left for the one underneath? Tell me that, little Commander.", "...No one has asked that. They ask me to leave. They never ask to see."], [40, 35, 30]],
+			["jade:scylla", "...Lies. Kind lies, but lies. Everyone runs in the end. Kraken — drown the lamps!"]],
+		"boss_lines": [["jade:scylla", "Kraken Abyss Queen — a hundred faces, and none of them mine!"], ["angela", "This court finds you... lonely. The sentence is company."],
+			["gala", "Darling, you have EIGHT arms. Imagine the gowns!"], ["commander", "Scylla — we're staying right here!"]],
+		"outro": [["nar", "The unfinished mask slipped from the workbench and broke. Along the walls, a hundred jade faces sighed, and went home to their owners."],
+			["scylla", "...You are all still here. ...The tide is in, the lamps are out, I have shown you everything, and you are still here."],
+			["morana", "There is a chapel that owes you a service, Kraken Queen. This time I will fill the pews myself."],
+			["gala", "And afterwards, a real ball. No masks. I'll lend you gown number seven. It has room."],
+			["scylla", "...A ball where they can see me. ...I will need to practise not looming. Commander... will you count the steps with me?"],
+			["nar", "— END OF ARC 13: THE JADE MASQUERADE —   Thank you for playing, Commander. More stories are coming."]]},
 ]
 const STAGES_PER_CHAPTER := 6
 
@@ -1222,6 +1310,16 @@ const INTERLUDES := [
 			["?", "lumeira", ["Then tonight, dream something just for you.", "I'm glad you woke up.", "Save me a seat at breakfast tomorrow."],
 				["...Just for me? ...Maybe a small one. A nap in the sun. ...With you nearby.", "...Me too. Being awake is noisy and bright and a little sad. I like it.", "...Every tomorrow. I'll even wake up on time. ...Probably."], [35, 40, 30]],
 			["nar", "The old lantern hangs in the hall now, unlit. Lumeira dusts it every morning, and says good morning to it, just in case."]]},
+	{"id": "i13", "name": "The Unmasked Ball", "req": 312, "bg": "lobby", "cast": ["scylla", "ninger", "mei", "angela", "gala"],
+		"lines": [["nar", "One week later, the cathedral hosted a ball with one rule, painted over the door in Gala's handwriting: FACES ONLY."],
+			["ninger", "Entry is free. ...Drinks are not. A girl has to recover her losses somehow."],
+			["mei", "I lost at musical chairs. Twice. It was GREAT. Somebody write that down."],
+			["angela", "I have apologised to forty-one guests. Thirty-nine accepted. Two requested a dance instead. I am... negotiating."],
+			["gala", "Gown number seven, as promised. Scylla, darling, turn around. Oh. Oh, that is unfair. You wear it better than I do."],
+			["scylla", "...No one has rung a bell. ...A child asked to ride on a tentacle. I said yes before I could think."],
+			["?", "scylla", ["May I have this dance?", "You look happy, Scylla.", "One, two, three. Follow my count."],
+				["...You may. Mind your feet. ...All of mine will mind yours.", "...Is that what this is? It feels like the first warm current after winter.", "...One, two, three. ...I did not loom. Did you see? I did not loom at all."], [40, 35, 30]],
+			["nar", "The music stopped at dawn, the way music should, and everyone went home wearing their own face."]]},
 ]
 const CHAPTER_REWARD := {"gems": 300, "summon_ticket": 3, "gear_chest": 1}
 
@@ -1438,6 +1536,7 @@ const ACHIEVEMENTS := [
 	{"id": "ch40", "name": "Clear Arc 10: The Abyss Choir", "stat": "stages_cleared", "target": 240, "give": {"gems": 10000, "summon_ticket": 20, "oath_ring": 1}},
 	{"id": "ch44", "name": "Clear Arc 11: The Frostbound Crown", "stat": "stages_cleared", "target": 264, "give": {"gems": 16000, "summon_ticket": 30, "celestial_gem": 7}},
 	{"id": "ch48", "name": "Clear Arc 12: The Dreaming Lantern", "stat": "stages_cleared", "target": 288, "give": {"gems": 16000, "summon_ticket": 30, "oath_ring": 1}},
+	{"id": "ch52", "name": "Clear Arc 13: The Jade Masquerade", "stat": "stages_cleared", "target": 312, "give": {"gems": 16000, "summon_ticket": 30, "celestial_gem": 7}},
 	{"id": "hard30", "name": "Clear 30 Hard stages", "stat": "hard_cleared", "target": 30, "give": {"gems": 1500, "star_stone": 20}},
 	{"id": "own8", "name": "Recruit 8 heroes", "stat": "heroes_owned", "target": 8, "give": {"gems": 300}},
 	{"id": "own27", "name": "Recruit 27 heroes", "stat": "heroes_owned", "target": 27, "give": {"gems": 3000}},
@@ -1518,6 +1617,7 @@ static func ach_cat(a: Dictionary) -> String:
 	return str(ACH_CAT_OF.get(a["stat"], "COLLECTION"))
 
 const MAIL := [
+	{"id": "arc13_jade", "title": "Arc 13: The Jade Masquerade", "body": "An invitation sealed in green wax has arrived: a masked ball at the Thousand-Coin Bazaar, where nobody ever leaves. Four new story chapters (49-52) are open after Arc 12. Break the jade masks of Ning Er, Mei and Angela, and find the maskmaker in the grotto below. Travel supplies are attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
 	{"id": "arc12_dream", "title": "Arc 12: The Dreaming Lantern", "body": "The morning bell did not ring, and half the cathedral will not wake up. Four new story chapters (45-48) are open after Arc 11: follow Rumi, Furu and Mora into Lumeira's dream and bring back Glytta, Kara and Gemora. Watch out for the new Dreambound bosses. Something to keep you awake is attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
 	{"id": "arc11_frost", "title": "Arc 11: The Frostbound Crown", "body": "Snow is falling inside the cathedral! Four new story chapters (41-44) are open after Arc 10, where Valeria, Schylua, Micca and Aqua face the Winter Crown of Frostvale. Watch out for the new Frostbound bosses. A warm cup of supplies is attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
 	{"id": "xmas_hyeonxa", "title": "Starfall Christmas: Hyeonxa's Limited Skin!", "body": "The Starfall Christmas event is live until January 1st! Clear the snowbound event stages, collect Event Tokens and exchange 1,800 of them for Hyeonxa's limited skin SCARLET MISTLETOE — with its own battle sprite. Here are some tokens to get you started.", "give": {"festival_token": 200}},
@@ -1560,6 +1660,7 @@ const TITLES := [
 	{"id": "abyss_choir", "name": "Conductor of the Abyss", "desc": "Clear Arc 10 (Chapter 40)."},
 	{"id": "frostbound", "name": "Crownbreaker of Frostvale", "desc": "Clear Arc 11 (Chapter 44)."},
 	{"id": "dreamwalker", "name": "Dreamwalker", "desc": "Clear Arc 12 (Chapter 48)."},
+	{"id": "unmasked", "name": "Breaker of Masks", "desc": "Clear Arc 13 (Chapter 52)."},
 	{"id": "homebody", "name": "Homebody", "desc": "Unlock every Private Room."},
 	{"id": "mirror_master", "name": "Mirror Master", "desc": "Clear 30 Hero Trial tiers."},
 	{"id": "hunter", "name": "Apex Hunter", "desc": "Defeat any Boss Hunt target on ABYSS difficulty."},
@@ -2084,7 +2185,7 @@ static var _prof_json: Dictionary = {}
 
 ## Story speaker ids may carry a variant prefix ("mirror:", "hollow:", "echo:").
 static func base_id(id: String) -> String:
-	for p in ["mirror:", "hollow:", "echo:", "ashen:", "feral:", "frost:", "dream:"]:
+	for p in ["mirror:", "hollow:", "echo:", "ashen:", "feral:", "frost:", "dream:", "jade:"]:
 		if id.begins_with(p):
 			return id.substr(p.length())
 	return id
@@ -2562,7 +2663,7 @@ static func fav_room(id: String) -> String:
 # ------------------------------------------------------------------ Starlight Rift (weekly roguelite climb)
 const RIFT_MAPS := ["space", "alien", "abaddon", "blackhole", "dino", "bigtree", "necro", "galaxy", "dragonfire", "asgard", "outland", "ice", "apocalypse", "hell", "aqua", "forest"]
 const RIFT_POOL := ["slime", "ex_nymph", "gumi_wolf", "slarkoi", "eroghost", "evy_blood_sage", "ygg_naar", "hairly", "svormentis", "ymir", "scomantis", "skelinch", "serpentia", "voodoo", "lizamorph", "octra"]
-const RIFT_VARIANTS := ["mirror", "hollow", "astral", "echo", "ashen", "frost", "dream"]
+const RIFT_VARIANTS := ["mirror", "hollow", "astral", "echo", "ashen", "frost", "dream", "jade"]
 ## Blessings: picked 1-of-3 after every win; they stack for the rest of the run.
 const BLESSINGS := {
 	"ember": {"name": "Ember Heart", "desc": "All allies ATK +8%", "rar": "R", "bonus": {"atk": 0.08}},
@@ -2697,6 +2798,7 @@ const LINKS := [
 	{"id": "blaze", "name": "Blaze Brigade", "heroes": ["rubby", "shina"], "bonus": {"atk": 0.06}, "line": "Fireworks and dragonfire."},
 	{"id": "wander", "name": "Wanderer & Sage", "heroes": ["sven", "hyeonxa"], "bonus": {"hp": 0.08}, "line": "Quiet roads and quieter tea."},
 	{"id": "warm", "name": "Warm Hearts", "heroes": ["eurnipha", "cthollia"], "bonus": {"hp": 0.08}, "line": "Saved from the Hollow Star together."},
+	{"id": "faces", "name": "Faces Only", "heroes": ["scylla", "angela", "mei"], "bonus": {"atk": 0.05, "hp": 0.05, "def": 0.05}, "line": "No masks, no verdicts, no perfect records."},
 	{"id": "dawn", "name": "Good Morning", "heroes": ["lumeira", "kara", "gemora"], "bonus": {"atk": 0.05, "hp": 0.05, "def": 0.05}, "line": "A nap, a cup of tea and a small warm star."},
 	{"id": "thaw", "name": "After the Thaw", "heroes": ["valeria", "rubby", "aqua"], "bonus": {"atk": 0.05, "hp": 0.05, "def": 0.05}, "line": "Ice, fireworks and rain — the recipe for spring."},
 	{"id": "lastlight", "name": "The Last Light", "heroes": ["shina", "fidelia", "mora"], "bonus": {"atk": 0.06, "hp": 0.06, "def": 0.06}, "line": "Today, tomorrow, and every tomorrow after that."},
@@ -3790,6 +3892,8 @@ static func name_of(id: String) -> String:
 		return "Frostbound " + name_of(id.substr(6)).split(" ")[0]
 	if id.begins_with("dream:"):
 		return "Dreambound " + name_of(id.substr(6)).split(" ")[0]
+	if id.begins_with("jade:"):
+		return "Masked " + name_of(id.substr(5)).split(" ")[0]
 	var e := _entry(id)
 	return str(e.get("display_name", id.capitalize()))
 
@@ -3814,6 +3918,8 @@ static func theme_color(id: String) -> Color:
 		return Color("#3f7fb8")
 	if id.begins_with("dream:"):
 		return Color("#b05fc0")
+	if id.begins_with("jade:"):
+		return Color("#2f9a6a")
 	var c := str(_entry(id).get("theme_color", ""))
 	if c != "":
 		return Color(c)

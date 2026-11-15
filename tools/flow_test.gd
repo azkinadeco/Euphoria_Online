@@ -754,11 +754,12 @@ func _run() -> void:
 	check(not ups.is_empty() and ups[0][0] == "lucidria", "bond_up signal fires on level up")
 
 	print("[long-term content]")
-	check(DB.CHAPTERS.size() == 48 and DB.stage_count() == 288, "48 chapters / 288 stages")
+	check(DB.CHAPTERS.size() == 52 and DB.stage_count() == 312, "52 chapters / 312 stages")
+	check(DB.name_of("jade:scylla") == "Masked Scylla" and DB.base_id("jade:mei") == "mei", "jade variant names")
 	check(DB.name_of("dream:lumeira") == "Dreambound Lumeira" and DB.base_id("dream:kara") == "kara", "dream variant names")
-	for dch in range(44, 48):
+	for dch in range(44, 52):
 		var dst: Dictionary = DB.stage(dch * DB.STAGES_PER_CHAPTER + 5)
-		check(bool(dst["boss"]) and (dst["enemies"] as Array).any(func(e): return bool(e.get("boss", false)) and str(e.get("variant", "")) == "dream"), "chapter %d ends with a Dreambound boss" % (dch + 1))
+		check(bool(dst["boss"]) and (dst["enemies"] as Array).any(func(e): return bool(e.get("boss", false)) and str(e.get("variant", "")) == ("dream" if dch < 48 else "jade")), "chapter %d ends with its arc's variant boss" % (dch + 1))
 		for dk in ["intro", "mid", "mid2", "boss_lines", "outro"]:
 			for dl in (DB.CHAPTERS[dch][dk] as Array):
 				var sp := str(dl[1]) if str(dl[0]) == "?" else str(dl[0])

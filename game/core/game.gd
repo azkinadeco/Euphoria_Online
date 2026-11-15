@@ -3942,6 +3942,7 @@ func title_unlocked(id: String) -> bool:
 		"abyss_choir": return stages_cleared() >= 240
 		"frostbound": return stages_cleared() >= 264
 		"dreamwalker": return stages_cleared() >= 288
+		"unmasked": return stages_cleared() >= 312
 		"mirror_master": return trials_done() >= 30
 		"homebody": return DB.ROOMS.all(func(r): return room_unlocked(r))
 		"limitless": return s["heroes"].values().any(func(x): return int(x.get("lb", 0)) >= DB.MAX_LB)

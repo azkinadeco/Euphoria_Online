@@ -621,6 +621,12 @@ static func corrupt(t: CanvasItem, variant: String = "") -> void:
 		m.set_shader_parameter("desat", 0.8)
 		m.set_shader_parameter("tone", Vector3(0.74, 1.08, 1.62))
 		m.set_shader_parameter("glow", Color("#bff0ff"))
+	elif variant == "jade":
+		# Masked (Arc 13): carved-jade green, as if the whole figure were cut from the mask's stone, with a pale green halo
+		m.set_shader_parameter("hue_shift", 0.0)
+		m.set_shader_parameter("desat", 0.6)
+		m.set_shader_parameter("tone", Vector3(0.78, 1.36, 0.98))
+		m.set_shader_parameter("glow", Color("#8dffc0"))
 	elif variant == "dream":
 		# Dreambound (Arc 12): soft rose-violet haze, like a painting seen through closed eyelids, with a pink halo
 		m.set_shader_parameter("hue_shift", 0.0)

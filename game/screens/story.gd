@@ -169,7 +169,7 @@ func _render() -> void:
 	for c in _tabs.get_children():
 		c.queue_free()
 	# Arc selector + chapters of the current arc (keeps the tab row short with 14+ chapters)
-	var arcs := [[0, 5], [6, 9], [10, 13], [14, 17], [18, 21], [22, 25], [26, 29], [30, 33], [34, 37], [38, 39], [40, 43], [44, DB.CHAPTERS.size() - 1]]
+	var arcs := [[0, 5], [6, 9], [10, 13], [14, 17], [18, 21], [22, 25], [26, 29], [30, 33], [34, 37], [38, 39], [40, 43], [44, 47], [48, DB.CHAPTERS.size() - 1]]
 	var cur_arc := 0
 	for ai in arcs.size():
 		if _chapter >= arcs[ai][0] and _chapter <= arcs[ai][1]:
@@ -487,6 +487,8 @@ func _place_nodes() -> void:
 			k += 1
 
 static func _arc_name(ch: int) -> String:
+	if ch >= 48:
+		return "ARC 13  •  THE JADE MASQUERADE"
 	if ch >= 44:
 		return "ARC 12  •  THE DREAMING LANTERN"
 	if ch >= 40:
