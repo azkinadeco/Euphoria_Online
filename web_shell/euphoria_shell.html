@@ -852,6 +852,36 @@ const engine = new Engine(GODOT_CONFIG);
 		nextTip();
 		const tipTimer = setInterval(nextTip, 6000);
 		const pctEl = document.getElementById('status-pct');
+		// remaining time from the recent download speed (smoothed; shown once it is stable)
+		let etaT0 = 0;
+		let etaB0 = 0;
+		let etaRate = 0;
+		function eta(current, total) {
+			const now = performance.now();
+			if (etaT0 === 0 || current < etaB0) {
+				etaT0 = now;
+				etaB0 = current;
+				return '';
+			}
+			const dt = (now - etaT0) / 1000;
+			if (dt < 1.5) {
+				return etaRate > 0 ? fmtEta((total - current) / etaRate) : '';
+			}
+			const r = (current - etaB0) / dt;
+			etaRate = etaRate > 0 ? etaRate * 0.7 + r * 0.3 : r;
+			etaT0 = now;
+			etaB0 = current;
+			return etaRate > 0 ? fmtEta((total - current) / etaRate) : '';
+		}
+		function fmtEta(sec) {
+			if (!isFinite(sec) || sec <= 1) {
+				return '';
+			}
+			if (sec < 60) {
+				return '  •  ±' + Math.ceil(sec) + ' dtk lagi';
+			}
+			return '  •  ±' + Math.ceil(sec / 60) + ' mnt lagi';
+		}
 		function pct100(current, total) {
 			return Math.min(100, Math.round((current / total) * 100));
 		}
@@ -875,7 +905,7 @@ const engine = new Engine(GODOT_CONFIG);
 					const curMB = (current / (1024 * 1024)).toFixed(1);
 					const totMB = (total / (1024 * 1024)).toFixed(1);
 					pctEl.textContent = pct + '%';
-					statusText.textContent = 'Mengunduh aset: ' + curMB + ' MB / ' + totMB + ' MB';
+					statusText.textContent = 'Mengunduh aset: ' + curMB + ' MB / ' + totMB + ' MB' + eta(current, total);
 					reconnecting = false;
 					if (pct < 100) {
 						statusDetail.textContent = 'Mengunduh data grafik karakter & cutscene HD...';

@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hm. Update batch 212 — Perkiraan sisa waktu unduhan
+
+- Shell web: `eta()` menghitung kecepatan unduh (dihaluskan, diperbarui tiap ≥ 1,5 dtk) dan menambahkan "±N dtk/mnt lagi" ke teks progres.
+
 ## 2hl. Update batch 211 — UPGRADE setelah kalah menuju hero terlemah
 
 - `battle.gd::_show_result`: tombol UPGRADE pada kekalahan membuka `hero_detail` hero dengan power terendah di formasi (tab UPGRADE, swipe di antara anggota tim); tooltip menyebut namanya.

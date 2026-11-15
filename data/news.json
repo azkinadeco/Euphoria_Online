@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15c6",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "How long is left",
+  "body": "The download screen now estimates how long is left (\"±23 dtk lagi\") from your connection's recent speed."
+ },
+ {
   "id": "n2026-11-15c5",
   "date": "2026-11-15",
   "tag": "UPDATE",
