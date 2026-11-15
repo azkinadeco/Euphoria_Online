@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hh. Update batch 207 — Avatar di pemilih Heart Catch
+
+- `minigame.gd`: baris PLAY AS memakai `UI.avatar` (56 px, bingkai merah muda untuk pilihan aktif) menggantikan potongan wajah bulat.
+
 ## 2hg. Update batch 205 — Peringatan slot kosong di Battle Prep
 
 - `formation.gd::_start`: bila jumlah hero di tim < min(5, hero yang dimiliki) (kecuali Trial), popup "EMPTY SLOTS" dengan AUTO FILL (`Game.auto_formation` dengan elemen counter dari scout) atau FIGHT ANYWAY (`static var _gap_ok`, tidak ditanya lagi selama sesi). Logika bayar/mulai dipindah ke `_launch()`.

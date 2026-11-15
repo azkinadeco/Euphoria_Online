@@ -218,15 +218,10 @@ func _show_intro() -> void:
 		fb.focus_mode = Control.FOCUS_NONE
 		fb.custom_minimum_size = Vector2(58, 58)
 		fb.tooltip_text = DB.name_of(hid)
-		var ring := Panel.new()
-		ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		ring.add_theme_stylebox_override("panel", UI.style(Color(0, 0, 0, 0.4), PINK if on else Color(1, 1, 1, 0.2), 29, 3 if on else 1, 0))
-		fb.add_child(ring)
-		var fc := UI.tex_rect(DB.face(hid), Vector2(50, 50), true)
-		fc.position = Vector2(4, 4)
-		fc.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		fb.add_child(fc)
+		# the same full-body avatar as everywhere else; the chosen one gets a pink frame
+		var av := UI.avatar(hid, 56, PINK if on else Color(1, 1, 1, 0.25), 3 if on else 1)
+		av.position = Vector2(1, 1)
+		fb.add_child(av)
 		fb.pressed.connect(func():
 			if hid != hero_id:
 				Game.sfx("ui_click")
