@@ -14,6 +14,10 @@ for f in favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png; do
 done
 # static favicons for desktop browsers (the engine's runtime icon swap is not reliable there)
 cp web_shell/favicon.ico web_shell/favicon-32.png web_shell/favicon-192.png web/
+# loading-screen slideshow (tools/make_loading_art.py builds web_shell/loading)
+rm -rf web/loading builds/loading
+cp -R web_shell/loading web/loading
+cp -R web_shell/loading builds/loading
 touch web/.gdignore
 ls -la web | awk '{print $5, $9}'
 
