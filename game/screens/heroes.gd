@@ -2,11 +2,13 @@ extends Screen
 ## Hero collection / codex.
 
 var _grid: GridContainer
-var _filter := "ALL"
-var _elem := ""
-var _role := ""
+# filters and sort are remembered for the session: coming back from a hero keeps the list as it was
+static var _filter := "ALL"
+static var _elem := ""
+static var _role := ""
 var _elem_bar: HBoxContainer
-var _sort := "power"
+static var _sort := "power"
+static var _scroll_y := 0
 var _tabs: Array = []
 var _count: Label
 
@@ -46,7 +48,7 @@ func build() -> void:
 		# room on the right so the red badge does not sit on the last letter
 		cx.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		UI.add_badge(cx, codex_n)
-	var sort_b := UI.button("Sort: Power", Callable(), "", Vector2(118, 40))
+	var sort_b := UI.button("Sort: " + _sort.capitalize(), Callable(), "", Vector2(118, 40))
 	sort_b.add_theme_font_size_override("font_size", 14)
 	sort_b.pressed.connect(func():
 		_sort = "rarity" if _sort == "power" else ("level" if _sort == "rarity" else "power")
@@ -94,6 +96,12 @@ func build() -> void:
 	resized.connect(_fit_cards)
 	_card_w = _card_width()
 	_rebuild()
+	# back from a hero: the list opens where you left it
+	sc.tree_exiting.connect(func(): _scroll_y = sc.scroll_vertical)
+	if _scroll_y > 0:
+		get_tree().create_timer(0.06).timeout.connect(func():
+			if is_instance_valid(sc):
+				sc.scroll_vertical = _scroll_y)
 
 func _card_width() -> float:
 	var w: float = size.x if size.x > 100.0 else get_viewport_rect().size.x

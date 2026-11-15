@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gt. Update batch 191 — Daftar Heroes mengingat filter dan posisi
+
+- `heroes.gd`: `_filter`, `_elem`, `_role`, `_sort` dan posisi scroll jadi `static var` (bertahan selama sesi). Kembali dari detail hero tidak lagi mereset daftar ke ALL / Power / atas.
+
 ## 2gs. Update batch 190 — Sel Season Pass & petunjuk Expedition
 
 - `pass.gd::_cell`: hadiah berdampingan (ikon + jumlah per hadiah) alih-alih bertumpuk; sel Premium terkunci memakai tanda kecil di pojok, baris status hanya untuk CLAIM! / ✔ CLAIMED.
