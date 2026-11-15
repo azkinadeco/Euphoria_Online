@@ -774,3 +774,59 @@ static func podium(e: Dictionary, k: int, value: String) -> Control:
 		l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		v.add_child(l)
 	return p
+
+# ----------------------------------------------------------------- tall content
+static func _is_action_row(c: Node) -> bool:
+	if c is Button:
+		return true
+	if c is HBoxContainer:
+		for k in c.get_children():
+			if k is Button:
+				return true
+	return false
+
+## Gives a panel (PanelContainer > VBoxContainer) that is taller than its room a scroll area. The first
+## `head` rows (a title) and up to two trailing button rows stay fixed, everything between scrolls.
+## max_h > 0: the panel sizes itself (a popup) and must end up at most that tall.
+## max_h <= 0: the panel is stretched by its anchors (a screen column) and the scroll area fills it.
+static func fit_tall(p: PanelContainer, head: int, max_h: float) -> bool:
+	if p.get_child_count() != 1 or not (p.get_child(0) is VBoxContainer):
+		return false
+	var v := p.get_child(0) as VBoxContainer
+	for k0 in v.get_children():
+		if k0.has_meta("autofit"):
+			return true
+	var kids: Array = v.get_children()
+	var cut := kids.size()
+	var pinned := 0
+	while cut > head and pinned < 2:
+		var k: Node = kids[cut - 1]
+		if _is_action_row(k):
+			pinned += 1
+			cut -= 1
+		elif k.get_class() == "Control" and pinned == 0 and k.get_child_count() == 0:
+			cut -= 1   # a trailing spacer: the scroll area takes its job
+			kids.remove_at(cut)
+			v.remove_child(k)
+			k.queue_free()
+		else:
+			break
+	if cut <= head:
+		return false
+	var mid := vbox(v.get_theme_constant("separation"))
+	for i in range(head, cut):
+		var k2: Node = kids[i]
+		v.remove_child(k2)
+		if k2.get_class() == "Control" and k2.get_child_count() == 0 and ((k2 as Control).size_flags_vertical & Control.SIZE_EXPAND) != 0:
+			k2.queue_free()   # spacers have nothing to push apart inside a scroll area
+			continue
+		mid.add_child(k2)
+	var sc := scroll(mid)
+	sc.set_meta("autofit", true)
+	v.add_child(sc)
+	v.move_child(sc, head)
+	if max_h > 0.0:
+		# everything except the scroll area keeps its height; the scroll area gets what is left
+		var rest: float = p.get_combined_minimum_size().y
+		sc.custom_minimum_size.y = maxf(120.0, max_h - rest - float(v.get_theme_constant("separation")))
+	return true

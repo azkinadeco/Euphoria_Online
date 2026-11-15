@@ -362,7 +362,12 @@ func _audit(step: String) -> void:
 	_audit_node(main_node, step, vp, seen)
 	# OVER = two texts drawn on top of each other
 	var rects: Array = []
-	_audit_collect(main_node, vp, rects)
+	# with a popup open only the popup counts (the dimmed screen behind it is not a clash)
+	var over_root: Node = main_node
+	for c in main_node.overlay.get_children():
+		if c is Control and c.has_meta("popup"):
+			over_root = c
+	_audit_collect(over_root, vp, rects)
 	for i in rects.size():
 		for j in range(i + 1, rects.size()):
 			var a: Rect2 = rects[i][0]

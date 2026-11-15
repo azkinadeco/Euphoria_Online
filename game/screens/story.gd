@@ -517,7 +517,10 @@ static func _arc_name(ch: int) -> String:
 func _interludes() -> void:
 	var v: VBoxContainer = main.popup("INTERLUDES", 680)
 	v.add_child(UI.wrap_label("Quiet moments between the battles. Each one unlocks after an Arc. First read: 200 Gems + 1 Summon Ticket + Bond for the heroes in it.", 14, UI.MUTED))
-	for it in DB.INTERLUDES:
+	# in unlock order (the data lists them in the order they were written)
+	var list: Array = DB.INTERLUDES.duplicate()
+	list.sort_custom(func(x, y): return int(x["req"]) < int(y["req"]))
+	for it in list:
 		var item: Dictionary = it
 		var open := Game.interlude_open(item)
 		var read := Game.interlude_read(item["id"])

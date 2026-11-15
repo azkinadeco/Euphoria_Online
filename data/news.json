@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15w",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Popups that always fit the screen",
+  "body": "Four popups had outgrown the screen as the game grew: Notices, Interludes, Lobby Scene and Rates. Their lower rows, and sometimes the CLOSE button, were below the edge with no way to scroll. Every popup now scrolls when it is taller than the screen and keeps its buttons in view. The Notices list scrolls on its own next to the article, and Interludes are listed in unlock order."
+ },
+ {
   "id": "n2026-11-15v",
   "date": "2026-11-15",
   "tag": "UPDATE",

@@ -289,15 +289,6 @@ func _fit_scan(n: Node, depth: int) -> void:
 		if depth < 5:
 			_fit_scan(ch, depth + 1)
 
-func _fit_is_action_row(c: Node) -> bool:
-	if c is Button:
-		return true
-	if c is HBoxContainer:
-		for k in c.get_children():
-			if k is Button:
-				return true
-	return false
-
 func _fit_panel(p: PanelContainer) -> bool:
 	if p.get_child_count() != 1 or not (p.get_child(0) is VBoxContainer):
 		return false
@@ -308,38 +299,7 @@ func _fit_panel(p: PanelContainer) -> bool:
 	var need: float = p.get_combined_minimum_size().y
 	if need < 220.0 or top + need <= size.y - 4.0 or top > size.y * 0.5:
 		return false
-	var kids: Array = v.get_children()
-	# keep up to two trailing action rows (buttons) pinned under the scroll area
-	var cut := kids.size()
-	var pinned := 0
-	while cut > 0 and pinned < 2:
-		var k: Node = kids[cut - 1]
-		if _fit_is_action_row(k):
-			pinned += 1
-			cut -= 1
-		elif k.get_class() == "Control" and pinned == 0 and k.get_child_count() == 0:
-			cut -= 1   # a trailing spacer: the scroll area takes its job
-			kids.remove_at(cut)
-			v.remove_child(k)
-			k.queue_free()
-		else:
-			break
-	if cut <= 0:
-		return false
-	var mid := UI.vbox(v.get_theme_constant("separation"))
-	for i in cut:
-		var k2: Node = kids[i]
-		if k2.get_class() == "Control" and k2.get_child_count() == 0 and ((k2 as Control).size_flags_vertical & Control.SIZE_EXPAND) != 0:
-			v.remove_child(k2)   # spacers have nothing to push apart inside a scroll area
-			k2.queue_free()
-			continue
-		v.remove_child(k2)
-		mid.add_child(k2)
-	var sc := UI.scroll(mid)
-	sc.set_meta("autofit", true)
-	v.add_child(sc)
-	v.move_child(sc, 0)
-	return true
+	return UI.fit_tall(p, 0, -1.0)
 
 ## The header holds back, home, icon, title, the screen's own buttons and the currency chips. On a narrow
 ## window or a big UI size that row gets wider than the screen and its right end (often a button) is lost.

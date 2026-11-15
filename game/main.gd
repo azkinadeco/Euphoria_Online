@@ -281,6 +281,16 @@ func show_news(sel: int = 0) -> void:
 		b.clip_text = true
 		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		lv.add_child(b)
+	# the list scrolls on its own next to the article (it used to grow the popup far past the screen)
+	h.remove_child(lv)
+	var lsc := UI.scroll(lv)
+	lsc.size_flags_horizontal = Control.SIZE_FILL
+	lsc.custom_minimum_size = Vector2(312, 0)
+	h.add_child(lsc)
+	var sel_i := clampi(sel, 0, items.size() - 1)
+	(func():
+		if is_instance_valid(lsc) and sel_i > 4:
+			lsc.scroll_vertical = int(maxf(0.0, sel_i * 58.0 - 116.0))).call_deferred()
 	var it2: Dictionary = items[clampi(sel, 0, items.size() - 1)]
 	var rv := UI.vbox(8)
 	rv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -727,6 +737,20 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 	v.set_meta("layer", layer)
 	layer.set_meta("panel", p)
 	UI.pop(p)
+	# Safety net: a popup taller than the screen (long lists, big UI size) had its lower rows and its
+	# CLOSE button below the edge with no way to reach them. Its content scrolls instead.
+	var head := 1 if title != "" else 0
+	var fit := func():
+		if is_instance_valid(p) and not layer.has_meta("closing"):
+			var room: float = layer.size.y - 20.0
+			if room > 200.0 and p.get_combined_minimum_size().y > room:
+				UI.fit_tall(p, head, room)
+	fit.call_deferred()
+	var ft := Timer.new()
+	ft.wait_time = 0.25
+	ft.timeout.connect(fit)
+	layer.add_child(ft)
+	ft.start()
 	return v
 
 ## Fade the dim and shrink the panel away, then free the layer. The layer stops counting as a popup at once.

@@ -1228,6 +1228,18 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fu. Update batch 169 — Popup yang selalu muat di layar
+
+Batch perbaikan (tanpa fitur baru). Ditemukan lewat audit layout pada 40+ popup.
+
+- **`UI.fit_tall(panel, head, max_h)`**: logika auto-fit dipindah ke `UI` dan dipakai juga oleh `main.popup()`. Popup yang lebih tinggi dari layar mendapat area scroll; judul dan sampai dua baris tombol di bawah tetap diam. Dicek ulang tiap 0,25 dtk selama popup terbuka (isi bisa berubah).
+- Yang tadinya rusak: **NOTICES** (panel 7.749 px — daftar notice tanpa scroll), **INTERLUDES** (896 px), **LOBBY SCENE** (1.101 px), **RATES** (1.000 px, tombol CLOSE di bawah layar).
+- Notices: daftar di kiri punya scroll sendiri dan otomatis menggulir ke notice yang dipilih.
+- Interludes diurutkan menurut syarat stage (urutan buka).
+- Battle Prep: tag "▲ +30%" tidak lagi menutupi tag kelas di kartu hero.
+- Layar judul: papan nama hero dianimasikan lewat offset anchor (dulu posisi basi → bisa setengah keluar layar bila jendela berubah ukuran saat intro).
+- Audit `OVER` hanya memeriksa popup teratas bila ada popup terbuka.
+
 ## 2ft. Update batch 168 — UI X-LARGE yang benar-benar muat
 
 Batch perbaikan (tanpa fitur baru).

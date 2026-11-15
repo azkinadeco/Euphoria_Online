@@ -435,7 +435,7 @@ func _render_roster() -> void:
 		if (_scout.get("heroes", []) as Array).has(hid):
 			var up := UI.styled_panel(Color(0, 0, 0, 0.8), UI.GREEN, 6, 1, 3)
 			up.add_child(UI.label("▲ +30%", 12, UI.GREEN, 2))
-			up.position = Vector2(8, 34)
+			up.position = Vector2(8, 58)   # under the class tag (it used to sit on top of it)
 			up.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			card.add_child(up)
 		card.pressed.connect(func(): _on_roster(hid))

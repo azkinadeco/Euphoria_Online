@@ -263,7 +263,10 @@ func _name_plate(hid: String, tc: Color) -> void:
 	box.modulate.a = 0.0
 	var tw := box.create_tween().set_parallel(true)
 	tw.tween_property(box, "modulate:a", 1.0, 0.5).set_delay(0.9)
-	tw.tween_property(box, "position:x", box.position.x, 0.5).from(box.position.x + 40).set_delay(0.9).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	# slide the anchored offsets, not the position: a position read before layout pinned the plate to a
+	# stale spot, so it ended up half off-screen when the window changed size during the intro
+	tw.tween_property(box, "offset_left", -330.0, 0.5).from(-290.0).set_delay(0.9).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(box, "offset_right", -24.0, 0.5).from(16.0).set_delay(0.9).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
 func _info_chip(text: String, col: Color) -> Control:
 	var l := UI.label(text, 14, col, 3)
