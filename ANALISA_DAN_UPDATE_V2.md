@@ -1228,6 +1228,12 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gl. Update batch 186 — Pemeriksaan akhir dan publish
+
+- `tools/flow_test.gd` PASS, `tools/smoke.sh` PASS, `tools/audit.sh` PASS di 1280×720, kanvas sempit (1,23) dan 1560×720 X-LARGE, `tools/check_refs.py` bersih (81 ikon, 373 suara, 27 background).
+- Build web di-publish dengan slideshow loading baru (8 hero di realm masing-masing) dan font simbol.
+- Catatan untuk aset berikutnya: background hero baru cukup ditaruh sebagai `bg_<id hero>.jpg` di folder `new backround hero/hero_backgrounds/`, lalu impor (lossy 0,85, tanpa mipmap) dan jalankan `tools/make_loading_art.py` bila hero itu ada di slideshow.
+
 ## 2gk. Update batch 185 — Perbaikan regresi auto-fit, realm di Art Viewer & Messenger
 
 Batch perbaikan (tanpa fitur baru).
