@@ -676,6 +676,16 @@ func _render_upgrade() -> void:
 		cost.add_child(UI.tex_rect(DB.icon("icon_gold"), Vector2(26, 26)))
 		cost.add_child(UI.label("%s" % Game.fmt(DB.gold_to_next(h["level"])), 15))
 		lv.add_child(cost)
+		# short of EXP or Gold: a direct link to the dungeon that drops it
+		var short_exp: bool = Game.amount("hero_exp") < DB.exp_to_next(h["level"])
+		var short_gold: bool = Game.amount("gold") < DB.gold_to_next(h["level"])
+		if (short_exp or short_gold) and Game.feature_req("dungeon") <= int(Game.s["player"]["level"]):
+			var dg := "exp" if short_exp else "gold"
+			var gl := UI.button("GET %s ▶" % ("EXP" if short_exp else "GOLD"), func(): main.go("dungeon", {"dungeon": dg}), "", Vector2(120, 32))
+			gl.add_theme_font_size_override("font_size", 13)
+			gl.tooltip_text = "Crystal Sanctum drops Hero EXP" if short_exp else "Golden Vault drops Gold"
+			cost.add_child(UI.spacer())
+			cost.add_child(gl)
 	var btns := UI.hbox(10)
 	lv.add_child(btns)
 	for n in [1, 5, 99]:

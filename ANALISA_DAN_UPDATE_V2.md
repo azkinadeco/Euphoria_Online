@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hn. Update batch 213 — Tautan "GET EXP / GOLD" di tab Upgrade
+
+- `hero_detail.gd`: bila EXP atau Gold kurang untuk level berikutnya (dan Dungeon sudah terbuka), tombol kecil di baris biaya membuka Daily Dungeon pada Crystal Sanctum / Golden Vault.
+
 ## 2hm. Update batch 212 — Perkiraan sisa waktu unduhan
 
 - Shell web: `eta()` menghitung kecepatan unduh (dihaluskan, diperbarui tiap ≥ 1,5 dtk) dan menambahkan "±N dtk/mnt lagi" ke teks progres.
