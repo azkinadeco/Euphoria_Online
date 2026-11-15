@@ -1,7 +1,8 @@
 #!/bin/zsh
 # Layout audit: opens every screen and popup at three canvas shapes and fails when a text or panel is cut
 # off or pushed outside the window. Usage: zsh tools/audit.sh [quick]   (quick = default shape only)
-# Findings: CLIP text cut without "…", CUT sticks out of a clipping parent, OFF outside the window.
+# Findings: CLIP text cut without "…", CUT sticks out of a clipping parent, OFF outside the window,
+# FLAT a scroll list squeezed to no height.
 # (TRIM = long ellipsis and OVER = overlapping texts are printed but do not fail the run.)
 cd "$(dirname "$0")/.."
 GODOT=${GODOT:-/Users/apple/Downloads/Godot.app/Contents/MacOS/Godot}
@@ -16,7 +17,7 @@ run() {  # name, godot args, first step
   local LOG=$(AUDIT=1 "$GODOT" ${=2} --path . -s res://tools/shot_runner.gd -- "$OUT" "$3$PREP,$SCREENS,close,$POPUPS" 16 2>&1)
   rm -rf "$OUT"; rm -f "$DATA/euphoria_v2_save.json"; rm -rf "$DATA/backups"
   # steps before the first screen are still on the title screen while the scale changes: not layout bugs
-  local BAD=$(echo "$LOG" | grep -E "^AUDIT (CLIP|CUT|OFF)|SCRIPT ERROR" | grep -vE "\[(novn|notips|boost|clear:60|close|scale=[0-9.]+|gset:[^]]*)\]" | sort -u)
+  local BAD=$(echo "$LOG" | grep -E "^AUDIT (CLIP|CUT|OFF|FLAT)|SCRIPT ERROR" | grep -vE "\[(novn|notips|boost|clear:60|close|scale=[0-9.]+|gset:[^]]*)\]" | sort -u)
   local SOFT=$(echo "$LOG" | grep -E "^AUDIT (TRIM|OVER)" | sort -u | wc -l | tr -d ' ')
   local N=$(echo "$LOG" | grep -c "^SHOT")
   if [ -n "$BAD" ]; then echo "AUDIT $1: FAIL ($N steps)"; echo "$BAD"; FAIL=1; else echo "AUDIT $1: PASS ($N steps, $SOFT soft notes)"; fi

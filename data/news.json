@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zm",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Messenger list fixed, realms in the art viewer",
+  "body": "Fixed: the chat list in the Messenger could come up empty since the last update (the chats were there, the list had collapsed). Also new: the full-screen art viewer shows each hero in front of her own realm, and the Messenger backdrop follows whoever you are chatting with."
+ },
+ {
   "id": "n2026-11-15zl",
   "date": "2026-11-15",
   "tag": "UPDATE",

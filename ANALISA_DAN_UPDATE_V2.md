@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gk. Update batch 185 — Perbaikan regresi auto-fit, realm di Art Viewer & Messenger
+
+Batch perbaikan (tanpa fitur baru).
+
+- **Regresi batch 167 diperbaiki**: `UI.fit_tall` membungkus panel yang sudah punya daftar scroll sendiri, karena label wrap melaporkan tinggi sangat besar sebelum layout pertama. Akibatnya daftar chat Messenger menciut jadi nol. Sekarang panel dengan `ScrollContainer` ber-expand dilewati, pemeriksaan pertama ditunda sampai layout selesai (0,12 dtk layar, 0,08 dtk popup), dan panel selebar < 80 px diabaikan.
+- Audit layout: jenis baru **`FLAT`** (area scroll berisi tapi tingginya < 8 px) — ikut menggagalkan `tools/audit.sh`.
+- `art_viewer.gd`: latar = realm hero (lebih terang) bila ada. `messenger.gd`: latar mengikuti lawan chat.
+
 ## 2gj. Update batch 184 — Punggung kartu summon baru
 
 Batch perbaikan tampilan (tanpa fitur baru).

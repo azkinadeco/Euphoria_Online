@@ -796,6 +796,11 @@ static func fit_tall(p: PanelContainer, head: int, max_h: float) -> bool:
 	for k0 in v.get_children():
 		if k0.has_meta("autofit"):
 			return true
+		# A panel that already has a stretching scroll list looks after its own overflow. Wrapping it again
+		# collapsed that list to nothing (Messenger's chat list vanished: a wrapping label reports a huge
+		# height before its first layout, which looked like "too tall").
+		if k0 is ScrollContainer and ((k0 as Control).size_flags_vertical & Control.SIZE_EXPAND) != 0:
+			return false
 	var kids: Array = v.get_children()
 	var cut := kids.size()
 	var pinned := 0

@@ -29,9 +29,12 @@ func _ready() -> void:
 		_hdr_level = 0
 		_hdr_apply()
 		_fit_header())
-	(func():
-		_fit_header()
-		_fit_scan(self, 0)).call_deferred()
+	# first check after the first layout has settled (wrapping labels report a huge height before it)
+	get_tree().create_timer(0.12).timeout.connect(func():
+		if is_inside_tree():
+			_fit_header()
+			_fit_scan(self, 0))
+	_fit_header.call_deferred()
 
 ## Called by Main when Game.changed fires while this screen is visible.
 func refresh() -> void:
@@ -308,7 +311,7 @@ func _fit_panel(p: PanelContainer) -> bool:
 		return true
 	var top: float = p.global_position.y - global_position.y
 	var need: float = p.get_combined_minimum_size().y
-	if need < 220.0 or top + need <= size.y - 4.0 or top > size.y * 0.5:
+	if need < 220.0 or top + need <= size.y - 4.0 or top > size.y * 0.5 or p.size.x < 80.0:
 		return false
 	return UI.fit_tall(p, 0, -1.0)
 

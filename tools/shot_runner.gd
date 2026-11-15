@@ -459,6 +459,12 @@ func _audit_node(n: Node, step: String, vp: Rect2, seen: Dictionary) -> void:
 					_audit_report("CUT", step, c, "by " + cut_by, seen)
 				elif not vp.grow(2.0).encloses(r) and vp.intersects(r):
 					_audit_report("OFF", step, c, "rect %s" % [str(Rect2i(r))], seen)
+		# FLAT = a scroll list squeezed to (almost) no height although it has content
+		if c is ScrollContainer and c.get_child_count() > 0 and r.size.x > 40.0:
+			var inner := c.get_child(0) as Control
+			var along: float = r.size.x if (c as ScrollContainer).vertical_scroll_mode == ScrollContainer.SCROLL_MODE_DISABLED else r.size.y
+			if inner != null and inner.get_child_count() > 0 and along < 8.0 and inner.get_combined_minimum_size().y > 20.0:
+				_audit_report("FLAT", step, c, "scroll area %dx%d with %d rows" % [int(r.size.x), int(r.size.y), inner.get_child_count()], seen)
 		if c is BaseButton and not (c as BaseButton).disabled and c.mouse_filter != Control.MOUSE_FILTER_IGNORE and r.size.x > 1.0 and minf(r.size.x, r.size.y) < 30.0 and vp.intersects(r):
 			_audit_report("TINY", step, c, "tap target %dx%d" % [int(r.size.x), int(r.size.y)], seen)
 		if txt != "" and r.size.x > 1.0:

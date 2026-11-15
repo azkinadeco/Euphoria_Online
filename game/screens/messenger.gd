@@ -122,6 +122,13 @@ func _preview(id: String) -> String:
 	return ("You: " if last[0] == "p" else "") + str(last[1])
 
 func _render_chat(scroll_down: bool) -> void:
+	# the chat happens "at her place": the backdrop follows whoever you are talking to
+	if bg_rect != null and is_instance_valid(bg_rect) and _sel != "":
+		var nb: Texture2D = DB.bg(DB.hero_bg_key(_sel))
+		if bg_rect.texture != nb:
+			bg_rect.texture = nb
+			bg_rect.modulate.a = 0.0
+			bg_rect.create_tween().tween_property(bg_rect, "modulate:a", 1.0, 0.35)
 	for c in _title.get_children():
 		c.queue_free()
 	for c in _chat.get_children():

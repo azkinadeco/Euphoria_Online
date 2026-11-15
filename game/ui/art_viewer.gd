@@ -58,9 +58,10 @@ func _ready() -> void:
 	base.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(base)
 	# the hero's home map (by element), blurred-dark so the art pops
-	var scene := UI.tex_rect(DB.bg(str(DB.ELEM_BG.get(DB.element_of(id), "lobby"))), Vector2.ZERO, true)
+	# her own realm when she has one (shown brighter: it is part of the picture), else her element's map
+	var scene := UI.tex_rect(DB.bg(DB.hero_bg_key(id)), Vector2.ZERO, true)
 	scene.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	scene.modulate = Color(0.32, 0.28, 0.4)
+	scene.modulate = Color(0.62, 0.58, 0.7) if DB.has_hero_bg(id) else Color(0.32, 0.28, 0.4)
 	scene.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(scene)
 	var bg := ColorRect.new()

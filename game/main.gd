@@ -760,7 +760,7 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 			var room: float = layer.size.y - 20.0
 			if room > 200.0 and p.get_combined_minimum_size().y > room:
 				UI.fit_tall(p, head, room)
-	fit.call_deferred()
+	get_tree().create_timer(0.08).timeout.connect(fit)   # after the first layout (see UI.fit_tall)
 	var ft := Timer.new()
 	ft.wait_time = 0.25
 	ft.timeout.connect(fit)
