@@ -431,6 +431,9 @@ func _audit_node(n: Node, step: String, vp: Rect2, seen: Dictionary) -> void:
 					var bsoft: bool = b.text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING
 					if bw > avail + 2.0 and (not bsoft or avail < bw * 0.6):
 						_audit_report("TRIM" if bsoft else "CLIP", step, c, "needs %d px, has %d" % [int(bw), int(avail)], seen)
+			# TINY = text under 11 px, or a button too small to hit with a finger (soft notes)
+			if fs < 11:
+				_audit_report("TINY", step, c, "font %d px" % fs, seen)
 			# sticks out of a clipping ancestor / the window?
 			var in_scroll := false
 			var p := c.get_parent()
@@ -449,6 +452,10 @@ func _audit_node(n: Node, step: String, vp: Rect2, seen: Dictionary) -> void:
 					_audit_report("CUT", step, c, "by " + cut_by, seen)
 				elif not vp.grow(2.0).encloses(r) and vp.intersects(r):
 					_audit_report("OFF", step, c, "rect %s" % [str(Rect2i(r))], seen)
+		if c is BaseButton and not (c as BaseButton).disabled and c.mouse_filter != Control.MOUSE_FILTER_IGNORE and r.size.x > 1.0 and minf(r.size.x, r.size.y) < 30.0 and vp.intersects(r):
+			_audit_report("TINY", step, c, "tap target %dx%d" % [int(r.size.x), int(r.size.y)], seen)
+		if txt != "" and r.size.x > 1.0:
+			pass
 		elif c is PanelContainer and r.size.x > 60.0 and not vp.grow(6.0).encloses(r) and vp.intersects(r):
 			var inside := false
 			var q := c.get_parent()

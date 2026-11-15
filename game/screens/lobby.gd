@@ -105,10 +105,10 @@ func build() -> void:
 	acts.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	acts.anchor_left = 0.08
 	acts.anchor_right = 0.56
-	acts.offset_top = -196
+	acts.offset_top = -204
 	acts.offset_bottom = -168
 	acts.alignment = BoxContainer.ALIGNMENT_CENTER
-	acts.modulate.a = 0.85
+	acts.modulate.a = 0.92
 	var tk := _pill("♥ TALK", func(): main.talk(Game.s["lobby_hero"]), Color("#ff8fb8"))
 	var ob := _pill("OUTFIT", _next_outfit, Color.WHITE)
 	if _enemy != "":
@@ -900,8 +900,9 @@ func _pill(text: String, cb: Callable, col: Color) -> Button:
 	var b := Button.new()
 	b.text = text
 	b.focus_mode = Control.FOCUS_NONE
-	b.custom_minimum_size = Vector2(0, 28)
-	b.add_theme_font_size_override("font_size", 11)
+	# 36 px tall and 13 px text: at 28 / 11 the pills were hard to hit and to read on a phone
+	b.custom_minimum_size = Vector2(0, 36)
+	b.add_theme_font_size_override("font_size", 13)
 	b.add_theme_color_override("font_color", col)
 	b.add_theme_color_override("font_hover_color", col.lightened(0.3))
 	for st in ["normal", "hover", "pressed"]:

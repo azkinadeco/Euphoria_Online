@@ -244,7 +244,15 @@ func _chip(key: String) -> Control:
 		var plus := UI.button("+", func(): main.go("shop"), "FlatButton", Vector2(26, 26))
 		plus.add_theme_font_size_override("font_size", 18)
 		plus.add_theme_color_override("font_color", UI.GOLD)
+		plus.mouse_filter = Control.MOUSE_FILTER_IGNORE   # the whole chip is the button (the "+" alone was 26 px wide)
 		h.add_child(plus)
+		p.mouse_filter = Control.MOUSE_FILTER_STOP
+		p.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		p.tooltip_text = "Open the Shop"
+		p.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
+				Game.sfx("ui_click")
+				main.go("shop"))
 	return p
 
 func _update_chips() -> void:

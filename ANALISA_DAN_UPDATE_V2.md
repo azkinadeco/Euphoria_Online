@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fy. Update batch 173 — Target sentuh yang lebih besar
+
+Batch perbaikan (tanpa fitur baru).
+
+- Audit layout punya jenis **`TINY`**: teks di bawah 11 px atau tombol aktif yang sisi terpendeknya < 30 px. Dari 85 layar/popup hanya dua pola yang muncul.
+- **Chip Gems / Energy** (`Screen._chip`): seluruh chip kini bisa ditekan untuk membuka Shop; dulu hanya "+" selebar 26 px.
+- **Pil lobby** (TALK, OUTFIT, SCENE, FORTUNE, VIEW, HERO): tinggi 28 → 36 px, teks 11 → 13 px, opasitas 0,85 → 0,92.
+
 ## 2fx. Update batch 172 — Referensi aset yang gagal diam-diam, nama hero terbaca
 
 Batch perbaikan (tanpa fitur baru).
