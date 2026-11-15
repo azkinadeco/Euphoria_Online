@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zy",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Avatars match everywhere",
+  "body": "Player avatars now look the same everywhere: the Arena ranking, the Arena defense log and the guild member list use the full-body avatar frame from your profile (your own row shows your chosen avatar)."
+ },
+ {
   "id": "n2026-11-15zx",
   "date": "2026-11-15",
   "tag": "UPDATE",

@@ -293,9 +293,7 @@ func _render_right() -> void:
 		for m in Game.guild_members():
 			var h := UI.hbox(8)
 			h.add_child(UI.label("#%d" % rank, 15, UI.GOLD, 2))
-			var fp := UI.styled_panel(Color.BLACK, Color("#6b4a7e"), 6, 1, 1)
-			fp.add_child(UI.tex_rect(DB.face(m["hero"]), Vector2(36, 36), true))
-			h.add_child(fp)
+			h.add_child(UI.avatar(str(m["hero"]), 38, Color("#8a6aae"), 1))   # member avatar (full-body sprite)
 			var v := UI.vbox(0)
 			v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			v.add_child(UI.label("%s  Lv.%d" % [m["name"], m["level"]], 14, UI.GREEN if str(m["name"]).ends_with("(You)") else Color.WHITE))

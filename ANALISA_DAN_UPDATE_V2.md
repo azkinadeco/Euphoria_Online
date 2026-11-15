@@ -1253,6 +1253,11 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gx. Update batch 195 — Avatar seragam di Arena & Guild
+
+- `arena.gd`: baris peringkat (#4 dst.) dan log pertahanan memakai `UI.avatar`; baris "(You)" memakai `Game.avatar_id()` dengan bingkai hijau.
+- `guild.gd`: daftar anggota memakai `UI.avatar`.
+
 ## 2gw. Update batch 194 — Daftar penghuni Garden
 
 - `garden.gd::_render_hud`: potongan wajah diganti `UI.avatar` (sprite full body, bingkai warna tema hero); hati terpakai merah muda penuh, sisa berupa garis tipis (dulu semuanya satu warna).

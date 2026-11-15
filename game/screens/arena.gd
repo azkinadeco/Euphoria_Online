@@ -365,9 +365,7 @@ func _render_defence() -> void:
 		_list.add_child(row)
 		var rh := UI.hbox(10)
 		row.add_child(rh)
-		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(str(e["hero"]))], 6, 1, 1)
-		fp.add_child(UI.face_rect(str(e["hero"]), Vector2(40, 40)))
-		rh.add_child(fp)
+		rh.add_child(UI.avatar(str(e["hero"]), 42, DB.RARITY_COLOR[DB.rarity_of(str(e["hero"]))], 1))   # attacker's avatar
 		var nv := UI.vbox(0)
 		nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		rh.add_child(nv)
@@ -429,9 +427,7 @@ func _render_ranking() -> void:
 		var rl := UI.label("#%d" % (i + 1), 17, Color.WHITE, 3)
 		rl.custom_minimum_size = Vector2(46, 0)
 		rh.add_child(rl)
-		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(e["hero"])], 6, 1, 1)
-		fp.add_child(UI.face_rect(e["hero"], Vector2(34, 34)))
-		rh.add_child(fp)
+		rh.add_child(UI.avatar(Game.avatar_id() if me else str(e["hero"]), 36, UI.GREEN if me else DB.RARITY_COLOR[DB.rarity_of(str(e["hero"]))], 2 if me else 1))   # player avatar
 		var nl := UI.label(str(e["name"]) + ("  (You)" if me else ""), 16, UI.GREEN if me else Color.WHITE, 2)
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		rh.add_child(nl)
