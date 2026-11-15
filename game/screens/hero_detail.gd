@@ -136,6 +136,20 @@ func build() -> void:
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tabs.add_child(b)
 		_tabs.append(b)
+		# a small dot where something can be done: Star Up affordable / an unread memory
+		var dot_on: bool = (tn == "UPGRADE" and Game.star_up_ready(id)) or (tn == "BOND" and Game.bond_stories_new_for(id) > 0)
+		if dot_on:
+			var dot := Panel.new()
+			dot.add_theme_stylebox_override("panel", UI.style(Color("#ff3b5c"), Color.WHITE, 6, 1, 0))
+			dot.size = Vector2(12, 12)
+			dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			b.add_child(dot)
+			# anchored to the top-right corner, so it follows the tab whatever its final width
+			dot.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+			dot.offset_left = -15
+			dot.offset_right = -3
+			dot.offset_top = 3
+			dot.offset_bottom = 15
 	_panel_box = UI.vbox(10)
 	rv.add_child(UI.scroll(_panel_box))
 	_render()

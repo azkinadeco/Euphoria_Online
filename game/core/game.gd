@@ -2715,6 +2715,14 @@ func bond_story_unlocked(id: String, ep: int) -> bool:
 func bond_story_read(id: String, ep: int) -> bool:
 	return (s["bond_stories"].get(id, []) as Array).has(ep)
 
+## Unread Bond memories of one hero.
+func bond_stories_new_for(id: String) -> int:
+	var n := 0
+	for ep in DB.BOND_STORY_REQ.size():
+		if bond_story_unlocked(id, ep) and not bond_story_read(id, ep):
+			n += 1
+	return n
+
 func bond_stories_new() -> int:
 	var n := 0
 	for id in s["heroes"].keys():

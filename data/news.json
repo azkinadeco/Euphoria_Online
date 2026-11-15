@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15c2",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Red dots show what is ready",
+  "body": "On a hero's page a small red dot now marks the tab where something is waiting: UPGRADE when she can Star Up, BOND when she has an unread memory."
+ },
+ {
   "id": "n2026-11-15c1",
   "date": "2026-11-15",
   "tag": "UPDATE",

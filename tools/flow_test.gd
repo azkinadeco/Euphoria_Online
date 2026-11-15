@@ -1933,6 +1933,12 @@ func _run() -> void:
 	G.s["items"]["star_stone"] = sr_keep["stone"]
 	G.s["cur"]["gold"] = sr_keep["gold"]
 
+	print("[bond memories per hero]")
+	var bm_total := 0
+	for bm_id in G.s["heroes"].keys():
+		bm_total += G.bond_stories_new_for(str(bm_id))
+	check(bm_total == G.bond_stories_new(), "per-hero unread memories add up to the total (%d)" % bm_total)
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

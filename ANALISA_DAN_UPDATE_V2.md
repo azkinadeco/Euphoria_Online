@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hi. Update batch 208 — Titik merah di tab hero
+
+- `Game.bond_stories_new_for(id)`; `hero_detail.gd`: titik merah di pojok kanan atas tab UPGRADE (Star Up siap) dan BOND (memori belum dibaca).
+
 ## 2hh. Update batch 207 — Avatar di pemilih Heart Catch
 
 - `minigame.gd`: baris PLAY AS memakai `UI.avatar` (56 px, bingkai merah muda untuk pilihan aktif) menggantikan potongan wajah bulat.
