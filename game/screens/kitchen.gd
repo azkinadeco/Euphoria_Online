@@ -461,7 +461,7 @@ func _serve(id: String) -> void:
 	if err != "":
 		main.toast(err, UI.RED)
 		return
-	Game.sfx("buff")
+	Game.sfx("battle/buff")   # the file lives in audio/battle: plain "buff" was silent
 	var m := Game.active_meal()
 	main.toast("%s%s served: %s for %d battles" % ["New meal! " if replacing else "", DB.ITEMS[id]["name"], Game.meal_text(m["bonus"]), int(m["left"])], UI.GREEN)
 	_render()

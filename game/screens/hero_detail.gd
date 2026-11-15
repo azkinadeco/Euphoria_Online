@@ -42,6 +42,25 @@ func build() -> void:
 	tw.tween_property(_art, "scale", Vector2(1.005, 1.014), 1.8).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(_art, "scale", Vector2.ONE, 1.8).set_trans(Tween.TRANS_SINE)
 
+	# soft dark corner behind the name block: tags, name and title sit on top of the art
+	var ng := Gradient.new()
+	ng.set_color(0, Color(0.03, 0.01, 0.07, 0.78))
+	ng.set_color(1, Color(0.03, 0.01, 0.07, 0.0))
+	var ngt := GradientTexture2D.new()
+	ngt.gradient = ng
+	ngt.fill = GradientTexture2D.FILL_RADIAL
+	ngt.fill_from = Vector2(0.0, 0.35)
+	ngt.fill_to = Vector2(1.0, 0.35)
+	ngt.width = 64
+	ngt.height = 64
+	var nshade := TextureRect.new()
+	nshade.texture = ngt
+	nshade.stretch_mode = TextureRect.STRETCH_SCALE
+	nshade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	nshade.position = Vector2(0, 66)
+	nshade.size = Vector2(430, 200)
+	nshade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(nshade)
 	_name_box = UI.vbox(2)
 	_name_box.position = Vector2(30, 80)
 	add_child(_name_box)

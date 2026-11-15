@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15z",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Silent failures swept up",
+  "body": "Small fixes found by a sweep for things that fail silently. Serving a meal in the Kitchen now plays its sound (it pointed at a file that was not there), two older notices show their intended backdrop, and on the Hero screen the name, tags and title sit on a soft shadow so they stay readable over the artwork."
+ },
+ {
   "id": "n2026-11-15y",
   "date": "2026-11-15",
   "tag": "UPDATE",
@@ -595,7 +602,7 @@
   "date": "2026-11-08",
   "tag": "UPDATE",
   "title": "New Look: Boss Hunt",
-  "bg": "hunt",
+  "bg": "space",
   "body": "Difficulty is now picked from coloured tiles showing each level, with a check mark on the ones you've cleared.\nA power comparison shows your team against the target, with a FAVORED / EVEN / RISKY / DEADLY verdict.\nThe target list shows which difficulties you've cleared, and the Hunter's Exchange shows Hunt Core prices and stock bars."
  },
  {
@@ -619,7 +626,7 @@
   "date": "2026-11-08",
   "tag": "UPDATE",
   "title": "New Look: World Boss",
-  "bg": "worldboss",
+  "bg": "hell",
   "body": "Damage rewards are now tiers I to V with progress bars, a NEXT tag on the next tier, a summary of how much damage is left, and pulsing CLAIM buttons.\nThe ranking has a top-3 podium and shows this week's reward for your rank.\nFixed: the RANKING tab in World Boss and Starlight Rift now opens properly."
  },
  {

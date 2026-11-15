@@ -1860,6 +1860,14 @@ func _run() -> void:
 	check(is_equal_approx(G.effective_ui_scale(Vector2(1280, 720)), 1.15), "AUTO keeps the default size on 16:9")
 	G.s["settings"]["ui_scale"] = us_keep
 
+	print("[asset references]")
+	var ar_bad: Array = []
+	for ar_n in DB.news():
+		if not DB.BG.has(str(ar_n.get("bg", "lobby"))):
+			ar_bad.append("%s:%s" % [ar_n["id"], ar_n.get("bg")])
+	check(ar_bad.is_empty(), "every notice uses a background that exists %s" % str(ar_bad))
+	check(ResourceLoader.exists("res://audio/battle/buff.wav") and not ResourceLoader.exists("res://audio/buff.wav"), "the buff sound lives in audio/battle (Kitchen plays battle/buff)")
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

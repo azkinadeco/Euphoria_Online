@@ -1228,6 +1228,15 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fx. Update batch 172 — Referensi aset yang gagal diam-diam, nama hero terbaca
+
+Batch perbaikan (tanpa fitur baru).
+
+- **`tools/check_refs.py`**: memindai semua `icon("…")`, `"icon_/item_/elem_…"`, `sfx("…")`, kunci `bg` di kode dan `data/news.json` terhadap file yang ada. Ikon hilang hanya jadi kotak kosong dan suara hilang hanya senyap, jadi tidak pernah terlapor.
+- Temuan: `Game.sfx("buff")` di Kitchen (file ada di `audio/battle/`) → kini `battle/buff`; notice `n2026-11-08p` (bg `hunt`) dan `n2026-11-08m` (bg `worldboss`) memakai kunci yang tidak ada → `space` / `hell`.
+- **Hero detail**: bayangan radial lembut di belakang blok nama (tag rarity/elemen/kelas, nama, gelar) yang menumpang di atas art.
+- Flow test: tiap notice harus memakai background yang ada.
+
 ## 2fw. Update batch 171 — Audit layout permanen, tes yang stabil, petunjuk putar ponsel
 
 Batch perbaikan (tanpa fitur baru).
