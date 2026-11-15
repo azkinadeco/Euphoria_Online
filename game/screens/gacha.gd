@@ -527,6 +527,15 @@ func _play_reveal(results: Array) -> void:
 		var card := HeroCard.new(r["id"], card_size, {"show_level": false, "owned": true})
 		card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		back.add_child(card)
+		# tap a revealed card to look at her full art
+		var rid: String = r["id"]
+		back.mouse_filter = Control.MOUSE_FILTER_STOP
+		back.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		back.tooltip_text = "View " + DB.name_of(rid)
+		back.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and is_instance_valid(_reveal) and _reveal.has_meta("done"):
+				Game.sfx("ui_click")
+				ArtViewer.open(main, rid, 0, [0]))
 		var tag := UI.label("NEW!" if r["new"] else "+%d Shards" % r["shards"], 15, UI.GREEN if r["new"] else UI.GOLD, 5)
 		tag.position = Vector2(0, card_size.y + 2)
 		tag.size = Vector2(card_size.x, 20)
@@ -541,6 +550,15 @@ func _play_reveal(results: Array) -> void:
 		if not skip[0]:
 			await get_tree().create_timer(0.12).timeout
 
+	_reveal.set_meta("done", true)   # all cards turned: they can be tapped now
+	var hint := UI.label("Tap a card to view her art", 13, UI.MUTED, 2)
+	hint.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	hint.offset_top = -104
+	hint.offset_bottom = -86
+	hint.offset_left = -200
+	hint.offset_right = 200
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_reveal.add_child(hint)
 	var bar := UI.hbox(16)
 	bar.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
 	bar.offset_top = -86

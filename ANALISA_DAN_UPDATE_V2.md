@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hk. Update batch 210 — Kartu hasil summon bisa diketuk
+
+- `gacha.gd::_play_reveal`: setelah semua kartu terbuka (`_reveal` meta `done`), tiap kartu membuka `ArtViewer` hero itu; petunjuk "Tap a card to view her art" di atas tombol.
+
 ## 2hj. Update batch 209 — Toast penolakan bergoyang
 
 - `main.toast`: toast merah bergoyang singkat (rotasi, 5 langkah × 0,05 dtk) setelah muncul; selain itu suara `ui/error` + getar dari batch sebelumnya.
