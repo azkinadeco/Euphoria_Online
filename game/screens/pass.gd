@@ -8,6 +8,7 @@ var _scroll: ScrollContainer
 func build() -> void:
 	set_bg("galaxy", 0.5)
 	var bar := header("SEASON PASS", ["gems"])
+	tutorial("pass")
 	bar.add_child(UI.button("CLAIM ALL", func():
 		var r := Game.claim_all_pass()
 		if r.is_empty():

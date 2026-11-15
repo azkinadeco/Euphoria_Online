@@ -29,6 +29,7 @@ func build() -> void:
 	if DB.EVENT.has("fx"):
 		add_child(FestivalFX.new(str(DB.EVENT["fx"]), Color.WHITE, 40))
 	header("EVENT", ["energy", "festival_token"])
+	tutorial("event")
 	if str(params.get("tab", "")) != "":
 		_tab = str(params["tab"])
 

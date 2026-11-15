@@ -1228,6 +1228,15 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fz. Update batch 174 — Panduan pertama untuk mode lama yang terlewat
+
+Batch perbaikan (tanpa fitur baru). Ditemukan lewat sapuan konsistensi data (hero, item, musuh, fitur).
+
+- Enam fitur di `DB.FEATURE_UNLOCK` tidak punya entri `DB.TUTORIALS`: **tower, event, friends, pass, bestiary, gallery**. Ditambahkan (2 baris, masing-masing oleh satu hero) + pemanggilan `tutorial("…")` di tiap layar. Otomatis masuk Guide Archive (kini 28 panduan). Pemain lama melihatnya sekali saat membuka mode itu lagi.
+- `ITEM_SOURCES`: Sweet Cake, Moonlight Perfume dan Rune Pouch mencantumkan sumber selain toko (Festival Exchange, Weekly Missions, Achievements).
+- Sapuan yang sama tidak menemukan hero tanpa profil / memori / voice / face / sprite, item tanpa deskripsi, atau musuh tanpa art.
+- Flow test: tiap fitur yang bisa dibuka (kecuali mini-game, yang punya kartu intro sendiri) wajib punya panduan.
+
 ## 2fy. Update batch 173 — Target sentuh yang lebih besar
 
 Batch perbaikan (tanpa fitur baru).

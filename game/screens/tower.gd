@@ -10,6 +10,7 @@ func build() -> void:
 	set_bg("galaxy", 0.45)
 	ambient(Color(0.75, 0.7, 1.0), 14)
 	header("TOWER OF TRIALS", ["gold", "gems"])
+	tutorial("tower")
 	var cur := int(Game.s["tower"]["floor"])
 	var b := body(76)
 

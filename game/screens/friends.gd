@@ -10,6 +10,7 @@ func build() -> void:
 	_filter = str(params.get("filter", "ALL"))
 	set_bg("forest", 0.6)
 	var bar := header("FRIENDS", ["friend_point"])
+	tutorial("friends")
 	bar.add_child(UI.button("FRIEND SHOP", func(): main.go("shop", {"tab": "friend_point"}), "", Vector2(160, 46)))
 	var b := body(76)
 	var list := Game.friends()

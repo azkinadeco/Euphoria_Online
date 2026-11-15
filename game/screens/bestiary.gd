@@ -25,6 +25,7 @@ func build() -> void:
 	set_bg("necro", 0.6)
 	ambient(Color(0.8, 0.9, 1.0), 20)
 	header("BESTIARY", ["gold", "gems"])
+	tutorial("bestiary")
 	var b := body(76)
 	var lp := UI.panel()
 	lp.anchor_right = 0.335

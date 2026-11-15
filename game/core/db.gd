@@ -1441,6 +1441,9 @@ const ITEM_SOURCES := {
 	"exp_potion": [["AFK Rewards", "lobby", {}], ["Dungeon", "dungeon", {}], ["Boss Hunt", "hunt", {}]],
 	"energy_potion": [["Black Market", "shop", {"tab": "market"}], ["Mail rewards", "mail", {}]],
 	"bouquet": [["Garden visits", "garden", {}]],
+	"sweet_cake": [["Festival Exchange", "festival", {}], ["Achievements", "quests", {}]],
+	"perfume": [["Weekly Missions", "quests", {}], ["Achievements", "quests", {}]],
+	"rune_pouch": [["Weekly Missions", "quests", {}]],
 	"celestial_gem": [["Garden visits (rare)", "garden", {}], ["Daily Login", "lobby", {}], ["World Boss milestones", "worldboss", {}]],
 	"oath_ring": [["Starlight Rift milestones", "rift", {}], ["Season Pass", "pass", {}], ["Black Market", "shop", {"tab": "market"}]],
 	"star_stone": [["Boss Hunt", "hunt", {}], ["Black Market", "shop", {"tab": "market"}]],
@@ -2056,6 +2059,18 @@ const TUTORIALS := {
 	"expedition": [["scylla", "...Send us on expeditions. We bring back loot while you rest."]],
 	"guild": [["xylia", "A guild is an alliance. Check in and donate daily — every guild level makes all of us stronger."],
 		["xylia", "And the Raid Boss... let's tear it apart together."]],
+	"tower": [["kali", "The Tower of Trials. No Energy needed, and every floor can be cleared once."],
+		["kali", "Every fifth floor has a Guardian with a Summon Ticket. Watch the THREAT bar before you climb."]],
+	"event": [["lumeira", "A limited event! Its stages drop Event Tokens — more for every star you earn."],
+		["lumeira", "Spend them in the event shop while it lasts. The tokens stay with you, but the items leave with the event."]],
+	"friends": [["fidelia", "Your friends lend you a hero. Pick one as SUPPORT in Battle Prep for Story, Event and Tower."],
+		["fidelia", "Send hearts every day for Friend Points, then trade them in the Friend Shop."]],
+	"pass": [["valeria", "The Season Pass. Stages, dungeons, summons and missions all give Pass EXP."],
+		["valeria", "Each level has a free reward. Premium adds a second row, and the Grand Prize at the top."]],
+	"bestiary": [["scylla", "...Every foe you defeat is recorded here. The first kill reveals her entry and her art."],
+		["scylla", "Keep hunting for the kill rewards. After 20 defeats, some of them can even be tamed."]],
+	"gallery": [["glytta", "The Gallery keeps every outfit and artwork you have unlocked."],
+		["glytta", "Tap a hero to open her album and see which pictures are still waiting for you~"]],
 }
 
 # ---------------------------------------------------------------- runes (Brown Dust style)

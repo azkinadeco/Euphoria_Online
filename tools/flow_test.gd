@@ -1868,6 +1868,18 @@ func _run() -> void:
 	check(ar_bad.is_empty(), "every notice uses a background that exists %s" % str(ar_bad))
 	check(ResourceLoader.exists("res://audio/battle/buff.wav") and not ResourceLoader.exists("res://audio/buff.wav"), "the buff sound lives in audio/battle (Kitchen plays battle/buff)")
 
+	print("[first-visit guides]")
+	var fg_missing: Array = []
+	for fg_k in DB.FEATURE_UNLOCK.keys():
+		# the Heart Catch mini-game explains itself with its own intro card
+		if fg_k != "minigame" and not DB.TUTORIALS.has(fg_k):
+			fg_missing.append(fg_k)
+	check(fg_missing.is_empty(), "every unlockable feature has a first-visit guide %s" % str(fg_missing))
+	for fg_k in ["tower", "event", "friends", "pass", "bestiary", "gallery"]:
+		check(DB.tutorial_name(fg_k) != "" and DB.tutorial_icon(fg_k) != "", "guide %s has a name and an icon for the archive" % fg_k)
+	for fg_i in ["sweet_cake", "perfume", "rune_pouch", "gold_bag"]:
+		check(DB.item_sources(fg_i).size() >= 1, "%s lists where to get it (%d)" % [fg_i, DB.item_sources(fg_i).size()])
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

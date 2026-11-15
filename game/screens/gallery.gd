@@ -19,6 +19,7 @@ func build() -> void:
 	set_bg("lobby", 0.72)
 	ambient(Color(1.0, 0.85, 1.0), 25)
 	var bar := header("GALLERY", [])
+	tutorial("gallery")
 	_count = UI.label("", 16, UI.GOLD, 3)
 	_count.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	bar.add_child(_count)
