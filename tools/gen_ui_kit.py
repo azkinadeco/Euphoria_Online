@@ -249,5 +249,6 @@ for k in range(16):
 d.polygon(star, fill=(232, 190, 98, 255))
 d.ellipse((cx - 14 * SS, cy - 14 * SS, cx + 14 * SS, cy + 14 * SS), fill=(255, 245, 210, 255))
 card.alpha_composite(Image.composite(card, card, m)) if False else None
-save(card, 'card_back.png', (300, 390))
+# the summon card back is drawn by tools/gen_card_back.py (ornate version); do not overwrite it here
+# save(card, 'card_back.png', (300, 390))
 print("card back written")

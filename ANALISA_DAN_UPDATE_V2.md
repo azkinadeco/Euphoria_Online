@@ -1228,6 +1228,12 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gj. Update batch 184 — Punggung kartu summon baru
+
+Batch perbaikan tampilan (tanpa fitur baru).
+
+- `tools/gen_card_back.py` menggambar `art/ui/card_back.png` (300×390): bidang ungu dengan kisi berlian, tiga bingkai emas, berlian sudut, medali bulan sabit + bintang. `gen_ui_kit.py` tidak lagi menimpa file itu.
+
 ## 2gi. Update batch 183 — Percikan sentuh dan getaran
 
 Batch perbaikan interaksi (tanpa fitur baru).
