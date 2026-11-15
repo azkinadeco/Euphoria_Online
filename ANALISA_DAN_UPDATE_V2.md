@@ -1253,6 +1253,14 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gp. Update batch 187 — Layar kemenangan, ikon Equipment & Gear Chest
+
+Batch perbaikan (tanpa fitur baru).
+
+- `battle.gd::_show_result`: tiga syarat bintang jadi chip (★ hijau bila terpenuhi, ☆ merah redup bila tidak) yang muncul berurutan; hadiah 44 px muncul satu per satu dengan pop + suara `ui/tab` (dilewati saat Reduce effects).
+- `art/icons/icon_equipment.png` digambar ulang (pedang + perisai; yang lama tampak seperti kotak dicoret, cadangan di `_recut_backup/icon_equipment_old.png`).
+- Gear Chest memakai ikon peti baru `item_gear_chest.png` (Royal Chest diwarnai baja-perunggu).
+
 ## 2gl. Update batch 186 — Pemeriksaan akhir dan publish
 
 - `tools/flow_test.gd` PASS, `tools/smoke.sh` PASS, `tools/audit.sh` PASS di 1280×720, kanvas sempit (1,23) dan 1560×720 X-LARGE, `tools/check_refs.py` bersih (81 ikon, 373 suara, 27 background).

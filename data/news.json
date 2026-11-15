@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zq",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "A clearer victory screen",
+  "body": "The victory screen tells its story better: the three star conditions are shown as chips that light up green when met, and your rewards drop in one by one with a soft tick. The Equipment icon (Forge, Armory dungeon) was redrawn as a sword and shield, and the Gear Chest has its own chest icon instead of the equipment symbol."
+ },
+ {
   "id": "n2026-11-15zp",
   "date": "2026-11-15",
   "tag": "UPDATE",

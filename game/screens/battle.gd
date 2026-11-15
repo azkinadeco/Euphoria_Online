@@ -2073,8 +2073,20 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 				tw.tween_interval(0.35 + 0.25 * k)
 				tw.tween_callback(func(): Game.sfx("star_up"))
 				tw.tween_property(s, "modulate:a", 1.0, 0.2)
-		var conds := UI.label("✔ Victory    %s No hero lost    %s Within 3 rounds" % ["✔" if stars >= 2 and summary["deaths"] == 0 else "✘", "✔" if summary["rounds"] <= 3 else "✘"], 15, Color.WHITE, 3)
-		conds.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		# the three star conditions as chips: green when met, dimmed red when missed (one star each)
+		var conds := UI.hbox(8)
+		conds.alignment = BoxContainer.ALIGNMENT_CENTER
+		var ci := 0
+		for cd in [["Victory", true], ["No hero lost", stars >= 2 and summary["deaths"] == 0], ["Within 3 rounds", summary["rounds"] <= 3]]:
+			var ok: bool = cd[1]
+			var cc0: Color = UI.GREEN if ok else Color("#ff8a9a")
+			var chip := UI.styled_panel(Color(cc0, 0.12 if ok else 0.06), Color(cc0, 0.6 if ok else 0.3), 12, 1, 0)
+			var chl := UI.label(("★ " if ok else "☆ ") + str(cd[0]), 14, cc0 if ok else Color(cc0, 0.75), 2)
+			chip.add_child(UI.margin(chl, 10, 3, 10, 3))
+			conds.add_child(chip)
+			chip.modulate.a = 0.0
+			chip.create_tween().tween_property(chip, "modulate:a", 1.0, 0.25).set_delay(0.5 + ci * 0.18)
+			ci += 1
 		v.add_child(conds)
 		var q := UI.label("MVP %s: \"%s\"" % [DB.name_of(mvp), Game.voice(mvp, "win")], 16, Color("#ffe6a3"), 3)
 		q.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -2111,8 +2123,26 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 		rv.add_child(UI.label("REWARDS", 16, UI.GOLD, 3))
 		var shown := rewards.duplicate()
 		shown.erase("player_exp")
-		rv.add_child(UI.reward_row(shown, 40, 16))
+		var rrow := UI.reward_row(shown, 44, 16)
+		rv.add_child(rrow)
 		v.add_child(rp)
+		# rewards drop in one by one after the stars, each with a soft tick
+		if not Game.reduce_fx():
+			var ri := 0
+			for rc in rrow.get_children():
+				var rcc := rc as Control
+				if rcc == null:
+					continue
+				rcc.modulate.a = 0.0
+				var rtw := rcc.create_tween()
+				rtw.tween_interval(0.9 + ri * 0.09)
+				rtw.tween_callback(func():
+					rcc.pivot_offset = rcc.size * 0.5
+					rcc.scale = Vector2(1.35, 1.35)
+					Game.sfx("ui/tab"))
+				rtw.tween_property(rcc, "modulate:a", 1.0, 0.12)
+				rtw.parallel().tween_property(rcc, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+				ri += 1
 	var btns := UI.hbox(12)
 	btns.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_child(btns)

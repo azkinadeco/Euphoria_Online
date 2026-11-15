@@ -1344,7 +1344,7 @@ const ITEMS := {
 	"skill_book": {"name": "Skill Book", "icon": "icon_skills", "desc": "Used to raise a hero's skill level (+12% skill power per level).", "kind": "material"},
 	"rune_pouch": {"name": "Rune Pouch", "icon": "item_rune_pouch", "desc": "Open for 2 random runes (Tier 1-2).", "kind": "runes", "count": 2, "max_tier": 2},
 	"rune_chest": {"name": "Grand Rune Chest", "icon": "item_rune_chest", "desc": "Open for 3 random runes (Tier 1-3).", "kind": "runes", "count": 3, "max_tier": 3},
-	"gear_chest": {"name": "Gear Chest", "icon": "icon_equipment", "desc": "Open for random equipment (R 70% • SR 27% • SSR 3%).", "kind": "chest", "rates": {"SSR": 0.03, "SR": 0.27}},
+	"gear_chest": {"name": "Gear Chest", "icon": "item_gear_chest", "desc": "Open for random equipment (R 70% • SR 27% • SSR 3%).", "kind": "chest", "rates": {"SSR": 0.03, "SR": 0.27}},
 	"gear_chest_ssr": {"name": "Royal Gear Chest", "icon": "item_royal_chest", "desc": "Open for SR or SSR equipment (SSR 30%).", "kind": "chest", "rates": {"SSR": 0.3, "SR": 0.7}},
 	"forge_ember": {"name": "Forge Ember", "icon": "item_forge_ember", "desc": "Salvaged from equipment and won in the Armory Ruins. Fuels Reforging at the Forge.", "kind": "currency"},
 	"skin_ticket": {"name": "Special Skin Ticket", "icon": "item_skin_ticket", "desc": "Unlocks any Special Skin in the Wardrobe.", "kind": "currency"},
