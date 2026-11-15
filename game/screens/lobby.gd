@@ -496,6 +496,7 @@ func _build_goal() -> void:
 	_goal_label = UI.label("", 15, Color.WHITE, 3)
 	_goal_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_goal_label.clip_text = true
+	_goal_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	h.add_child(_goal_label)
 	_goal_go = UI.button("GO", func():
 		var g := Game.next_goal()

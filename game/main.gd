@@ -279,6 +279,7 @@ func show_news(sel: int = 0) -> void:
 		b.add_theme_font_size_override("font_size", 13)
 		b.add_theme_color_override("font_color", tag_col.get(it.get("tag", "INFO"), Color.WHITE))
 		b.clip_text = true
+		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		lv.add_child(b)
 	var it2: Dictionary = items[clampi(sel, 0, items.size() - 1)]
 	var rv := UI.vbox(8)

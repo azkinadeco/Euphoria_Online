@@ -278,6 +278,7 @@ func _render_info() -> void:
 			i_rl.tooltip_text = "Best single battle: %s damage  •  Knocked out %d times" % [Game.fmt(int(i_rec["best"])), int(i_rec["ko"])]
 			i_rl.mouse_filter = Control.MOUSE_FILTER_PASS
 			i_rl.clip_text = true
+			i_rl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 			v.add_child(i_rl)
 
 	var sk := DB.skill_of(id)

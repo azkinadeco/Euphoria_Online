@@ -457,6 +457,7 @@ func _build_no_partner(b: Control) -> void:
 		var nl := UI.label(DB.name_of(hid), 15, Color.WHITE, 2)
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nl.clip_text = true
+		nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		nr.add_child(nl)
 		nr.add_child(UI.label("Bond Lv.%d" % int(h["bond"]), 12, Color("#ff8fb8"), 2))
 		var bar := UI.bar(mini(int(prog[hid]), need_total), need_total, "", 8)

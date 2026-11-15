@@ -228,6 +228,7 @@ func _render_market() -> void:
 		var n := UI.label("%s x%s" % [Game.reward_name(k), Game.fmt(int(o["give"][k]))], 16, Color.WHITE if not sold else UI.MUTED, 3)
 		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		n.clip_text = true
+		n.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		v.add_child(n)
 		var was := UI.label("was %s" % Game.fmt(int(round(float(o["price"]) / (1.0 - off / 100.0)))) if off > 0 else "Limit 1 per stock", 12, UI.MUTED, 0)
 		was.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -358,6 +359,7 @@ func _item_card(it: Dictionary) -> Control:
 	var n := UI.label(it["name"], 17, Color.WHITE if not sold else UI.MUTED, 3)
 	n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	n.clip_text = true
+	n.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	v.add_child(n)
 	var gr := UI.reward_row(it["give"], 22, 13)
 	gr.alignment = FlowContainer.ALIGNMENT_CENTER

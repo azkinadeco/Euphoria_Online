@@ -181,6 +181,7 @@ func _row(m: Dictionary) -> Control:
 	h.add_child(v)
 	var t := UI.label(m["title"], 15, Color.WHITE if not done else UI.MUTED, 2)
 	t.clip_text = true
+	t.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	v.add_child(t)
 	var sub := UI.hbox(6)
 	v.add_child(sub)

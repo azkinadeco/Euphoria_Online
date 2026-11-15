@@ -209,6 +209,7 @@ func _diff_tile(i: int, cleared_to: int) -> Control:
 	var t1 := UI.label(("✓ " if done else "") + DB.HUNT_DIFFS[i], 12, dc if open else UI.MUTED, 2)
 	t1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	t1.clip_text = true
+	t1.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	v.add_child(t1)
 	var t2 := UI.label("Lv.%d" % int(DB.hunt_stage(_sel, i)["level"]) if open else "LOCKED", 10, Color.WHITE if open else UI.MUTED, 0)
 	t2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

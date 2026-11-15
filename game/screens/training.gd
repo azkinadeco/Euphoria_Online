@@ -70,6 +70,7 @@ func _card(elem: String, id: String) -> Control:
 	nv.add_child(eh)
 	var nl := UI.label(DB.name_of(id), 13, Color.WHITE, 2)
 	nl.clip_text = true
+	nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	nv.add_child(nl)
 	var weak := ""
 	for k in DB.ELEMENT_BEATS.keys():

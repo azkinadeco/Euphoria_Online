@@ -1228,6 +1228,17 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fs. Update batch 167 — Perapian layout: audit otomatis, auto-fit panel, Heroes & Tower
+
+Batch perbaikan (tanpa fitur baru).
+
+- **Alat audit layout** di `tools/shot_runner.gd` (`AUDIT=1`): tiap layar dilaporkan `CLIP` (teks terpotong tanpa elipsis), `TRIM` (elipsis yang membuang >40% teks), `CUT` (keluar dari parent yang meng-clip), `OFF` (teks/panel keluar jendela) dan `OVER` (dua teks bertumpuk).
+- **Auto-fit panel** (`Screen._fit_scan/_fit_panel`): panel yang isinya lebih tinggi dari layar dibungkus scroll, baris tombol aksi di bawah tetap menempel. Sebelumnya di UI X-LARGE tombol seperti CHALLENGE (Tower) atau baris terakhir Bag/Mail jatuh di bawah layar.
+- **`UI.fade_in`**: untuk node di dalam Container, posisi akhir dulu dibaca sebelum layout (0,0) sehingga isi panel menempel ke bingkai (Tower, panel info Summon, Oath). Sekarang digeser relatif ke posisi dari container.
+- **Heroes**: kartu awal 170 px memaksa kolom 21 px melewati tepi kanan; ukuran kartu kini mengikuti lebar layar. Jumlah hero + bonus koleksi jadi dua baris pendek, badge CODEX tidak menutupi huruf.
+- **Tower**: banner 84 px, tombol 54 px — panel pas tanpa scroll di ukuran default.
+- 23 label `clip_text` sekarang berakhir dengan "…".
+
 ## 2fr. Update batch 166 — Filter kelas di layar Heroes
 
 - `DB.ROLE_GROUPS` / `ROLE_GROUP` / `role_group(id)`: 10 role dikelompokkan jadi TANK (Tank, Knight, Paladin), DPS (Warrior, Assassin, Ranger), MAGE (Mage, Warlock), SUPPORT (Healer, Buffer).

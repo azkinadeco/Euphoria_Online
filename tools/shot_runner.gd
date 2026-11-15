@@ -34,6 +34,8 @@ func _process(_d: float) -> bool:
 		var img := root.get_viewport().get_texture().get_image()
 		img.save_png("%s/%02d_%s.png" % [out_dir, idx, steps[idx].replace(":", "_").replace("=", "-")])
 		print("SHOT ", steps[idx])
+		if OS.get_environment("AUDIT") != "":
+			_audit(steps[idx])
 		_next()
 	return false
 
@@ -349,3 +351,139 @@ func _closing(n: Node) -> bool:
 			return true
 		n = n.get_parent()
 	return false
+
+## Layout audit (AUDIT=1): reports texts that are cut off or pushed off the screen on the current screen.
+##   CLIP  = a label/button whose own text does not fit its box
+##   CUT   = a text that sticks out of a clipping parent (not a scroll list)
+##   OFF   = a text or panel outside the window
+func _audit(step: String) -> void:
+	var seen := {}
+	var vp := Rect2(Vector2.ZERO, root.get_visible_rect().size)
+	_audit_node(main_node, step, vp, seen)
+	# OVER = two texts drawn on top of each other
+	var rects: Array = []
+	_audit_collect(main_node, vp, rects)
+	for i in rects.size():
+		for j in range(i + 1, rects.size()):
+			var a: Rect2 = rects[i][0]
+			var b: Rect2 = rects[j][0]
+			var x := a.intersection(b)
+			if x.size.x > 6.0 and x.size.y > 5.0 and x.get_area() >= 0.3 * min(a.get_area(), b.get_area()):
+				_audit_report("OVER", step, rects[i][1], "with \"%s\"" % [_audit_text(rects[j][1]).left(30)], seen)
+
+func _audit_text(c: Control) -> String:
+	if c is Label or c is Button:
+		return str(c.text).strip_edges()
+	return ""
+
+func _audit_report(kind: String, step: String, c: Control, extra: String, seen: Dictionary) -> void:
+	var t := _audit_text(c).replace("\n", " / ").left(46)
+	var key := "%s|%s|%s" % [kind, step, t if t != "" else str(c.get_path())]
+	if seen.has(key):
+		return
+	seen[key] = true
+	var par := c.get_parent()
+	var chain := ""
+	for i in 3:
+		if par == null:
+			break
+		chain = par.name + "/" + chain
+		par = par.get_parent()
+	print("AUDIT %s [%s] \"%s\" %s  <%s%s>" % [kind, step, t, extra, chain, c.get_class()])
+
+func _audit_node(n: Node, step: String, vp: Rect2, seen: Dictionary) -> void:
+	if n is CanvasItem and not (n as CanvasItem).visible:
+		return
+	if n is Control:
+		var c := n as Control
+		if c.modulate.a < 0.05 or c.self_modulate.a < 0.0:
+			return
+		var txt := _audit_text(c)
+		var r := c.get_global_rect()
+		if txt != "" and r.size.x > 1.0:
+			var font := c.get_theme_font("font")
+			var fs := c.get_theme_font_size("font_size")
+			if c is Label:
+				var l := c as Label
+				if l.autowrap_mode == TextServer.AUTOWRAP_OFF:
+					if (l.clip_text or l.text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING) and txt.find("\n") < 0:
+						var w: float = font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+						# an ellipsis is a graceful cut: only report it when most of the text is gone
+						var soft: bool = l.text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING
+						if w > l.size.x + 2.0 and (not soft or l.size.x < w * 0.6):
+							_audit_report("TRIM" if soft else "CLIP", step, c, "needs %d px, has %d" % [int(w), int(l.size.x)], seen)
+				elif l.get_line_count() > l.get_visible_line_count() and l.get_visible_line_count() > 0:
+					_audit_report("CLIP", step, c, "%d of %d lines shown" % [l.get_visible_line_count(), l.get_line_count()], seen)
+			elif c is Button:
+				var b := c as Button
+				if b.clip_text or b.text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING:
+					var bw: float = font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+					var sb := b.get_theme_stylebox("normal")
+					var avail: float = b.size.x - sb.get_minimum_size().x - (b.icon.get_width() if b.icon != null and not b.expand_icon else 0)
+					var bsoft: bool = b.text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING
+					if bw > avail + 2.0 and (not bsoft or avail < bw * 0.6):
+						_audit_report("TRIM" if bsoft else "CLIP", step, c, "needs %d px, has %d" % [int(bw), int(avail)], seen)
+			# sticks out of a clipping ancestor / the window?
+			var in_scroll := false
+			var p := c.get_parent()
+			var cut_by := ""
+			while p != null and p != root:
+				if p is ScrollContainer:
+					in_scroll = true
+					break
+				if p is Control and (p as Control).clip_contents:
+					var pr := (p as Control).get_global_rect()
+					if not pr.grow(3.0).encloses(r) and cut_by == "":
+						cut_by = "%s (%d px over)" % [p.name, int(max(max(pr.position.x - r.position.x, r.end.x - pr.end.x), max(pr.position.y - r.position.y, r.end.y - pr.end.y)))]
+				p = p.get_parent()
+			if not in_scroll:
+				if cut_by != "":
+					_audit_report("CUT", step, c, "by " + cut_by, seen)
+				elif not vp.grow(2.0).encloses(r) and vp.intersects(r):
+					_audit_report("OFF", step, c, "rect %s" % [str(Rect2i(r))], seen)
+		elif c is PanelContainer and r.size.x > 60.0 and not vp.grow(6.0).encloses(r) and vp.intersects(r):
+			var inside := false
+			var q := c.get_parent()
+			while q != null and q != root:
+				if q is ScrollContainer or (q is Control and (q as Control).clip_contents):
+					inside = true
+					break
+				q = q.get_parent()
+			if not inside:
+				_audit_report("OFF", step, c, "panel rect %s" % [str(Rect2i(r))], seen)
+	for ch in n.get_children():
+		_audit_node(ch, step, vp, seen)
+
+## Tight rectangles of the visible single-line labels (for the overlap check).
+func _audit_collect(n: Node, clip: Rect2, out: Array) -> void:
+	if n is CanvasItem and not (n as CanvasItem).visible:
+		return
+	var my_clip := clip
+	if n is Control:
+		var c := n as Control
+		if c.modulate.a < 0.05:
+			return
+		if c.clip_contents or c is ScrollContainer:
+			my_clip = clip.intersection(c.get_global_rect())
+		if c is Label and (c as Label).autowrap_mode == TextServer.AUTOWRAP_OFF:
+			var l := c as Label
+			var txt := str(l.text).strip_edges()
+			if txt != "" and txt.find("\n") < 0:
+				var sz: Vector2 = l.get_theme_font("font").get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, l.get_theme_font_size("font_size"))
+				var sc := l.get_global_transform().get_scale()
+				var r := l.get_global_rect()
+				var w: float = min(sz.x * sc.x, r.size.x) if l.clip_text else sz.x * sc.x
+				var x: float = r.position.x
+				if l.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER:
+					x += (r.size.x - w) * 0.5
+				elif l.horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT:
+					x += r.size.x - w
+				var h: float = sz.y * sc.y * 0.72
+				var y: float = r.position.y + (r.size.y - h) * (0.5 if l.vertical_alignment == VERTICAL_ALIGNMENT_CENTER else (1.0 if l.vertical_alignment == VERTICAL_ALIGNMENT_BOTTOM else 0.0))
+				if l.vertical_alignment == VERTICAL_ALIGNMENT_TOP:
+					y += sz.y * sc.y * 0.14
+				var tr := Rect2(x, y, w, h).intersection(my_clip)
+				if tr.size.x > 4.0 and tr.size.y > 4.0:
+					out.append([tr, c])
+	for ch in n.get_children():
+		_audit_collect(ch, my_clip, out)

@@ -160,6 +160,7 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	info.add_child(st)
 	var nm := UI.label(DB.name_of(id).split(" ")[0], 14 if card_size.x >= 100 else 12, Color.WHITE, 4)
 	nm.clip_text = true
+	nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	info.add_child(nm)
 
 	if owned and opts.get("show_level", true):

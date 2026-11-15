@@ -154,6 +154,7 @@ func _card(f: Dictionary, sent: bool) -> Control:
 	var nm := UI.label(str(f["name"]), 18, Color.WHITE if not used else UI.MUTED, 2)
 	nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nm.clip_text = true
+	nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	top.add_child(nm)
 	top.add_child(UI.label("♥" if sent else "♡", 18, Color("#ff6fae") if sent else UI.MUTED, 2))
 	var stt: String = STATUS[int(f["idx"]) % STATUS.size()]

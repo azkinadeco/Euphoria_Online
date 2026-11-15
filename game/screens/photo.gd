@@ -114,9 +114,11 @@ func _build_panel() -> void:
 	hr.add_child(hv)
 	_name_l = UI.label("", 16, Color.WHITE, 2)
 	_name_l.clip_text = true
+	_name_l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	hv.add_child(_name_l)
 	_info = UI.label("", 12, UI.GOLD, 0)
 	_info.clip_text = true
+	_info.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	hv.add_child(_info)
 	var ch := UI.button("CHANGE", _pick_hero, "", Vector2(78, 36))
 	ch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -158,6 +160,7 @@ func _stepper(title: String, cb: Callable) -> Control:
 	var val := UI.label("", 14, UI.GOLD, 2)
 	val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	val.clip_text = true
+	val.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	mid.add_child(val)
 	_vals[title] = val
 	var r := UI.button("▶", func(): cb.call(1), "", Vector2(38, 40))

@@ -10,6 +10,15 @@ var _chips: Array = []
 func build() -> void:
 	pass
 
+func _ready() -> void:
+	# safety net for big UI sizes / short windows (see _fit_scan)
+	var t := Timer.new()
+	t.wait_time = 0.3
+	t.timeout.connect(func(): _fit_scan(self, 0))
+	add_child(t)
+	t.start()
+	(func(): _fit_scan(self, 0)).call_deferred()
+
 ## Called by Main when Game.changed fires while this screen is visible.
 func refresh() -> void:
 	_update_chips()
@@ -246,3 +255,68 @@ func body(top: float = 72.0, pad: float = 16.0) -> Control:
 	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(c)
 	return c
+
+# ----------------------------------------------------------------- auto-fit
+## A panel whose content is taller than the window would push its last rows (often the main button)
+## off the screen: UI size X-LARGE, short browser windows. Such a panel gets a scroll area for its
+## content while the action row at the bottom stays pinned and always reachable.
+func _fit_scan(n: Node, depth: int) -> void:
+	for ch in n.get_children():
+		if not (ch is Control) or not (ch as Control).visible or ch is ScrollContainer:
+			continue
+		if ch is PanelContainer and _fit_panel(ch as PanelContainer):
+			continue
+		if depth < 5:
+			_fit_scan(ch, depth + 1)
+
+func _fit_is_action_row(c: Node) -> bool:
+	if c is Button:
+		return true
+	if c is HBoxContainer:
+		for k in c.get_children():
+			if k is Button:
+				return true
+	return false
+
+func _fit_panel(p: PanelContainer) -> bool:
+	if p.get_child_count() != 1 or not (p.get_child(0) is VBoxContainer):
+		return false
+	var v := p.get_child(0) as VBoxContainer
+	if v.get_child_count() > 0 and v.get_child(0).has_meta("autofit"):
+		return true
+	var top: float = p.global_position.y - global_position.y
+	var need: float = p.get_combined_minimum_size().y
+	if need < 220.0 or top + need <= size.y - 4.0 or top > size.y * 0.5:
+		return false
+	var kids: Array = v.get_children()
+	# keep up to two trailing action rows (buttons) pinned under the scroll area
+	var cut := kids.size()
+	var pinned := 0
+	while cut > 0 and pinned < 2:
+		var k: Node = kids[cut - 1]
+		if _fit_is_action_row(k):
+			pinned += 1
+			cut -= 1
+		elif k.get_class() == "Control" and pinned == 0 and k.get_child_count() == 0:
+			cut -= 1   # a trailing spacer: the scroll area takes its job
+			kids.remove_at(cut)
+			v.remove_child(k)
+			k.queue_free()
+		else:
+			break
+	if cut <= 0:
+		return false
+	var mid := UI.vbox(v.get_theme_constant("separation"))
+	for i in cut:
+		var k2: Node = kids[i]
+		if k2.get_class() == "Control" and k2.get_child_count() == 0 and ((k2 as Control).size_flags_vertical & Control.SIZE_EXPAND) != 0:
+			v.remove_child(k2)   # spacers have nothing to push apart inside a scroll area
+			k2.queue_free()
+			continue
+		v.remove_child(k2)
+		mid.add_child(k2)
+	var sc := UI.scroll(mid)
+	sc.set_meta("autofit", true)
+	v.add_child(sc)
+	v.move_child(sc, 0)
+	return true

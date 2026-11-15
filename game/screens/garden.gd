@@ -73,6 +73,7 @@ func _render_hud() -> void:
 		r.add_child(rv)
 		var nm := UI.label("%s  •  Bond %d" % [DB.name_of(id).split(" ")[0], int(Game.hero(id)["bond"])], 12, Color.WHITE, 0)
 		nm.clip_text = true
+		nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		rv.add_child(nm)
 		var used := _taps(id)
 		rv.add_child(UI.label("♥".repeat(mini(used, DB.GARDEN_TAPS_PER_DAY)) + "♡".repeat(maxi(0, DB.GARDEN_TAPS_PER_DAY - used)), 12, Color("#ff8fb8") if used < DB.GARDEN_TAPS_PER_DAY else UI.MUTED, 0))

@@ -275,6 +275,7 @@ func _show_unit_info(uid: int) -> void:
 	top.add_child(tv)
 	var nm := UI.label(DB.name_of(id), 19, Color.WHITE, 3)
 	nm.clip_text = true
+	nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	tv.add_child(nm)
 	var lh := UI.hbox(6)
 	tv.add_child(lh)
@@ -1884,6 +1885,7 @@ func _show_training_result(dmg: int, res: Dictionary) -> void:
 		var nl := UI.label(DB.name_of(u["id"]).split(" ")[0] + ("" if u["alive"] else " (KO)"), 13, Color.WHITE, 2)
 		nl.custom_minimum_size = Vector2(110, 0)
 		nl.clip_text = true
+		nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		h.add_child(nl)
 		var b := UI.bar(val, mx, "", 10)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL

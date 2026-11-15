@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15u",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Layout tidy-up: panels that always fit",
+  "body": "A tidy-up pass on layout. Panels whose content is taller than the screen now scroll while their main button stays pinned at the bottom, so nothing can end up below the edge on big UI sizes or short windows. The Heroes header fits the screen again, the Tower floor panel has its padding back, and long titles end with \"…\" instead of being cut mid-letter."
+ },
+ {
   "id": "n2026-11-15t",
   "date": "2026-11-15",
   "tag": "UPDATE",

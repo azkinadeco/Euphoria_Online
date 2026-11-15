@@ -150,6 +150,7 @@ func build() -> void:
 		tb.add_theme_font_size_override("font_size", 14)
 		tb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		tb.clip_text = true
+		tb.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		if not Game.tactic_unlocked("rally"):
 			tb.disabled = true
 			tb.text = "TACTIC (Lv.%d)" % DB.TACTICS[0]["req"]
@@ -385,6 +386,7 @@ func _render_info() -> void:
 		var lt := UI.label("Deployed %d / %d   —   %s" % [Game.formation().size(), DB.MAX_DEPLOY, hint], 16, UI.MUTED)
 		lt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		lt.clip_text = true
+		lt.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		_info.add_child(lt)
 		var lb := UI.button("♥ LINKS %d" % lk.size(), _show_links, "GoldButton" if not lk.is_empty() else "", Vector2(120, 34))
 		lb.add_theme_font_size_override("font_size", 13)
@@ -875,6 +877,7 @@ func _power_up() -> void:
 		var nl := UI.label(DB.name_of(hid), 15, Color.WHITE, 2)
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nl.clip_text = true
+		nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		h.add_child(nl)
 		if levels.has(hid):
 			h.add_child(UI.label("Lv.%d  →  Lv.%d" % [int(levels[hid][0]), int(levels[hid][1])], 15, UI.GREEN, 2))

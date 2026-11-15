@@ -685,6 +685,27 @@ static func fade_in(node: CanvasItem, dur: float = 0.25, from_offset: Vector2 = 
 	tw.tween_property(node, "modulate:a", 1.0, dur)
 	if node is Control and from_offset != Vector2.ZERO:
 		var c := node as Control
+		if c.get_parent() is Container:
+			# A container places its children on the NEXT layout pass, so the position read here is often a
+			# stale (0, 0). Tweening to it pinned the content against the panel frame (no padding left/top).
+			# Slide relative to wherever the container puts the node, and let it re-sort at the end.
+			var par := c.get_parent() as Container
+			var st := {"base": c.position, "p": 0.0}
+			var on_sort := func():
+				if is_instance_valid(c):
+					st["base"] = c.position
+					c.position = (st["base"] as Vector2) + from_offset * (1.0 - float(st["p"]))
+			par.sort_children.connect(on_sort)
+			c.position = (st["base"] as Vector2) + from_offset
+			tw.tween_method(func(pr: float):
+				st["p"] = pr
+				c.position = (st["base"] as Vector2) + from_offset * (1.0 - pr), 0.0, 1.0, dur)
+			tw.chain().tween_callback(func():
+				if is_instance_valid(par):
+					if par.sort_children.is_connected(on_sort):
+						par.sort_children.disconnect(on_sort)
+					par.queue_sort())
+			return
 		var target := c.position
 		c.position = target + from_offset
 		tw.tween_property(c, "position", target, dur)
@@ -750,5 +771,6 @@ static func podium(e: Dictionary, k: int, value: String) -> Control:
 		var l := label(t[0], t[1], t[2], 2)
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.clip_text = true
+		l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		v.add_child(l)
 	return p

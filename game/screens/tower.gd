@@ -57,7 +57,7 @@ func build() -> void:
 
 	# scene banner: the floor's battlefield behind the title
 	var ban := Control.new()
-	ban.custom_minimum_size = Vector2(0, 100)
+	ban.custom_minimum_size = Vector2(0, 84)
 	ban.clip_contents = true
 	v.add_child(ban)
 	var bt := UI.tex_rect(DB.bg(str(t["bg"])), Vector2.ZERO, true)
@@ -84,7 +84,7 @@ func build() -> void:
 	ban.add_child(tv)
 	if guardian:
 		tv.add_child(UI.label("GUARDIAN FLOOR", 14, Color("#ff7a8a"), 3))
-	tv.add_child(UI.label("FLOOR %d" % cur, 34, UI.GOLD, 6))
+	tv.add_child(UI.label("FLOOR %d" % cur, 30, UI.GOLD, 6))
 	tv.add_child(UI.label("Enemy Lv.%d  •  %d foes  •  %s" % [t["level"], t["enemies"].size(), str(t["bg"]).capitalize()], 14, Color(0.9, 0.88, 1.0), 3))
 
 	# threat meter: your power vs theirs
@@ -145,9 +145,9 @@ func build() -> void:
 	v.add_child(UI.spacer(false))
 	var btns := UI.hbox(10)
 	v.add_child(btns)
-	btns.add_child(UI.button("TEAM", func(): main.go("formation"), "", Vector2(130, 60)))
+	btns.add_child(UI.button("TEAM", func(): main.go("formation"), "", Vector2(130, 54)))
 	btns.get_child(0).tooltip_text = "No energy cost. Each floor can only be cleared once.\nEvery 5th floor has a Guardian and a bonus Summon Ticket."
-	var cb := UI.button("⚔ CHALLENGE FLOOR %d" % cur, func(): main.go("formation", {"mode": "tower", "floor": cur}), "GoldButton", Vector2(0, 60))
+	var cb := UI.button("⚔ CHALLENGE FLOOR %d" % cur, func(): main.go("formation", {"mode": "tower", "floor": cur}), "GoldButton", Vector2(0, 54))
 	cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btns.add_child(cb)
 	UI.fade_in(v, 0.3)

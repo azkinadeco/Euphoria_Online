@@ -187,6 +187,7 @@ func _bond_card(hid: String, h: Dictionary) -> Control:
 		var un := DB.bond_unlocks(hid, goal)
 		var nl := UI.label(("NEXT  Lv.%d" % goal) + ("" if un.is_empty() else ":  " + str(un[0])), 12, UI.GOLD, 2)
 		nl.clip_text = true
+		nl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		nl.custom_minimum_size.x = 0
 		nl.tooltip_text = "\n".join(un)
 		nl.mouse_filter = Control.MOUSE_FILTER_PASS

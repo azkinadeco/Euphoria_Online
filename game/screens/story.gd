@@ -594,6 +594,7 @@ func _render_detail() -> void:
 	th.add_child(stl)
 	var nm := UI.label(str(st["name"]).trim_prefix("BOSS • "), 22, Color.WHITE, 5)
 	nm.clip_text = true
+	nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_detail.add_child(nm)
 	# power: your team vs the enemy on one bar
 	var ep := Game.enemy_power(st["enemies"])

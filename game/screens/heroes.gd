@@ -21,25 +21,32 @@ func build() -> void:
 	v.add_child(bar)
 	for f in ["ALL", "OWNED", "SSR", "SR", "R"]:
 		var key: String = f
-		var t := UI.button(f, func(): _filter = key; _rebuild(), "TabButton", Vector2(76, 40))
+		var t := UI.button(f, func(): _filter = key; _rebuild(), "TabButton", Vector2(66, 40))
 		t.toggle_mode = true
 		bar.add_child(t)
 		_tabs.append(t)
 	bar.add_child(UI.spacer())
-	_count = UI.label("", 15, UI.MUTED, 3)
-	_count.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	bar.add_child(_count)
-	var cbl := UI.label("Collection +%.1f%% stats" % (Game.collection_bonus() * 100.0), 14, UI.GREEN, 3)
-	cbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	cbl.tooltip_text = "Every hero you own gives +0.5% HP/ATK/DEF to all heroes."
-	cbl.mouse_filter = Control.MOUSE_FILTER_PASS
-	bar.add_child(cbl)
-	bar.add_child(UI.button("GALLERY", func(): main.go("gallery"), "", Vector2(104, 40)))
-	var cx := UI.button("CODEX", _codex, "GoldButton" if Game.codex_claimable() > 0 else "", Vector2(96, 40))
+	# owned count with the collection bonus under it (two short lines instead of one long one)
+	var cv := UI.vbox(0)
+	cv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	cv.tooltip_text = "Every hero you own gives +0.5% HP/ATK/DEF to all heroes."
+	cv.mouse_filter = Control.MOUSE_FILTER_PASS
+	bar.add_child(cv)
+	_count = UI.label("", 14, UI.TEXT, 3)
+	_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	cv.add_child(_count)
+	var cbl := UI.label("Collection +%.1f%% stats" % (Game.collection_bonus() * 100.0), 12, UI.GREEN, 3)
+	cbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	cv.add_child(cbl)
+	bar.add_child(UI.button("GALLERY", func(): main.go("gallery"), "", Vector2(96, 40)))
+	var codex_n: int = Game.codex_claimable()
+	var cx := UI.button("CODEX", _codex, "GoldButton" if codex_n > 0 else "", Vector2(112 if codex_n > 0 else 86, 40))
 	bar.add_child(cx)
-	if Game.codex_claimable() > 0:
-		UI.add_badge(cx, Game.codex_claimable())
-	var sort_b := UI.button("Sort: Power", Callable(), "", Vector2(128, 40))
+	if codex_n > 0:
+		# room on the right so the red badge does not sit on the last letter
+		cx.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		UI.add_badge(cx, codex_n)
+	var sort_b := UI.button("Sort: Power", Callable(), "", Vector2(118, 40))
 	sort_b.add_theme_font_size_override("font_size", 14)
 	sort_b.pressed.connect(func():
 		_sort = "rarity" if _sort == "power" else ("level" if _sort == "rarity" else "power")
@@ -54,7 +61,7 @@ func build() -> void:
 		eb.theme_type_variation = "TabButton"
 		eb.toggle_mode = true
 		eb.focus_mode = Control.FOCUS_NONE
-		eb.custom_minimum_size = Vector2(56 if el != "" else 70, 38)
+		eb.custom_minimum_size = Vector2(52 if el != "" else 64, 38)
 		eb.set_meta("elem", el)
 		if el == "":
 			eb.text = "ALL"
@@ -68,7 +75,7 @@ func build() -> void:
 	_elem_bar.add_child(UI.spacer())
 	for rg in [""] + DB.ROLE_GROUPS:
 		var rkey: String = rg
-		var rb := UI.button("ANY" if rg == "" else rg, func(): Game.sfx("ui_click"); _role = rkey; _rebuild(), "TabButton", Vector2(60 if rg == "" else 82, 38))
+		var rb := UI.button("ANY" if rg == "" else rg, func(): Game.sfx("ui_click"); _role = rkey; _rebuild(), "TabButton", Vector2(54 if rg == "" else (86 if rg == "SUPPORT" else 66), 38))
 		rb.tooltip_text = "Any class" if rg == "" else {"TANK": "Tank, Knight, Paladin", "DPS": "Warrior, Assassin, Ranger", "MAGE": "Mage, Warlock", "SUPPORT": "Healer, Buffer"}[rg]
 		rb.toggle_mode = true
 		rb.add_theme_font_size_override("font_size", 13)
@@ -81,13 +88,22 @@ func build() -> void:
 	v.add_child(sc)
 	_grid.columns = 6
 	_sc = sc
-	# 6 cards per row (bigger art); the card size follows the available width
-	sc.resized.connect(func():
-		var w := clampf((sc.size.x - 20.0 - 14.0 * 5.0) / 6.0, 120.0, 220.0)
-		if absf(w - _card_w) > 4.0:
-			_card_w = w
-			_rebuild())
+	# 6 cards per row (bigger art); the card size follows the SCREEN width. (It used to follow the scroll
+	# area, but the cards themselves set that area's minimum width, so a 170 px start pushed the whole
+	# column 21 px past the right edge and it could never shrink again.)
+	resized.connect(_fit_cards)
+	_card_w = _card_width()
 	_rebuild()
+
+func _card_width() -> float:
+	var w: float = size.x if size.x > 100.0 else get_viewport_rect().size.x
+	return floorf(clampf((w - 32.0 - 24.0 - 14.0 * 5.0) / 6.0, 110.0, 220.0))
+
+func _fit_cards() -> void:
+	var w := _card_width()
+	if absf(w - _card_w) > 3.0:
+		_card_w = w
+		_rebuild()
 
 var _sc: Control
 var _card_w := 170.0
