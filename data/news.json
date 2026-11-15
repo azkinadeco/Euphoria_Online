@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15y",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Rotate hint on phones, sturdier tests",
+  "body": "On phones, the web version now shows a \"rotate your phone\" screen when the game is held upright, instead of a tiny stretched layout; your game keeps running behind it. A rare script error on the loading screen (when the game started in the middle of a slide change) is fixed too."
+ },
+ {
   "id": "n2026-11-15x",
   "date": "2026-11-15",
   "tag": "UPDATE",

@@ -1228,6 +1228,16 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fw. Update batch 171 — Audit layout permanen, tes yang stabil, petunjuk putar ponsel
+
+Batch perbaikan (tanpa fitur baru).
+
+- **`tools/audit.sh`** (`zsh tools/audit.sh`, atau `quick`): membuka 45 layar + 40 popup pada tiga bentuk kanvas — 1280×720 default, 1280×720 kanvas sempit (skala 1,23), 1560×720 X-LARGE — dan gagal bila ada `CLIP` / `CUT` / `OFF`. Jalankan sebelum rilis bersama `tools/smoke.sh`. Hasil sekarang: PASS di ketiganya.
+- **Tes "Crimson Thirst lifesteal"** tidak lagi acak: gear tes punya substat acak sehingga satu battle kadang selesai tanpa event heal (~1 dari 12 run gagal palsu). Sekarang lifesteal cukup muncul di salah satu dari 8 seed.
+- **Shell web**: layar "Putar ponselmu" saat game dipegang tegak di layar sentuh (`#rotate-hint`, hanya setelah loading selesai — `body.game-on`). Dulu game tampil sangat kecil dan memanjang.
+- Slideshow loading: timer pergantian slide tidak lagi menyentuh elemen yang sudah dihapus saat game mulai (TypeError).
+- `shot_runner.gd`: `TIMING=1` mencetak waktu buka tiap layar.
+
 ## 2fv. Update batch 170 — Keterbacaan: Training Ground, Festival, World Boss, Date
 
 Batch perbaikan (tanpa fitur baru).

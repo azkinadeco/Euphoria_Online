@@ -392,6 +392,77 @@ body {
 	#ld-caption { top: 42%; }
 }
 
+/* ---------- "rotate your phone" (after loading; the game is landscape only) ---------- */
+#rotate-hint {
+	display: none;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 50;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 22px;
+	padding: 24px;
+	text-align: center;
+	background: radial-gradient(ellipse at 50% 40%, #2a1748 0%, #120a22 55%, #07040e 100%);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+	color: #efe6ff;
+}
+
+#rotate-hint img {
+	width: 62vw;
+	max-width: 300px;
+	height: auto;
+}
+
+.rh-phone {
+	width: 64px;
+	height: 112px;
+	border: 3px solid #e8be62;
+	border-radius: 12px;
+	box-shadow: 0 0 22px rgba(255, 200, 110, 0.35);
+	animation: rh-turn 2.4s ease-in-out infinite;
+}
+
+.rh-phone::after {
+	content: "";
+	display: block;
+	width: 18px;
+	height: 3px;
+	margin: 98px auto 0;
+	border-radius: 2px;
+	background: #e8be62;
+}
+
+@keyframes rh-turn {
+	0%, 20% { transform: rotate(0deg); }
+	60%, 100% { transform: rotate(-90deg); }
+}
+
+.rh-title {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 22px;
+	font-weight: 700;
+	color: #ffe9b0;
+}
+
+.rh-text {
+	max-width: 300px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #cfc2ea;
+}
+
+/* only on touch screens held upright, and only once the game is running */
+@media (orientation: portrait) and (pointer: coarse) {
+	body.game-on #rotate-hint {
+		display: flex;
+	}
+}
+
 #status-retry {
 	display: block;
 	margin: 0.8rem auto 0.2rem;
@@ -472,6 +543,13 @@ body {
 				</div>
 			</div>
 			<div id="status-notice"></div>
+		</div>
+
+		<div id="rotate-hint">
+			<img src="loading/logo.webp" alt="Euphoria Online" onerror="this.style.display='none'">
+			<div class="rh-phone"></div>
+			<div class="rh-title">Putar ponselmu</div>
+			<div class="rh-text">Euphoria Online dimainkan dalam mode landscape. Putar ponsel ke samping untuk melanjutkan — permainanmu tetap berjalan.</div>
 		</div>
 
 		<script>
@@ -632,6 +710,9 @@ const engine = new Engine(GODOT_CONFIG);
 				bgTurn++;
 			}
 			setTimeout(function () {
+				if (slidesStopped) {
+					return; // the game started meanwhile: the loading screen is gone
+				}
 				if (ok[1]) {
 					heroEl.src = heroSrc;
 					heroEl.classList.add('on');
@@ -704,6 +785,7 @@ const engine = new Engine(GODOT_CONFIG);
 		if (mode === 'hidden') {
 			stopSlides();
 			statusOverlay.remove();
+			document.body.classList.add('game-on');
 			initializing = false;
 			return;
 		}

@@ -1119,12 +1119,20 @@ func _run() -> void:
 		gg0["owner"] = hid_s
 	var sbon: Dictionary = G.stat_bonus(hid_s)
 	check((sbon["sets"] as Array).has("vampire") and float(sbon["atk"]) >= 0.05, "3-piece set active and 2-piece stats added")
-	var ssim := BattleSim.new()
-	ssim.setup(G.ally_team({"mode": "story", "stage": 1}), G.enemies_for({"mode": "story", "stage": 30}), 5)
-	var svu: Dictionary = ssim.units.filter(func(u): return u["id"] == hid_s)[0]
-	check((svu["sets"] as Array).has("vampire"), "battle unit carries its gear sets")
-	ssim.run()
-	var heals: int = ssim.events.filter(func(ev): return ev["t"] == "heal" and ev["uid"] == svu["uid"]).size()
+	# The gear above rolls random substats, so one fixed battle sometimes ends before the wearer is both
+	# hurt and attacking (no heal event -> a false failure about once in a dozen runs). Lifesteal only has
+	# to show up in one of several battles.
+	var heals := 0
+	for sseed in range(5, 13):
+		var ssim := BattleSim.new()
+		ssim.setup(G.ally_team({"mode": "story", "stage": 1}), G.enemies_for({"mode": "story", "stage": 30}), sseed)
+		var svu: Dictionary = ssim.units.filter(func(u): return u["id"] == hid_s)[0]
+		if sseed == 5:
+			check((svu["sets"] as Array).has("vampire"), "battle unit carries its gear sets")
+		ssim.run()
+		heals += ssim.events.filter(func(ev): return ev["t"] == "heal" and ev["uid"] == svu["uid"]).size()
+		if heals > 0:
+			break
 	check(heals > 0, "Crimson Thirst lifesteal heals in battle (%d)" % heals)
 	for gg0 in gsA:
 		gg0["set"] = "aegis"
