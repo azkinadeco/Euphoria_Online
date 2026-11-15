@@ -3,7 +3,7 @@ extends Screen
 
 var _list: VBoxContainer
 var _side: VBoxContainer
-var _tab := "DAILY"
+static var _tab := "DAILY"   # remembered for the session
 var _t := 0.0
 var _timer: Label
 
@@ -201,7 +201,7 @@ func _render() -> void:
 	UI.stagger(_list)
 
 var _rows: Array = []
-var _ach_cat := ""
+static var _ach_cat := ""
 
 ## Achievement Rank: points, the road of ranks, and a chest for every rank reached.
 func _rank_panel() -> void:

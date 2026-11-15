@@ -4,8 +4,9 @@ extends Screen
 var _grid: GridContainer
 var _detail: VBoxContainer
 var _sel := ""
-var _tab := "ITEMS"
-var _filter := "ALL"
+# tab and category are remembered for the session (back from a GO link lands where you were)
+static var _tab := "ITEMS"
+static var _filter := "ALL"
 var _filters: HBoxContainer
 var _summary: Label
 
