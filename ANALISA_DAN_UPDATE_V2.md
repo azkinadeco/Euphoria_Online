@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gv. Update batch 193 — Daftar Boss Hunt terbaca
+
+- `hunt.gd`: gradasi gelap dari kiri di tiap kartu target (di bawah nama, status dan hadiah).
+
 ## 2gu. Update batch 192 — Bag & Missions mengingat tab
 
 - `bag.gd` (`_tab`, `_filter`) dan `quests.gd` (`_tab`, `_ach_cat`) kini `static var`; parameter `tab` dari luar tetap menang.

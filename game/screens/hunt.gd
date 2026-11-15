@@ -66,6 +66,22 @@ func _render() -> void:
 		th.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		th.modulate = Color(0.7, 0.7, 0.75) if hid == _sel else Color(0.4, 0.4, 0.45)
 		fr.add_child(th)
+		# dark fade from the left under the name and reward line (the starfield art made them hard to read)
+		var g := Gradient.new()
+		g.set_color(0, Color(0.03, 0.01, 0.07, 0.88))
+		g.set_color(1, Color(0.03, 0.01, 0.07, 0.0))
+		g.add_point(0.62, Color(0.03, 0.01, 0.07, 0.55))
+		var gt := GradientTexture2D.new()
+		gt.gradient = g
+		gt.width = 64
+		gt.height = 4
+		var sh := TextureRect.new()
+		sh.texture = gt
+		sh.stretch_mode = TextureRect.STRETCH_SCALE
+		sh.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		sh.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		sh.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fr.add_child(sh)
 		var face := UI.face_rect(h["boss"], Vector2(60, 60))
 		face.position = Vector2(8, 8)
 		face.size = Vector2(60, 60)
