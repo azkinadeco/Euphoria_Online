@@ -1228,6 +1228,13 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gh. Update batch 182 — Realm hero di belakang ultimate
+
+Batch perbaikan animasi (tanpa fitur baru).
+
+- `battle.gd::_ultimate`: lapisan realm hero (tint elemen, alpha 0,42, zoom lambat) di antara langit gradien dan garis kecepatan. Hanya untuk hero yang punya background sendiri.
+- `DB.warm_battle_art` ikut memuat realm itu saat battle dibuka, supaya ultimate pertama tidak tersendat.
+
 ## 2gg. Update batch 181 — Layar judul di realm hero
 
 Batch perbaikan (tanpa fitur baru).

@@ -956,6 +956,17 @@ func _ultimate(u: Dictionary) -> float:
 		var b := Color(ec.darkened(0.6), 0.94)
 		sky.draw_polygon(PackedVector2Array([Vector2.ZERO, Vector2(s.x, 0), s, Vector2(0, s.y)]), PackedColorArray([b, a, a, b])))
 	root.add_child(sky)
+	# her realm glows through the backdrop, tinted by her element and slowly pushing in
+	if DB.has_hero_bg(hid):
+		var realm := UI.tex_rect(DB.bg(DB.hero_bg_key(hid)), Vector2.ZERO, true)
+		realm.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		realm.modulate = Color(ec.lightened(0.55), 0.0)
+		root.add_child(realm)
+		realm.resized.connect(func(): realm.pivot_offset = realm.size * 0.5)
+		realm.pivot_offset = get_viewport_rect().size * 0.5
+		var rt := realm.create_tween().set_parallel(true)
+		rt.tween_property(realm, "modulate:a", 0.42, 0.25)
+		rt.tween_property(realm, "scale", Vector2(1.12, 1.12), 1.8).from(Vector2(1.02, 1.02)).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	# diagonal speed lines rushing right → left
 	var lines := Control.new()
 	lines.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

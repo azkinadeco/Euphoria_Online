@@ -3907,6 +3907,8 @@ static func warm_battle_art(id: String, ally: bool, boss: bool, skin: int = 0) -
 		cutin(id)
 		if ult:
 			art(id, skin)
+			if has_hero_bg(id):
+				bg(hero_bg_key(id))   # the realm behind her ultimate
 
 ## Chibi battle sprite. Evolved sprite unlocks at 5★.
 static func sprite(id: String, star: int = 1, skin: int = -1) -> Texture2D:
