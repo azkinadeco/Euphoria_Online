@@ -445,9 +445,12 @@ func play_bgm(name: String = "bgm_lobby") -> void:
 			refresh_volume()
 			_bgm.play())
 		return
+	# starting from silence (after the quiet title): fade in instead of starting at full volume
 	_bgm.stream = st
-	_bgm.volume_db = linear_to_db(maxf(0.001, float(s["settings"]["bgm"]) * 0.7))
+	var target := linear_to_db(maxf(0.001, float(s["settings"]["bgm"]) * 0.7))
+	_bgm.volume_db = -36.0
 	_bgm.play()
+	create_tween().tween_property(_bgm, "volume_db", target, 1.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 ## Silence the music (title screen and studio logo: the lobby song only starts once you are in the game).
 func stop_bgm(fade: float = 0.6) -> void:
