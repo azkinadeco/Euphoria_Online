@@ -3465,6 +3465,28 @@ func feature_badge(route: String) -> int:
 		n = maxi(n, 1)
 	return n
 
+# ---- pinned MENU shortcuts
+const PIN_MAX := 6
+
+func pins() -> Array:
+	var known: Array = DB.MENU_FEATURES.map(func(f): return str(f[0]))
+	return (s.get("pins", []) as Array).filter(func(r): return known.has(str(r)))
+
+## Pins or unpins a MENU feature. Returns "" or an error text.
+func toggle_pin(route: String) -> String:
+	var p := pins()
+	if p.has(route):
+		p.erase(route)
+	elif not DB.MENU_FEATURES.any(func(f): return str(f[0]) == route):
+		return "Unknown feature."
+	elif p.size() >= PIN_MAX:
+		return "You can pin up to %d shortcuts. Unpin one first." % PIN_MAX
+	else:
+		p.append(route)
+	s["pins"] = p
+	mark_dirty()
+	return ""
+
 func seen_unlock(route: String) -> void:
 	var nu: Array = s.get("new_unlocks", [])
 	if nu.has(route):

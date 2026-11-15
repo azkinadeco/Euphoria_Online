@@ -397,7 +397,8 @@ func _open_menu() -> void:
 	var info := {}
 	for f in DB.MENU_FEATURES:
 		info[f[0]] = f
-	for sec in DB.MENU_SECTIONS:
+	var secs: Array = [["★ PINNED", Game.pins()]] + DB.MENU_SECTIONS
+	for sec in secs:
 		var head := UI.hbox(8)
 		var bar := ColorRect.new()
 		bar.color = UI.GOLD
@@ -405,6 +406,9 @@ func _open_menu() -> void:
 		head.add_child(bar)
 		head.add_child(UI.label(str(sec[0]), 16, UI.GOLD, 3))
 		body.add_child(head)
+		if (sec[1] as Array).is_empty():
+			head.add_child(UI.label("Tap ☆ on any tile to keep it here (up to %d)." % Game.PIN_MAX, 13, UI.MUTED, 2))
+			continue
 		var g := GridContainer.new()
 		g.columns = 6
 		g.add_theme_constant_override("h_separation", 10)
@@ -445,6 +449,27 @@ func _menu_tile(f: Array, v: Control) -> Button:
 			main.close_popup(v)
 		main.go(route))
 	UI.hover_fx(b, 1.05)
+	var pinned := Game.pins().has(route)
+	var pb := Button.new()
+	pb.flat = true
+	pb.focus_mode = Control.FOCUS_NONE
+	pb.text = "★" if pinned else "☆"
+	pb.tooltip_text = "Unpin" if pinned else "Pin to the top of the MENU"
+	pb.add_theme_font_size_override("font_size", 18)
+	pb.add_theme_color_override("font_color", UI.GOLD if pinned else Color(1, 1, 1, 0.35))
+	pb.add_theme_color_override("font_hover_color", UI.GOLD)
+	pb.position = Vector2(2, 0)
+	pb.size = Vector2(34, 34)
+	pb.set_meta("pin", route)
+	pb.pressed.connect(func():
+		var err := Game.toggle_pin(route)
+		if err != "":
+			main.toast(err, UI.RED)
+			return
+		Game.sfx("ui_click")
+		main.close_popup(v)
+		_open_menu())
+	b.add_child(pb)
 	var n := Game.feature_badge(route)
 	if n > 0:
 		UI.add_badge(b, n)

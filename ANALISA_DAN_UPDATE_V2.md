@@ -1228,6 +1228,11 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2fn. Update batch 162 — Shortcut yang di-pin di MENU
+
+- `Game.pins()` / `toggle_pin(route)` (maksimal `PIN_MAX` = 6, disimpan di `s["pins"]`, route yang sudah tidak ada dibuang).
+- `lobby.gd::_open_menu`: bagian **★ PINNED** paling atas (petunjuk singkat bila kosong). `_menu_tile`: tombol ☆/★ kecil di pojok kiri atas tiap tile untuk pin/unpin; badge tetap tampil di tile yang di-pin.
+
 ## 2fm. Update batch 161 — Backup otomatis save
 
 - `Game.make_backup(tag)`: menulis `s` ke `user://backups/save_<tag>.json`. Tag kosong = backup harian (`day_key`), dibuat di `load_game()` bila belum ada untuk hari itu (isi = save saat game dibuka). Hanya `BACKUP_KEEP` (5) backup harian terbaru yang disimpan; tag `before_restore` dan `before_reset` di luar batas itu.

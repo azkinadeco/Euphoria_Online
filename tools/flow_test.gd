@@ -1786,6 +1786,19 @@ func _run() -> void:
 	G.backup_dir = G.BACKUP_DIR
 	G.s = bk_save
 
+	print("[menu pins]")
+	var pn_save: Array = G.s.get("pins", [])
+	G.s["pins"] = []
+	check(G.toggle_pin("arena") == "" and G.pins() == ["arena"], "a feature can be pinned")
+	check(G.toggle_pin("arena") == "" and G.pins().is_empty(), "tapping again unpins it")
+	check(G.toggle_pin("not_a_screen") != "", "unknown routes are refused")
+	for pnf in DB.MENU_FEATURES.slice(0, G.PIN_MAX):
+		G.toggle_pin(str(pnf[0]))
+	check(G.pins().size() == G.PIN_MAX and G.toggle_pin(str(DB.MENU_FEATURES[G.PIN_MAX][0])) != "" and G.pins().size() == G.PIN_MAX, "pins are capped at %d" % G.PIN_MAX)
+	G.s["pins"] = ["arena", "gone_feature"]
+	check(G.pins() == ["arena"], "pins of removed features are dropped")
+	G.s["pins"] = pn_save
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)
