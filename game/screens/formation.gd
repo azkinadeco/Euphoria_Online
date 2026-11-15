@@ -912,10 +912,35 @@ func _power_up() -> void:
 			main.toast("Team Power %s → %s  (%s)" % [Game.fmt(int(res["before"])), Game.fmt(int(res["after"])), ", ".join(parts)], UI.GREEN)
 		_render(), "GoldButton", Vector2(190, 48)))
 
+static var _gap_ok := false   # "fight anyway" chosen once: do not ask again this session
+
 func _start() -> void:
 	if Game.formation().is_empty():
 		main.toast("Deploy at least one hero!", UI.RED)
 		return
+	# empty slots although more heroes are free: ask once (easy to miss after a hero was removed)
+	var free_n := mini(DB.MAX_DEPLOY, Game.s["heroes"].size())
+	if not _gap_ok and str(params.get("mode", "")) != "trial" and Game.formation().size() < free_n:
+		_ask_fill(free_n)
+		return
+	_launch()
+
+func _ask_fill(free_n: int) -> void:
+	var v: VBoxContainer = main.popup("EMPTY SLOTS", 520)
+	v.add_child(UI.wrap_label("Only %d of %d slots are filled. Every hero you add makes the team stronger." % [Game.formation().size(), free_n], 15, UI.TEXT))
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("FIGHT ANYWAY", func():
+		_gap_ok = true
+		main.close_popup(v)
+		_launch(), "", Vector2(180, 48)))
+	row.add_child(UI.button("AUTO FILL", func():
+		main.close_popup(v)
+		Game.auto_formation(str(_scout.get("counter", "")) if not _scout.is_empty() else "")
+		main.replace("formation", params), "GoldButton", Vector2(180, 48)))
+
+func _launch() -> void:
 	var err := Game.pay_battle(params)
 	if err != "":
 		main.toast(err, UI.RED)

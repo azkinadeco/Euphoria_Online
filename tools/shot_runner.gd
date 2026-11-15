@@ -340,6 +340,9 @@ func _next() -> void:
 			if str(bu["id"]) == v.substr(4):
 				bs._ultimate(bu)
 				break
+	elif v.begins_with("gpop:"):
+		# gpop:formation -> removes the last entry of Game.s["formation"]
+		(root.get_node("Game").s[v.substr(5)] as Array).pop_back()
 	elif v == "wait":
 		pass
 	elif v == "close":

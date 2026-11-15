@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15b8",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "No more half-empty teams by accident",
+  "body": "Starting a battle with empty slots while free heroes are waiting now asks first: AUTO FILL builds a full team for this fight, FIGHT ANYWAY goes in as you are (and is remembered for the session)."
+ },
+ {
   "id": "n2026-11-15b7",
   "date": "2026-11-15",
   "tag": "UPDATE",
