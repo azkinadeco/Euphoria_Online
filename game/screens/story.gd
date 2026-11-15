@@ -143,6 +143,16 @@ func _chapter_card() -> void:
 	tw.tween_interval(1.6)
 	tw.tween_property(layer, "modulate:a", 0.0, 0.45)
 	tw.tween_callback(layer.queue_free)
+	# a tap anywhere dismisses the card at once (it covers the BATTLE button for ~3 s otherwise)
+	layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	layer.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.pressed and not layer.has_meta("closing"):
+			layer.set_meta("closing", true)
+			layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			tw.kill()
+			var ft := layer.create_tween()
+			ft.tween_property(layer, "modulate:a", 0.0, 0.18)
+			ft.tween_callback(layer.queue_free))
 
 func refresh() -> void:
 	super.refresh()

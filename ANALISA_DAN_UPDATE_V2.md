@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2gz. Update batch 198 — Kartu judul chapter bisa diketuk
+
+- `story.gd::_chapter_card`: lapisan kartu menangkap ketukan dan memudar dalam 0,18 dtk (sebelumnya ±3 dtk menutupi panel stage dan tombol BATTLE).
+
 ## 2gy. Update batch 197 — Kenaikan stat terlihat saat upgrade
 
 - `hero_detail.gd::_stat_gain(before)`: setelah Level Up / Star Up, selisih HP / ATK / DEF (warna masing-masing) naik di bawah teks besar lalu memudar.
