@@ -1228,6 +1228,13 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gd. Update batch 178 — Kartu gacha diantar jejak cahaya
+
+Batch perbaikan (tanpa fitur baru).
+
+- `gacha.gd::_comet`: tiap kartu diantar garis cahaya melengkung dari gerbang (warna rarity), dengan kilatan saat mendarat; kartu muncul dari titik jatuhnya. Dilewati bila di-skip atau Reduce effects aktif.
+- Jeda 0,28 dtk setelah ledakan agar cincin kejut terlihat sebelum kartu tampil.
+
 ## 2gc. Update batch 177 — Realm tiap hero, 2.5D lebih dalam, info elemen di layar hero
 
 Batch perbaikan (tanpa fitur baru). Termasuk pekerjaan pra-batch atas permintaan user.

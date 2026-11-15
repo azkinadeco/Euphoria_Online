@@ -489,11 +489,23 @@ func _play_reveal(results: Array) -> void:
 		holder.add_child(back)
 		back.scale = Vector2(0.2, 0.2)
 		back.modulate.a = 0.0
-		var dt := back.create_tween().set_parallel(true)
-		dt.tween_property(back, "scale", Vector2.ONE, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(holders.size() * 0.05)
-		dt.tween_property(back, "modulate:a", 1.0, 0.2).set_delay(holders.size() * 0.05)
 		holders.append(back)
 	await get_tree().process_frame
+	# each card is delivered by a streak of light from the gate, in the colour of its rarity; it lands, the
+	# card pops out of the impact
+	var travel := 0.0 if skip[0] or Game.reduce_fx() else 0.26
+	for i in holders.size():
+		var hb: Panel = holders[i]
+		var delay: float = i * (0.02 if skip[0] else 0.06)
+		if travel > 0.0:
+			_comet(_reveal.size * 0.5, hb.get_global_rect().get_center() - _reveal.get_global_rect().position, (DB.RARITY_COLOR[results[i]["rarity"]] as Color).lightened(0.25), delay, travel)
+		var dt := hb.create_tween().set_parallel(true)
+		dt.tween_property(hb, "scale", Vector2.ONE, 0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(delay + travel)
+		dt.tween_property(hb, "modulate:a", 1.0, 0.18).set_delay(delay + travel)
+	if travel > 0.0:
+		await get_tree().create_timer(travel + holders.size() * 0.06 + 0.15).timeout
+		if not is_inside_tree() or not is_instance_valid(_reveal):
+			return
 	for i in results.size():
 		if not is_inside_tree() or not is_instance_valid(_reveal):
 			return
@@ -545,6 +557,52 @@ func _play_reveal(results: Array) -> void:
 		_reveal.queue_free()
 		_reveal = null
 		_pull(again_count, pay), "GoldButton", Vector2(260, 56)))
+
+## A streak of light flying along a shallow arc from `from` to `to`, with a tapering tail and a small flash
+## where it lands.
+func _comet(from: Vector2, to: Vector2, col: Color, delay: float, dur: float) -> void:
+	var line := Line2D.new()
+	line.width = 9.0
+	var wc := Curve.new()
+	wc.add_point(Vector2(0, 0.0))
+	wc.add_point(Vector2(1, 1.0))
+	line.width_curve = wc
+	var g := Gradient.new()
+	g.set_color(0, Color(col, 0.0))
+	g.set_color(1, Color(col.lightened(0.5), 1.0))
+	line.gradient = g
+	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	line.end_cap_mode = Line2D.LINE_CAP_ROUND
+	var add := CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	line.material = add
+	_reveal.add_child(line)
+	var mid := (from + to) * 0.5 + Vector2((to.y - from.y) * 0.35, -(to.x - from.x) * 0.2 - 40.0)
+	var at := func(t: float) -> Vector2:
+		return from.lerp(mid, t).lerp(mid.lerp(to, t), t)
+	var tw := line.create_tween()
+	tw.tween_interval(delay)
+	tw.tween_method(func(p: float):
+		var pts := PackedVector2Array()
+		for k in 9:
+			pts.append(at.call(clampf(p - 0.34 + k * 0.0425, 0.0, 1.0)))
+		line.points = pts, 0.0, 1.0, dur).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tw.tween_callback(func():
+		var fl := Panel.new()
+		fl.add_theme_stylebox_override("panel", UI.style(Color(col.lightened(0.6), 0.9), Color.TRANSPARENT, 40, 0, 0, 24))
+		(fl.get_theme_stylebox("panel") as StyleBoxFlat).shadow_color = Color(col, 0.8)
+		fl.size = Vector2(46, 46)
+		fl.position = to - Vector2(23, 23)
+		fl.pivot_offset = Vector2(23, 23)
+		fl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fl.material = add
+		_reveal.add_child(fl)
+		var ftw := fl.create_tween().set_parallel(true)
+		ftw.tween_property(fl, "scale", Vector2(3.0, 3.0), 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		ftw.tween_property(fl, "modulate:a", 0.0, 0.25)
+		ftw.chain().tween_callback(fl.queue_free))
+	tw.tween_property(line, "modulate:a", 0.0, 0.12)
+	tw.tween_callback(line.queue_free)
 
 ## Rotating rays behind SR/SSR cards + a sweeping shine across the card.
 func _card_shine(back: Control, sz: Vector2, col: Color, big: bool) -> void:
