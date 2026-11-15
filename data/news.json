@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zh",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "The interface has a voice",
+  "body": "The interface has its own voice. Popups open and close with a soft whoosh, tabs tick, rewards arrive with a chime, and \"not enough\" or \"locked\" gets a low double note instead of the same click as everything else. All of it follows the Sound Effects volume in Settings."
+ },
+ {
   "id": "n2026-11-15zg",
   "date": "2026-11-15",
   "tag": "UPDATE",

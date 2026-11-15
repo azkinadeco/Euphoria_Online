@@ -1228,6 +1228,14 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gf. Update batch 180 — Set suara UI
+
+Batch perbaikan interaksi (tanpa fitur baru).
+
+- `tools/gen_ui_audio.py` mensintesis 6 suara pendek ke `audio/ui/`: `open`, `close`, `tab`, `error`, `reward`, `confirm` (mono 44,1 kHz, lembut).
+- Dipasang di: `main.popup()` (open), `_dismiss` (close), `UI.button` varian TabButton (tab), `main.toast` warna merah (error), `main.show_rewards` (reward).
+- `Game.sfx`: suara `ui/…` yang sama tidak menumpuk dalam 140 ms.
+
 ## 2ge. Update batch 179 — AUTO formation yang memperhatikan komposisi
 
 Batch perbaikan gameplay (tanpa fitur baru).

@@ -614,6 +614,8 @@ static func _toast_group(text: String) -> String:
 	return m.get_string() if m else text
 
 func toast(text: String, color: Color = UI.GOLD) -> void:
+	if color == UI.RED:
+		Game.sfx("ui/error")   # "not enough", "locked", "can't do that"
 	var grp := _toast_group(text)
 	# "NEW FEATURE UNLOCKED: A!" + "...: B!" → one toast listing both
 	var join := grp == text and text.find(": ") > 0
@@ -737,6 +739,7 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 	v.set_meta("layer", layer)
 	layer.set_meta("panel", p)
 	UI.pop(p)
+	Game.sfx("ui/open")
 	# Safety net: a popup taller than the screen (long lists, big UI size) had its lower rows and its
 	# CLOSE button below the edge with no way to reach them. Its content scrolls instead.
 	var head := 1 if title != "" else 0
@@ -761,6 +764,8 @@ func _dismiss(layer: Node) -> void:
 		layer.queue_free()
 		return
 	var lc := layer as Control
+	if lc.has_meta("popup"):
+		Game.sfx("ui/close")
 	lc.set_meta("closing", true)
 	if lc.has_meta("popup"):
 		lc.remove_meta("popup")
@@ -827,7 +832,7 @@ func _fly_icons() -> void:
 
 func show_rewards(title: String, rewards: Dictionary, after: Callable = Callable()) -> void:
 	_fly_src.clear()
-	Game.sfx("star_up")
+	Game.sfx("ui/reward")   # a chime of its own (star_up stays for level and star gains)
 	var v := popup(title, 560)
 	if rewards.is_empty():
 		v.add_child(UI.wrap_label("Nothing to collect yet.", 16))

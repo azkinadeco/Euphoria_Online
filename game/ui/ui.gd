@@ -178,7 +178,7 @@ static func button(text: String, cb: Callable = Callable(), variant: String = ""
 		b.theme_type_variation = variant
 	if cb.is_valid():
 		b.pressed.connect(func():
-			Game.sfx("ui_click")
+			Game.sfx("ui/tab" if variant == "TabButton" else "ui_click")
 			cb.call())
 	hover_fx(b)
 	if variant == "GoldButton":

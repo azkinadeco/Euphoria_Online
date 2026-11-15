@@ -518,10 +518,18 @@ func apply_ui_scale() -> void:
 func refresh_volume() -> void:
 	_bgm.volume_db = linear_to_db(maxf(0.001, float(s["settings"]["bgm"]) * 0.7))
 
+var _sfx_last := {}
+
 func sfx(name: String) -> void:
 	var path := "res://audio/%s.wav" % name
 	if not ResourceLoader.exists(path) or float(s["settings"]["sfx"]) <= 0.01:
 		return
+	# the same UI sound never stacks on itself (a popup that closes and reopens, ten toasts at once)
+	if name.begins_with("ui/"):
+		var now := Time.get_ticks_msec()
+		if now - int(_sfx_last.get(name, -1000)) < 140:
+			return
+		_sfx_last[name] = now
 	var p := _sfx[_sfx_i]
 	_sfx_i = (_sfx_i + 1) % _sfx.size()
 	p.stream = load(path)
