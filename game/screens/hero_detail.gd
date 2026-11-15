@@ -199,7 +199,11 @@ func _render() -> void:
 		if str(DB.ELEMENT_BEATS[ek]) == el:
 			weak = str(ek)
 	var facts := UI.hbox(6)
-	for fact in [["STRONG VS", beats, UI.GREEN], ["WEAK TO", weak, Color("#ff8a9a")]]:
+	var facts_list: Array = [["STRONG VS", beats, UI.GREEN], ["WEAK TO", weak, Color("#ff8a9a")]]
+	if beats != "" and beats == weak:
+		# Light and Dark beat each other: one chip says it instead of two that look contradictory
+		facts_list = [["RIVAL ⇄", beats, UI.GOLD]]
+	for fact in facts_list:
 		if str(fact[1]) == "":
 			continue
 		var chip := UI.styled_panel(Color(0.03, 0.01, 0.07, 0.62), Color(fact[2] as Color, 0.55), 9, 1, 0)

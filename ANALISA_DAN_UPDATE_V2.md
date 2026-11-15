@@ -1253,6 +1253,11 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hl. Update batch 211 — UPGRADE setelah kalah menuju hero terlemah
+
+- `battle.gd::_show_result`: tombol UPGRADE pada kekalahan membuka `hero_detail` hero dengan power terendah di formasi (tab UPGRADE, swipe di antara anggota tim); tooltip menyebut namanya.
+- `hero_detail.gd`: untuk LIGHT/DARK (saling mengalahkan) satu chip "RIVAL ⇄" menggantikan STRONG VS + WEAK TO yang tampak bertentangan.
+
 ## 2hk. Update batch 210 — Kartu hasil summon bisa diketuk
 
 - `gacha.gd::_play_reveal`: setelah semua kartu terbuka (`_reveal` meta `done`), tiap kartu membuka `ArtViewer` hero itu; petunjuk "Tap a card to view her art" di atas tombol.

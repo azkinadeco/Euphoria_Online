@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15c5",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "Upgrade the right hero after a loss",
+  "body": "After a defeat, UPGRADE now takes you straight to the weakest hero of that team on her Upgrade tab, instead of the full hero list. On a Light or Dark hero's page, the element chips read \"RIVAL ⇄ DARK/LIGHT\" instead of two chips that looked contradictory (Light and Dark beat each other)."
+ },
+ {
   "id": "n2026-11-15c4",
   "date": "2026-11-15",
   "tag": "UPDATE",

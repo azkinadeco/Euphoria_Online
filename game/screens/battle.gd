@@ -2168,8 +2168,21 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 		btns.add_child(UI.button("NEXT FLOOR ▶", func(): main.replace("formation", {"mode": "tower", "floor": int(Game.s["tower"]["floor"])}), "GoldButton", Vector2(200, 54)))
 	if not won:
 		btns.add_child(UI.button("RETRY", func(): main.replace("formation", params), "GoldButton", Vector2(140, 54)))
-		var ub := UI.button("UPGRADE", func(): main.replace("heroes"), "", Vector2(140, 54))
-		ub.tooltip_text = "Level up, star up and gear your heroes"
+		# straight to the weakest hero of this team, on her UPGRADE tab (that is where power is cheapest)
+		var weakest := ""
+		var wp := 1 << 30
+		for fe in Game.formation():
+			var fid := str(fe[0])
+			if Game.owns(fid) and Game.hero_power(fid) < wp:
+				wp = Game.hero_power(fid)
+				weakest = fid
+		var team_ids: Array = Game.formation().map(func(fe2): return str(fe2[0]))
+		var ub := UI.button("UPGRADE", func():
+			if weakest != "":
+				main.replace("hero_detail", {"id": weakest, "tab": "UPGRADE", "list": team_ids})
+			else:
+				main.replace("heroes"), "", Vector2(140, 54))
+		ub.tooltip_text = "Upgrade %s, your weakest hero in this team" % DB.name_of(weakest) if weakest != "" else "Level up, star up and gear your heroes"
 		btns.add_child(ub)
 	btns.add_child(UI.button("STATS", _show_stats, "", Vector2(110, 54)))
 	btns.add_child(UI.button("CONTINUE", func(): main.back(), "", Vector2(150 if btns.get_child_count() >= 3 else 160, 54)))

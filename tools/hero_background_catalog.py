@@ -1,9 +1,12 @@
 """Catalog and prompts for all 40 hero backgrounds in Aetheria Online.
-Maps each hero to their lore, title, elemental concept, and 16:9 prompt (1376x768).
+Maps each hero to their lore, title, elemental concept, status, and 16:9 prompt (1376x768).
+Total: 40 heroes | Completed: 27 | Remaining: 13
 """
 
 HERO_BACKGROUND_CATALOG = {
-    # --- COMPLETED BATCH (15 heroes) ---
+    # =========================================================================
+    # --- COMPLETED BACKGROUNDS (27 distinct heroes) ---
+    # =========================================================================
     "shina": {
         "name": "Shina",
         "title": "DRAGONIC FLAME MONARCH",
@@ -139,13 +142,11 @@ HERO_BACKGROUND_CATALOG = {
         "concept": "Black Chapel interior with soaring gothic vaulted ceilings, lit black candles, holy altar, incense haze, and moonlight through stained glass.",
         "prompt": "Anime visual novel background of the Black Chapel interior, soaring gothic vaulted ceilings, dark stained glass windows with silver moonlight shining through, dozens of lit black candles on a marble altar, mysterious sacred incense haze, landscape only, no characters"
     },
-
-    # --- PENDING RESUME UPON QUOTA RESET (25 heroes) ---
     "eropatra": {
         "name": "Eropatra",
         "title": "DESERT SERPENT EMPRESS",
         "element": "FIRE",
-        "status": "PENDING_QUOTA",
+        "status": "COMPLETED",
         "file": "bg_eropatra.jpg",
         "concept": "Opulent golden desert serpent palace terrace overlooking glowing twilight sand dunes, serpent braziers, and sandstone pillars.",
         "prompt": "Anime visual novel background of an opulent desert serpent palace terrace, golden sandstone Egyptian temple pillars, glowing hieroglyphs, golden snake braziers with burning fire, overlooking vast glowing golden sand dunes at twilight, luxurious oasis palace, landscape only, no characters"
@@ -154,7 +155,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Furu",
         "title": "CELESTIAL ARCH-PRIESTESS",
         "element": "LIGHT",
-        "status": "PENDING_QUOTA",
+        "status": "COMPLETED",
         "file": "bg_furu.jpg",
         "concept": "Grand celestial cathedral sun garden, brilliant holy sunlight filtering through white marble colonnades and stained glass.",
         "prompt": "Anime visual novel background of a grand celestial cathedral sun garden, brilliant holy sunlight filtering through white marble colonnades and stained glass, glowing golden flowers and holy fountain, peaceful divine sanctuary, high fantasy anime art, landscape only, no characters"
@@ -163,7 +164,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Glytta",
         "title": "CRYSTAL BLADE DANCER",
         "element": "WIND",
-        "status": "PENDING_QUOTA",
+        "status": "COMPLETED",
         "file": "bg_glytta.jpg",
         "concept": "Sparkling crystalline highland plateau, giant glowing prism crystals sprouting from emerald grass with floating wind petals.",
         "prompt": "Anime visual novel background of a sparkling crystalline highland plateau, giant glowing prism crystals sprouting from emerald grass, floating iridescent wind petals, crystalline amphitheater with clear mountain blue sky and gentle breeze, landscape only, no characters"
@@ -172,11 +173,87 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Hyeonxa",
         "title": "NINE-HEAD HYDRA MATRIARCH",
         "element": "WATER",
-        "status": "PENDING_QUOTA",
+        "status": "COMPLETED",
         "file": "bg_hyeonxa.jpg",
         "concept": "Enchanted misty swamp marsh, glowing emerald poisonous lotus blossoms, ancient hydra carved stone shrines emerging from still waters.",
         "prompt": "Anime visual novel background of an enchanted misty swamp marsh, glowing emerald poisonous lotus blossoms, ancient hydra carved stone shrines emerging from still murky waters, toxic bioluminescent mist, dark enchanted wetland, landscape only, no characters"
     },
+    "abadonia": {
+        "name": "Abadonia",
+        "title": "ABYSSAL LION QUEEN",
+        "element": "DARK",
+        "status": "COMPLETED",
+        "file": "bg_abadonia.jpg",
+        "concept": "Abyssal Pride royal throne room, black marble pillars, regal crimson velvet banners with golden lion emblems, burning torches.",
+        "prompt": "Anime visual novel background of the Abyssal Pride royal throne room, majestic black marble pillars, regal crimson velvet banners with golden lion emblems, burning golden torch braziers, grand dark royal palace interior, landscape only, no characters"
+    },
+    "rubby": {
+        "name": "Rubby",
+        "title": "BOMB BELLE",
+        "element": "FIRE",
+        "status": "COMPLETED",
+        "file": "bg_rubby.jpg",
+        "concept": "Colorful pyrotechnics workshop and festival courtyard, exploding colorful fireworks illuminating the evening sky.",
+        "prompt": "Anime visual novel background of a bustling colorful pyrotechnics workshop and festival courtyard, exploding colorful fireworks illuminating the evening sky, brass gears, barrels, and sparklers, vibrant festive atmosphere, landscape only, no characters"
+    },
+    "schylua": {
+        "name": "Schylua",
+        "title": "FROST REAPER",
+        "element": "ICE",
+        "status": "COMPLETED",
+        "file": "bg_schylua.jpg",
+        "concept": "Silent frozen glacial cave, towering translucent blue ice crystals and hanging icicles, glassy frozen lake under winter moon.",
+        "prompt": "Anime visual novel background of a silent frozen glacial cave, towering translucent blue ice crystals and hanging icicles, a glassy frozen lake reflecting a pale winter moon, gentle drifting snow, serene glacial landscape, landscape only, no characters"
+    },
+    "siv": {
+        "name": "Siv",
+        "title": "THUNDER HAMMER MAIDEN",
+        "element": "LIGHTNING",
+        "status": "COMPLETED",
+        "file": "bg_siv.jpg",
+        "concept": "Grand dwarven lightning forge inside a massive cavern, giant glowing runic anvils, streams of molten metal and electric sparks.",
+        "prompt": "Anime visual novel background of a grand dwarven lightning forge inside a massive cavern, giant glowing runic anvils, streams of molten metal and crackling electric lightning sparks, heavy iron chains and colossal stone arches, landscape only, no characters"
+    },
+    "ninger": {
+        "name": "Ning Er",
+        "title": "PRINCESS OF A THOUSAND COINS",
+        "element": "EARTH",
+        "status": "COMPLETED",
+        "file": "bg_ninger.jpg",
+        "concept": "Grand imperial prosperity garden, golden ornate pavilions, sparkling gold coins and jade ornaments decorating blooming peach trees.",
+        "prompt": "Anime visual novel background of a grand imperial prosperity garden, golden ornate pavilions, sparkling gold coins and jade ornaments decorating blooming peach blossom trees, stone footbridges over tranquil golden koi ponds, opulent oriental palace, landscape only, no characters"
+    },
+    "spimei": {
+        "name": "Spimei",
+        "title": "SCARLET SPIDER ENGINE",
+        "element": "FIRE",
+        "status": "COMPLETED",
+        "file": "bg_spimei.jpg",
+        "concept": "High-tech mech hangar and spider drone factory, industrial metal catwalks, crimson holographic diagnostic monitors, laser grids.",
+        "prompt": "Anime visual novel background of a high-tech mech hangar and spider drone factory, industrial metal catwalks, crimson holographic diagnostic monitors, robotic assembly arms and red laser warning grids, dark sci-fi military workshop, landscape only, no characters"
+    },
+    "luby": {
+        "name": "Luby",
+        "title": "MECHA CAT MISCHIEF",
+        "element": "WIND",
+        "status": "COMPLETED",
+        "file": "bg_luby.jpg",
+        "concept": "Vibrant cyberpunk inventor workshop, glowing neon cat signs, colorful holographic blueprints, gadgets, robot cat toys.",
+        "prompt": "Anime visual novel background of a vibrant cyberpunk inventor workshop, glowing neon cat signs, colorful holographic blueprints, gadgets, robot cat toys, cute mechanical tools on workbenches, cozy futuristic anime room, landscape only, no characters"
+    },
+    "seraph": {
+        "name": "Seraph",
+        "title": "ARCHANGEL OF A THOUSAND EYES",
+        "element": "LIGHT",
+        "status": "COMPLETED",
+        "file": "bg_seraph.jpg",
+        "concept": "Transcendent cosmic celestial realm, glowing sacred geometry mandalas and golden halo rings floating in an infinite pastel cloudscape.",
+        "prompt": "Anime visual novel background of a transcendent cosmic celestial realm, glowing sacred geometry mandalas and golden halo rings floating in an infinite pastel cloudscape, divine radiant illumination, heavenly astral dimension, landscape only, no characters"
+    },
+
+    # =========================================================================
+    # --- REMAINING HEROES TO GENERATE (13 heroes) ---
+    # =========================================================================
     "scylla": {
         "name": "Scylla",
         "title": "KRAKEN ABYSS QUEEN",
@@ -222,42 +299,6 @@ HERO_BACKGROUND_CATALOG = {
         "concept": "Celestial clockwork observatory, giant glowing golden time gears and pendulums floating in the air under a vaulted starry dome.",
         "prompt": "Anime visual novel background of a magnificent celestial clockwork observatory, giant glowing golden time gears and pendulums floating in the air, astronomical astrolabes, starry midnight sky visible through a vaulted glass dome, landscape only, no characters"
     },
-    "abadonia": {
-        "name": "Abadonia",
-        "title": "ABYSSAL LION QUEEN",
-        "element": "DARK",
-        "status": "PENDING_QUOTA",
-        "file": "bg_abadonia.jpg",
-        "concept": "Abyssal Pride royal throne room, black marble pillars, regal crimson velvet banners with golden lion emblems, burning torches.",
-        "prompt": "Anime visual novel background of the Abyssal Pride royal throne room, majestic black marble pillars, regal crimson velvet banners with golden lion emblems, burning golden torch braziers, grand dark royal palace interior, landscape only, no characters"
-    },
-    "rubby": {
-        "name": "Rubby",
-        "title": "BOMB BELLE",
-        "element": "FIRE",
-        "status": "PENDING_QUOTA",
-        "file": "bg_rubby.jpg",
-        "concept": "Colorful pyrotechnics workshop and festival courtyard, exploding colorful fireworks illuminating the evening sky.",
-        "prompt": "Anime visual novel background of a bustling colorful pyrotechnics workshop and festival courtyard, exploding colorful fireworks illuminating the evening sky, brass gears, barrels, and sparklers, vibrant festive atmosphere, landscape only, no characters"
-    },
-    "schylua": {
-        "name": "Schylua",
-        "title": "FROST REAPER",
-        "element": "ICE",
-        "status": "PENDING_QUOTA",
-        "file": "bg_schylua.jpg",
-        "concept": "Silent frozen glacial cave, towering translucent blue ice crystals and hanging icicles, glassy frozen lake under winter moon.",
-        "prompt": "Anime visual novel background of a silent frozen glacial cave, towering translucent blue ice crystals and hanging icicles, a glassy frozen lake reflecting a pale winter moon, gentle drifting snow, serene glacial landscape, landscape only, no characters"
-    },
-    "siv": {
-        "name": "Siv",
-        "title": "THUNDER HAMMER MAIDEN",
-        "element": "LIGHTNING",
-        "status": "PENDING_QUOTA",
-        "file": "bg_siv.jpg",
-        "concept": "Grand dwarven lightning forge inside a massive cavern, giant glowing runic anvils, streams of molten metal and electric sparks.",
-        "prompt": "Anime visual novel background of a grand dwarven lightning forge inside a massive cavern, giant glowing runic anvils, streams of molten metal and crackling electric lightning sparks, heavy iron chains and colossal stone arches, landscape only, no characters"
-    },
     "vexira": {
         "name": "Vexira",
         "title": "SUCCUBUS TEMPTRESS",
@@ -294,49 +335,13 @@ HERO_BACKGROUND_CATALOG = {
         "concept": "Oriental moonlit courtyard under a giant crimson harvest moon, vibrant red Japanese maple trees shedding leaves onto stone veranda.",
         "prompt": "Anime visual novel background of an oriental moonlit courtyard under a giant crimson harvest moon, vibrant red Japanese maple trees shedding leaves onto stone pavement, traditional wooden temple veranda, romantic martial night scene, landscape only, no characters"
     },
-    "ninger": {
-        "name": "Ning Er",
-        "title": "PRINCESS OF A THOUSAND COINS",
-        "element": "EARTH",
-        "status": "PENDING_QUOTA",
-        "file": "bg_ninger.jpg",
-        "concept": "Grand imperial prosperity garden, golden ornate pavilions, sparkling gold coins and jade ornaments decorating blooming peach trees.",
-        "prompt": "Anime visual novel background of a grand imperial prosperity garden, golden ornate pavilions, sparkling gold coins and jade ornaments decorating blooming peach blossom trees, stone footbridges over tranquil golden koi ponds, opulent oriental palace, landscape only, no characters"
-    },
-    "spimei": {
-        "name": "Spimei",
-        "title": "SCARLET SPIDER ENGINE",
-        "element": "FIRE",
-        "status": "PENDING_QUOTA",
-        "file": "bg_spimei.jpg",
-        "concept": "High-tech mech hangar and spider drone factory, industrial metal catwalks, crimson holographic diagnostic monitors, laser grids.",
-        "prompt": "Anime visual novel background of a high-tech mech hangar and spider drone factory, industrial metal catwalks, crimson holographic diagnostic monitors, robotic assembly arms and red laser warning grids, dark sci-fi military workshop, landscape only, no characters"
-    },
-    "luby": {
-        "name": "Luby",
-        "title": "MECHA CAT MISCHIEF",
-        "element": "WIND",
-        "status": "PENDING_QUOTA",
-        "file": "bg_luby.jpg",
-        "concept": "Vibrant cyberpunk inventor workshop, glowing neon cat signs, colorful holographic blueprints, gadgets, robot cat toys.",
-        "prompt": "Anime visual novel background of a vibrant cyberpunk inventor workshop, glowing neon cat signs, colorful holographic blueprints, gadgets, robot cat toys, cute mechanical tools on workbenches, cozy futuristic anime room, landscape only, no characters"
-    },
-    "seraph": {
-        "name": "Seraph",
-        "title": "ARCHANGEL OF A THOUSAND EYES",
-        "element": "LIGHT",
-        "status": "PENDING_QUOTA",
-        "file": "bg_seraph.jpg",
-        "concept": "Transcendent cosmic celestial realm, glowing sacred geometry mandalas and golden halo rings floating in an infinite pastel cloudscape.",
-        "prompt": "Anime visual novel background of a transcendent cosmic celestial realm, glowing sacred geometry mandalas and golden halo rings floating in an infinite pastel cloudscape, divine radiant illumination, heavenly astral dimension, landscape only, no characters"
-    },
     "tamo": {
         "name": "Tamo",
         "title": "NINE-TAILED SWORD QUEEN",
         "element": "EARTH",
         "status": "PENDING_QUOTA",
         "file": "bg_tamo.jpg",
-        "concept": "Sacred nine-tailed fox ancient forest shrine, massive cedar tree wrapped in shimenawa ropes, mossy stone fox statues, spirit orbs.",
+        "concept": "Sacred nine-tailed fox ancient forest shrine, massive thousand-year-old sacred cedar tree wrapped in shimenawa ropes, mossy stone fox statues, spirit orbs.",
         "prompt": "Anime visual novel background of a sacred nine-tailed fox ancient forest shrine, massive thousand-year-old sacred cedar tree wrapped in shimenawa ropes, mossy stone fox statues with red bibs, glowing spirit orbs in mystical twilight fog, landscape only, no characters"
     },
     "gravity": {
