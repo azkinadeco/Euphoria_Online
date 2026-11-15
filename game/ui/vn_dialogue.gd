@@ -155,6 +155,10 @@ func _ready() -> void:
 	_auto_btn = UI.button("AUTO", _toggle_auto, "TabButton", Vector2(100, 42))
 	_auto_btn.toggle_mode = true
 	bar.add_child(_auto_btn)
+	# AUTO stays on for the next scene once the player turned it on (story chapters run back to back)
+	if _auto_pref and not compact:
+		_auto = true
+		_auto_btn.set_pressed_no_signal(true)
 	bar.add_child(UI.button("LOG", _show_log, "", Vector2(90, 42)))
 	bar.add_child(UI.button("SKIP ▶▶", _finish, "", Vector2(120, 42)))
 	if compact:
@@ -238,8 +242,11 @@ func _assign_slots() -> void:
 		_slots[sid] = next
 		next = "R" if next == "L" else "L"
 
+static var _auto_pref := false
+
 func _toggle_auto() -> void:
 	_auto = _auto_btn.button_pressed
+	_auto_pref = _auto
 	_auto_t = 0.0
 
 func _process(delta: float) -> void:

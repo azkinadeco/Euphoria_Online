@@ -1253,6 +1253,10 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hb. Update batch 200 — AUTO dialog diingat
+
+- `vn_dialogue.gd`: `static var _auto_pref`; adegan berikutnya (non-tutorial) mulai dengan AUTO aktif bila terakhir dinyalakan.
+
 ## 2ha. Update batch 199 — Parallax lobby di ponsel
 
 - `lobby.gd`: parallax hero/background hanya bereaksi pada gerak mouse, jadi di layar sentuh diam. Setelah 2,5 dtk tanpa gerak pointer, `_parallax` mengikuti angka delapan lambat (dimatikan oleh Reduce effects).

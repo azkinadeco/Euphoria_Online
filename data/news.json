@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15b3",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "AUTO stays on",
+  "body": "Story scenes remember AUTO: once you switch it on, the next scene starts in AUTO too until you switch it off."
+ },
+ {
   "id": "n2026-11-15b2",
   "date": "2026-11-15",
   "tag": "UPDATE",
