@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-15zd",
+  "date": "2026-11-15",
+  "tag": "UPDATE",
+  "title": "New loading screen for the web version",
+  "body": "The web page got a new loading screen and a tidier front door. While the game downloads you see eight heroes in front of their maps (tap to switch), with a centred progress bar that scales to your screen. Shared links now show a proper preview card with the logo, and on notch phones nothing sits under the camera cut-out."
+ },
+ {
   "id": "n2026-11-15zc",
   "date": "2026-11-15",
   "tag": "UPDATE",

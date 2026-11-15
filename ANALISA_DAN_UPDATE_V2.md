@@ -1228,6 +1228,15 @@ tools/
 2. Tambahkan entri di `DB.HEROES` (rarity, role, hp/atk/def, skill: aim, shape, mult, efek).
 3. (Opsional) tambah voice line di `DB.HERO_LINES`.
 
+## 2gb. Update batch 176 — Halaman web: layar loading baru, kartu pratinjau, safe area
+
+Batch perbaikan (tanpa fitur baru).
+
+- **Layar loading web ditulis ulang** (`web_shell/euphoria_shell.html`): progress bar dulu ikut aturan `position:absolute; left:0` milik overlay sehingga menempel ke kiri dan menumpuk teks. Sekarang panel terpusat yang menskala dengan tinggi layar (`clamp()` + `vh`), layout portrait tersendiri, dan slideshow 8 hero di depan map in-game (ganti tiap 7 dtk atau ketuk), 16 tip bergilir.
+- `tools/make_loading_art.py` membuat gambar kecil ke `web_shell/loading/` (±2,5 MB, dimuat satu per satu); `publish_web.sh` menyalinnya ke `web/loading`.
+- **Meta halaman**: description, Open Graph (`og:title/description/image`), `twitter:card`, preload logo. Kartu pratinjau 1200×630 `loading/share.jpg`. Catatan: `og:image` masih path relatif — ganti ke URL absolut bila domain sudah tetap (WhatsApp/Facebook memintanya).
+- **Safe area** (`viewport-fit=cover`): logo, caption dan panel loading memakai `env(safe-area-inset-*)`.
+
 ## 2ga. Update batch 175 — Naskah Arc 13: Scylla sesuai art-nya
 
 Batch perbaikan (tanpa fitur baru).
