@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16i",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Your finds come first",
+  "body": "The Bestiary now lists the foes you have discovered first (most defeated at the top) and opens on one of them, instead of a wall of silhouettes with your finds scattered in between."
+ },
+ {
   "id": "n2026-11-16h",
   "date": "2026-11-16",
   "tag": "UPDATE",

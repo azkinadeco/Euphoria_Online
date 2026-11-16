@@ -114,14 +114,22 @@ func build() -> void:
 	b.add_child(rp)
 	_detail = UI.vbox(8)
 	rp.add_child(UI.scroll(_detail))
-	_sel = str(params.get("sel", DB.ENEMIES.keys()[0]))
+	# opens on the first discovered foe (the first of the list is usually still a silhouette)
+	_sel = str(params.get("sel", _ordered()[0]))
 	_render()
+
+## Discovered foes first (most defeated first), then the unknown ones in their usual order.
+func _ordered() -> Array:
+	var ids: Array = DB.ENEMIES.keys()
+	var known: Array = ids.filter(func(i): return Game.kills_of(i) > 0)
+	known.sort_custom(func(a, b): return Game.kills_of(a) > Game.kills_of(b))
+	return known + ids.filter(func(i): return Game.kills_of(i) == 0)
 
 func _render() -> void:
 	params["sel"] = _sel
 	for c in _grid.get_children():
 		c.queue_free()
-	for id in DB.ENEMIES.keys():
+	for id in _ordered():
 		var eid: String = id
 		var known := Game.kills_of(eid) > 0
 		var btn := Button.new()
