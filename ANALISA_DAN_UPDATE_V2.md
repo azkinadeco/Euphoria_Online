@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2hr. Update batch 217 — Build web kembali ±136 MB
+
+- 210 file `.import` di `art/characters/` masih lossless (`compress/mode=0`, `size_limit=0`): semua musuh 15 Nov, Octra, serta hero gala, hyeonxa, morana, seraph, tamo. Disamakan dengan standar proyek: lossy 0,85, `size_limit` 1200 (art) / 512 (sprite). PCK 235 MB → 136 MB. Koordinat rig berbasis UV, jadi tidak terpengaruh.
+- Setelah impor art baru: periksa `grep -rl "^compress/mode=0" art/characters --include=*.import` harus kosong.
+
 ## 2hp. Update batch 215 — Sumber Skill Book & helper `_source_row`
 
 - `hero_detail.gd::_source_row(parent, title, item, list)`: baris tombol GO dari daftar eksplisit atau `DB.item_sources(item)` (maks. 3, fitur terkunci/lobby dilewati). Dipakai untuk shard (Star Up) dan Skill Book (Skill Up yang terkunci). Baris memakai `HFlowContainer` agar tombol membungkus ke baris kedua di layar sempit (versi pertama membuat panel lebih lebar dari layar — tertangkap `tools/audit.sh`).

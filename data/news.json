@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16b",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "A smaller download",
+  "body": "The first download is much smaller again: about 136 MB instead of 235 MB. The new enemies (and a few heroes from earlier updates) were stored without compression; they now use the same compression as the rest of the art."
+ },
+ {
   "id": "n2026-11-16a",
   "date": "2026-11-16",
   "tag": "UPDATE",
