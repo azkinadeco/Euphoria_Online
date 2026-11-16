@@ -13,7 +13,7 @@ BATTLES="story:select=5,battle:mode=story&stage=5,skipbattle,wait,wait,wait,wait
 STEPS="close,boost,game:add_player_exp|2000000,close,${SCREENS//,/,close,},close,$BATTLES"
 LOG=$("$GODOT" --path . -s res://tools/shot_runner.gd -- "$OUT" "$STEPS" 12 2>&1)
 rm -rf "$OUT"; rm -f "$SAVE"; rm -rf "$BACKUPS"
-ERR=$(echo "$LOG" | grep -E "SCRIPT ERROR|Invalid call|Nonexistent function|Invalid access|STUCK" | sort | uniq -c)
+ERR=$(echo "$LOG" | grep -E "SCRIPT ERROR|Invalid call|Nonexistent function|Invalid access|STUCK|Lambda capture|ERROR: Invalid" | sort | uniq -c)
 echo "$LOG" | grep -c "^SHOT" | xargs echo "steps run:"
 echo "$LOG" | grep "OK screen"
 if [ -n "$ERR" ]; then echo "SMOKE: FAIL"; echo "$ERR"; exit 1; fi

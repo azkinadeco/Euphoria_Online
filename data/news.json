@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16n",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Stricter checks",
+  "body": "Behind the scenes: the automatic UI test now also fails on stray engine errors, and the layout check covers the BOOST popup in Battle Prep again."
+ },
+ {
   "id": "n2026-11-16m",
   "date": "2026-11-16",
   "tag": "UPDATE",

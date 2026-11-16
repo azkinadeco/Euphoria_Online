@@ -1262,6 +1262,12 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2id. Update batch 230 — Uji otomatis lebih ketat
+
+- `tools/smoke.sh` juga gagal pada "Lambda capture … freed" dan "ERROR: Invalid" (regresi batch 227 tidak tertangkap smoke).
+- `tools/audit.sh`: langkah popup BOOST memakai nama fungsi yang benar (`_power_up`); popup itu tidak ikut diaudit sejak diganti nama.
+- Tur semua layar + popup: tidak ada error lain.
+
 ## 2ic. Update batch 229 — Timer milik layar/popup, avatar ulang tahun
 
 - Regresi batch 227: pemeriksaan layout memakai `get_tree().create_timer`, sehingga bisa memanggil popup/layar yang sudah ditutup ("Lambda capture was freed"). Kini `main._owned_timer(owner, …)` dan Timer milik Screen — ikut hilang bersama pemiliknya; tween tombol ✕ dibuat di layer popup.
