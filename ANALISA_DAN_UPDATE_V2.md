@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2oo. Update batch 240–241: riwayat summon + harga "Summon Again" (16 Nov 2026)
+
+- 240: baris Summon History memakai logo rarity (`UI.rarity_tag` 12, kolom lebar tetap 44 px) di depan nama, bukan teks "SR Vexira".
+- 241: tombol "SUMMON xN AGAIN" di layar hasil menampilkan harga (`_price`), penting di banner Normal (Gold) dan saat tiket habis.
+
 ## 2nn. Update batch 238–239: sisa label rarity + kartu summon (16 Nov 2026)
 
 - 238: Codex (`heroes.gd` `_codex_row`) memakai `UI.rarity_tag`; pelat hero di layar judul memakai `UI.rarity_text` (sebelumnya teks "LR" polos).

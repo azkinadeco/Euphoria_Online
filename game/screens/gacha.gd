@@ -360,7 +360,10 @@ func _show_history() -> void:
 		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR.get(h["r"], UI.ACCENT), 6, 2, 1)
 		fp.add_child(UI.face_rect(h["id"], Vector2(32, 32)))
 		row.add_child(fp)
-		var nl := UI.label("%s  %s" % [h["r"], DB.name_of(h["id"])], 15, (DB.RARITY_COLOR.get(h["r"], UI.ACCENT) as Color).lightened(0.2), 2)
+		var crest := UI.rarity_tag(str(h["r"]), 12)
+		crest.custom_minimum_size.x = 44   # crests differ in width: a fixed column keeps the names aligned
+		row.add_child(crest)
+		var nl := UI.label(DB.name_of(h["id"]), 15, (DB.RARITY_COLOR.get(h["r"], UI.ACCENT) as Color).lightened(0.2), 2)
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(nl)
 		row.add_child(UI.label(Time.get_datetime_string_from_unix_time(int(h["t"]) + 7 * 3600).replace("T", " ").substr(0, 16), 12, UI.MUTED))
@@ -631,10 +634,13 @@ func _play_reveal(results: Array) -> void:
 		_render(), "", Vector2(200, 56)))
 	var again_count := results.size()
 	var pay := Game.pull_pay(again_count, str(DB.BANNERS[_banner_i]["id"]))
-	bar.add_child(UI.button("SUMMON x%d AGAIN" % again_count, func():
+	# the price on the button: on the Gold banner, or when the tickets ran out, "again" costs something new
+	var ab := UI.button("SUMMON x%d AGAIN\n%s" % [again_count, _price(again_count)], func():
 		_reveal.queue_free()
 		_reveal = null
-		_pull(again_count, pay), "GoldButton", Vector2(260, 56)))
+		_pull(again_count, pay), "GoldButton", Vector2(280, 64))
+	ab.add_theme_font_size_override("font_size", 16)
+	bar.add_child(ab)
 
 ## A streak of light flying along a shallow arc from `from` to `to`, with a tapering tail and a small flash
 ## where it lands.

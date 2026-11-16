@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16y",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Clearer Summon Results",
+  "body": "Polish: Summon History shows each pull's rarity crest in a neat column, and the \"Summon Again\" button now shows what the next summon costs (Gems, Tickets or Gold)."
+ },
+ {
   "id": "n2026-11-16x",
   "date": "2026-11-16",
   "tag": "UPDATE",
