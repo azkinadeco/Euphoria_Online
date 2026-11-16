@@ -3014,7 +3014,12 @@ const WORLD_BOSSES := [
 	{"id": "ygg_naar", "name": "Eye of the Primordial", "bg": "galaxy"},
 	{"id": "ymir", "name": "Ymir, Bone Throne Colossus", "bg": "necro"},
 	{"id": "svormentis", "name": "Svormentis, the Devouring Maw", "bg": "outland"},
+	# 15 Nov foes. Order matters: week % size picks the boss, and this order keeps the week of the
+	# update (week 2967 -> index 8) on Serpentia, so nobody's weekly progress jumps to another boss.
+	{"id": "lolth", "name": "Lolth, Broodmother of Whispers", "bg": "necro"},
 	{"id": "serpentia", "name": "Serpentia, Flame-Scale Lamia", "bg": "dragonfire"},
+	{"id": "code_zero", "name": "Code Zero, Skull Worm Colossus", "bg": "space"},
+	{"id": "octavia", "name": "Octavia-Vex, Tide of a Thousand Arms", "bg": "aqua"},
 ]
 const WB_TRIES := 3
 ## Weekly cumulative damage milestones.

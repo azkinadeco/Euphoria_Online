@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2hw. Update batch 222 — Tiga World Boss baru
+
+- `DB.WORLD_BOSSES` 8 → 11: Lolth (necro), Code Zero (space), Octavia-Vex (aqua). Urutan dipilih supaya minggu pembaruan (week 2967 → indeks 8) tetap Serpentia; progres mingguan pemain tidak berpindah boss.
+
 ## 2hv. Update batch 221 — Kartu musuh juga di Battle Prep
 
 - `_foe_info` dipindah ke `main.foe_info(e)` dan dipakai di Story maupun `formation.gd::_layout_enemies` (unit musuh di papan kini bisa diketuk; ukuran area sentuh diset manual).

@@ -1975,6 +1975,11 @@ func _run() -> void:
 	check(DB.skill_of("selene")["desc"].contains("130%") and DB.skill_of("lolth")["desc"].contains("Silence"), "descriptions follow the skill numbers")
 	check(not DB.ENEMIES["selene"]["skill"].has("desc"), "the const enemy table stays untouched")
 
+	print("[world boss rotation]")
+	check(DB.WORLD_BOSSES.size() == 11 and DB.WORLD_BOSSES.all(func(b): return DB.ENEMIES.has(b["id"]) and DB.BG.has(b["bg"])), "11 world bosses, all valid")
+	check(str(DB.world_boss(2967)["id"]) == "serpentia", "the update week keeps its boss")
+	check(DB.WORLD_BOSSES.any(func(b): return b["id"] == "lolth") and DB.WORLD_BOSSES.any(func(b): return b["id"] == "code_zero") and DB.WORLD_BOSSES.any(func(b): return b["id"] == "octavia"), "three 15 Nov foes join the rotation")
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)
