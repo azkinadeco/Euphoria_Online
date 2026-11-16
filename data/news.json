@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16k",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Smoother, steadier, lighter",
+  "body": "Smoother everywhere. The game no longer stutters every few moments: a layout check that ran on every screen several times a second now runs only while a screen opens. Backgrounds no longer slide or zoom (that slow drift looked like lag on phones); battle maps now glow with soft light shafts and a breathing light instead, and sun rays pulse rather than turn. Animated characters do less work per frame for exactly the same picture, and on phones with very sharp screens the game renders at 2x instead of 3x pixel density, which looks the same at phone size but is far lighter. The loading screen now shows only pictures, with a small \"ketuk untuk masuk\" line."
+ },
+ {
   "id": "n2026-11-16j",
   "date": "2026-11-16",
   "tag": "UPDATE",

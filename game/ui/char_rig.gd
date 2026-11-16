@@ -81,6 +81,9 @@ func _check() -> void:
 		else:
 			bone_a.append(Vector4.ZERO)
 			bone_b.append(Vector4.ZERO)
+	_mat.set_shader_parameter("bone_count", mini((rig.get("bones", []) as Array).size(), 10))
+	_mat.set_shader_parameter("float_count", mini((rig.get("floats", []) as Array).size(), 6))
+	_mat.set_shader_parameter("glow_count", mini((rig.get("glows", []) as Array).size(), 6))
 	_mat.set_shader_parameter("bone_a", bone_a)
 	_mat.set_shader_parameter("bone_b", bone_b)
 	var glows := PackedVector3Array()

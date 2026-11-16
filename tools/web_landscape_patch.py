@@ -29,6 +29,10 @@ PATCHES = [
     ('if(isFullscreen||wantsFullWindow){width=Math.floor(window.innerWidth*scale);height=Math.floor(window.innerHeight*scale)}',
      'if(isFullscreen||wantsFullWindow){const fr=window.__eoFrame?window.__eoFrame():[window.innerWidth,window.innerHeight];'
      'width=Math.floor(fr[0]*scale);height=Math.floor(fr[1]*scale)}'),
+    # render at most 2 device pixels per CSS pixel: phones with a 3x screen drew 2.25x more pixels for a
+    # difference the eye cannot see at that size, and every full-screen layer paid for it every frame
+    ('getPixelRatio:function(){return GodotDisplayScreen.hidpi?window.devicePixelRatio||1:1}',
+     'getPixelRatio:function(){return GodotDisplayScreen.hidpi?Math.min(2,window.devicePixelRatio||1):1}'),
     # the shell's "tap to enter" wakes the audio inside that tap (sound for the studio logo)
     ('function _godot_audio_resume(){',
      'window.__eoAudio=function(){return GodotAudio};function _godot_audio_resume(){'),

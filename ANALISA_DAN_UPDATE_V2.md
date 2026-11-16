@@ -1262,6 +1262,16 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ia. Update batch 227 — Performa 60 FPS & gerakan latar yang halus
+
+Diukur dengan langkah baru `perf:<label>` di `tools/shot_runner.gd` (90 frame: rata-rata, p95, draw call; `nocap` melepas batas FPS). Sebelum → sesudah (ms per frame, Mac ini, tanpa batas FPS): lobby avg 18,7 → 10,3, p95 25–48 → 12,6; halaman hero p95 101 → 9,8; Heroes p95 42 → 14; battle p95 71 → 13; layar judul p95 52 → 16.
+
+- **Penyebab tersendat**: `Screen._ready` memasang Timer 0,3 dtk yang menelusuri seluruh layar (auto-fit) selama layar terbuka; popup punya timer 0,25 dtk + 0,05 dtk. Kini hanya 3 kali saat layar/popup dibuka (0,12/0,5/1,2 dtk) + saat resize; tombol ✕ hanya mengikuti panel selama animasi pop.
+- **Shader rig** (`char_rig.gdshader`): loop tulang/floats/glows berhenti di jumlah slot yang dipakai (`bone_count`, `float_count`, `glow_count`) — gambar identik.
+- **Web**: rasio piksel kanvas dibatasi 2 (`web_landscape_patch.py`, `getPixelRatio`). Ponsel DPR 3 sebelumnya merender 2,25× lebih banyak piksel.
+- **Gerakan latar dihapus, diganti efek** (permintaan user: gerakan terasa kaku/seperti lag): battle — zoom/geser latar diganti `UI.light_shafts` + cahaya bernapas (`self_modulate`), sinar matahari berdenyut alih-alih berputar; lobby — parallax latar/hero dan goyangan idle (batch 199) dihapus; halaman hero — latar tidak lagi bergeser.
+- **Layar loading web**: hanya gambar (nama/gelar/kutipan hero dihapus), tombol emas besar diganti tulisan kecil berkedip "ketuk untuk masuk".
+
 ## 2hz. Update batch 225 — Bestiary menunjuk chapter yang tepat
 
 - `DB.chapters_with(id)`: chapter yang pool atau bosnya memuat musuh itu. "WHERE TO FIND HER" menampilkan chapter pertama (+ jumlah lainnya); GO membuka Story tepat di stage pertama chapter tersebut. Baris lokasi memakai `wrap_label` (versi pertama membuat panel lebih lebar dari layar — tertangkap `tools/audit.sh`).

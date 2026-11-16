@@ -1367,20 +1367,23 @@ func _unit_light() -> ShaderMaterial:
 		_light_mat.set_shader_parameter("rim", 0.3 if Game.reduce_fx() else 0.55)
 	return _light_mat
 
-## The battle backdrop slowly drifts and breathes (a camera that is never quite still).
+## The battle backdrop stays still (a slow zoom / pan of a big picture read as stutter on phones); it lives
+## through light instead: shafts and a soft breathing glow drawn by the GPU each frame, never a jump.
 func _living_bg() -> void:
 	if get_child_count() == 0 or Game.reduce_fx():
 		return
 	var bgr := get_child(0) as TextureRect
 	if bgr == null:
 		return
-	bgr.resized.connect(func(): bgr.pivot_offset = bgr.size * 0.5)
-	bgr.pivot_offset = bgr.size * 0.5
-	var tw := bgr.create_tween().set_loops()
-	tw.tween_property(bgr, "scale", Vector2(1.07, 1.07), 9.0).set_trans(Tween.TRANS_SINE)
-	tw.parallel().tween_property(bgr, "position:x", -18.0, 9.0).set_trans(Tween.TRANS_SINE)
-	tw.tween_property(bgr, "scale", Vector2(1.03, 1.03), 9.0).set_trans(Tween.TRANS_SINE)
-	tw.parallel().tween_property(bgr, "position:x", 14.0, 9.0).set_trans(Tween.TRANS_SINE)
+	var bgk0 := Game.battle_bg(params)
+	var lc: Color = Color(str(LIGHT.get(bgk0, ["#fff0d8"])[0]))
+	var shafts := UI.light_shafts(lc.lightened(0.3), 0.45)
+	add_child(shafts)
+	move_child(shafts, 1)
+	# the map's light slowly breathes (colour only, no movement)
+	var glow := bgr.create_tween().set_loops()
+	glow.tween_property(bgr, "self_modulate", Color(1.06, 1.04, 1.02), 3.2).set_trans(Tween.TRANS_SINE)
+	glow.tween_property(bgr, "self_modulate", Color(0.96, 0.96, 1.0), 3.2).set_trans(Tween.TRANS_SINE)
 	# light shafts on bright maps
 	var bgk := Game.battle_bg(params)
 	if bgk in ["asgard", "forest", "bigtree", "pool", "outland", "dino", "aqua", "world"] and ResourceLoader.exists("res://art/ui/rays.png"):
@@ -1397,9 +1400,10 @@ func _living_bg() -> void:
 		rays.material = rm
 		add_child(rays)
 		move_child(rays, 1)
+		# the sun rays pulse in brightness instead of turning
 		var rt := rays.create_tween().set_loops()
-		rt.tween_property(rays, "rotation", 0.12, 7.0).set_trans(Tween.TRANS_SINE)
-		rt.tween_property(rays, "rotation", -0.05, 7.0).set_trans(Tween.TRANS_SINE)
+		rt.tween_property(rays, "modulate:a", 0.32, 2.8).set_trans(Tween.TRANS_SINE)
+		rt.tween_property(rays, "modulate:a", 0.14, 2.8).set_trans(Tween.TRANS_SINE)
 
 func _punch(amount: float) -> void:
 	if Game.reduce_fx():

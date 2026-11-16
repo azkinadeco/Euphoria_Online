@@ -18,8 +18,30 @@ func _init() -> void:
 		wait = int(args[2])
 	DirAccess.make_dir_recursive_absolute(out_dir)
 
+var _perf_label := ""
+var _perf: Array = []
+var _perf_gpu: Array = []
+var _perf_t := 0
+
 func _process(_d: float) -> bool:
 	frame += 1
+	if _perf_label != "":
+		var now := Time.get_ticks_usec()
+		if _perf_t > 0:
+			_perf.append((now - _perf_t) / 1000.0)
+			_perf_gpu.append(Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0)
+		_perf_t = now
+		if _perf.size() >= 90:
+			_perf.sort()
+			_perf_gpu.sort()
+			var avg := 0.0
+			for x in _perf:
+				avg += x
+			print("PERF %-22s frame avg %5.1f ms  p95 %5.1f  proc med %5.2f ms  p95 %5.2f  draws %d  nodes %d" % [_perf_label, avg / _perf.size(), _perf[int(_perf.size() * 0.95)],
+				_perf_gpu[_perf_gpu.size() / 2], _perf_gpu[int(_perf_gpu.size() * 0.95)],
+				int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)), int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))])
+			_perf_label = ""
+			_perf_t = 0
 	if frame == 2:
 		if not root.has_node("Game"):
 			var g: Node = load("res://game/core/game.gd").new()
@@ -346,6 +368,32 @@ func _next() -> void:
 	elif v.begins_with("gpop:"):
 		# gpop:formation -> removes the last entry of Game.s["formation"]
 		(root.get_node("Game").s[v.substr(5)] as Array).pop_back()
+	elif v.begins_with("noshader:"):
+		# noshader:light_shafts -> removes every material whose shader path contains that text (perf tests)
+		var key := v.substr(9)
+		for n in root.find_children("*", "CanvasItem", true, false):
+			var m := (n as CanvasItem).material as ShaderMaterial
+			if m != null and m.shader != null and m.shader.resource_path.contains(key):
+				(n as CanvasItem).material = null
+				if key == "light_shafts" or key == "summon":
+					(n as CanvasItem).visible = false
+				for c in n.get_children():
+					if c.get_class() == "Node" and c.get_script() != null:
+						c.set_process(false)
+	elif v.begins_with("nonode:"):
+		# nonode:AmbientFX -> hides nodes of that script class
+		for n in root.find_children("*", "", true, false):
+			if n.get_script() != null and str((n.get_script() as Script).get_global_name()) == v.substr(7):
+				(n as CanvasItem).visible = false
+				n.set_process(false)
+	elif v == "nocap":
+		Engine.max_fps = 0
+	elif v.begins_with("perf:"):
+		# perf:<label> -> measures the next 90 frames: CPU frame time, GPU time, draw calls (PERF lines)
+		_perf_label = v.substr(5)
+		_perf = []
+		_perf_gpu = []
+		RenderingServer.viewport_set_measure_render_time(root.get_viewport().get_viewport_rid(), true)
 	elif v == "wait":
 		pass
 	elif v == "close":

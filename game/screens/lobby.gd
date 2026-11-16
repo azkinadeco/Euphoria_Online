@@ -563,15 +563,8 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if is_instance_valid(_pointer) and is_instance_valid(_pointer_target):
 		_place_pointer()
-	# parallax: hero drifts with the pointer, background moves the other way. Phones have no pointer, so
-	# after a few still seconds the scene sways by itself (slow figure-eight) and keeps its depth.
-	_still_t += delta
-	if _still_t > 2.5 and not Game.reduce_fx():
-		var tt := Time.get_ticks_msec() / 1000.0
-		_parallax = _parallax.lerp(Vector2(sin(tt * 0.23) * 0.7, sin(tt * 0.37) * 0.45), minf(1.0, delta * 0.8))
-	if is_instance_valid(_holder):
-		_holder.position = _holder.position.lerp(_parallax * Vector2(14, 8), minf(1.0, delta * 4.0))
-		_bg.position = _bg.position.lerp(-_parallax * Vector2(10, 6), minf(1.0, delta * 4.0))
+	# The room and the hero no longer slide around (a few pixels of drift read as stutter on phones).
+	# The scene lives through the light shafts, motes and the hero's own 2.5D animation instead.
 	if not _slides.is_empty():
 		_slide_t += delta
 		if _slide_t > 5.0:

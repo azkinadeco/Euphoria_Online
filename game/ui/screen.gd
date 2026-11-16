@@ -17,24 +17,27 @@ func build() -> void:
 	pass
 
 func _ready() -> void:
-	# safety net for big UI sizes / short windows (see _fit_scan)
-	var t := Timer.new()
-	t.wait_time = 0.3
-	t.timeout.connect(func():
-		_fit_header()
-		_fit_scan(self, 0))
-	add_child(t)
-	t.start()
+	# Safety net for big UI sizes / short windows (see _fit_scan). It used to walk the whole screen every
+	# 0.3 s for as long as the screen was open (a hitch you could see on busy screens); now it checks a few
+	# times while the screen settles, and again after a resize.
 	resized.connect(func():
 		_hdr_level = 0
 		_hdr_apply()
-		_fit_header())
-	# first check after the first layout has settled (wrapping labels report a huge height before it)
-	get_tree().create_timer(0.12).timeout.connect(func():
-		if is_inside_tree():
-			_fit_header()
-			_fit_scan(self, 0))
+		_fit_header()
+		_fit_soon())
+	_fit_soon()
 	_fit_header.call_deferred()
+
+## Header + tall-panel check at 0.12 s (after the first layout; wrapping labels report a huge height
+## before it), 0.5 s and 1.2 s (late content: lazy pictures, staggered rows).
+func _fit_soon() -> void:
+	if not is_inside_tree():
+		return
+	for d in [0.12, 0.5, 1.2]:
+		get_tree().create_timer(d).timeout.connect(func():
+			if is_inside_tree():
+				_fit_header()
+				_fit_scan(self, 0))
 
 ## Called by Main when Game.changed fires while this screen is visible.
 func refresh() -> void:

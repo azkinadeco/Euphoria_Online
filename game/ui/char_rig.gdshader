@@ -13,6 +13,9 @@ uniform float head_band = 1.0;            // 1 = everything above the neck near 
 // bones: a = pivot.xy + tip.xy; b = width, swing amplitude (rad), speed, phase. width 0 = unused.
 // The weight grows from 0 at the pivot to 1 at the tip, and the swing lags along the bone,
 // so hair, tails, tentacles and sleeves wave instead of turning stiffly.
+uniform int bone_count = 10;   // used slots: the loops stop there (same picture, less work per pixel)
+uniform int float_count = 6;
+uniform int glow_count = 6;
 uniform vec4 bone_a[10];
 uniform vec4 bone_b[10];
 uniform float bone_wave = 1.1;            // phase lag along a bone (0 = stiff)
@@ -152,6 +155,7 @@ void fragment() {
 	float keep = 1.0 - face;
 	// 3) bones (hair, arms, tails, tentacles, wings...)
 	for (int i = 0; i < 10; i++) {
+		if (i >= bone_count) { break; }
 		float w = bone_b[i].x;
 		if (w > 0.0) {
 			vec2 sh = seg(uv, bone_a[i].xy, bone_a[i].zw);
@@ -165,6 +169,7 @@ void fragment() {
 	}
 	// floaters bob up and down (each on its own rhythm)
 	for (int i = 0; i < 6; i++) {
+		if (i >= float_count) { break; }
 		if (floats[i].z > 0.0) {
 			float fm = (1.0 - smoothstep(floats[i].z * 0.6, floats[i].z, length((uv - floats[i].xy) * vec2(aspect, 1.0)))) * keep;
 			uv.y += sin(t * (1.1 + float(i) * 0.17) + float(i) * 1.9) * floats[i].w * fm * calm;
@@ -178,6 +183,7 @@ void fragment() {
 	uv.y += breath * 0.003 * cb;
 	// 5) heat shimmer inside glows
 	for (int i = 0; i < 6; i++) {
+		if (i >= glow_count) { break; }
 		if (glows[i].z > 0.0) {
 			float gm = (1.0 - smoothstep(0.0, glows[i].z, length((uv - glows[i].xy) * vec2(aspect, 1.0)))) * keep;
 			uv.x += sin(t * 8.0 + uv.y * 120.0 + float(i)) * 0.002 * gm * calm;
@@ -252,6 +258,7 @@ void fragment() {
 		c.rgb = outc.rgb;
 	}
 	for (int i = 0; i < 6; i++) {
+		if (i >= glow_count) { break; }
 		if (glows[i].z > 0.0) {
 			float d = length((buv - glows[i].xy) * vec2(aspect, 1.0)) / glows[i].z;
 			float flick = 0.55 + 0.25 * sin(t * 6.0 + float(i) * 2.3) + 0.2 * sin(t * 11.0 + float(i));

@@ -787,11 +787,9 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 				xb.scale = p.scale
 				xb.modulate.a = p.modulate.a
 		p.item_rect_changed.connect(place)
-		var xt := Timer.new()
-		xt.wait_time = 0.05
-		xt.timeout.connect(place)
-		layer.add_child(xt)
-		xt.start()
+		# follow the panel only while its pop-in animation runs, then stay put (no endless timer)
+		var follow := create_tween()
+		follow.tween_method(func(_v: float): place.call(), 0.0, 1.0, 0.45)
 		place.call_deferred()
 	Game.sfx("ui/open")
 	# Safety net: a popup taller than the screen (long lists, big UI size) had its lower rows and its
@@ -802,12 +800,10 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 			var room: float = layer.size.y - 20.0
 			if room > 200.0 and p.get_combined_minimum_size().y > room:
 				UI.fit_tall(p, head, room)
-	get_tree().create_timer(0.08).timeout.connect(fit)   # after the first layout (see UI.fit_tall)
-	var ft := Timer.new()
-	ft.wait_time = 0.25
-	ft.timeout.connect(fit)
-	layer.add_child(ft)
-	ft.start()
+	# after the first layout (see UI.fit_tall), then twice more while the content settles (no endless timer)
+	for fd in [0.08, 0.4, 1.0]:
+		get_tree().create_timer(fd).timeout.connect(fit)
+	p.minimum_size_changed.connect(fit)
 	return v
 
 ## Fade the dim and shrink the panel away, then free the layer. The layer stops counting as a popup at once.
