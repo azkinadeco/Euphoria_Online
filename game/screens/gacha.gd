@@ -90,15 +90,16 @@ func _render() -> void:
 		h.offset_left = 8
 		h.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		btn.add_child(h)
-		var fid: String = bd["featured"] if bd["featured"] != "" else "micca"
+		var fid: String = bd["featured"] if bd["featured"] != "" else ("rumi" if bd.has("tiers") else "cthollia")
 		var face := UI.face_rect(fid, Vector2(66, 66))
 		face.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		h.add_child(face)
 		var v := UI.vbox(0)
 		v.alignment = BoxContainer.ALIGNMENT_CENTER
 		v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		v.add_child(UI.label("RATE UP" if bd["featured"] != "" else "STANDARD", 12, Color("#ff9ad5") if bd["featured"] != "" else Color("#9fb4ff"), 3))
-		var nl := UI.label(DB.name_of(fid) if bd["featured"] != "" else "All Heroes", 18, Color.WHITE, 3)
+		var kind := "RATE UP" if bd["featured"] != "" else ("NORMAL  •  GOLD" if bd.has("tiers") else "STANDARD")
+		v.add_child(UI.label(kind, 12, Color("#ff9ad5") if bd["featured"] != "" else (UI.GOLD if bd.has("tiers") else Color("#9fb4ff")), 3))
+		var nl := UI.label(DB.name_of(fid) if bd["featured"] != "" else ("N to SSR heroes" if bd.has("tiers") else "All Heroes"), 18, Color.WHITE, 3)
 		v.add_child(nl)
 		h.add_child(v)
 		_list.add_child(btn)
@@ -106,31 +107,38 @@ func _render() -> void:
 	var fid2: String = b["featured"]
 	_frames = b.get("img", [])
 	_frame_i = 0
-	_art.texture = DB.tex(_frames[0]) if not _frames.is_empty() else DB.art(fid2 if fid2 != "" else "micca", 0)
+	_art.texture = DB.tex(_frames[0]) if not _frames.is_empty() else DB.art(fid2 if fid2 != "" else ("rumi" if b.has("tiers") else "cthollia"), 0)
 	for c in _info.get_children():
 		c.queue_free()
 	_info.add_child(UI.label(b["name"].to_upper(), 24, UI.GOLD, 5))
-	if not bool(Game.s["gacha"].get("first10_done", false)):
-		var fl := UI.label("★ FIRST 10x SUMMON: GUARANTEED SSR! ★", 15, UI.GOLD, 4)
+	if not bool(Game.s["gacha"].get("first10_done", false)) and not b.has("tiers"):
+		var fl := UI.label("★ FIRST 10x SUMMON: GUARANTEED %s+! ★" % DB.FIRST10_RARITY, 15, UI.GOLD, 4)
 		_info.add_child(fl)
 		var ft := fl.create_tween().set_loops()
 		ft.tween_property(fl, "modulate", Color(1.4, 1.3, 1.0), 0.6)
 		ft.tween_property(fl, "modulate", Color.WHITE, 0.6)
 	if fid2 != "":
 		var r := UI.hbox(8)
-		r.add_child(UI.rarity_tag("SSR", 15))
+		r.add_child(UI.rarity_tag(DB.rarity_of(fid2), 15))
 		r.add_child(UI.label(DB.name_of(fid2), 22, Color.WHITE, 4))
 		_info.add_child(r)
 		_info.add_child(UI.label(DB.title_of(fid2), 14, DB.theme_color(fid2).lightened(0.35), 3))
 		_info.add_child(UI.wrap_label(DB.skill_of(fid2)["name"] + ": " + str(DB.skill_of(fid2).get("desc", "")), 13, UI.TEXT))
 	_info.add_child(UI.wrap_label(b["desc"], 14, UI.MUTED))
-	var rates := UI.hbox(6)
+	# the banner's own drop rates, rarest first (wraps on narrow screens)
+	var rates := HFlowContainer.new()
+	rates.add_theme_constant_override("h_separation", 5)
+	rates.add_theme_constant_override("v_separation", 5)
 	_info.add_child(rates)
-	for rt in [["SSR", "3%", Color("#ffc94a")], ["SR", "15%", Color("#c77dff")], ["R", "82%", Color("#5fa8ff")]]:
-		var rp := UI.styled_panel(Color(rt[2], 0.15), Color(rt[2], 0.6), 8, 1, 4.0)
-		rp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var rl := UI.label("%s  %s" % [rt[0], rt[1]], 13, rt[2], 2)
-		rl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var rt_map := DB.gacha_rates(b.get("tiers", []))
+	var order: Array = DB.RARITY_ORDER.duplicate()
+	order.reverse()
+	for r0 in order:
+		if not rt_map.has(r0):
+			continue
+		var rcol: Color = DB.RARITY_COLOR[r0]
+		var rp := UI.styled_panel(Color(rcol, 0.15), Color(rcol, 0.6), 8, 1, 4.0)
+		var rl := UI.label("%s %s" % [r0, rate_text(float(rt_map[r0]))], 12, rcol.lightened(0.15), 2)
 		rp.add_child(rl)
 		rates.add_child(rp)
 	var meters := UI.styled_panel(Color(0, 0, 0, 0.35), Color(1, 1, 1, 0.1), 10, 1, 8.0)
@@ -138,8 +146,11 @@ func _render() -> void:
 	var mv := UI.vbox(6)
 	meters.add_child(mv)
 	var pity := int(Game.s["gacha"]["pity"])
-	mv.add_child(_meter("PITY", "SSR guaranteed at %d" % DB.GACHA_PITY, pity, DB.GACHA_PITY, Color("#ffc94a")))
-	if fid2 != "":
+	if not b.has("tiers"):
+		mv.add_child(_meter("PITY", "%s+ guaranteed at %d" % [DB.PITY_RARITY, DB.GACHA_PITY], pity, DB.GACHA_PITY, DB.RARITY_COLOR[DB.PITY_RARITY]))
+	if b.has("tiers"):
+		mv.add_child(UI.wrap_label("Paid with Gold: %s per summon. No pity or Summon Points on this banner." % Game.fmt(int(b.get("cost", 6000))), 12, UI.MUTED))
+	elif fid2 != "":
 		var spk := Game.spark_points(b["id"])
 		var sr := UI.hbox(8)
 		var m := _meter("SPARK", "pick %s at %d" % [DB.name_of(fid2).split(" ")[0], DB.SPARK_COST], mini(spk, DB.SPARK_COST), DB.SPARK_COST, Color("#ff9ad5"))
@@ -151,7 +162,7 @@ func _render() -> void:
 			if r.has("error"):
 				main.toast(r["error"], UI.MUTED)
 				return
-			r["rarity"] = "SSR"
+			r["rarity"] = DB.rarity_of(str(r.get("id", fid2)))
 			_play_reveal([r]), "GoldButton" if spk >= DB.SPARK_COST else "", Vector2(104, 34))
 		xb.add_theme_font_size_override("font_size", 12)
 		xb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -164,7 +175,10 @@ func _render() -> void:
 		mv.add_child(sr)
 	else:
 		mv.add_child(_wish_row())
-	_info.add_child(UI.wrap_label("10x summon guarantees at least one SR. Duplicates turn into hero shards. Each pull on a rate-up banner gives 1 Summon Point — %d points = the featured hero." % DB.SPARK_COST, 12, UI.MUTED))
+	if b.has("tiers"):
+		_info.add_child(UI.wrap_label("10x summon guarantees at least one SR. Duplicates turn into hero shards.", 12, UI.MUTED))
+	else:
+		_info.add_child(UI.wrap_label("10x summon guarantees at least one SR. Duplicates turn into hero shards. Each pull on a rate-up banner gives 1 Summon Point — %d points = the featured hero." % DB.SPARK_COST, 12, UI.MUTED))
 	var ir := UI.hbox(8)
 	var rb := UI.button("RATES & HERO LIST", _show_rates, "", Vector2(0, 40))
 	rb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -178,12 +192,22 @@ func _render() -> void:
 func _render_buttons() -> void:
 	for c in _btns.get_children():
 		c.queue_free()
-	if Game.can_free_pull():
+	if Game.can_free_pull() and not DB.BANNERS[_banner_i].has("tiers"):
 		_btns.add_child(_pull_btn("FREE DAILY\nSUMMON x1", 1, "free"))
-	_btns.add_child(_pull_btn("SUMMON x1\n%s" % _price(1), 1, Game.pull_pay(1)))
-	_btns.add_child(_pull_btn("SUMMON x10\n%s" % _price(10), 10, Game.pull_pay(10)))
+	var bid0: String = DB.BANNERS[_banner_i]["id"]
+	_btns.add_child(_pull_btn("SUMMON x1\n%s" % _price(1), 1, Game.pull_pay(1, bid0)))
+	_btns.add_child(_pull_btn("SUMMON x10\n%s" % _price(10), 10, Game.pull_pay(10, bid0)))
+
+## A drop rate as text: 30%, 0.1%, 0.0001%.
+static func rate_text(r: float) -> String:
+	var t := "%.4f" % (r * 100.0)
+	t = t.rstrip("0").rstrip(".")
+	return t + "%"
 
 func _price(count: int) -> String:
+	var bnr: Dictionary = DB.BANNERS[_banner_i]
+	if str(bnr.get("cur", "")) == "gold":
+		return "%s Gold" % Game.fmt(int(bnr.get("cost", 6000)) * count)
 	var tk := mini(Game.amount("summon_ticket"), count)
 	var gems := "%s Gems" % Game.fmt(DB.GACHA_COST * (count - tk))
 	if tk == 0:
@@ -194,7 +218,13 @@ func _price(count: int) -> String:
 func _pull_btn(text: String, count: int, pay: String) -> Button:
 	var b := UI.button(text, func(): _pull(count, pay), "GoldButton" if count == 10 or pay == "free" else "", Vector2(216, 92))
 	b.add_theme_font_size_override("font_size", 19)
-	if pay != "free":
+	if pay == "gold":
+		b.icon = DB.icon("icon_gold")
+		b.add_theme_constant_override("icon_max_width", 34)
+		if Game.amount("gold") < int(DB.BANNERS[_banner_i].get("cost", 6000)) * count:
+			b.modulate = Color(0.82, 0.8, 0.85)
+			b.tooltip_text = "Not enough Gold"
+	elif pay != "free":
 		b.icon = DB.icon("icon_ticket") if Game.amount("summon_ticket") >= count else DB.icon("icon_gem")
 		b.add_theme_constant_override("icon_max_width", 34)
 		if Game.amount("summon_ticket") < count and Game.amount("gems") < DB.GACHA_COST * (count - mini(Game.amount("summon_ticket"), count)):
@@ -232,7 +262,7 @@ func _wish_row() -> Control:
 	var h := UI.hbox(6)
 	v.add_child(h)
 	h.add_child(UI.label("WISHLIST", 13, Color("#ff9ad5"), 2))
-	var sl := UI.label("%d%% of SSR pulls come from your picks" % int(DB.WISH_RATE * 100), 11, UI.MUTED, 0)
+	var sl := UI.label("%d%% of pulls of a pick's rarity become your picks" % int(DB.WISH_RATE * 100), 11, UI.MUTED, 0)
 	sl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.add_child(sl)
 	var r := UI.hbox(8)
@@ -260,7 +290,7 @@ func _show_wishlist() -> void:
 	var v: VBoxContainer = main.popup("WISHLIST", 760)
 	var head := UI.label("", 14, UI.GOLD, 2)
 	v.add_child(head)
-	v.add_child(UI.wrap_label("Pick up to %d SSR heroes. On the Standard Summon, %d%% of your SSR pulls will be one of them. Heroes you already own still count: duplicates become shards." % [DB.WISH_MAX, int(DB.WISH_RATE * 100)], 13, UI.MUTED))
+	v.add_child(UI.wrap_label("Pick up to %d heroes of SSR rarity or higher. On the Standard Summon, %d%% of your pulls of a picked hero's rarity become one of your picks of that rarity. Heroes you already own still count: duplicates become shards." % [DB.WISH_MAX, int(DB.WISH_RATE * 100)], 13, UI.MUTED))
 	var f := HFlowContainer.new()
 	f.add_theme_constant_override("h_separation", 8)
 	f.add_theme_constant_override("v_separation", 8)
@@ -275,7 +305,7 @@ func _show_wishlist() -> void:
 			(cards[id] as HeroCard).set_selected(w.has(id))
 			(cards[id] as HeroCard).get_node("wish").visible = w.has(id)
 	for id in DB.hero_ids():
-		if DB.rarity_of(id) != "SSR":
+		if not DB.rarity_at_least(id, DB.WISH_MIN_RARITY):
 			continue
 		var hid: String = id
 		var card := HeroCard.new(hid, Vector2(96, 124), {"show_level": false, "lazy": true})
@@ -309,10 +339,16 @@ func _show_wishlist() -> void:
 func _show_history() -> void:
 	var v: VBoxContainer = main.popup("SUMMON HISTORY", 640)
 	var hist: Array = Game.s["gacha"].get("history", [])
-	var cnt := {"SSR": 0, "SR": 0, "R": 0}
+	var cnt := {}
 	for h in hist:
 		cnt[h["r"]] = int(cnt.get(h["r"], 0)) + 1
-	v.add_child(UI.label("Last %d pulls  •  SSR %d  •  SR %d  •  R %d   (total pulls %d)" % [hist.size(), cnt["SSR"], cnt["SR"], cnt["R"], int(Game.s["gacha"]["total"])], 14, UI.MUTED))
+	var parts: Array = []
+	var ordr: Array = DB.RARITY_ORDER.duplicate()
+	ordr.reverse()
+	for r1 in ordr:
+		if cnt.has(r1):
+			parts.append("%s %d" % [r1, int(cnt[r1])])
+	v.add_child(UI.wrap_label("Last %d pulls  •  %s   (total pulls %d)" % [hist.size(), "  •  ".join(parts) if not parts.is_empty() else "-", int(Game.s["gacha"]["total"])], 14, UI.MUTED))
 	var list := UI.vbox(4)
 	var sc := UI.scroll(list)
 	sc.custom_minimum_size = Vector2(0, 400)
@@ -321,10 +357,10 @@ func _show_history() -> void:
 		list.add_child(UI.label("No summons yet.", 15, UI.MUTED))
 	for h in hist:
 		var row := UI.hbox(10)
-		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[h["r"]], 6, 2, 1)
+		var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR.get(h["r"], UI.ACCENT), 6, 2, 1)
 		fp.add_child(UI.face_rect(h["id"], Vector2(32, 32)))
 		row.add_child(fp)
-		var nl := UI.label("%s  %s" % [h["r"], DB.name_of(h["id"])], 15, DB.RARITY_COLOR[h["r"]].lightened(0.2), 2)
+		var nl := UI.label("%s  %s" % [h["r"], DB.name_of(h["id"])], 15, (DB.RARITY_COLOR.get(h["r"], UI.ACCENT) as Color).lightened(0.2), 2)
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(nl)
 		row.add_child(UI.label(Time.get_datetime_string_from_unix_time(int(h["t"]) + 7 * 3600).replace("T", " ").substr(0, 16), 12, UI.MUTED))
@@ -335,15 +371,31 @@ func _show_history() -> void:
 
 func _show_rates() -> void:
 	var v: VBoxContainer = main.popup("RATES", 720)
-	v.add_child(UI.label("SSR 3%%  •  SR 15%%  •  R 82%%  •  Pity %d" % DB.GACHA_PITY, 16, UI.GOLD))
-	for r in ["SSR", "SR", "R"]:
+	var bnr: Dictionary = DB.BANNERS[_banner_i]
+	var rt_map := DB.gacha_rates(bnr.get("tiers", []))
+	if not bnr.has("tiers"):
+		v.add_child(UI.wrap_label("Pity: %s or better guaranteed within %d summons. The %s rate includes the share of tiers that have no heroes yet." % [DB.PITY_RARITY, DB.GACHA_PITY, DB.RARITY_ORDER[0]], 13, UI.MUTED))
+	var order2: Array = DB.RARITY_ORDER.duplicate()
+	order2.reverse()
+	for r in order2:
+		var ids: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == r)
+		if bnr.has("tiers") and not (bnr["tiers"] as Array).has(r):
+			continue
+		var hr := UI.hbox(8)
+		hr.add_child(UI.rarity_tag(r, 15))
+		hr.add_child(UI.label(DB.RARITY_NAME[r], 15, DB.RARITY_COLOR[r], 2))
+		var rl2 := UI.label(rate_text(float(rt_map[r])) if rt_map.has(r) else "no heroes yet", 15, Color.WHITE if rt_map.has(r) else UI.MUTED, 2)
+		rl2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		rl2.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		hr.add_child(rl2)
+		v.add_child(hr)
+		if ids.is_empty():
+			continue
 		var f := HFlowContainer.new()
 		f.add_theme_constant_override("h_separation", 8)
 		f.add_theme_constant_override("v_separation", 8)
-		v.add_child(UI.label(r, 18, DB.RARITY_COLOR[r], 3))
-		for id in DB.hero_ids():
-			if DB.rarity_of(id) == r:
-				f.add_child(HeroCard.new(id, Vector2(84, 108), {"show_level": false, "lazy": true}))
+		for id in ids:
+			f.add_child(HeroCard.new(id, Vector2(84, 108), {"show_level": false, "lazy": true}))
 		v.add_child(f)
 	var ok := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
 	ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -370,17 +422,20 @@ func on_back() -> bool:
 
 # ---------------------------------------------------------------- reveal
 
+## Reveal intensity of a rarity: 0 = N / R, 1 = SR, 2 = SSR and above (gold rays, splash).
+static func _tier(r: String) -> int:
+	var k := DB.rarity_rank(r)
+	return 2 if k >= DB.rarity_rank("SSR") else (1 if k == DB.rarity_rank("SR") else 0)
+
 func _play_reveal(results: Array) -> void:
 	_reveal = Control.new()
 	_reveal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_reveal.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(_reveal)
-	var best := "R"
+	var best := "N"
 	for r in results:
-		if r["rarity"] == "SSR":
-			best = "SSR"
-		elif r["rarity"] == "SR" and best == "R":
-			best = "SR"
+		if DB.rarity_rank(r["rarity"]) > DB.rarity_rank(best):
+			best = r["rarity"]
 	var col: Color = DB.RARITY_COLOR[best]
 	var dark := ColorRect.new()
 	dark.color = Color(0.01, 0.0, 0.03, 0.97)
@@ -403,7 +458,7 @@ func _play_reveal(results: Array) -> void:
 	dark.gui_input.connect(func(e):
 		if e is InputEventMouseButton and e.pressed:
 			skip[0] = true)
-	var tier: int = {"R": 0, "SR": 1, "SSR": 2}[best]
+	var tier: int = _tier(best)
 	gate.charge(1.2)
 	for k in 12:
 		if skip[0] or not is_inside_tree():
@@ -414,7 +469,7 @@ func _play_reveal(results: Array) -> void:
 	# the tell: the core takes the colour of the best card (blue / purple / gold) and the rays open
 	if not skip[0]:
 		gate.tell(col.lightened(0.15), tier, 0.9)
-		if best == "SSR":
+		if _tier(best) == 2:
 			Game.sfx("battle/light")
 			if not Game.reduce_fx():
 				var sh := _reveal.create_tween().set_loops(6)
@@ -429,8 +484,8 @@ func _play_reveal(results: Array) -> void:
 			return
 		_reveal.position = Vector2.ZERO
 	gate.burst(0.7)
-	Game.haptic(120 if best == "SSR" else (60 if best == "SR" else 30))
-	Game.sfx("star_up" if best == "SSR" else "ui_click")
+	Game.haptic([30, 60, 120][_tier(best)])
+	Game.sfx("star_up" if _tier(best) == 2 else "ui_click")
 	var flash := ColorRect.new()
 	flash.color = col.lightened(0.5) if not Game.reduce_fx() else Color(0, 0, 0, 0)
 	flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -472,10 +527,10 @@ func _play_reveal(results: Array) -> void:
 		art_back.stretch_mode = TextureRect.STRETCH_SCALE
 		art_back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		back.add_child(art_back)
-		if r["rarity"] != "R":
+		if _tier(r["rarity"]) > 0:
 			# rarity tell: SR cards pulse purple, SSR cards pulse gold before they turn
 			var halo := Panel.new()
-			halo.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, rc.lightened(0.2), 14, 4, 0, 18 if r["rarity"] == "SSR" else 10))
+			halo.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, rc.lightened(0.2), 14, 4, 0, 18 if _tier(r["rarity"]) == 2 else 10))
 			(halo.get_theme_stylebox("panel") as StyleBoxFlat).shadow_color = Color(rc.r, rc.g, rc.b, 0.8)
 			halo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			halo.offset_left = -3
@@ -512,7 +567,7 @@ func _play_reveal(results: Array) -> void:
 			return
 		var r: Dictionary = results[i]
 		var back: Panel = holders[i]
-		if r["rarity"] == "SSR" and not skip[0]:
+		if _tier(r["rarity"]) == 2 and not skip[0]:
 			await _ssr_splash(r)
 			if not is_inside_tree() or not is_instance_valid(_reveal):
 				return
@@ -543,9 +598,9 @@ func _play_reveal(results: Array) -> void:
 		back.add_child(tag)
 		var ft2 := back.create_tween()
 		ft2.tween_property(back, "scale:x", 1.0, 0.08 if skip[0] else 0.14)
-		if r["rarity"] != "R":
-			_card_shine(back, card_size, DB.RARITY_COLOR[r["rarity"]], r["rarity"] == "SSR")
-		if r["rarity"] != "R":
+		if _tier(r["rarity"]) > 0:
+			_card_shine(back, card_size, DB.RARITY_COLOR[r["rarity"]], _tier(r["rarity"]) == 2)
+		if _tier(r["rarity"]) > 0:
 			Game.sfx("star_up")
 		if not skip[0]:
 			await get_tree().create_timer(0.12).timeout
@@ -571,7 +626,7 @@ func _play_reveal(results: Array) -> void:
 		_reveal.queue_free()
 		_render(), "", Vector2(200, 56)))
 	var again_count := results.size()
-	var pay := Game.pull_pay(again_count)
+	var pay := Game.pull_pay(again_count, str(DB.BANNERS[_banner_i]["id"]))
 	bar.add_child(UI.button("SUMMON x%d AGAIN" % again_count, func():
 		_reveal.queue_free()
 		_reveal = null
@@ -712,7 +767,7 @@ func _ssr_splash(r: Dictionary) -> void:
 	v.offset_top = -120
 	v.offset_bottom = 120
 	layer.add_child(v)
-	var tag := UI.rarity_tag("SSR", 26)
+	var tag := UI.rarity_tag(DB.rarity_of(str(r["id"])), 26)
 	tag.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	v.add_child(tag)
 	var nm := UI.label(DB.name_of(r["id"]).to_upper(), 50, UI.GOLD, 10)
@@ -724,7 +779,7 @@ func _ssr_splash(r: Dictionary) -> void:
 		nm.scale = Vector2(1.8, 1.8)
 		nm.create_tween().tween_property(nm, "scale", Vector2.ONE, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.25)).call_deferred()
 	v.add_child(UI.label(DB.title_of(r["id"]), 20, Color.WHITE, 5))
-	v.add_child(UI.stars(DB.RARITY_START_STAR["SSR"], 34))
+	v.add_child(UI.stars(DB.RARITY_START_STAR[DB.rarity_of(str(r["id"]))], 34))
 	v.add_child(UI.wrap_label("\"%s\"" % Game.voice(r["id"], "summon"), 18, Color("#ffe6a3")))
 	if r["new"]:
 		v.add_child(UI.label("NEW HERO!", 24, UI.GREEN, 6))

@@ -1262,6 +1262,20 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2jj. Update batch: rarity baru 9 tier, 4 banner, Gallery Lv1, avatar form (16 Nov 2026)
+
+Sumber: dokumen pemilik "Rarerity Hero 16 nov 2026.docx".
+
+- **Rarity 9 tier** (`DB.RARITY_ORDER` N < R < SR < SSR < UR < LR < MR < GR < OR, `DB.RARITY_NAME`, `DB.RARITY_COLOR`, `DB.RARITY_RATE`, `DB.rarity_rank`, `DB.rarity_at_least`, `DB.heroes_of_rarity`). 37 hero dipindah sesuai dokumen: MR Cthollia, Micca; LR Abadonia, Tamo, Shina, Morana, Seraph, Angela, Luby; UR Valeria, Glytta, Gala, Spimei, Lucidria, Scylla, Ning Er, Mei, Kali, Kara, Xylia; SSR Hyeonxa, Schylua, Fidelia, Siv, Gemora, Rubby, Sven, Eurnipha, Eropatra, Atalanta, Zennyo Ryuo; SR Vexira, Aqua, Mora; R Furu, Lumeira; N Rumi.
+- **Drop rate** persis dari dokumen (`DB.gacha_rates(tiers)`): tier tanpa hero (GR, OR) tidak ikut diundi; sisa persen (dokumen total 94,1%) masuk ke N, jadi Standard: N 36%. Opsi "topup 3jt" untuk Void belum dibuat (game masih offline, tidak ada toko uang asli).
+- **Banner**: hanya 4. `nov8_morana`, `nov8_tamo` (rate-up: 50% tarikan LR jadi hero unggulan), `standard` (semua hero, wishlist SSR+), `normal` (baru: N–SSR, bayar 6.000 Gold, tanpa pity/spark/first-10x, rate SSR 10% SR 20% R 25% N 45%). Pity → LR+ di 80 (`DB.PITY_RARITY`), first 10x → UR+ (`DB.FIRST10_RARITY`), 10x tetap minimal SR.
+- **Border + aura per rarity**: `game/ui/rarity_frame.gdshader` + `UI.rarity_frame(card, rarity, …)`: N–UR warna solid, LR pelangi berjalan, MR magenta-merah, GR putih hologram dengan kilau, OR hitam kosmik dengan bintang berkelip; aura makin kuat di tier tinggi. Dipakai di HeroCard dan kartu Gallery.
+- **Gallery**: semua kartu memakai art utama Lv1 (`DB.art(id, 0)`, bukan portrait/evo/sprite), dikelompokkan per rarity dari OR ke N; tier tanpa hero (Void, God) tampil satu kartu "?" "Coming soon".
+- **Avatar profil**: default sprite Lv1 (`DB.sprite_forms`), form lain terbuka di 4★, evo di 5★ (`DB.sprite_form_star`, `Game.sprite_form_unlocked`, `Game.avatar_form`, `UI.my_avatar`). Profil → AVATAR → baris FORM.
+- Lain: filter Heroes per rarity, urutan rarity, splash/cut-in ultimate untuk SSR ke atas, shard/harga per tier (`DUPE_SHARDS`, `RECRUIT_SHARDS`, `MARKET_SHARD_PRICE`), riwayat summon menghitung semua tier.
+- Catatan balance: stat dasar hero tidak diubah (masih per hero). Bintang awal ikut rarity (SSR ke atas 3★), jadi tim awal (Fidelia, Lucidria, Shina) mulai lebih kuat.
+- Tes: flow test baru untuk total rate 100%, rate MR/LR, rarity hero, 4 banner, Normal Summon (Gold, N–SSR, pity tidak berubah), urutan sprite form.
+
 ## 2ii. Update batch 235 — Entrance baris yang bertahap utuh
 
 - `UI.stagger`: item disembunyikan langsung, tween-nya dimulai satu frame setelah layar dibangun (alasan sama dengan batch 233/234; baris-baris pertama dulu muncul sekaligus). Dipakai di ±36 tempat.

@@ -21,9 +21,16 @@ func build() -> void:
 	b.add_child(v)
 	var bar := UI.hbox(8)
 	v.add_child(bar)
-	for f in ["ALL", "OWNED", "SSR", "SR", "R"]:
+	# ALL / OWNED, then one tab per rarity that has heroes (rarest first)
+	var ftabs: Array = ["ALL", "OWNED"]
+	var rord: Array = DB.RARITY_ORDER.duplicate()
+	rord.reverse()
+	for r in rord:
+		if not DB.heroes_of_rarity(r).is_empty():
+			ftabs.append(r)
+	for f in ftabs:
 		var key: String = f
-		var t := UI.button(f, func(): _filter = key; _rebuild(), "TabButton", Vector2(66, 40))
+		var t := UI.button(f, func(): _filter = key; _rebuild(), "TabButton", Vector2(66 if f.length() > 3 else 50, 40))
 		t.toggle_mode = true
 		bar.add_child(t)
 		_tabs.append(t)
@@ -316,7 +323,7 @@ func _rebuild() -> void:
 		var owned := Game.owns(id)
 		if _filter == "OWNED" and not owned:
 			continue
-		if _filter in ["SSR", "SR", "R"] and DB.rarity_of(id) != _filter:
+		if DB.RARITY_ORDER.has(_filter) and DB.rarity_of(id) != _filter:
 			continue
 		if _elem != "" and DB.ELEMENT_GROUP.get(DB.element_of(id), "") != _elem:
 			continue
@@ -330,7 +337,7 @@ func _rebuild() -> void:
 			return oa
 		match _sort:
 			"rarity":
-				return ["SSR", "SR", "R"].find(DB.rarity_of(a)) < ["SSR", "SR", "R"].find(DB.rarity_of(b))
+				return DB.rarity_rank(DB.rarity_of(a)) > DB.rarity_rank(DB.rarity_of(b))
 			"level":
 				return int(Game.hero(a).get("level", 0)) > int(Game.hero(b).get("level", 0))
 		return Game.hero_power(a) > Game.hero_power(b))

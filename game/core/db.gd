@@ -34,8 +34,43 @@ const BG := {
 	"shower": "res://backround image/new backround maps/shower backround.jpg",
 }
 
-const RARITY_COLOR := {"R": Color("#5fa8ff"), "SR": Color("#c77dff"), "SSR": Color("#ffc94a")}
-const RARITY_START_STAR := {"R": 1, "SR": 2, "SSR": 3}
+# ---------------------------------------------------------------- hero rarity (owner's sheet, 16 Nov 2026)
+## Nine tiers, lowest first. Gear keeps its own R / SR / SSR and shares the colours of those three.
+const RARITY_ORDER := ["N", "R", "SR", "SSR", "UR", "LR", "MR", "GR", "OR"]
+const RARITY_NAME := {"N": "Normal", "R": "Rare", "SR": "Super Rare", "SSR": "Superior Super Rare", "UR": "Ultra Rare",
+	"LR": "Legend", "MR": "Mythic", "GR": "God", "OR": "Void"}
+## Border / tag colours. LR (rainbow), GR (white hologram) and OR (cosmic black) are animated on cards
+## by game/ui/rarity_frame.gdshader; these are their base colours.
+const RARITY_COLOR := {"N": Color("#9aa0ab"), "R": Color("#5fa8ff"), "SR": Color("#c77dff"), "SSR": Color("#ffc94a"),
+	"UR": Color("#ff4747"), "LR": Color("#7ef0ff"), "MR": Color("#ff2f86"), "GR": Color("#f4f6ff"), "OR": Color("#8f6cff")}
+## Summon drop rate of each tier (the sheet's numbers). Tiers without heroes yet, and whatever the sheet
+## leaves over (its numbers add up to 94.1%), go to N - see gacha_rates().
+const RARITY_RATE := {"N": 0.30, "R": 0.25, "SR": 0.20, "SSR": 0.10, "UR": 0.05, "LR": 0.03, "MR": 0.01, "GR": 0.001, "OR": 0.000001}
+const RARITY_START_STAR := {"N": 1, "R": 1, "SR": 2, "SSR": 3, "UR": 3, "LR": 3, "MR": 3, "GR": 3, "OR": 3}
+
+static func rarity_rank(r: String) -> int:
+	var i := RARITY_ORDER.find(r)
+	return i if i >= 0 else 1
+
+## True when hero `id` is of rarity `r` or higher.
+static func rarity_at_least(id: String, r: String) -> bool:
+	return rarity_rank(rarity_of(id)) >= rarity_rank(r)
+
+## Heroes of one tier, in roster order.
+static func heroes_of_rarity(r: String) -> Array:
+	return HEROES.keys().filter(func(h): return str(HEROES[h]["rarity"]) == r)
+
+## Drop rates for a summon pool limited to `tiers` (all tiers when empty): every tier that has heroes keeps
+## its sheet rate; the share of tiers left out (empty, or outside the pool) goes to the lowest tier.
+static func gacha_rates(tiers: Array = []) -> Dictionary:
+	var use: Array = RARITY_ORDER.filter(func(r): return (tiers.is_empty() or tiers.has(r)) and not heroes_of_rarity(r).is_empty())
+	var out := {}
+	var total := 0.0
+	for r in use:
+		out[r] = float(RARITY_RATE[r])
+		total += float(RARITY_RATE[r])
+	out[use[0]] = float(out[use[0]]) + (1.0 - total)
+	return out
 const MAX_STAR := 6
 const MAX_BOND := 10
 const MAX_DEPLOY := 5
@@ -87,7 +122,7 @@ const MARKET_POOL := [
 	{"give": {"energy_potion": 3}, "price": 90, "cur": "gems", "w": 4},
 	{"give": {"oath_ring": 1}, "price": 1500, "cur": "gems", "w": 1},
 ]
-const MARKET_SHARD_PRICE := {"R": 60, "SR": 120, "SSR": 260}
+const MARKET_SHARD_PRICE := {"N": 40, "R": 60, "SR": 120, "SSR": 260, "UR": 360, "LR": 480, "MR": 700, "GR": 1000, "OR": 1500}
 
 ## Role passives (always active in battle, both sides).
 const PASSIVES := {
@@ -173,65 +208,65 @@ const ELEMENT_ICON := {"FIRE": "elem_fire", "WATER": "elem_water", "ICE": "elem_
 const SHAPES := ["single", "pierce", "line", "column", "cross", "square", "x", "all"]
 
 const HEROES := {
-	"fidelia": {"rarity": "R", "role": "PALADIN", "hp": 2600, "atk": 120, "def": 120,
+	"fidelia": {"rarity": "SSR", "role": "PALADIN", "hp": 2600, "atk": 120, "def": 120,
 		"skill": {"name": "Tidal Bulwark", "aim": "front", "shape": "single", "mult": 1.1, "shield_self": 0.25,
 		"taunt": 2, "desc": "Strikes the front enemy for 110% ATK and shields herself for 25% Max HP. Taunts enemies for 2 rounds."}},
-	"lucidria": {"rarity": "R", "role": "TANK", "hp": 2800, "atk": 110, "def": 130,
+	"lucidria": {"rarity": "UR", "role": "TANK", "hp": 2800, "atk": 110, "def": 130,
 		"skill": {"name": "Ancient Mace Slam", "aim": "front", "shape": "pierce", "mult": 1.0, "stun": 0.35,
 		"taunt": 1, "desc": "Smashes the front enemy and the one behind it for 100% ATK. 35% chance to Stun. Taunts enemies for 1 round."}},
-	"eurnipha": {"rarity": "R", "role": "WARRIOR", "hp": 2000, "atk": 170, "def": 80,
+	"eurnipha": {"rarity": "SSR", "role": "WARRIOR", "hp": 2000, "atk": 170, "def": 80,
 		"skill": {"name": "Void Siphon", "aim": "front", "shape": "single", "mult": 1.5, "drain": 0.4,
 		"desc": "Drains the front enemy for 150% ATK, healing 40% of the damage dealt."}},
-	"rumi": {"rarity": "R", "role": "MAGE", "hp": 1400, "atk": 210, "def": 50,
+	"rumi": {"rarity": "N", "role": "MAGE", "hp": 1400, "atk": 210, "def": 50,
 		"skill": {"name": "Crimson Exorcism", "aim": "back", "shape": "single", "mult": 1.6, "execute": 0.8,
 		"desc": "Hits the furthest enemy in her row for 160% ATK. +80% damage to targets under 35% HP."}},
-	"mora": {"rarity": "R", "role": "MAGE", "hp": 1450, "atk": 180, "def": 55,
+	"mora": {"rarity": "SR", "role": "MAGE", "hp": 1450, "atk": 180, "def": 55,
 		"skill": {"name": "Chronos Ring", "aim": "front", "shape": "column", "mult": 0.8,
 		"desc": "Strikes the whole column of the front enemy for 80% ATK."}},
-	"furu": {"rarity": "SR", "role": "HEALER", "hp": 1700, "atk": 150, "def": 70,
+	"furu": {"rarity": "R", "role": "HEALER", "hp": 1700, "atk": 150, "def": 70,
 		"skill": {"name": "Sacred Benediction", "aim": "ally_all", "shape": "all", "heal": 0.9,
 		"cleanse": true, "desc": "Heals every ally for 90% ATK. Cleanses Burn, Stun, Silence and DEF/Heal debuffs."}},
-	"glytta": {"rarity": "SR", "role": "WARRIOR", "hp": 2100, "atk": 190, "def": 85,
+	"glytta": {"rarity": "UR", "role": "WARRIOR", "hp": 2100, "atk": 190, "def": 85,
 		"skill": {"name": "Crystal Waltz", "aim": "front", "shape": "line", "mult": 0.9,
 		"desc": "Dances through the entire enemy row for 90% ATK."}},
-	"hyeonxa": {"rarity": "SR", "role": "WARLOCK", "hp": 1600, "atk": 200, "def": 60,
+	"hyeonxa": {"rarity": "SSR", "role": "WARLOCK", "hp": 1600, "atk": 200, "def": 60,
 		"skill": {"name": "Nine-Fang Venom", "aim": "front", "shape": "cross", "mult": 0.75, "burn": 0.3,
 		"silence": 0.3, "desc": "Cross-shaped venom burst for 75% ATK. Poisons for 30% ATK each round (2 rounds). 30% chance to Silence."}},
-	"scylla": {"rarity": "SR", "role": "ASSASSIN", "hp": 1500, "atk": 240, "def": 55,
+	"scylla": {"rarity": "UR", "role": "ASSASSIN", "hp": 1500, "atk": 240, "def": 55,
 		"skill": {"name": "Kraken Ambush", "aim": "back", "shape": "single", "mult": 1.9, "crit_bonus": 0.3,
 		"desc": "Ambushes the furthest enemy in her row for 190% ATK. +30% Crit chance."}},
-	"lumeira": {"rarity": "SR", "role": "BUFFER", "hp": 1550, "atk": 170, "def": 60,
+	"lumeira": {"rarity": "R", "role": "BUFFER", "hp": 1550, "atk": 170, "def": 60,
 		"skill": {"name": "Astral Wing Hymn", "aim": "front", "shape": "column", "mult": 0.6, "team_atk": 0.2,
 		"desc": "Hits a column for 60% ATK and grants all allies +20% ATK for 2 rounds."}},
-	"gemora": {"rarity": "SR", "role": "RANGER", "hp": 1500, "atk": 225, "def": 55,
+	"gemora": {"rarity": "SSR", "role": "RANGER", "hp": 1500, "atk": 225, "def": 55,
 		"skill": {"name": "Void Railgun", "aim": "front", "shape": "line", "mult": 1.0, "crit_bonus": 0.2,
 		"desc": "Fires through the entire row for 100% ATK. +20% Crit chance."}},
-	"shina": {"rarity": "SSR", "role": "WARRIOR", "hp": 2500, "atk": 260, "def": 100,
+	"shina": {"rarity": "LR", "role": "WARRIOR", "hp": 2500, "atk": 260, "def": 100,
 		"skill": {"name": "Dragonic Inferno", "aim": "front", "shape": "square", "mult": 1.3, "burn": 0.35,
 		"desc": "Engulfs a 2x2 area for 130% ATK and Burns for 35% ATK each round (2 rounds)."}},
-	"xylia": {"rarity": "SSR", "role": "WARLOCK", "hp": 1800, "atk": 300, "def": 70,
+	"xylia": {"rarity": "UR", "role": "WARLOCK", "hp": 1800, "atk": 300, "def": 70,
 		"skill": {"name": "Pandemonium Blueprint", "aim": "front", "shape": "x", "mult": 1.5, "def_down": 0.25,
 		"desc": "X-shaped demonic seal for 150% ATK. Reduces DEF by 25% for 2 rounds."}},
-	"micca": {"rarity": "SSR", "role": "MAGE", "hp": 1700, "atk": 290, "def": 65,
+	"micca": {"rarity": "MR", "role": "MAGE", "hp": 1700, "atk": 290, "def": 65,
 		"skill": {"name": "Pandora Unboxed", "aim": "front", "shape": "all", "mult": 0.9, "stun": 0.2,
 		"desc": "Unleashes chaos on ALL enemies for 90% ATK. 20% chance to Stun each."}},
-	"cthollia": {"rarity": "SSR", "role": "WARLOCK", "hp": 2000, "atk": 270, "def": 80,
+	"cthollia": {"rarity": "MR", "role": "WARLOCK", "hp": 2000, "atk": 270, "def": 80,
 		"skill": {"name": "Abyssal Maelstrom", "aim": "front", "shape": "cross", "mult": 1.15, "stun": 0.25,
 		"desc": "Cross-shaped maelstrom for 115% ATK. 25% chance to Freeze."}},
-	"valeria": {"rarity": "SSR", "role": "KNIGHT", "hp": 3000, "atk": 220, "def": 150,
+	"valeria": {"rarity": "UR", "role": "KNIGHT", "hp": 3000, "atk": 220, "def": 150,
 		"skill": {"name": "Frostvale Judgement", "aim": "front", "shape": "column", "mult": 1.0, "stun": 0.4, "shield_self": 0.2,
 		"desc": "Freezes a whole column for 100% ATK (40% Freeze) and shields herself for 20% Max HP."}},
 	"eropatra": {"rarity": "SSR", "role": "ASSASSIN", "hp": 1900, "atk": 310, "def": 70,
 		"skill": {"name": "Serpent Empress Fang", "aim": "back", "shape": "pierce", "mult": 2.0, "burn": 0.3,
 		"heal_block": 1, "desc": "Strikes the furthest enemy in her row (and behind) for 200% ATK, Burning for 2 rounds. Blocks healing for 2 rounds."}},
 	# ---- November 2026 heroes
-	"abadonia": {"rarity": "SSR", "role": "KNIGHT", "hp": 3100, "atk": 230, "def": 150,
+	"abadonia": {"rarity": "LR", "role": "KNIGHT", "hp": 3100, "atk": 230, "def": 150,
 		"skill": {"name": "Lion Sovereign's Charge", "aim": "front", "shape": "pierce", "mult": 1.3, "shield_self": 0.25, "stun": 0.2,
 		"taunt": 2, "desc": "Rides through the front enemy and the one behind for 130% ATK (20% Stun) and gains a 25% Max HP shield. Taunts enemies for 2 rounds."}},
 	"atalanta": {"rarity": "SSR", "role": "ASSASSIN", "hp": 1850, "atk": 305, "def": 65,
 		"skill": {"name": "Thunderstep Dash", "aim": "back", "shape": "pierce", "mult": 1.9, "crit_bonus": 0.25,
 		"desc": "Lightning-dashes to the furthest enemy in her row (and behind) for 190% ATK. +25% Crit chance."}},
-	"kali": {"rarity": "SSR", "role": "WARRIOR", "hp": 2400, "atk": 270, "def": 95,
+	"kali": {"rarity": "UR", "role": "WARRIOR", "hp": 2400, "atk": 270, "def": 95,
 		"skill": {"name": "Hundred Blade Rain", "aim": "front", "shape": "line", "mult": 1.15, "def_down": 0.2,
 		"desc": "A hundred swords rain on the whole row for 115% ATK and lower DEF by 20% for 2 rounds."}},
 	"zennyo": {"rarity": "SSR", "role": "MAGE", "hp": 1900, "atk": 285, "def": 70,
@@ -240,51 +275,51 @@ const HEROES := {
 	"aqua": {"rarity": "SR", "role": "HEALER", "hp": 1750, "atk": 155, "def": 75,
 		"skill": {"name": "Chalice of the Tides", "aim": "ally_all", "shape": "all", "heal": 1.0,
 		"revive": 0.3, "cleanse": true, "desc": "Pours the holy chalice, healing every ally for 100% ATK. Once per battle, revives a fallen ally with 30% HP. Cleanses debuffs."}},
-	"rubby": {"rarity": "SR", "role": "MAGE", "hp": 1500, "atk": 215, "def": 55,
+	"rubby": {"rarity": "SSR", "role": "MAGE", "hp": 1500, "atk": 215, "def": 55,
 		"skill": {"name": "Big Bang Ballad", "aim": "front", "shape": "square", "mult": 1.1, "burn": 0.25,
 		"desc": "Throws her bomb friends at a 2x2 area for 110% ATK. Burns for 2 rounds."}},
-	"schylua": {"rarity": "SR", "role": "WARRIOR", "hp": 2050, "atk": 200, "def": 85,
+	"schylua": {"rarity": "SSR", "role": "WARRIOR", "hp": 2050, "atk": 200, "def": 85,
 		"skill": {"name": "Glacial Reap", "aim": "front", "shape": "line", "mult": 0.95, "stun": 0.25,
 		"heal_block": 1, "desc": "An ice scythe sweep across the whole row for 95% ATK. 25% chance to Freeze. Blocks healing for 2 rounds."}},
 	"vexira": {"rarity": "SR", "role": "WARLOCK", "hp": 1600, "atk": 205, "def": 60,
 		"skill": {"name": "Charm of Ruin", "aim": "front", "shape": "cross", "mult": 0.8, "def_down": 0.3,
 		"silence": 0.4, "desc": "Cross-shaped imp swarm for 80% ATK. Charmed enemies lose 30% DEF for 2 rounds. 40% chance to Silence."}},
-	"siv": {"rarity": "R", "role": "TANK", "hp": 2400, "atk": 140, "def": 125,
+	"siv": {"rarity": "SSR", "role": "TANK", "hp": 2400, "atk": 140, "def": 125,
 		"skill": {"name": "Thunder Tap", "aim": "front", "shape": "pierce", "mult": 1.0, "stun": 0.3,
 		"desc": "A hammer strike through the front enemy and the one behind for 100% ATK. 30% chance to Stun."}},
-	"sven": {"rarity": "R", "role": "WARRIOR", "hp": 2200, "atk": 165, "def": 95,
+	"sven": {"rarity": "SSR", "role": "WARRIOR", "hp": 2200, "atk": 165, "def": 95,
 		"skill": {"name": "Rift Cleaver", "aim": "front", "shape": "column", "mult": 0.9,
 		"desc": "A greatsword cleave down the whole column for 90% ATK."}},
 	# ---- 4 November 2026 heroes
-	"angela": {"rarity": "SSR", "role": "PALADIN", "hp": 3000, "atk": 230, "def": 145,
+	"angela": {"rarity": "LR", "role": "PALADIN", "hp": 3000, "atk": 230, "def": 145,
 		"skill": {"name": "Seraph's Verdict", "aim": "front", "shape": "column", "mult": 1.2, "team_atk": 0.15, "taunt": 2,
 		"desc": "Smites the front column with holy light for 120% ATK, raises ALL allies' ATK by 15% for 2 rounds and taunts enemies."}},
-	"kara": {"rarity": "SSR", "role": "ASSASSIN", "hp": 1800, "atk": 320, "def": 60,
+	"kara": {"rarity": "UR", "role": "ASSASSIN", "hp": 1800, "atk": 320, "def": 60,
 		"skill": {"name": "Phoenix Harvest", "aim": "back", "shape": "single", "mult": 2.2, "burn": 0.35, "crit_bonus": 0.2,
 		"desc": "Twin scythes reap the furthest enemy for 220% ATK and set her ablaze (35% ATK burn). +20% Crit chance."}},
-	"mei": {"rarity": "SSR", "role": "WARRIOR", "hp": 2500, "atk": 285, "def": 90,
+	"mei": {"rarity": "UR", "role": "WARRIOR", "hp": 2500, "atk": 285, "def": 90,
 		"skill": {"name": "Crimson Moon Slash", "aim": "front", "shape": "square", "mult": 1.35, "def_down": 0.25,
 		"desc": "A blood-red katana arc hits a 2x2 area for 135% ATK and lowers their DEF by 25% for 2 rounds."}},
-	"ninger": {"rarity": "SR", "role": "HEALER", "hp": 2000, "atk": 160, "def": 85,
+	"ninger": {"rarity": "UR", "role": "HEALER", "hp": 2000, "atk": 160, "def": 85,
 		"skill": {"name": "Rain of Golden Fortune", "aim": "ally_all", "shape": "all", "heal": 0.75, "cleanse": true,
 		"desc": "Showers every ally in lucky coins: heals 75% ATK and cleanses their debuffs."}},
-	"luby": {"rarity": "SSR", "role": "ASSASSIN", "hp": 1900, "atk": 300, "def": 70,
+	"luby": {"rarity": "LR", "role": "ASSASSIN", "hp": 1900, "atk": 300, "def": 70,
 		"skill": {"name": "Mecha-Cat Pounce", "aim": "back", "shape": "cross", "mult": 1.4, "stun": 0.25, "crit_bonus": 0.15,
 		"desc": "Her mecha cat pounces on the furthest enemy in a cross for 140% ATK (25% Stun). +15% Crit chance."}},
-	"spimei": {"rarity": "SR", "role": "RANGER", "hp": 1650, "atk": 240, "def": 60,
+	"spimei": {"rarity": "UR", "role": "RANGER", "hp": 1650, "atk": 240, "def": 60,
 		"skill": {"name": "Scarlet Drone Swarm", "aim": "back", "shape": "all", "mult": 0.55, "burn": 0.15,
 		"desc": "Her spider-drones strafe EVERY enemy for 55% ATK and leave them burning (15% ATK)."}},
 	# ---- 8 November 2026 heroes
-	"gala": {"rarity": "SR", "role": "MAGE", "hp": 1700, "atk": 235, "def": 60,
+	"gala": {"rarity": "UR", "role": "MAGE", "hp": 1700, "atk": 235, "def": 60,
 		"skill": {"name": "Nebula Parasol", "aim": "front", "shape": "all", "mult": 0.6, "burn": 0.2,
 		"desc": "Her lava-octopus parasol erupts over EVERY enemy for 60% ATK and sets them burning (20% ATK)."}},
-	"morana": {"rarity": "SSR", "role": "HEALER", "hp": 2200, "atk": 190, "def": 85,
+	"morana": {"rarity": "LR", "role": "HEALER", "hp": 2200, "atk": 190, "def": 85,
 		"skill": {"name": "Black Mass Benediction", "aim": "ally_all", "shape": "all", "heal": 0.85, "cleanse": true,
 		"desc": "A forbidden hymn heals every ally for 85% ATK and cleanses their debuffs."}},
-	"seraph": {"rarity": "SSR", "role": "MAGE", "hp": 1800, "atk": 305, "def": 65,
+	"seraph": {"rarity": "LR", "role": "MAGE", "hp": 1800, "atk": 305, "def": 65,
 		"skill": {"name": "Thousand-Eye Judgement", "aim": "back", "shape": "cross", "mult": 1.3, "stun": 0.2,
 		"desc": "The eyes on her wings open and smite the furthest enemy in a cross for 130% ATK (20% Stun)."}},
-	"tamo": {"rarity": "SSR", "role": "WARRIOR", "hp": 2700, "atk": 270, "def": 105,
+	"tamo": {"rarity": "LR", "role": "WARRIOR", "hp": 2700, "atk": 270, "def": 105,
 		"skill": {"name": "Nine-Tail Greatsword", "aim": "front", "shape": "line", "mult": 1.25, "burn": 0.15, "def_down": 0.2,
 		"desc": "A foxfire greatsword sweep hits the front line for 125% ATK, burns (15% ATK) and lowers DEF by 20%."}},
 }
@@ -1691,14 +1726,19 @@ const MAIL := [
 	{"id": "bond_event", "title": "Bond Festival", "body": "Gifts for your favourite heroes. Give them flowers in the Bond tab!", "give": {"bouquet": 10, "celestial_gem": 3}},
 ]
 
-const GACHA_RATES := {"SSR": 0.03, "SR": 0.15}
 const GACHA_PITY := 80
+## Pity: GACHA_PITY pulls without a PITY_RARITY-or-better hero guarantee one. The first 10x guarantees
+## FIRST10_RARITY or better. (Under the old 3-tier table both were "SSR", then the top tier.)
+const PITY_RARITY := "LR"
+const FIRST10_RARITY := "UR"
+## Wishlist: on the Standard banner, half of the pulls of a wished hero's tier become one of the picks.
+const WISH_MIN_RARITY := "SSR"
 const GACHA_COST := 150
-const DUPE_SHARDS := {"R": 10, "SR": 20, "SSR": 40}
+const DUPE_SHARDS := {"N": 5, "R": 10, "SR": 20, "SSR": 40, "UR": 50, "LR": 60, "MR": 80, "GR": 100, "OR": 120}
 ## Spark: every pull on a rate-up banner gives 1 Summon Point for that banner;
 ## SPARK_COST points can be exchanged for the featured hero (or her duplicate shards).
 const SPARK_COST := 150
-## Wishlist: on the Standard banner, half of the SSR pulls become one of up to WISH_MAX chosen SSR heroes.
+## Up to WISH_MAX wished heroes (SSR or higher).
 const WISH_MAX := 3
 const WISH_RATE := 0.5
 
@@ -1735,24 +1775,14 @@ const TITLES := [
 ]
 
 const BANNERS := [
-	{"id": "nov8_morana", "name": "Black Priestess Rate-Up", "featured": "morana", "desc": "NEW! Morana rate UP! 50% of SSR pulls are Morana.", "bg": "necro"},
-	{"id": "nov8_tamo", "name": "Nine-Tail Queen Rate-Up", "featured": "tamo", "desc": "NEW! Tamo rate UP! 50% of SSR pulls are Tamo.", "bg": "dragonfire"},
-	{"id": "nov8_seraph", "name": "Archangel Rate-Up", "featured": "seraph", "desc": "NEW! Seraph rate UP! 50% of SSR pulls are Seraph.", "bg": "asgard"},
-	{"id": "nov4b_luby", "name": "Mecha Cat Rate-Up", "featured": "luby", "desc": "NEW! Luby rate UP! 50% of SSR pulls are Luby.", "bg": "bigtree"},
-	{"id": "nov4_mei", "name": "Crimson Bunny Rate-Up", "featured": "mei", "desc": "NEW! Mei rate UP! 50% of SSR pulls are Mei. Tap the art!", "bg": "hell",
-		"img": ["res://art/banners_event/banner_bunny_1.png", "res://art/banners_event/banner_bunny_2.png", "res://art/banners_event/banner_bunny_3.png"]},
-	{"id": "nov4_kara", "name": "Phoenix Reaper Rate-Up", "featured": "kara", "desc": "NEW! Kara rate UP! 50% of SSR pulls are Kara.", "bg": "dragonfire",
-		"img": ["res://art/banners_event/banner_scythe_1.png"]},
-	{"id": "nov4_angela", "name": "Seraph Rate-Up", "featured": "angela", "desc": "NEW! Angela rate UP! 50% of SSR pulls are Angela.", "bg": "asgard"},
-	{"id": "pickup_sven", "name": "Wanderer's Pick-Up", "featured": "sven", "desc": "Sven rate UP! 50% of R pulls are Sven — and Spark him at 150 points.", "bg": "battle",
-		"img": ["res://art/banners_event/banner_sven_1.png"]},
-	{"id": "nov2026", "name": "Lion Queen Rate-Up", "featured": "abadonia", "desc": "NEW! Abadonia rate UP! 50% of SSR pulls are Abadonia.", "bg": "boss"},
-	{"id": "nov2026b", "name": "Dragon Princess Rate-Up", "featured": "zennyo", "desc": "NEW! Zennyo Ryuo rate UP! 50% of SSR pulls are Zennyo.", "bg": "hell",
-		"img": ["res://art/banners_event/banner_dragon_1.png"]},
-	{"id": "limited", "name": "Pandemonium Rate-Up", "featured": "xylia", "desc": "Xylia rate UP! 50% of SSR pulls are Xylia.", "bg": "galaxy"},
-	{"id": "limited2", "name": "Dragon Flame Rate-Up", "featured": "shina", "desc": "Shina rate UP! 50% of SSR pulls are Shina.", "bg": "hell"},
-	{"id": "standard", "name": "Standard Summon", "featured": "", "desc": "All heroes. SSR 3% • SR 15% • R 82%.", "bg": "asgard"},
+	{"id": "nov8_morana", "name": "Black Priestess Rate-Up", "featured": "morana", "desc": "Morana rate UP! 50% of Legend (LR) pulls are Morana.", "bg": "necro"},
+	{"id": "nov8_tamo", "name": "Nine-Tail Queen Rate-Up", "featured": "tamo", "desc": "Tamo rate UP! 50% of Legend (LR) pulls are Tamo.", "bg": "dragonfire"},
+	{"id": "standard", "name": "Standard Summon", "featured": "", "desc": "Every hero, every rarity. Pick up to 3 favourites with the Wishlist.", "bg": "asgard"},
+	# Normal Summon: N to SSR heroes only, paid with Gold (no pity, no spark)
+	{"id": "normal", "name": "Normal Summon", "featured": "", "desc": "N, R, SR and SSR heroes for Gold.", "bg": "forest",
+		"tiers": ["N", "R", "SR", "SSR"], "cur": "gold", "cost": 6000},
 ]
+
 
 # ---------------------------------------------------------------- equipment
 const GEAR_SLOTS := ["weapon", "armor", "accessory"]
@@ -3976,7 +4006,7 @@ static func cutin(id: String) -> Texture2D:
 ## them — so the fight never stalls on a full-size texture load. Already-loaded art costs nothing.
 static func warm_battle_art(id: String, ally: bool, boss: bool, skin: int = 0) -> void:
 	face(id)
-	var ult := ally and not boss and rarity_of(id) == "SSR"
+	var ult := ally and not boss and rarity_at_least(id, "SSR")
 	if ult or boss or str(skill_of(id).get("shape", "single")) in ["all", "square", "x"]:
 		cutin(id)
 		if ult:
@@ -4011,6 +4041,32 @@ static func sprite(id: String, star: int = 1, skin: int = -1) -> Texture2D:
 		return tex(evo_list[0])
 	return art(id, 0)
 
+## A hero's battle sprites in unlock order: the Lv1 form first, then later stage forms, then evolutions
+## (special-outfit sprites are left out). Used by the Commander avatar picker.
+static func sprite_forms(id: String) -> Array:
+	var base_list: Array = []
+	var evo_list: Array = []
+	for s in _entry(id).get("sprites", []):
+		var p := str(s)
+		if not ResourceLoader.exists(p) or p.contains("_special"):
+			continue
+		if p.contains("_evo"):
+			evo_list.append(p)
+		else:
+			base_list.append(p)
+	base_list.sort()
+	evo_list.sort()
+	return base_list + evo_list
+
+## Star a sprite form needs: Lv1 form always, later stage forms at 4 stars, evolutions at 5.
+static func sprite_form_star(id: String, form: int) -> int:
+	if form <= 0:
+		return 0
+	var l := sprite_forms(id)
+	if form >= l.size():
+		return 99
+	return 5 if str(l[form]).contains("_evo") else 4
+
 static func boss_sprite(id: String) -> Texture2D:
 	var sprites: Array = _entry(id).get("sprites", [])
 	for s in sprites:
@@ -4023,8 +4079,8 @@ static func boss_sprite(id: String) -> Texture2D:
 static func hero_ids() -> Array:
 	var ids: Array = HEROES.keys()
 	ids.sort_custom(func(a, b):
-		var ra: int = ["SSR", "SR", "R"].find(HEROES[a]["rarity"])
-		var rb: int = ["SSR", "SR", "R"].find(HEROES[b]["rarity"])
+		var ra: int = -rarity_rank(str(HEROES[a]["rarity"]))
+		var rb: int = -rarity_rank(str(HEROES[b]["rarity"]))
 		return a < b if ra == rb else ra < rb)
 	return ids
 
@@ -4315,8 +4371,8 @@ static func hard_stage(index: int) -> Dictionary:
 	st["first_gems"] = 200 if st["boss"] else 80
 	st["first_items"] = {}
 	var ids: Array = hero_ids()
-	var ssr: Array = ids.filter(func(h): return rarity_of(h) == "SSR")
-	var low: Array = ids.filter(func(h): return rarity_of(h) != "SSR")
+	var ssr: Array = ids.filter(func(h): return rarity_at_least(h, "SSR"))
+	var low: Array = ids.filter(func(h): return not rarity_at_least(h, "SSR"))
 	st["shard_id"] = ssr[ch % ssr.size()] if st["boss"] else low[(index * 7) % low.size()]
 	st["shards"] = 5 if st["boss"] else 4
 	return st

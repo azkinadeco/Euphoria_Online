@@ -79,7 +79,7 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	frame.add_child(shade)
 
 	# holographic sweep across owned SSR cards (Sakura Oath / Brown Dust style)
-	if rarity == "SSR" and owned and not Game.reduce_fx():
+	if DB.rarity_rank(rarity) >= DB.rarity_rank("SSR") and owned and not Game.reduce_fx():
 		var sh := TextureRect.new()
 		var sg := Gradient.new()
 		sg.offsets = PackedFloat32Array([0.0, 0.5, 1.0])
@@ -105,6 +105,9 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 		stw.tween_callback(func(): sh.position.x = -card_size.x)
 		stw.tween_interval(2.6)
 
+	# rarity border + aura (animated for LR / MR / GR / OR); dimmer for heroes not owned yet
+	UI.rarity_frame(self, rarity, 10.0, 2.0 if card_size.x < 100 else 2.5, 6.0 if card_size.x < 100 else 9.0, 1.0 if owned else 0.25)
+
 	var elem := UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(id), "elem_light")), Vector2(24, 24))
 	elem.position = Vector2(5, 5)
 	elem.size = Vector2(24, 24)
@@ -116,7 +119,7 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	var rtag := UI.label(rarity, 11, rc.lightened(0.35), 3)
 	rtag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rchip.add_child(UI.margin(rtag, 5, 0, 5, 0))
-	rchip.position = Vector2(card_size.x - (40 if rarity == "SSR" else 32), 6)
+	rchip.position = Vector2(card_size.x - (24 + 8 * rarity.length()), 6)
 	frame.add_child(rchip)
 
 	# battle role tag under the element icon (TANK / DPS / MAGE / SUP)

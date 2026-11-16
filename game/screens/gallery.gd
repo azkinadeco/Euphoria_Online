@@ -80,19 +80,22 @@ func _build_list() -> void:
 	_grids.clear()
 	for c in _list.get_children():
 		c.queue_free()
-	for tier in ["SSR", "SR", "R"]:
+	var tiers: Array = DB.RARITY_ORDER.duplicate()
+	tiers.reverse()
+	for tier in tiers:
 		var all_ids: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == tier)
 		var ids: Array = all_ids.filter(func(h): return _filter == "ALL" or (_filter == "OWNED") == Game.owns(h))
-		if ids.is_empty():
+		var coming: bool = all_ids.is_empty() and _filter != "OWNED"   # a tier with no heroes yet: one "?" card
+		if ids.is_empty() and not coming:
 			continue
 		ids.sort_custom(func(x, y): return int(Game.owns(x)) > int(Game.owns(y)))
 		var have := all_ids.filter(func(h): return Game.owns(h)).size()
 		var hd := UI.hbox(8)
 		hd.add_child(UI.rarity_tag(tier, 18))
-		var hl := UI.label("%s HEROES" % tier, 16, DB.RARITY_COLOR[tier], 3)
+		var hl := UI.label("%s HEROES" % str(DB.RARITY_NAME[tier]).to_upper(), 16, DB.RARITY_COLOR[tier], 3)
 		hl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		hd.add_child(hl)
-		var hc := UI.label("%d / %d" % [have, all_ids.size()], 13, UI.MUTED, 2)
+		var hc := UI.label("coming soon" if coming else "%d / %d" % [have, all_ids.size()], 13, UI.MUTED, 2)
 		hc.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		hd.add_child(hc)
 		_list.add_child(hd)
@@ -104,7 +107,37 @@ func _build_list() -> void:
 		_grids.append(g)
 		for id in ids:
 			g.add_child(_hero_card(id))
+		if coming:
+			g.add_child(_mystery_card(tier))
 	UI.stagger(_list, 0.02, 20)
+
+## Placeholder for a rarity tier that has no heroes yet.
+func _mystery_card(tier: String) -> Control:
+	var rc: Color = DB.RARITY_COLOR[tier]
+	var fr := Panel.new()
+	fr.custom_minimum_size = Vector2(164, 214)
+	fr.add_theme_stylebox_override("panel", UI.style(Color(0.04, 0.03, 0.08, 1.0), Color(rc, 0.7), 10, 2, 0))
+	fr.tooltip_text = "%s heroes are coming in a future update." % DB.RARITY_NAME[tier]
+	var q := UI.label("?", 84, Color(rc, 0.75), 6)
+	q.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	q.offset_bottom = -40
+	q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	q.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	q.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fr.add_child(q)
+	var cap := UI.vbox(0)
+	cap.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	cap.offset_top = -40
+	cap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fr.add_child(cap)
+	UI.rarity_frame(fr, tier, 10.0, 2.5, 9.0, 0.6)
+	var nm := UI.label("???", 14, UI.MUTED, 3)
+	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cap.add_child(nm)
+	var cl := UI.label("Coming soon", 11, Color(rc, 0.9), 2)
+	cl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cap.add_child(cl)
+	return fr
 
 func _unlocked_count(id: String) -> int:
 	if not Game.owns(id):
@@ -130,8 +163,13 @@ func _hero_card(id: String) -> Control:
 	fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(fr)
-	var t := UI.tex_rect_lazy(DB.tex_loaded(DB.portrait_path(id)), func(): return DB.portrait(id), Vector2.ZERO, true)
+	UI.rarity_frame(b, DB.rarity_of(id), 10.0, 2.5, 9.0, 1.0 if owned else 0.25)
+	# every card shows the hero's main Lv1 art (never an evolution, outfit or battle sprite), whole figure
+	var t := UI.tex_rect_lazy(DB.art_ready(id, 0), func(): return DB.art(id, 0), Vector2.ZERO, false)
 	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	t.offset_left = 4
+	t.offset_top = 4
+	t.offset_right = -4
 	t.offset_bottom = -40
 	if not owned:
 		t.modulate = Color(0.11, 0.09, 0.17)

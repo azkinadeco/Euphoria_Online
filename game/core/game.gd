@@ -868,7 +868,7 @@ func add_hero(id: String) -> Dictionary:
 	s["heroes"][id] = _new_hero(id)
 	return {"new": true, "shards": 0}
 
-const RECRUIT_SHARDS := {"R": 30, "SR": 50, "SSR": 80}
+const RECRUIT_SHARDS := {"N": 20, "R": 30, "SR": 50, "SSR": 80, "UR": 100, "LR": 120, "MR": 150, "GR": 200, "OR": 250}
 
 func recruit_with_shards(id: String) -> String:
 	if owns(id):
@@ -1313,11 +1313,11 @@ func apply_stage_result(index: int, won: bool, stars: int) -> Dictionary:
 			for k in DB.CHAPTER_REWARD.keys():
 				rewards[k] = int(rewards.get(k, 0)) + int(DB.CHAPTER_REWARD[k])
 			rewards["chapter_clear"] = int(st["chapter"]) + 1
-	# Random shard drop for a non-owned or owned R/SR hero
+	# Random shard drop for a hero below SSR
 	if randf() < 0.35:
 		var pool: Array = []
 		for id in DB.HEROES.keys():
-			if DB.rarity_of(id) != "SSR":
+			if not DB.rarity_at_least(id, "SSR"):
 				pool.append(id)
 		rewards["shard:" + str(pool[randi() % pool.size()])] = 2
 	if st["boss"] or randf() < 0.3:
@@ -1386,16 +1386,44 @@ func can_free_pull() -> bool:
 	return int(s["gacha"]["free_day"]) != day_key()
 
 ## How a summon of `count` is paid: tickets first, Gems cover the rest.
-func pull_pay(count: int) -> String:
+func pull_pay(count: int, banner_id: String = "") -> String:
+	if str(banner_of(banner_id).get("cur", "")) == "gold":
+		return "gold"
 	var tk := amount("summon_ticket")
 	return "ticket" if tk >= count else ("mixed" if tk > 0 else "gems")
 
-func pull(banner_id: String, count: int, pay: String) -> Dictionary:
-	var banner: Dictionary = {}
+func banner_of(banner_id: String) -> Dictionary:
 	for b in DB.BANNERS:
 		if b["id"] == banner_id:
-			banner = b
-	if pay == "free":
+			return b
+	return {}
+
+## Rolls one rarity for a banner (its own tiers, or the full table).
+func _roll_rarity(banner: Dictionary) -> String:
+	var rates := DB.gacha_rates(banner.get("tiers", []))
+	var roll := randf()
+	var acc := 0.0
+	var order: Array = DB.RARITY_ORDER.duplicate()
+	order.reverse()   # rarest first, so float rounding can only ever favour the common tier
+	var last := ""
+	for r in order:
+		if rates.has(r):
+			acc += float(rates[r])
+			last = r
+			if roll < acc:
+				return r
+	return last
+
+func pull(banner_id: String, count: int, pay: String) -> Dictionary:
+	var banner: Dictionary = banner_of(banner_id)
+	var normal: bool = banner.has("tiers")   # the Gold banner: no pity, no first-10x guarantee
+	if pay == "gold" or str(banner.get("cur", "")) == "gold":
+		if pay == "free":
+			return {"error": "The free daily summon is for the Gem banners."}
+		pay = "gold"
+		if not spend("gold", int(banner.get("cost", 6000)) * count):
+			return {"error": "Not enough Gold."}
+	elif pay == "free":
 		if not can_free_pull() or count != 1:
 			return {"error": "Free summon already used today."}
 		s["gacha"]["free_day"] = day_key()
@@ -1408,40 +1436,42 @@ func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 			return {"error": "Not enough Gems."}
 		spend("summon_ticket", tk)
 		spend("gems", DB.GACHA_COST * (count - tk))
-	else:
+	elif pay != "gold":
 		if not spend("gems", DB.GACHA_COST * count):
 			return {"error": "Not enough Gems."}
 	var results: Array = []
 	var got_sr := false
+	var sr := DB.rarity_rank("SR")
 	for i in count:
-		s["gacha"]["pity"] = int(s["gacha"]["pity"]) + 1
-		var roll := randf()
-		var rarity := "R"
-		if int(s["gacha"]["pity"]) >= DB.GACHA_PITY or roll < DB.GACHA_RATES["SSR"]:
-			rarity = "SSR"
-		elif roll < DB.GACHA_RATES["SSR"] + DB.GACHA_RATES["SR"]:
+		var rarity := _roll_rarity(banner)
+		if not normal:
+			s["gacha"]["pity"] = int(s["gacha"]["pity"]) + 1
+			if int(s["gacha"]["pity"]) >= DB.GACHA_PITY and DB.rarity_rank(rarity) < DB.rarity_rank(DB.PITY_RARITY):
+				rarity = DB.PITY_RARITY
+			# the first 10x guarantees a top hero
+			if count >= 10 and i == count - 1 and not bool(s["gacha"].get("first10_done", false)) \
+					and not results.any(func(x): return DB.rarity_rank(x["rarity"]) >= DB.rarity_rank(DB.FIRST10_RARITY)) \
+					and DB.rarity_rank(rarity) < DB.rarity_rank(DB.FIRST10_RARITY):
+				rarity = DB.FIRST10_RARITY
+		# every 10x brings at least one SR or better
+		if count >= 10 and i == count - 1 and not got_sr and DB.rarity_rank(rarity) < sr:
 			rarity = "SR"
-		if count >= 10 and i == count - 1 and not got_sr and rarity == "R":
-			rarity = "SR"
-		if count >= 10 and i == count - 1 and not bool(s["gacha"].get("first10_done", false)) and not results.any(func(x): return x["rarity"] == "SSR") and rarity != "SSR":
-			rarity = "SSR"
-		if rarity != "R":
+		if DB.rarity_rank(rarity) >= sr:
 			got_sr = true
-		if rarity == "SSR":
+		if not normal and DB.rarity_rank(rarity) >= DB.rarity_rank(DB.PITY_RARITY):
 			s["gacha"]["pity"] = 0
-		var pool: Array = []
-		for id in DB.HEROES.keys():
-			if DB.rarity_of(id) == rarity:
-				pool.append(id)
+		var pool: Array = DB.heroes_of_rarity(rarity)
 		var id: String = pool[randi() % pool.size()]
-		# rate-up: half of the pulls of the featured hero's rarity become her (SSR banners and SR/R pick-ups)
+		# rate-up: half of the pulls of the featured hero's rarity become her
 		if str(banner.get("featured", "")) != "" and DB.rarity_of(str(banner["featured"])) == rarity and randf() < 0.5:
 			id = banner["featured"]
-		# wishlist: on the Standard banner half of the SSR pulls come from the player's picks
+		# wishlist (Standard banner): half of the pulls of a wished hero's tier come from the picks of that tier
 		var wished := false
-		if str(banner.get("featured", "")) == "" and rarity == "SSR" and not wishlist().is_empty() and randf() < DB.WISH_RATE:
-			id = wishlist()[randi() % wishlist().size()]
-			wished = true
+		if banner_id == "standard":
+			var wl: Array = wishlist().filter(func(w): return DB.rarity_of(w) == rarity)
+			if not wl.is_empty() and randf() < DB.WISH_RATE:
+				id = wl[randi() % wl.size()]
+				wished = true
 		var res := add_hero(id)
 		res["id"] = id
 		res["rarity"] = rarity
@@ -1456,10 +1486,10 @@ func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 		if hist.size() > 100:
 			hist.resize(100)
 		s["gacha"]["history"] = hist
-	if count >= 10:
+	if count >= 10 and not normal:
 		s["gacha"]["first10_done"] = true
 	s["gacha"]["total"] = int(s["gacha"]["total"]) + count
-	stat_add("ssr_pulled", results.filter(func(x): return x["rarity"] == "SSR").size())
+	stat_add("ssr_pulled", results.filter(func(x): return DB.rarity_rank(x["rarity"]) >= DB.rarity_rank("SSR")).size())
 	for i in count:
 		quest_progress("summon")
 	mark_dirty()
@@ -1469,12 +1499,12 @@ func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 ## SSR heroes picked for the Standard banner (ids that no longer exist are dropped).
 func wishlist() -> Array:
 	var w: Array = s["gacha"].get("wish", [])
-	return w.filter(func(id): return DB.HEROES.has(id) and DB.rarity_of(id) == "SSR")
+	return w.filter(func(id): return DB.HEROES.has(id) and DB.rarity_at_least(id, DB.WISH_MIN_RARITY))
 
 ## Adds or removes a hero from the wishlist. Returns "" or an error text.
 func toggle_wish(id: String) -> String:
-	if not DB.HEROES.has(id) or DB.rarity_of(id) != "SSR":
-		return "Only SSR heroes can be wished for."
+	if not DB.HEROES.has(id) or not DB.rarity_at_least(id, DB.WISH_MIN_RARITY):
+		return "Only SSR or rarer heroes can be wished for."
 	var w := wishlist()
 	if w.has(id):
 		w.erase(id)
@@ -4129,10 +4159,19 @@ func avatar_id() -> String:
 	var a := str(s["player"].get("avatar", ""))
 	return a if owns(a) else str(s["lobby_hero"])
 
-func set_avatar(id: String) -> void:
+func set_avatar(id: String, form: int = 0) -> void:
 	if owns(id):
 		s["player"]["avatar"] = id
+		s["player"]["avatar_form"] = form if sprite_form_unlocked(id, form) else 0
 		mark_dirty()
+
+func sprite_form_unlocked(id: String, form: int) -> bool:
+	return form == 0 or (owns(id) and int(hero(id).get("star", 1)) >= DB.sprite_form_star(id, form))
+
+## Sprite form shown on the Commander avatar (0 = the hero's Lv1 sprite).
+func avatar_form() -> int:
+	var f := int(s["player"].get("avatar_form", 0))
+	return f if sprite_form_unlocked(avatar_id(), f) else 0
 
 func rename(n: String) -> String:
 	n = n.strip_edges()

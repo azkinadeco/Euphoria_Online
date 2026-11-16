@@ -111,7 +111,7 @@ func _profile(parent: Control) -> void:
 	p.add_child(v)
 	var top := UI.hbox(12)
 	v.add_child(top)
-	var av := UI.avatar(Game.avatar_id(), 84)
+	var av := UI.my_avatar(84)
 	top.add_child(av)
 	var nv := UI.vbox(2)
 	nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL

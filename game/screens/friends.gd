@@ -24,7 +24,7 @@ func build() -> void:
 	lp.add_child(lv)
 	var me := UI.hbox(10)
 	lv.add_child(me)
-	me.add_child(_avatar(Game.avatar_id(), 60, Color("#ffcf5a"), true))
+	me.add_child(UI.my_avatar(60, Color("#ffcf5a"), 2))
 	var mv := UI.vbox(1)
 	mv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	me.add_child(mv)

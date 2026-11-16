@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16t",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Nine Hero Rarities & New Summon Hall",
+  "body": "Heroes now come in nine rarities: N, R, SR, SSR, UR, Legend (LR), Mythic (MR), God (GR) and Void (OR). Each has its own border and aura: grey, blue, purple, gold, red, a rainbow ring for Legend, magenta-red for Mythic, white hologram for God and cosmic black for Void.\n\nSummon rates: N 30%, R 25%, SR 20%, SSR 10%, UR 5%, LR 3%, MR 1%. God and Void heroes are coming in a future update; until then their share goes to N.\n\nThe Summon hall now has four banners: Morana Rate-Up, Tamo Rate-Up, the Standard Summon (every hero) and the new Normal Summon (N to SSR heroes for 6,000 Gold). Pity now guarantees a Legend or better at 80 summons, and the first 10x guarantees UR or better.\n\nThe Gallery shows every hero in her main Lv1 art, sorted by rarity, with a mystery card for the tiers still to come. Your Commander avatar starts in the hero's Lv1 sprite; forms open at 4★ and evolutions at 5★ (Profile → AVATAR → FORM)."
+ },
+ {
   "id": "n2026-11-16s",
   "date": "2026-11-16",
   "tag": "UPDATE",

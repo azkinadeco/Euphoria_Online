@@ -174,6 +174,8 @@ func build() -> void:
 	_build_goal()
 	move_child(_bubble, -1)
 	refresh()
+	if params.get("profile", false):
+		_open_profile.call_deferred()   # avatar picker: back on the AVATAR tab after the header avatar changed
 	if not params.get("intro", false):
 		var hid0: String = Game.s["lobby_hero"]
 		get_tree().create_timer(0.4).timeout.connect(func():
@@ -188,7 +190,7 @@ func _build_top_bar() -> void:
 	add_child(p)
 	var h := UI.hbox(10)
 	p.add_child(h)
-	var av := UI.avatar(Game.avatar_id(), 64)
+	var av := UI.my_avatar(64)
 	av.mouse_filter = Control.MOUSE_FILTER_STOP
 	av.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	av.tooltip_text = "Commander Profile"
@@ -1030,7 +1032,7 @@ func _open_profile() -> void:
 	h.add_child(left)
 	var top := UI.hbox(12)
 	left.add_child(top)
-	var av := UI.avatar(Game.avatar_id(), 112, UI.GOLD, 3)
+	var av := UI.my_avatar(112, UI.GOLD, 3)
 	top.add_child(av)
 	var idv := UI.vbox(4)
 	top.add_child(idv)
@@ -1160,7 +1162,42 @@ func _open_profile() -> void:
 		UI.stagger(box)
 	else:
 		# every choice is shown exactly as it will look: full-body sprite in the avatar frame
-		box.add_child(UI.label("Pick the hero shown as your Commander avatar.", 12, UI.MUTED))
+		box.add_child(UI.wrap_label("Pick the hero shown as your Commander avatar. Heroes start in their Lv1 sprite; later forms open at 4★ and evolutions at 5★.", 12, UI.MUTED))
+		# forms of the current avatar hero
+		var cur_id := Game.avatar_id()
+		var forms := DB.sprite_forms(cur_id)
+		if forms.size() > 1:
+			var fr := UI.hbox(8)
+			fr.add_child(UI.label("FORM", 13, UI.GOLD, 2))
+			for fi in forms.size():
+				var f_i: int = fi
+				var open := Game.sprite_form_unlocked(cur_id, f_i)
+				var sel := f_i == Game.avatar_form()
+				var ft := Button.new()
+				ft.theme_type_variation = "FlatButton"
+				ft.focus_mode = Control.FOCUS_NONE
+				ft.custom_minimum_size = Vector2(70, 84)
+				ft.disabled = not open
+				var fv := UI.vbox(1)
+				fv.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+				fv.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				ft.add_child(fv)
+				var fa := UI.avatar(cur_id, 64, UI.GOLD if sel else Color("#5b4790"), 3 if sel else 1, f_i)
+				if not open:
+					fa.modulate = Color(0.35, 0.33, 0.42)
+				fv.add_child(fa)
+				var fname := "Lv1" if f_i == 0 else ("EVO" if str(forms[f_i]).contains("_evo") else "Lv%d" % (f_i + 1))
+				var fl := UI.label(fname if open else "%d★" % DB.sprite_form_star(cur_id, f_i), 11, UI.GOLD if sel else (UI.TEXT if open else UI.MUTED), 2)
+				fl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				fv.add_child(fl)
+				ft.tooltip_text = "" if open else "Reach %d★ to unlock this form." % DB.sprite_form_star(cur_id, f_i)
+				ft.pressed.connect(func():
+					Game.sfx("ui_click")
+					Game.set_avatar(cur_id, f_i)
+					main.close_popup(v)
+					main.replace("lobby"))
+				fr.add_child(ft)
+			box.add_child(fr)
 		var ag := HFlowContainer.new()
 		ag.add_theme_constant_override("h_separation", 10)
 		ag.add_theme_constant_override("v_separation", 10)
@@ -1177,7 +1214,7 @@ func _open_profile() -> void:
 			tv.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			tv.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			tile.add_child(tv)
-			tv.add_child(UI.avatar(hid, 82, UI.GOLD if cur else Color("#5b4790"), 3 if cur else 1))
+			tv.add_child(UI.avatar(hid, 82, UI.GOLD if cur else Color("#5b4790"), 3 if cur else 1, Game.avatar_form() if cur else 0))
 			var nl := UI.label(DB.name_of(hid).split(" ")[0], 12, UI.GOLD if cur else UI.TEXT, 2)
 			nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			nl.clip_text = true
@@ -1185,9 +1222,11 @@ func _open_profile() -> void:
 			tv.add_child(nl)
 			tile.pressed.connect(func():
 				Game.sfx("ui_click")
-				Game.set_avatar(hid)
+				var keep: int = Game.avatar_form() if hid == Game.avatar_id() else 0
+				Game.set_avatar(hid, keep)
+				_prof_tab = "avatar"
 				main.close_popup(v)
-				main.replace("lobby"))
+				main.replace("lobby", {"profile": true}))
 			ag.add_child(tile)
 
 ## Hairly the fortune teller (animated pivot-rig NPC): one tarot card per day.

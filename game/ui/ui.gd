@@ -547,6 +547,39 @@ static func stars(n: int, size: int = 16, max_n: int = 0) -> Label:
 	var l := label(t, size, GOLD, 3)
 	return l
 
+const RARITY_FRAME_MODE := {"LR": 1, "GR": 2, "OR": 3, "MR": 4}
+const RARITY_AURA := {"N": 0.0, "R": 0.15, "SR": 0.3, "SSR": 0.45, "UR": 0.55, "LR": 0.7, "MR": 0.75, "GR": 0.85, "OR": 0.9}
+static var _rarity_shader: Shader
+
+## Rarity border + aura around `card` (game/ui/rarity_frame.gdshader): solid for N..UR, animated rainbow (LR),
+## magenta-red (MR), white hologram (GR) and cosmic black (OR). Added as the card's child, `pad` px outside it.
+static func rarity_frame(card: Control, rarity: String, radius: float = 10.0, width: float = 2.0, pad: float = 9.0, aura_scale: float = 1.0) -> ColorRect:
+	if _rarity_shader == null:
+		_rarity_shader = load("res://game/ui/rarity_frame.gdshader")
+	var r := ColorRect.new()
+	r.name = "rarity_frame"
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	r.set_anchors_preset(Control.PRESET_FULL_RECT)
+	r.offset_left = -pad
+	r.offset_top = -pad
+	r.offset_right = pad
+	r.offset_bottom = pad
+	var m := ShaderMaterial.new()
+	m.shader = _rarity_shader
+	m.set_shader_parameter("pad", pad)
+	m.set_shader_parameter("radius", radius)
+	m.set_shader_parameter("width", width)
+	m.set_shader_parameter("base_color", DB.RARITY_COLOR.get(rarity, ACCENT))
+	m.set_shader_parameter("mode", int(RARITY_FRAME_MODE.get(rarity, 0)))
+	m.set_shader_parameter("aura", float(RARITY_AURA.get(rarity, 0.2)) * aura_scale)
+	m.set_shader_parameter("speed", 0.0 if Game.reduce_fx() else 1.0)
+	r.material = m
+	var sync := func(): m.set_shader_parameter("rect_size", r.size)
+	r.resized.connect(sync)
+	card.add_child(r)
+	sync.call()
+	return r
+
 static func rarity_tag(rarity: String, size: int = 14) -> PanelContainer:
 	var c: Color = DB.RARITY_COLOR.get(rarity, ACCENT)
 	var p := styled_panel(c.darkened(0.55), c, 6, 2, 6)
@@ -885,7 +918,12 @@ static func scrim(from_top: bool, height: float, alpha: float = 0.8, tint: Color
 ## One avatar look for the whole game: the hero's full-body battle sprite on a soft backdrop in her colour,
 ## inside a rounded frame. (Avatars used to be face crops of the illustration, which came out differently
 ## for every hero: some a face, some a shoulder, some half a wing.) Heroes without a sprite fall back to the face.
-static func avatar(id: String, sz: float, ring: Color = GOLD, ring_w: int = 2) -> Control:
+## The player's own Commander avatar (their chosen hero and sprite form).
+static func my_avatar(sz: float, ring: Color = GOLD, ring_w: int = 2) -> Control:
+	return avatar(Game.avatar_id(), sz, ring, ring_w, Game.avatar_form())
+
+## `form` >= 0 picks one of DB.sprite_forms(id) (0 = Lv1); -1 follows the hero's stars and outfit.
+static func avatar(id: String, sz: float, ring: Color = GOLD, ring_w: int = 2, form: int = -1) -> Control:
 	var c := Control.new()
 	c.custom_minimum_size = Vector2(sz, sz)
 	c.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -922,6 +960,10 @@ static func avatar(id: String, sz: float, ring: Color = GOLD, ring_w: int = 2) -
 		star = int(Game.hero(id).get("star", 1))
 		skin = int(Game.hero(id).get("skin", 0))
 	var sp: Texture2D = DB.sprite(id, star, skin)
+	if form >= 0:
+		var fl := DB.sprite_forms(id)
+		if not fl.is_empty():
+			sp = DB.tex(str(fl[clampi(form, 0, fl.size() - 1)]))
 	var pic: TextureRect
 	if sp != null:
 		pic = tex_rect(sp)          # whole body, aspect kept

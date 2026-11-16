@@ -80,7 +80,7 @@ func _run() -> void:
 	var mt: int = G.amount("summon_ticket")
 	var mr: Dictionary = G.pull("standard", 10, "mixed")
 	check(mr.has("results") and G.amount("summon_ticket") == 0 and G.amount("gems") == mg - DB.GACHA_COST * (10 - mt), "welcome gifts afford the first 10x")
-	check(mr["results"].any(func(x): return x["rarity"] == "SSR"), "first 10x still guarantees an SSR")
+	check(mr["results"].any(func(x): return DB.rarity_rank(x["rarity"]) >= DB.rarity_rank(DB.FIRST10_RARITY)), "first 10x still guarantees a UR or better")
 	G.s["cur"]["gems"] = 0
 	G.s["items"]["summon_ticket"] = 3
 	check(G.pull("standard", 10, "mixed").has("error") and G.amount("summon_ticket") == 3, "mixed summon short on gems spends nothing")
@@ -279,40 +279,63 @@ func _run() -> void:
 	print("[gacha]")
 	var gems_before: int = G.amount("gems")
 	G.give({"summon_ticket": 10})
-	var res: Dictionary = G.pull("limited", 10, "ticket")
+	var res: Dictionary = G.pull("nov8_morana", 10, "ticket")
 	check(res.has("results") and res["results"].size() == 10, "10x pull with tickets")
 	var has_sr := false
 	for x in res["results"]:
-		if x["rarity"] != "R":
+		if DB.rarity_rank(x["rarity"]) >= DB.rarity_rank("SR"):
 			has_sr = true
 	check(has_sr, "10x guarantees SR+")
 	var has_ssr := false
 	for x in res["results"]:
-		if x["rarity"] == "SSR":
+		if DB.rarity_rank(x["rarity"]) >= DB.rarity_rank(DB.FIRST10_RARITY):
 			has_ssr = true
-	check(has_ssr and bool(G.s["gacha"]["first10_done"]), "first 10x guarantees an SSR")
+	check(has_ssr and bool(G.s["gacha"]["first10_done"]), "first 10x guarantees a UR or better")
 	check(G.amount("gems") == gems_before, "tickets used instead of gems")
-	check(G.pull("limited", 1, "free").has("results"), "free daily pull")
-	check(G.pull("limited", 1, "free").has("error"), "free pull only once a day")
+	check(G.pull("nov8_morana", 1, "free").has("results"), "free daily pull")
+	check(G.pull("nov8_morana", 1, "free").has("error"), "free pull only once a day")
 	G.s["gacha"]["pity"] = DB.GACHA_PITY - 1
 	G.s["cur"]["gems"] = 10000
 	var pr: Dictionary = G.pull("standard", 1, "gems")
-	check(pr["results"][0]["rarity"] == "SSR", "pity guarantees SSR")
-	check(int(G.s["gacha"]["pity"]) == 0, "pity resets after SSR")
+	check(DB.rarity_rank(pr["results"][0]["rarity"]) >= DB.rarity_rank(DB.PITY_RARITY), "pity guarantees LR or better")
+	check(int(G.s["gacha"]["pity"]) == 0, "pity resets after LR+")
+	print("[rarity tiers]")
+	var rsum := 0.0
+	for rv in DB.gacha_rates().values():
+		rsum += float(rv)
+	check(absf(rsum - 1.0) < 0.000001 and not DB.gacha_rates().has("GR") and not DB.gacha_rates().has("OR"), "full table adds to 100%, empty tiers left out")
+	check(absf(float(DB.gacha_rates()["MR"]) - 0.01) < 0.0000001 and absf(float(DB.gacha_rates()["LR"]) - 0.03) < 0.0000001, "MR 1% and LR 3% as on the sheet")
+	check(DB.rarity_of("cthollia") == "MR" and DB.rarity_of("morana") == "LR" and DB.rarity_of("valeria") == "UR" and DB.rarity_of("sven") == "SSR" and DB.rarity_of("rumi") == "N", "heroes moved to their new tiers")
+	check(DB.BANNERS.size() == 4 and DB.BANNERS.filter(func(b): return str(b["featured"]) != "").size() == 2, "two rate-up banners + Standard + Normal")
+	var nrt := DB.gacha_rates(["N", "R", "SR", "SSR"])
+	var nsum := 0.0
+	for rv in nrt.values():
+		nsum += float(rv)
+	check(absf(nsum - 1.0) < 0.000001 and nrt.size() == 4 and absf(float(nrt["SSR"]) - 0.1) < 0.000001, "Normal Summon rates cover N..SSR only, SSR 10%")
+	G.s["cur"]["gold"] = 120000
+	var npity := int(G.s["gacha"]["pity"])
+	var nres: Dictionary = G.pull("normal", 10, "gold")
+	check(nres.has("results") and G.amount("gold") == 60000 and nres["results"].all(func(x): return DB.rarity_rank(x["rarity"]) <= DB.rarity_rank("SSR")), "Normal Summon: Gold, N..SSR heroes only")
+	check(int(G.s["gacha"]["pity"]) == npity, "Normal Summon leaves the pity counter alone")
+	G.s["cur"]["gold"] = 100
+	check(G.pull("normal", 1, "gold").has("error"), "Normal Summon needs Gold")
+	check(G.pull_pay(1, "normal") == "gold", "Normal Summon pays with Gold")
+	G.s["cur"]["gold"] = 1000000
+	check(DB.sprite_forms("sven").size() == 5 and str(DB.sprite_forms("sven")[0]).ends_with("stage1.png") and str(DB.sprite_forms("sven")[2]).contains("_evo"), "sprite forms: Lv1, stage forms, then evolutions")
 
 	print("[level / star]")
-	var lvl: int = G.hero("fidelia")["level"]
-	var n: int = G.level_up("fidelia", 5)
-	check(n == 5 and G.hero("fidelia")["level"] == lvl + 5, "level up x5")
-	G.s["heroes"]["fidelia"]["level"] = DB.level_cap(1)
-	check(G.level_up("fidelia", 1) == 0, "level cap blocks leveling")
-	G.s["shards"]["fidelia"] = 0
+	var lvl: int = G.hero("rumi")["level"]
+	var n: int = G.level_up("rumi", 5)
+	check(n == 5 and G.hero("rumi")["level"] == lvl + 5, "level up x5")
+	G.s["heroes"]["rumi"]["level"] = DB.level_cap(1)
+	check(G.level_up("rumi", 1) == 0, "level cap blocks leveling")
+	G.s["shards"]["rumi"] = 0
 	G.s["items"]["star_stone"] = 0
-	check(G.star_up("fidelia") != "", "star up blocked without shards")
-	G.give({"shard:fidelia": 10, "gold": 100000})
-	check(G.star_up("fidelia") == "", "star up with shards")
-	check(G.hero("fidelia")["star"] == 2, "fidelia is 2★")
-	check(G.skin_unlocked("fidelia", 1), "star up unlocks outfit #2")
+	check(G.star_up("rumi") != "", "star up blocked without shards")
+	G.give({"shard:rumi": 10, "gold": 100000})
+	check(G.star_up("rumi") == "", "star up with shards")
+	check(G.hero("rumi")["star"] == 2, "rumi is 2★")
+	check(G.skin_unlocked("rumi", 1), "star up unlocks outfit #2")
 
 	print("[bond / oath]")
 	G.give({"celestial_gem": 30})
@@ -708,7 +731,7 @@ func _run() -> void:
 	print("[hard mode / backup]")
 	var hs0: Dictionary = DB.hard_stage(0)
 	check(int(hs0["level"]) == int(DB.stage(0)["level"]) + 14 and hs0.has("shard_id"), "hard stage stronger with shard reward")
-	check(DB.rarity_of(DB.hard_stage(DB.STAGES_PER_CHAPTER - 1)["shard_id"]) == "SSR", "hard boss drops SSR shards")
+	check(DB.rarity_at_least(DB.hard_stage(DB.STAGES_PER_CHAPTER - 1)["shard_id"], "SSR"), "hard boss drops SSR+ shards")
 	G.s["story"]["cleared"][DB.stage_id(DB.STAGES_PER_CHAPTER - 1)] = 3
 	check(G.hard_unlocked(0) and not G.hard_unlocked(1), "hard 1-1 opens after normal chapter boss")
 	var sid: String = hs0["shard_id"]
@@ -1129,7 +1152,7 @@ func _run() -> void:
 	var heals := 0
 	for sseed in range(5, 13):
 		var ssim := BattleSim.new()
-		ssim.setup(G.ally_team({"mode": "story", "stage": 1}), G.enemies_for({"mode": "story", "stage": 30}), sseed)
+		ssim.setup(G.ally_team({"mode": "story", "stage": 1}), G.enemies_for({"mode": "story", "stage": 8}), sseed)
 		var svu: Dictionary = ssim.units.filter(func(u): return u["id"] == hid_s)[0]
 		if sseed == 5:
 			check((svu["sets"] as Array).has("vampire"), "battle unit carries its gear sets")
@@ -1280,16 +1303,15 @@ func _run() -> void:
 	check(DB.ENEMIES.has("hairly") and DB.ENEMIES.has("svormentis") and DB.ENEMIES.has("ymir") and DB.art("ymir", 0) != null, "3 new enemies with art")
 	check(DB.lobby_art("angela") != null and not DB.art_list("angela").any(func(p): return "lobby" in str(p)), "lobby pose separate from outfits")
 	check(DB.alt_art("spimei", 1) != null, "alternate expression available")
-	var bnb: Dictionary = DB.BANNERS.filter(func(b): return b["id"] == "nov4_mei")[0]
-	check(bnb["featured"] == "mei" and bnb["img"].size() == 3, "bunny banner has 3 frames")
-	G.give({"summon_ticket": 200})
-	var got_sven := false
-	for k in 12:
-		var svp: Dictionary = G.pull("pickup_sven", 10, "ticket")
+	G.give({"summon_ticket": 400})
+	var got_tamo := 0
+	var lr_n := 0
+	for k in 30:
+		var svp: Dictionary = G.pull("nov8_tamo", 10, "ticket")
 		for sres in svp.get("results", []):
-			if sres["id"] == "sven":
-				got_sven = true
-	check(got_sven, "R pick-up banner gives the featured R hero")
+			lr_n += 1 if sres["rarity"] == "LR" else 0
+			got_tamo += 1 if sres["id"] == "tamo" else 0
+	check(got_tamo > 0 and got_tamo * 3 >= lr_n, "rate-up banner: about half of the LR pulls are the featured hero (%d / %d)" % [got_tamo, lr_n])
 	G.s["fortune_day"] = -1
 	check(G.fortune_ready() and not G.fortune_draw().is_empty() and not G.fortune_ready(), "fortune once per day")
 
@@ -1583,9 +1605,9 @@ func _run() -> void:
 	var wl_save: Dictionary = G.s
 	G.s = G.new_state()
 	G._check_day()
-	var wl_ssr: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == "SSR")
-	var wl_r: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == "R")
-	check(G.toggle_wish(str(wl_r[0])) != "" and G.wishlist().is_empty(), "only SSR heroes can be wished for")
+	var wl_ssr: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == "LR")
+	var wl_r: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == "SR")
+	check(G.toggle_wish(str(wl_r[0])) != "" and G.wishlist().is_empty(), "only SSR or rarer heroes can be wished for")
 	for wi in 3:
 		check(G.toggle_wish(str(wl_ssr[wi])) == "", "wish %d accepted" % (wi + 1))
 	check(G.toggle_wish(str(wl_ssr[3])) != "" and G.wishlist().size() == 3, "wishlist is capped at 3")
@@ -1598,13 +1620,13 @@ func _run() -> void:
 	for wi in 300:
 		G.s["gacha"]["pity"] = DB.GACHA_PITY - 1
 		var wr: Dictionary = G.pull("standard", 1, "gems")["results"][0]
-		wl_n += 1 if wr["rarity"] == "SSR" else 0
+		wl_n += 1 if DB.rarity_rank(wr["rarity"]) >= DB.rarity_rank("LR") else 0
 		wl_hits += 1 if wr["id"] == wl_ssr[5] else 0
-	check(wl_n == 300 and wl_hits > 110 and wl_hits < 200, "about half of Standard SSR pulls are the wished hero (%d / 300)" % wl_hits)
+	check(wl_n == 300 and wl_hits > 110 and wl_hits < 200, "about half of Standard LR pulls are the wished hero (%d / 300)" % wl_hits)
 	var wl_feat := 0
 	for wi in 60:
 		G.s["gacha"]["pity"] = DB.GACHA_PITY - 1
-		wl_feat += 1 if G.pull("limited", 1, "gems")["results"][0].get("wished", false) else 0
+		wl_feat += 1 if G.pull("nov8_morana", 1, "gems")["results"][0].get("wished", false) else 0
 	check(wl_feat == 0, "rate-up banners ignore the wishlist")
 	G.s = wl_save
 

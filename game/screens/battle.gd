@@ -626,7 +626,7 @@ func _play_action(e: Dictionary, group: Array) -> void:
 		board.highlights = hl
 		var me := _unit_center(v)
 		_fx.aura(me + Vector2(0, v.size.y * 0.3), Color("#ffcf4a") if int(u.get("awaken", 0)) >= 5 else ec, v.size.x * (0.75 if int(u.get("awaken", 0)) >= 5 else 0.55))
-		var ult: bool = u["side"] == 0 and not u["boss"] and DB.rarity_of(u["id"]) == "SSR" and not _ult_seen.has(u["id"])
+		var ult: bool = u["side"] == 0 and not u["boss"] and DB.rarity_at_least(u["id"], "SSR") and not _ult_seen.has(u["id"])
 		if not bool(Game.s["settings"].get("skip_cutin", false)) and (ult or u["boss"] or shape in ["all", "square", "x"]):
 			var cd := _ultimate(u) if ult else (0.7 if _cut_in(u) else 0.0)
 			if cd > 0.0:

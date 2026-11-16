@@ -427,7 +427,7 @@ func _render_ranking() -> void:
 		var rl := UI.label("#%d" % (i + 1), 17, Color.WHITE, 3)
 		rl.custom_minimum_size = Vector2(46, 0)
 		rh.add_child(rl)
-		rh.add_child(UI.avatar(Game.avatar_id() if me else str(e["hero"]), 36, UI.GREEN if me else DB.RARITY_COLOR[DB.rarity_of(str(e["hero"]))], 2 if me else 1))   # player avatar
+		rh.add_child(UI.my_avatar(36, UI.GREEN, 2) if me else UI.avatar(str(e["hero"]), 36, DB.RARITY_COLOR[DB.rarity_of(str(e["hero"]))], 1))   # player avatar
 		var nl := UI.label(str(e["name"]) + ("  (You)" if me else ""), 16, UI.GREEN if me else Color.WHITE, 2)
 		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		rh.add_child(nl)
