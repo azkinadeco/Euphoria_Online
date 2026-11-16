@@ -154,64 +154,6 @@ body {
 	pointer-events: none;
 }
 
-#ld-caption {
-	position: absolute;
-	left: max(calc(var(--lw) * 0.05), env(safe-area-inset-left, 0px));
-	top: 46%;
-	width: calc(var(--lw) * 0.42);
-	max-width: 560px;
-	transform: translateY(-50%);
-	opacity: 0;
-	transition: opacity 0.7s ease;
-	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
-	pointer-events: none;
-}
-
-#ld-caption.on {
-	opacity: 1;
-}
-
-#ld-elem {
-	display: inline-block;
-	padding: 3px 12px;
-	border-radius: 20px;
-	border: 1px solid currentColor;
-	background: rgba(7, 4, 14, 0.55);
-	font-size: clamp(9px, calc(var(--lh) * 0.019), 12px);
-	font-weight: 700;
-	letter-spacing: 2px;
-	text-shadow: none;
-}
-
-#ld-name {
-	margin-top: calc(var(--lh) * 0.01);
-	font-family: Georgia, "Times New Roman", serif;
-	font-size: clamp(24px, calc(var(--lh) * 0.084), 58px);
-	font-weight: 700;
-	line-height: 1.05;
-	color: #fff4d6;
-	letter-spacing: 1px;
-}
-
-#ld-title {
-	margin-top: calc(var(--lh) * 0.006);
-	font-size: clamp(9px, calc(var(--lh) * 0.021), 14px);
-	font-weight: 700;
-	letter-spacing: 3px;
-	color: #e8be62;
-}
-
-#ld-quote {
-	margin-top: calc(var(--lh) * 0.018000000000000002);
-	padding-left: 12px;
-	border-left: 2px solid rgba(232, 190, 98, 0.8);
-	font-family: Georgia, "Times New Roman", serif;
-	font-style: italic;
-	font-size: clamp(11px, calc(var(--lh) * 0.028999999999999998), 18px);
-	line-height: 1.4;
-	color: #efe6ff;
-}
-
 #status-container {
 	position: absolute;
 	left: 0;
@@ -371,12 +313,7 @@ html.short .ld-foot {
 	display: none;
 }
 
-html.short #ld-caption {
-	top: 42%;
-}
-
 /* an error box is showing: clear the middle of the screen for it */
-#status.has-error #ld-caption,
 #status.has-error #status-tip,
 #status.has-error .ld-foot {
 	display: none;
@@ -386,23 +323,21 @@ html.short #ld-caption {
 #ld-enter {
 	display: none;
 	margin: calc(var(--lh) * 0.03) auto 0;
-	padding: 0.7em 2.6em;
-	border: 1px solid #ffe3a0;
-	border-radius: 40px;
-	background: linear-gradient(#ffd77a, #e09a2c);
-	color: #3a1d05;
-	font-family: Georgia, "Times New Roman", serif;
-	font-size: clamp(15px, calc(var(--lh) * 0.045), 22px);
-	font-weight: 700;
-	letter-spacing: 2px;
+	padding: 6px 14px;
+	border: 0;
+	background: none;
+	color: rgba(255, 238, 200, 0.82);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	font-size: clamp(10px, calc(var(--lh) * 0.026), 13px);
+	font-weight: 500;
+	letter-spacing: 3px;
 	cursor: pointer;
-	box-shadow: 0 0 22px rgba(255, 200, 110, 0.55);
-	animation: ld-breathe 1.6s ease-in-out infinite;
+	animation: ld-blink 2.2s ease-in-out infinite;
 }
 
-@keyframes ld-breathe {
-	0%, 100% { transform: scale(1); box-shadow: 0 0 16px rgba(255, 200, 110, 0.45); }
-	50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 210, 130, 0.85); }
+@keyframes ld-blink {
+	0%, 100% { opacity: 0.35; }
+	50% { opacity: 0.95; }
 }
 
 #ld-ios {
@@ -487,6 +422,24 @@ function eoFit() {
 	de.style.setProperty('--lh', lh + 'px');
 }
 eoFit();
+// Screen refresh rate (Hz), measured from animation frames; the game picks a frame cap that divides it
+// evenly (Game.frame_cap_for), so a 90 Hz phone does not judder at 60 fps.
+(function () {
+	let n = 0;
+	let t0 = 0;
+	function tick(t) {
+		if (n === 0) {
+			t0 = t;
+		}
+		n++;
+		if (n < 61) {
+			requestAnimationFrame(tick);
+		} else {
+			window.__eoHz = Math.round(60000 / (t - t0));
+		}
+	}
+	requestAnimationFrame(tick);
+}());
 window.addEventListener('resize', eoFit);
 if (window.visualViewport) {
 	window.visualViewport.addEventListener('resize', eoFit);
@@ -517,12 +470,6 @@ window.addEventListener('orientationchange', function () { setTimeout(eoFit, 60)
 			<img id="ld-hero" alt="">
 			<div class="ld-shade"></div>
 			<img id="ld-logo" src="loading/logo.webp" alt="Euphoria Online" onerror="this.style.display='none'">
-			<div id="ld-caption">
-				<span id="ld-elem"></span>
-				<div id="ld-name"></div>
-				<div id="ld-title"></div>
-				<div id="ld-quote"></div>
-			</div>
 			<div id="status-container">
 				<div class="ld-panel">
 					<div class="ld-row">
@@ -532,11 +479,10 @@ window.addEventListener('orientationchange', function () { setTimeout(eoFit, 60)
 					<div id="status-progress" class="busy"><div id="status-fill"></div></div>
 					<div id="status-detail">Memuat data game...</div>
 					<div id="status-tip"></div>
-					<button id="ld-enter" type="button">KETUK UNTUK MASUK</button>
+					<button id="ld-enter" type="button">ketuk untuk masuk</button>
 					<div id="ld-ios">Layar penuh di iPhone: tombol Bagikan → <b>Tambahkan ke Layar Utama</b>, lalu buka dari ikonnya.</div>
 					<div class="ld-foot">
 						<span id="ld-dots"></span>
-						<span id="ld-hint">Ketuk layar untuk ganti hero</span>
 					</div>
 				</div>
 			</div>
@@ -804,7 +750,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // serviceWorker dimatikan: Safari iOS tidak sanggup cache .pck ratusan MB di CacheStorage
-const GODOT_CONFIG = Object.assign({"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"Euphoria_v2","experimentalVK":false,"fileSizes":{"Euphoria_v2.pck":127510128,"Euphoria_v2.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4,"serviceWorker":"Euphoria_v2.service.worker.js"}, { serviceWorker: '' });
+const GODOT_CONFIG = Object.assign({"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"Euphoria_v2","experimentalVK":false,"fileSizes":{"Euphoria_v2.pck":127515680,"Euphoria_v2.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4,"serviceWorker":"Euphoria_v2.service.worker.js"}, { serviceWorker: '' });
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -829,7 +775,6 @@ const engine = new Engine(GODOT_CONFIG);
 	const SLIDE_MS = 7000;
 	const bgs = [document.getElementById('ld-bg-a'), document.getElementById('ld-bg-b')];
 	const heroEl = document.getElementById('ld-hero');
-	const capEl = document.getElementById('ld-caption');
 	const dotsEl = document.getElementById('ld-dots');
 	let slideIdx = Math.floor(Math.random() * SLIDES.length);
 	let bgTurn = 0;
@@ -861,7 +806,6 @@ const engine = new Engine(GODOT_CONFIG);
 				return;
 			}
 			heroEl.classList.remove('on');
-			capEl.classList.remove('on');
 			if (ok[0]) {
 				const next = bgs[bgTurn % 2];
 				const prev = bgs[(bgTurn + 1) % 2];
@@ -878,14 +822,6 @@ const engine = new Engine(GODOT_CONFIG);
 					heroEl.src = heroSrc;
 					heroEl.classList.add('on');
 				}
-				const col = ELEM_COLOR[sl.elem] || '#ffe27a';
-				const elemEl = document.getElementById('ld-elem');
-				elemEl.textContent = sl.elem;
-				elemEl.style.color = col;
-				document.getElementById('ld-name').textContent = sl.name;
-				document.getElementById('ld-title').textContent = sl.title;
-				document.getElementById('ld-quote').textContent = '“' + sl.quote + '”';
-				capEl.classList.add('on');
 				for (let d = 0; d < dotsEl.children.length; d++) {
 					dotsEl.children[d].className = d === i ? 'on' : '';
 				}
