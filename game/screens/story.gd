@@ -649,7 +649,13 @@ func _render_detail() -> void:
 		el.offset_top = -16
 		fc.add_child(el)
 		p.tooltip_text = (str(e.get("variant", "")).capitalize() + " " if e.get("mirror", false) else "") + DB.name_of(e["id"])
-		p.mouse_filter = Control.MOUSE_FILTER_PASS
+		p.mouse_filter = Control.MOUSE_FILTER_STOP
+		p.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		var foe: Dictionary = e
+		p.gui_input.connect(func(ev: InputEvent):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				Game.sfx("ui_click")
+				_foe_info(foe))
 		ef.add_child(p)
 	_detail.add_child(ef)
 	if not sc.is_empty():
@@ -914,3 +920,38 @@ func _offer_flask(need: int) -> void:
 		if Game.use_item("energy_potion", 1):
 			Game.sfx("ui/reward")   # use_item already shows "Used Energy Flask"
 			_battle(), "GoldButton", Vector2(230, 48)))
+
+## Tap an enemy face on the stage panel: who she is and what her skill does, before the fight.
+func _foe_info(e: Dictionary) -> void:
+	var eid: String = str(e["id"])
+	var bid := DB.base_id(eid)
+	var v: VBoxContainer = main.popup("", 520)
+	var h := UI.hbox(14)
+	v.add_child(h)
+	h.add_child(UI.avatar(bid, 96, Color("#ff5c6c") if e.get("boss", false) else Color("#6b4a7e"), 2))
+	var tv := UI.vbox(3)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(tv)
+	var nm := (str(e.get("variant", "")).capitalize() + " " if e.get("mirror", false) else "") + DB.name_of(eid)
+	tv.add_child(UI.label(nm + ("   BOSS" if e.get("boss", false) else ""), 20, Color.WHITE, 3))
+	if DB.title_of(bid) != "":
+		tv.add_child(UI.label(DB.title_of(bid), 12, UI.MUTED, 2))
+	var row := UI.hbox(6)
+	tv.add_child(row)
+	row.add_child(UI.element_tag(DB.element_of(bid), 14))
+	row.add_child(UI.label(DB.role_of(bid), 14, UI.MUTED, 2))
+	tv.add_child(UI.label("Lv.%d" % int(e.get("level", 1)), 13, UI.GOLD, 2))
+	var sk := DB.skill_of(bid)
+	var sp := UI.styled_panel(Color(0, 0, 0, 0.35), Color(UI.GOLD, 0.35), 10, 1, 10)
+	var sv := UI.vbox(4)
+	sp.add_child(sv)
+	sv.add_child(UI.label("SKILL  •  " + str(sk.get("name", "")), 14, UI.GOLD, 2))
+	sv.add_child(UI.wrap_label(str(sk.get("desc", "")), 13, UI.TEXT))
+	v.add_child(sp)
+	var weak := ""
+	var grp: String = DB.ELEMENT_GROUP.get(DB.element_of(bid), DB.element_of(bid))
+	for k in DB.ELEMENT_BEATS.keys():
+		if str(DB.ELEMENT_BEATS[k]) == grp:
+			weak = str(k)
+	if weak != "":
+		v.add_child(UI.label("Bring %s heroes: +30%% damage against her." % weak, 13, UI.GREEN, 2))

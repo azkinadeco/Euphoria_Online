@@ -104,7 +104,10 @@ func _next() -> void:
 		var parts := v.substr(4).split("|")
 		var args: Array = []
 		for a in parts.slice(1):
-			args.append(int(a) if a.is_valid_int() else a)
+			if a.begins_with("{"):
+				args.append(JSON.parse_string(a.replace(";", ",")))   # cur:fn|{"id":"x";"level":5}
+			else:
+				args.append(int(a) if a.is_valid_int() else a)
 		main_node.current.callv(parts[0], args)
 	elif v.begins_with("scale="):
 		root.content_scale_factor = float(v.substr(6))

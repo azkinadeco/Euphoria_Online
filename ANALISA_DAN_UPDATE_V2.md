@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2hu. Update batch 220 — Info musuh dari panel stage Story
+
+- `story.gd::_foe_info`: wajah musuh di panel stage bisa diketuk → popup avatar, nama (varian/BOSS), gelar, elemen, peran, level, skill + deskripsi, dan elemen yang efektif melawannya.
+- `shot_runner.gd`: argumen `cur:` boleh berupa JSON (`;` sebagai koma).
+
 ## 2ht. Update batch 219 — Deskripsi skill musuh
 
 - `DB.skill_desc(sk)` menulis deskripsi dari data skill (area, sasaran, % ATK, burn/stun/silence/DEF down/heal block/drain/execute/crit/shield/taunt). `DB.skill_of(id)` untuk musuh mengembalikan salinan ber-`desc` (cache `_enemy_skill`; tabel const tidak diubah).
