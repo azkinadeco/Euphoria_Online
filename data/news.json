@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16p",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Even frame pacing on fast screens",
+  "body": "Smoother motion on high-refresh phones. The game now measures your screen's refresh rate and picks a frame cap that divides it evenly: a 90 Hz screen runs at 90 fps instead of a stuttering 60, a 120 Hz screen at an even 60, a 144 Hz screen at 72. The 30 FPS battery saver works the same way."
+ },
+ {
   "id": "n2026-11-16o",
   "date": "2026-11-16",
   "tag": "UPDATE",

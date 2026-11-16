@@ -422,6 +422,24 @@ function eoFit() {
 	de.style.setProperty('--lh', lh + 'px');
 }
 eoFit();
+// Screen refresh rate (Hz), measured from animation frames; the game picks a frame cap that divides it
+// evenly (Game.frame_cap_for), so a 90 Hz phone does not judder at 60 fps.
+(function () {
+	let n = 0;
+	let t0 = 0;
+	function tick(t) {
+		if (n === 0) {
+			t0 = t;
+		}
+		n++;
+		if (n < 61) {
+			requestAnimationFrame(tick);
+		} else {
+			window.__eoHz = Math.round(60000 / (t - t0));
+		}
+	}
+	requestAnimationFrame(tick);
+}());
 window.addEventListener('resize', eoFit);
 if (window.visualViewport) {
 	window.visualViewport.addEventListener('resize', eoFit);

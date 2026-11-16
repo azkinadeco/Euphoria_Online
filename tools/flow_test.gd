@@ -1988,6 +1988,11 @@ func _run() -> void:
 	check(wf_none.size() <= 2, "almost every foe appears in a story chapter (missing: %s)" % str(wf_none))
 	check(DB.chapters_with("selene")[0] == 38, "Selene first appears in Ch.39")
 
+	print("[even frame pacing]")
+	var fpc: Array = [[60.0, 60, 60], [90.0, 60, 90], [120.0, 60, 60], [144.0, 60, 72], [60.0, 30, 30], [120.0, 30, 30]]
+	for fp in fpc:
+		check(G.frame_cap_for(int(fp[1]), float(fp[0])) == int(fp[2]), "%d Hz screen, %d fps wanted -> cap %d" % [int(fp[0]), int(fp[1]), int(fp[2])])
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)

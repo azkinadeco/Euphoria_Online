@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2if. Update batch 232 — Frame pacing yang rata di layar 90/120/144 Hz
+
+- Shell web mengukur refresh rate (60 frame rAF → `window.__eoHz`). `Game.display_hz()` membacanya (desktop: `DisplayServer.screen_get_refresh_rate`).
+- `Game.frame_cap_for(want, hz)`: batas FPS = hz/d terlambat yang masih ≥ 95% target. 60 Hz→60, 90→90, 120→60, 144→72, 165→83; mode hemat 30: 60→30, 90→30, 144→29. Sebelumnya 60 fps di layar 90 Hz menampilkan frame berpola 1-2-1-2 refresh = tersendat walau FPS stabil.
+
 ## 2ie. Update batch 231 — Aura bernapas di belakang hero
 
 - `UI.hero_aura(art, color, strength)`: gradasi radial aditif warna tema hero di belakang art, hanya kecerahannya yang bernapas (2,6 dtk; tidak ada gerak posisi). Dipakai di lobby dan halaman hero; dimatikan animasinya saat Reduce effects.

@@ -480,7 +480,29 @@ func fps_cap() -> int:
 	return 30 if int(s["settings"].get("fps", 60)) == 30 else 60
 
 func apply_fps() -> void:
-	Engine.max_fps = fps_cap()
+	Engine.max_fps = frame_cap_for(fps_cap(), display_hz())
+
+## Refresh rate of the screen (Hz). On the web the page measures it (window.__eoHz); 60 when unknown.
+func display_hz() -> float:
+	if OS.has_feature("web"):
+		var hz: Variant = JavaScriptBridge.eval("window.__eoHz || 0", true)
+		if hz is float or hz is int:
+			if float(hz) > 20.0:
+				return float(hz)
+	var r := DisplayServer.screen_get_refresh_rate()
+	return r if r > 20.0 else 60.0
+
+## Frame cap that keeps frame pacing even: every frame on screen for the same number of refreshes.
+## A 60 cap on a 90 Hz screen alternates 1 and 2 refreshes per frame, which reads as stutter even at a
+## steady 60 fps; there the game runs at the screen's own rate. 120 / 144 Hz divide evenly: 60 / 72.
+static func frame_cap_for(want: int, hz: float) -> int:
+	if hz < 50.0:
+		return want
+	# the slowest even rate (hz / d) that still reaches the wanted fps
+	var d := 1
+	while hz / float(d + 1) >= float(want) * 0.95:
+		d += 1
+	return int(round(hz / float(d)))
 
 ## Redeem a code. Returns {"error": text} or {"give": rewards}.
 func redeem(code: String) -> Dictionary:
