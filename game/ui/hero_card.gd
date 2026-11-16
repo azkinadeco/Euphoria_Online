@@ -113,26 +113,19 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	elem.size = Vector2(24, 24)
 	frame.add_child(elem)
 
-	# rarity logo in the top-right corner (owner's badge art)
-	# about the height of the element icon, so the corner reads as one row of small marks
-	var rb_h := clampf(card_size.x * 0.18, 15.0, 26.0)
-	var rbadge := UI.badge_rect(DB.rarity_badge(rarity), rb_h)
-	rbadge.position = Vector2(card_size.x - rbadge.size.x - 3, 4)
+	# rarity logo in the top-right corner (owner's badge art), fitted in a small box so the wide
+	# crests (LEGEND, ULTRA RARE) take the same corner space as SSR and never cover her head
+	var rbadge := _fit_badge(DB.rarity_badge(rarity), clampf(card_size.x * 0.15, 13.0, 20.0), clampf(card_size.x * 0.30, 26.0, 44.0))
+	rbadge.position = Vector2(card_size.x - rbadge.size.x - 5, 5 + (24.0 - rbadge.size.y) * 0.5)   # centred on the element icon row
 	if not owned:
 		rbadge.modulate = Color(0.75, 0.75, 0.8)
 	frame.add_child(rbadge)
 
-	# battle role word (owner's role lettering: MAGE / FIGHTER / TANK / ASSASSIN / SUPPORT) on the dark band
-	# at the bottom, right side of the Lv line: readable, and never over her face
+	# battle role word (owner's role lettering: MAGE / FIGHTER / TANK / ASSASSIN / SUPPORT): small, right end
+	# of the Lv line, so it reads as a label next to the level instead of a title over the art
 	if card_size.x >= 84:
-		var rt := DB.role_badge(id)
-		var role_h := clampf(card_size.x * 0.085, 9.0, 13.0)
-		var rrole := UI.badge_rect(rt, role_h)
-		if rrole.size.x > card_size.x * 0.48:
-			var kk := card_size.x * 0.48 / rrole.size.x
-			rrole.custom_minimum_size *= kk
-			rrole.size *= kk
-		rrole.position = Vector2(card_size.x - rrole.size.x - 6, card_size.y - 63 + (13.0 - rrole.size.y) * 0.5)
+		var rrole := _fit_badge(DB.role_badge(id), clampf(card_size.x * 0.07, 7.0, 10.0), card_size.x * 0.34)
+		rrole.position = Vector2(card_size.x - rrole.size.x - 7, card_size.y - 64 + (16.0 - rrole.size.y) * 0.5)
 		rrole.tooltip_text = str(DB.role_info(id)[0])
 		frame.add_child(rrole)
 
@@ -247,6 +240,15 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	_sel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_sel.visible = false
 	add_child(_sel)
+
+## Badge art scaled to fit inside max_h x max_w, aspect kept.
+static func _fit_badge(t: Texture2D, max_h: float, max_w: float) -> TextureRect:
+	var r := UI.badge_rect(t, max_h)
+	if r.size.x > max_w:
+		var k := max_w / r.size.x
+		r.custom_minimum_size *= k
+		r.size *= k
+	return r
 
 func set_selected(v: bool) -> void:
 	_sel.visible = v

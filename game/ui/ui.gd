@@ -391,6 +391,23 @@ static func add_badge(parent: Control, n: int) -> void:
 	tw.tween_property(p, "scale", Vector2(1.18, 1.18), 0.45).set_trans(Tween.TRANS_SINE)
 	tw.tween_property(p, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
 
+## Small quiet dot (no number, no pulse): "something to do here", not a reward to collect.
+static func add_dot(parent: Control) -> void:
+	var p := Panel.new()
+	p.add_theme_stylebox_override("panel", style(Color("#ff8a5c"), Color(1, 1, 1, 0.85), 6, 1, 0))
+	p.custom_minimum_size = Vector2(12, 12)
+	p.size = Vector2(12, 12)
+	p.position = Vector2(parent.custom_minimum_size.x - 18, 6)
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(p)
+
+## Red number for rewards to collect, else a dot when there is only something to do.
+static func add_feature_badge(parent: Control, claim: int, total: int) -> void:
+	if claim > 0:
+		add_badge(parent, claim)
+	elif total > 0:
+		add_dot(parent)
+
 const LazyTex = preload("res://game/ui/lazy_tex.gd")
 
 ## tex_rect whose texture comes from `loader`; when `ready` is false (texture not loaded yet) it is filled

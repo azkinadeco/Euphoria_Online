@@ -395,7 +395,7 @@ func _build_bottom_nav() -> void:
 		_badges[route] = b
 
 ## Grid of secondary features, with lock levels and badges.
-func _open_menu() -> void:
+func _open_menu() -> VBoxContainer:
 	var v: VBoxContainer = main.popup("MENU", 1060)
 	var body := UI.vbox(10)
 	var sc := UI.scroll(body)
@@ -422,13 +422,84 @@ func _open_menu() -> void:
 		g.add_theme_constant_override("v_separation", 10)
 		body.add_child(g)
 		for route in sec[1]:
-			if info.has(route):
+			if DB.MENU_HUBS.has(route):
+				g.add_child(_hub_tile(str(route), v))
+			elif info.has(route):
 				g.add_child(_menu_tile(info[route], v))
 	var c := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
 	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	v.add_child(c)
+	return v
 
-func _menu_tile(f: Array, v: Control) -> Button:
+## One MENU tile that opens a hub (a small menu of related features, DB.MENU_HUBS).
+func _hub_tile(key: String, v: Control) -> Button:
+	var hub: Array = DB.MENU_HUBS[key]
+	var routes: Array = hub[2]
+	var open := routes.any(func(r): return Game.feature_unlocked(str(r)))
+	var b := Button.new()
+	b.theme_type_variation = "TabButton"
+	b.focus_mode = Control.FOCUS_NONE
+	b.custom_minimum_size = Vector2(158, 96)
+	b.set_meta("hub", key)
+	var vb := UI.vbox(2)
+	vb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vb.alignment = BoxContainer.ALIGNMENT_CENTER
+	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(vb)
+	var ic := UI.tex_rect(DB.icon(str(hub[0])), Vector2(0, 46))
+	vb.add_child(ic)
+	var l := UI.label(str(hub[1]), 14, Color.WHITE if open else UI.MUTED, 3)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vb.add_child(l)
+	var sub := UI.label("%d inside" % routes.size(), 11, UI.MUTED, 2)
+	if not open:
+		ic.modulate = Color(0.3, 0.3, 0.35)
+		var req := 999
+		for r in routes:
+			req = mini(req, Game.feature_req(str(r)))
+		sub.text = "Lv.%d" % req
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vb.add_child(sub)
+	b.pressed.connect(func():
+		Game.sfx("ui_click")
+		_open_hub(key, v))
+	UI.hover_fx(b, 1.05)
+	var n := 0
+	var any := 0
+	for r in routes:
+		if Game.feature_claim(str(r)) > 0:
+			n += 1
+		if Game.feature_badge(str(r)) > 0:
+			any += 1
+	UI.add_feature_badge(b, n, any)
+	return b
+
+## The small menu behind a hub tile, opened on top of the MENU.
+func _open_hub(key: String, menu: Control = null) -> void:
+	var hub: Array = DB.MENU_HUBS[key]
+	var routes: Array = hub[2]
+	var v: VBoxContainer = main.popup(str(hub[1]).to_upper(), 160.0 * mini(routes.size(), 3) + 10.0 * (mini(routes.size(), 3) - 1) + 60.0)
+	var info := {}
+	for f in DB.MENU_FEATURES:
+		info[f[0]] = f
+	var g := GridContainer.new()
+	g.columns = mini(routes.size(), 3)
+	g.add_theme_constant_override("h_separation", 10)
+	g.add_theme_constant_override("v_separation", 10)
+	g.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(g)
+	for r in routes:
+		if info.has(r):
+			# pinning inside a hub rebuilds the MENU behind it too (its PINNED row changes)
+			g.add_child(_menu_tile(info[r], v, func():
+				if menu != null and is_instance_valid(menu):
+					main.close_popup(menu)
+				_open_hub(key, _open_menu())))
+	var c := UI.button("BACK", func(): main.close_popup(v), "", Vector2(160, 44))
+	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(c)
+
+func _menu_tile(f: Array, v: Control, reopen: Callable = Callable()) -> Button:
 	var route: String = f[0]
 	var open := Game.feature_unlocked(route)
 	var b := Button.new()
@@ -475,11 +546,12 @@ func _menu_tile(f: Array, v: Control) -> Button:
 			return
 		Game.sfx("ui_click")
 		main.close_popup(v)
-		_open_menu())
+		if reopen.is_valid():
+			reopen.call()
+		else:
+			_open_menu())
 	b.add_child(pb)
-	var n := Game.feature_badge(route)
-	if n > 0:
-		UI.add_badge(b, n)
+	UI.add_feature_badge(b, Game.feature_claim(route), Game.feature_badge(route))
 	return b
 
 var _goal_box: PanelContainer
@@ -538,24 +610,26 @@ func refresh() -> void:
 		var rt := _ring.create_tween()
 		rt.tween_method(func(x: float): _ring_val = x; _ring.queue_redraw(), _ring_val, target, 0.8).set_trans(Tween.TRANS_CUBIC)
 	for r in ["mail", "quests", "messenger", "login", "event", "heroes", "news", "festival"]:
-		_set_badge(r, Game.feature_badge(r))
-	# MENU shows how many features have something to do (not the sum of everything)
+		_set_badge(r, Game.feature_claim(r), Game.feature_badge(r))
+	# MENU: red number = how many features have a reward to collect; a dot when there is only something to do
 	var menu_n := 0
+	var menu_any := 0
 	for f in DB.MENU_FEATURES:
-		if Game.feature_badge(f[0]) > 0:
+		if Game.feature_claim(f[0]) > 0:
 			menu_n += 1
-	_set_badge("menu", menu_n)
+		if Game.feature_badge(f[0]) > 0:
+			menu_any += 1
+	_set_badge("menu", menu_n, menu_any)
 	_update_afk()
 
-func _set_badge(route: String, n: int) -> void:
+func _set_badge(route: String, claim: int, total: int = -1) -> void:
 	var b: Control = _badges.get(route)
 	if b == null:
 		return
 	for c in b.get_children():
 		if c is Panel:
 			c.queue_free()
-	if n > 0:
-		UI.add_badge(b, n)
+	UI.add_feature_badge(b, claim, claim if total < 0 else total)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:

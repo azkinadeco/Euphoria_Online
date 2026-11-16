@@ -102,16 +102,22 @@ const MENU_FEATURES := [
 	["training", "icon_formation", "Training Ground"],
 	["event", "icon_live_ops", "Event"], ["festival", "icon_festival", "Festival"], ["bestiary", "icon_boss", "Bestiary"],
 	["expedition", "icon_afk", "Expedition"], ["garden", "icon_garden", "Garden"], ["room", "icon_room", "Private Room"], ["date", "icon_date", "Date"],
-	["wardrobe", "icon_heart", "Wardrobe"], ["guild", "icon_guild", "Guild"], ["friends", "icon_friends", "Friends"], ["gallery", "icon_codex", "Gallery"], ["settings", "icon_settings", "Settings"],
-	["photo", "icon_codex", "Photo Studio"], ["forge", "icon_equipment", "Forge"], ["messenger", "icon_messenger", "Messenger"], ["kitchen", "icon_kitchen", "Kitchen"],
+	["wardrobe", "item_skin_ticket", "Wardrobe"], ["guild", "icon_guild", "Guild"], ["friends", "icon_friends", "Friends"], ["gallery", "icon_codex", "Gallery"], ["settings", "icon_settings", "Settings"],
+	["photo", "icon_zoom", "Photo Studio"], ["forge", "icon_equipment", "Forge"], ["messenger", "icon_messenger", "Messenger"], ["kitchen", "icon_kitchen", "Kitchen"],
 ]
-## MENU sections (route lists, in display order).
+## MENU sections (route lists, in display order). A route may be a hub key from MENU_HUBS.
 const MENU_SECTIONS := [
-	["BATTLE", ["dungeon", "arena", "tower", "worldboss", "hunt", "rift"]],
-	["EVENTS & PRACTICE", ["event", "festival", "pass", "training"]],
-	["HEROES & BOND", ["messenger", "date", "room", "photo", "garden", "kitchen", "expedition", "gallery", "bestiary"]],
-	["SHOP & SOCIAL", ["shop", "forge", "wardrobe", "bag", "guild", "friends", "settings"]],
+	["BATTLE", ["challenges", "arena", "worldboss", "hunt", "rift"]],
+	["EVENTS & BOND", ["events", "bond", "collection"]],
+	["SHOP & SOCIAL", ["shop", "forge", "bag", "guild", "friends", "settings"]],
 ]
+## MENU hubs: one tile that opens a small menu of related features. key -> [icon, label, routes].
+const MENU_HUBS := {
+	"challenges": ["icon_dungeon", "Challenges", ["dungeon", "tower", "training"]],
+	"events": ["icon_live_ops", "Events", ["event", "festival", "pass"]],
+	"bond": ["icon_heart", "Bond", ["messenger", "date", "room", "kitchen", "garden", "expedition"]],
+	"collection": ["icon_ticket", "Collection", ["gallery", "bestiary", "photo", "wardrobe"]],
+}
 const MAX_AWAKEN := 5
 const AWAKEN_STAT := 0.06          # +6% HP/ATK/DEF per awaken level
 const AWAKEN_SHARDS := [40, 60, 80, 100, 120]

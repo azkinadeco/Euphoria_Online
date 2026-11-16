@@ -113,7 +113,7 @@ const HEADER_ICONS := {"HEROES": "icon_codex", "HERO": "icon_codex", "FORMATION"
 	"STORY": "icon_story", "SUMMON": "icon_gacha", "SHOP": "icon_shop", "BAG": "icon_bag", "MISSIONS": "icon_quest", "MAILBOX": "icon_mail",
 	"ARENA": "icon_arena", "TOWER OF TRIALS": "icon_tower", "SETTINGS": "icon_settings", "EVENT": "icon_live_ops", "GUILD": "icon_guild",
 	"FRIENDS": "icon_friends", "DAILY DUNGEON": "icon_dungeon", "SEASON PASS": "icon_pass", "GARDEN": "icon_heart", "GALLERY": "icon_codex",
-	"EXPEDITION": "icon_afk", "HEART CATCH": "icon_heart", "CODEX": "icon_codex", "WORLD BOSS": "icon_boss", "FESTIVAL": "icon_festival", "BOSS HUNT": "icon_combat_target", "STARLIGHT RIFT": "icon_awakening", "PRIVATE ROOM": "icon_heart", "BESTIARY": "icon_boss", "DATE": "icon_heart", "WARDROBE": "icon_heart"}
+	"EXPEDITION": "icon_afk", "HEART CATCH": "icon_heart", "CODEX": "icon_codex", "WORLD BOSS": "icon_boss", "FESTIVAL": "icon_festival", "BOSS HUNT": "icon_combat_target", "STARLIGHT RIFT": "icon_awakening", "PRIVATE ROOM": "icon_heart", "BESTIARY": "icon_boss", "DATE": "icon_heart", "WARDROBE": "item_skin_ticket"}
 
 func header(title: String, chips: Array = ["gold", "gems", "energy"]) -> HBoxContainer:
 	# decorative ribbon behind the header

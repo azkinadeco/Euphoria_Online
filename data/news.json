@@ -1,5 +1,26 @@
 [
  {
+  "id": "n2026-11-17c",
+  "date": "2026-11-17",
+  "tag": "UPDATE",
+  "title": "Calmer Notifications",
+  "body": "Red numbers now only mean rewards waiting to be collected. Things you can do (tries left, unread chats, new notices) show a small dot instead."
+ },
+ {
+  "id": "n2026-11-17b",
+  "date": "2026-11-17",
+  "tag": "UPDATE",
+  "title": "Neater Hero Cards",
+  "body": "Polish: the rarity crest and role lettering on hero cards are smaller and sit in fixed spots, so wide crests like LEGEND no longer cover a hero's head. A hero at her level cap now says what raises it (Star Up or Limit Break) instead of showing a LEVEL UP button, and her page shows her rarity once."
+ },
+ {
+  "id": "n2026-11-17a",
+  "date": "2026-11-17",
+  "tag": "UPDATE",
+  "title": "A Tidier Menu",
+  "body": "The Menu is now 14 tiles instead of 26. Dungeon, Tower and Training Ground live under CHALLENGES; Event, Festival and Season Pass under EVENTS; chats, dates, room, kitchen, garden and expeditions under BOND; Gallery, Bestiary, Photo Studio and Wardrobe under COLLECTION. Pins still work from inside every group."
+ },
+ {
   "id": "n2026-11-16B",
   "date": "2026-11-16",
   "tag": "UPDATE",

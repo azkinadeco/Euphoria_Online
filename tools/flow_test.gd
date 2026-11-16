@@ -1303,10 +1303,11 @@ func _run() -> void:
 	check(DB.ENEMIES.has("hairly") and DB.ENEMIES.has("svormentis") and DB.ENEMIES.has("ymir") and DB.art("ymir", 0) != null, "3 new enemies with art")
 	check(DB.lobby_art("angela") != null and not DB.art_list("angela").any(func(p): return "lobby" in str(p)), "lobby pose separate from outfits")
 	check(DB.alt_art("spimei", 1) != null, "alternate expression available")
-	G.give({"summon_ticket": 400})
+	# ~2% LR: 30 x 10 pulls gave only ~6 LR pulls and the 1/3 check failed by chance; 150 x 10 gives ~30
+	G.give({"summon_ticket": 1600})
 	var got_tamo := 0
 	var lr_n := 0
-	for k in 30:
+	for k in 150:
 		var svp: Dictionary = G.pull("nov8_tamo", 10, "ticket")
 		for sres in svp.get("results", []):
 			lr_n += 1 if sres["rarity"] == "LR" else 0
@@ -1820,6 +1821,27 @@ func _run() -> void:
 	DirAccess.remove_absolute("user://flow_test_backups")
 	G.backup_dir = G.BACKUP_DIR
 	G.s = bk_save
+
+	print("[menu hubs & badges]")
+	var hub_seen := {}
+	var hub_ok := true
+	for hk in DB.MENU_HUBS:
+		for hub_r in DB.MENU_HUBS[hk][2]:
+			hub_ok = hub_ok and not hub_seen.has(hub_r) and DB.MENU_FEATURES.any(func(f): return str(f[0]) == str(hub_r))
+			hub_seen[hub_r] = true
+	check(hub_ok, "every hub route is a MENU feature, in one hub only")
+	var reach_ok := true
+	for mf in DB.MENU_FEATURES:
+		var shown := hub_seen.has(str(mf[0]))
+		for sec in DB.MENU_SECTIONS:
+			shown = shown or (sec[1] as Array).has(str(mf[0]))
+		reach_ok = reach_ok and shown
+	check(reach_ok, "every MENU feature is reachable from a section or a hub")
+	var claim_ok := true
+	for br in ["mail", "quests", "login", "heroes", "pass", "expedition", "bestiary", "tower", "story", "kitchen", "worldboss", "festival", "rift", "messenger", "dungeon", "news"]:
+		claim_ok = claim_ok and G.feature_claim(br) <= G.feature_badge(br)
+	check(claim_ok, "a red number never exceeds the feature's badge total")
+	check(G.feature_claim("dungeon") == 0 and G.feature_claim("messenger") == 0, "tries left / unread chats are reminders (dot), not rewards")
 
 	print("[menu pins]")
 	var pn_save: Array = G.s.get("pins", [])

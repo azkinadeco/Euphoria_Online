@@ -1262,6 +1262,15 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ss. Update batch 248–249: Menu hub, kartu hero, badge tenang (17 Nov 2026)
+
+Hasil audit produk 17 Nov (temuan F7, F10, MERGE).
+- 248: MENU 26 tile → 14. `DB.MENU_HUBS` (challenges: dungeon/tower/training; events: event/festival/pass; bond: messenger/date/room/kitchen/garden/expedition; collection: gallery/bestiary/photo/wardrobe). Tile hub (`lobby._hub_tile`) membuka popup kecil `_open_hub`; pin dari dalam hub membangun ulang MENU di belakangnya. Ikon Wardrobe → `item_skin_ticket`, Photo Studio → `icon_zoom`, hub Collection → `icon_ticket` (tidak ada lagi ikon dobel).
+- 248: kartu hero (`hero_card._fit_badge`): crest rarity muat dalam kotak ±15%×30% lebar kartu, sejajar ikon elemen; tulisan role ±7% lebar kartu, maks 34% lebar, di ujung kanan baris Lv. Hero Detail: rarity hanya tampil sekali (crest di samping nama). Di level cap tombol LEVEL UP/+5/MAX diganti keterangan (Star Up / Limit Break / max).
+- 249: `Game.feature_claim(route)` = bagian badge yang berupa hadiah. `UI.add_feature_badge`: angka merah hanya untuk hadiah, titik oranye kecil (tanpa pulse) untuk pengingat (tries, chat belum dibaca, notice, unlock baru). Badge MENU di lobby menghitung fitur yang punya hadiah.
+- Flow test: bagian "[menu hubs & badges]"; tes rate-up LR diperbesar (150×10 pull) karena sebelumnya kadang gagal secara acak.
+- Catatan: F11 (chip energy abu-abu) ternyata screenshot yang diambil saat chip masih fade-in, bukan bug.
+
 ## 2rr. Update batch 244–246: Gallery "Coming Soon", tap di HP (16 Nov 2026)
 
 - 244: cek semua 37 art Lv1 dengan `tools/tilt_preview.gd` (lebar/tinggi siluet saat tilt dibanding art asli): semua ~1,00 setelah batch 237; Siv terukur lebih lebar hanya karena bayangan lantai di art-nya, figurnya tidak berubah. Kartu "?" Gallery jadi Button (ketuk → toast), form avatar terkunci tidak lagi `disabled` tapi memberi toast "Reach N★…" (HP tidak punya tooltip).

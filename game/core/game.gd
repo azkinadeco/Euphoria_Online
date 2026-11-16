@@ -3651,6 +3651,33 @@ func feature_badge(route: String) -> int:
 		n = maxi(n, 1)
 	return n
 
+## The part of feature_badge that is a reward waiting to be collected. Badges show this as a red number;
+## a feature with only reminders (tries left, unread chats, new unlocks...) gets a small dot instead, so
+## the red numbers keep meaning "free stuff here".
+func feature_claim(route: String) -> int:
+	if not feature_unlocked(route):
+		return 0
+	match route:
+		"mail": return mail_unclaimed()
+		"quests": return badge_quests() + road_ready()
+		"login": return 1 if can_claim_login() else 0
+		"heroes": return codex_claimable() if stages_cleared() > 0 else 0
+		"pass": return pass_claimable()
+		"expedition": return expeditions_ready()
+		"bestiary": return bestiary_ready()
+		"tower": return tower_milestones_ready()
+		"story": return star_chests_ready()
+		"kitchen": return 1 if basket_ready() else 0
+		"worldboss": return wboss_badge()
+		"festival": return 1 if fest_can_wish() else 0
+		"rift":
+			var n := 0
+			for i in DB.RIFT_MILESTONES.size():
+				if rift_milestone_state(i) == "ready":
+					n += 1
+			return n
+	return 0
+
 # ---- pinned MENU shortcuts
 const PIN_MAX := 6
 

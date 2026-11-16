@@ -169,10 +169,8 @@ func _render() -> void:
 		at.tween_property(_art, "position:x", _art.position.x, 0.35).from(_art.position.x - 40).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	for c in _name_box.get_children():
 		c.queue_free()
+	# rarity is shown once, as the crest beside her name (no rarity word up here as well)
 	var top := UI.hbox(8)
-	var rname := UI.rarity_text(DB.rarity_of(id), 16)
-	rname.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	top.add_child(rname)
 	top.add_child(UI.element_tag(DB.element_of(id), 15))
 	# the same role lettering as on her card (FIGHTER / TANK / MAGE / ASSASSIN / SUPPORT)
 	var rword := UI.badge_rect(DB.role_badge(id), 17)
@@ -704,13 +702,19 @@ func _render_upgrade() -> void:
 			gl.tooltip_text = "Crystal Sanctum drops Hero EXP" if short_exp else "Golden Vault drops Gold"
 			cost.add_child(UI.spacer())
 			cost.add_child(gl)
-	var btns := UI.hbox(10)
-	lv.add_child(btns)
-	for n in [1, 5, 99]:
-		var times: int = n
-		var b := UI.button("LEVEL UP" if n == 1 else ("+5" if n == 5 else "MAX"), func(): _do_level(times), "GoldButton" if n == 1 else "", Vector2(0, 48))
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		btns.add_child(b)
+	if h["level"] < cap:
+		var btns := UI.hbox(10)
+		lv.add_child(btns)
+		for n in [1, 5, 99]:
+			var times: int = n
+			var b := UI.button("LEVEL UP" if n == 1 else ("+5" if n == 5 else "MAX"), func(): _do_level(times), "GoldButton" if n == 1 else "", Vector2(0, 48))
+			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			btns.add_child(b)
+	else:
+		# at the cap there is nothing to level: say what raises it instead of showing a dead LEVEL UP button
+		var at_max: bool = int(h.get("lb", 0)) >= DB.MAX_LB
+		var note := "Absolute max level reached!" if at_max else ("Level cap reached. Limit Break below raises it by 5." if int(h["star"]) >= DB.MAX_STAR else "Level cap reached. Star Up to raise it.")
+		lv.add_child(UI.label(note, 15, UI.GREEN if at_max else UI.GOLD, 2))
 	var exp_pots := Game.amount("exp_potion")
 	if exp_pots > 0:
 		lv.add_child(UI.button("Use %d EXP Potion(s) → +%s Hero EXP" % [exp_pots, Game.fmt(exp_pots * 1000)], func(): Game.use_item("exp_potion", exp_pots); _render(), "", Vector2(0, 42)))
