@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16l",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Smooth battle runes",
+  "body": "The glowing runes under every tile of the battle and Battle Prep boards now turn smoothly; they were drawn at a third of the frame rate and visibly stepped."
+ },
+ {
   "id": "n2026-11-16k",
   "date": "2026-11-16",
   "tag": "UPDATE",

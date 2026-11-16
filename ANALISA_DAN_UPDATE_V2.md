@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ib. Update batch 228 — Rune papan battle berputar halus
+
+- `grid_board.gd::_process`: rune idle digambar ulang tiap frame (dulu tiap 3 frame ≈ 20 fps, meloncat ±1° per gambar — salah satu "gerakan kaku" di battle). Geometrinya sudah di-cache, jadi biayanya kecil.
+
 ## 2ia. Update batch 227 — Performa 60 FPS & gerakan latar yang halus
 
 Diukur dengan langkah baru `perf:<label>` di `tools/shot_runner.gd` (90 frame: rata-rata, p95, draw call; `nocap` melepas batas FPS). Sebelum → sesudah (ms per frame, Mac ini, tanpa batas FPS): lobby avg 18,7 → 10,3, p95 25–48 → 12,6; halaman hero p95 101 → 9,8; Heroes p95 42 → 14; battle p95 71 → 13; layar judul p95 52 → 16.

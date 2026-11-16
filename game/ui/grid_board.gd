@@ -57,12 +57,11 @@ var _frame := 0
 func _process(delta: float) -> void:
 	_t += delta
 	_frame += 1
-	# highlights animate every frame; the idle rune rotation only needs ~20 fps
+	# the runes turn every frame: redrawn every 3rd frame (~20 fps) they visibly stepped, which read as
+	# lag on the battle board (the geometry is cached, so a redraw is cheap)
+	_runes.queue_redraw()
 	if not highlights.is_empty() or selected.x >= 0:
 		_live.queue_redraw()
-		_runes.queue_redraw()
-	elif _frame % 3 == 0:
-		_runes.queue_redraw()
 
 var max_aspect := 0.52   # board height / width (battle uses a taller, closer board)
 
