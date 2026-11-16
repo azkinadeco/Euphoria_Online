@@ -262,7 +262,7 @@ func _name_plate(hid: String, tc: Color) -> void:
 	tags.alignment = BoxContainer.ALIGNMENT_END
 	tags.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(tags)
-	tags.add_child(UI.label(DB.rarity_of(hid), 13, DB.RARITY_COLOR[DB.rarity_of(hid)], 3))
+	tags.add_child(UI.rarity_text(DB.rarity_of(hid), 13))
 	tags.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(hid), "elem_light")), Vector2(18, 18)))
 	box.modulate.a = 0.0
 	var tw := box.create_tween().set_parallel(true)

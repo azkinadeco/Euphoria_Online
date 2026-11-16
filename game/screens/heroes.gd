@@ -255,7 +255,7 @@ func _codex_row(id: String) -> Control:
 	nv.add_child(UI.label(DB.name_of(id), 16, Color.WHITE if owned else UI.MUTED, 2))
 	var tags := UI.hbox(6)
 	nv.add_child(tags)
-	tags.add_child(UI.label(DB.rarity_of(id), 11, rc, 2))
+	tags.add_child(UI.rarity_tag(DB.rarity_of(id), 11))
 	tags.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(id), "elem_light")), Vector2(16, 16)))
 	if not owned:
 		tags.add_child(UI.label("not recruited", 11, UI.MUTED, 1))

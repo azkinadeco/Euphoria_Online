@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2nn. Update batch 238–239: sisa label rarity + kartu summon (16 Nov 2026)
+
+- 238: Codex (`heroes.gd` `_codex_row`) memakai `UI.rarity_tag`; pelat hero di layar judul memakai `UI.rarity_text` (sebelumnya teks "LR" polos).
+- 239: kartu summon tertutup untuk LR/MR/GR/OR memakai `UI.rarity_frame` (cincin animasi) sebagai tanda sebelum dibuka; SR/SSR/UR tetap halo berdenyut. Jarak baris kartu 18 → 30 px supaya "NEW!" / "+N Shards" tidak tertimpa kartu baris bawah.
+
 ## 2mm. Update batch 237: badge proporsional + 2.5D tidak menggencet (16 Nov 2026)
 
 - Keluhan pemilik: logo rarity dan tulisan role terlalu besar / tidak proporsional; Morana terlihat gepeng oleh efek 2.5D.

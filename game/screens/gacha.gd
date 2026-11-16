@@ -508,7 +508,7 @@ func _play_reveal(results: Array) -> void:
 	var grid := GridContainer.new()
 	grid.columns = 5 if results.size() > 1 else 1
 	grid.add_theme_constant_override("h_separation", 18)
-	grid.add_theme_constant_override("v_separation", 18)
+	grid.add_theme_constant_override("v_separation", 30)   # room for the NEW! / +Shards line under each card
 	center.add_child(grid)
 	var card_size := Vector2(150, 196) if results.size() > 1 else Vector2(240, 312)
 	var holders: Array = []
@@ -527,8 +527,12 @@ func _play_reveal(results: Array) -> void:
 		art_back.stretch_mode = TextureRect.STRETCH_SCALE
 		art_back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		back.add_child(art_back)
-		if _tier(r["rarity"]) > 0:
-			# rarity tell: SR cards pulse purple, SSR cards pulse gold before they turn
+		if UI.RARITY_FRAME_MODE.has(r["rarity"]):
+			# LR / MR / GR / OR: the card back already wears its animated rarity ring (rainbow, magenta-red,
+			# hologram, cosmic) before it turns, a stronger tell than a plain coloured pulse
+			UI.rarity_frame(back, r["rarity"], 12.0, 3.0, 14.0, 1.6)
+		elif _tier(r["rarity"]) > 0:
+			# rarity tell: SR cards pulse purple, SSR / UR cards pulse in their colour before they turn
 			var halo := Panel.new()
 			halo.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, rc.lightened(0.2), 14, 4, 0, 18 if _tier(r["rarity"]) == 2 else 10))
 			(halo.get_theme_stylebox("panel") as StyleBoxFlat).shadow_color = Color(rc.r, rc.g, rc.b, 0.8)
