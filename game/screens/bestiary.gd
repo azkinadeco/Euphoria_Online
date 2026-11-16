@@ -570,8 +570,9 @@ func _unknown_detail(id: String) -> void:
 		var scr: String = e[1]
 		var prm: Dictionary = e[2]
 		var row := UI.hbox(6)
-		var nl := UI.label("• " + str(e[0]), 13, UI.TEXT)
-		nl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var nl := UI.wrap_label("• " + str(e[0]), 13, UI.TEXT)   # wraps: a long chapter name made the panel too wide
+		nl.custom_minimum_size.x = 80
+		nl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		row.add_child(nl)
 		if Game.feature_unlocked(scr):
 			row.add_child(UI.button("GO", func(): main.go(scr, prm), "", Vector2(56, 32)))

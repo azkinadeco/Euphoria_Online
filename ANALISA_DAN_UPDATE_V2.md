@@ -1264,7 +1264,7 @@ tools/
 
 ## 2hz. Update batch 225 — Bestiary menunjuk chapter yang tepat
 
-- `DB.chapters_with(id)`: chapter yang pool atau bosnya memuat musuh itu. "WHERE TO FIND HER" menampilkan chapter pertama (+ jumlah lainnya); GO membuka Story tepat di stage pertama chapter tersebut.
+- `DB.chapters_with(id)`: chapter yang pool atau bosnya memuat musuh itu. "WHERE TO FIND HER" menampilkan chapter pertama (+ jumlah lainnya); GO membuka Story tepat di stage pertama chapter tersebut. Baris lokasi memakai `wrap_label` (versi pertama membuat panel lebih lebar dari layar — tertangkap `tools/audit.sh`).
 
 ## 2hy. Update batch 224 — Bestiary: yang ditemukan di atas
 
