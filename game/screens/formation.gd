@@ -627,6 +627,15 @@ func _layout_enemies() -> void:
 		uv.position = _enemy_board.cell_foot(e["cell"]) - Vector2(sz.x * 0.5, sz.y)
 		_enemy_board.add_child(uv)
 		uv.start_idle()
+		# tap a foe on the board: her card (skill, element, counter)
+		var foe: Dictionary = e
+		uv.size = sz   # (not in a container: the hit area must be sized by hand)
+		uv.mouse_filter = Control.MOUSE_FILTER_STOP
+		uv.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		uv.gui_input.connect(func(ev: InputEvent):
+			if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+				Game.sfx("ui_click")
+				main.foe_info(foe))
 		var lv := UI.label(("BOSS " if boss else "") + "Lv.%d" % int(e.get("level", 1)), 12, Color("#ff8a9a") if boss else Color.WHITE, 3)
 		lv.position = Vector2(sz.x * 0.3, sz.y - 4)
 		uv.add_child(lv)

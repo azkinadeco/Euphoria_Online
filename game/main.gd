@@ -1136,3 +1136,38 @@ func _next_bond_celebration() -> void:
 			layer.queue_free()
 			_bond_queue.pop_front()
 			_next_bond_celebration())
+
+## An enemy's card: who she is, her skill and what beats her (stage panel, Battle Prep board).
+func foe_info(e: Dictionary) -> void:
+	var eid: String = str(e["id"])
+	var bid := DB.base_id(eid)
+	var v: VBoxContainer = popup("", 520)
+	var h := UI.hbox(14)
+	v.add_child(h)
+	h.add_child(UI.avatar(bid, 96, Color("#ff5c6c") if e.get("boss", false) else Color("#6b4a7e"), 2))
+	var tv := UI.vbox(3)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(tv)
+	var nm := (str(e.get("variant", "")).capitalize() + " " if e.get("mirror", false) else "") + DB.name_of(eid)
+	tv.add_child(UI.label(nm + ("   BOSS" if e.get("boss", false) else ""), 20, Color.WHITE, 3))
+	if DB.title_of(bid) != "":
+		tv.add_child(UI.label(DB.title_of(bid), 12, UI.MUTED, 2))
+	var row := UI.hbox(6)
+	tv.add_child(row)
+	row.add_child(UI.element_tag(DB.element_of(bid), 14))
+	row.add_child(UI.label(DB.role_of(bid), 14, UI.MUTED, 2))
+	tv.add_child(UI.label("Lv.%d" % int(e.get("level", 1)), 13, UI.GOLD, 2))
+	var sk := DB.skill_of(bid)
+	var sp := UI.styled_panel(Color(0, 0, 0, 0.35), Color(UI.GOLD, 0.35), 10, 1, 10)
+	var sv := UI.vbox(4)
+	sp.add_child(sv)
+	sv.add_child(UI.label("SKILL  •  " + str(sk.get("name", "")), 14, UI.GOLD, 2))
+	sv.add_child(UI.wrap_label(str(sk.get("desc", "")), 13, UI.TEXT))
+	v.add_child(sp)
+	var weak := ""
+	var grp: String = DB.ELEMENT_GROUP.get(DB.element_of(bid), DB.element_of(bid))
+	for k in DB.ELEMENT_BEATS.keys():
+		if str(DB.ELEMENT_BEATS[k]) == grp:
+			weak = str(k)
+	if weak != "":
+		v.add_child(UI.label("Bring %s heroes: +30%% damage against her." % weak, 13, UI.GREEN, 2))

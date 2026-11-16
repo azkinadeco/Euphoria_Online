@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2hv. Update batch 221 — Kartu musuh juga di Battle Prep
+
+- `_foe_info` dipindah ke `main.foe_info(e)` dan dipakai di Story maupun `formation.gd::_layout_enemies` (unit musuh di papan kini bisa diketuk; ukuran area sentuh diset manual).
+
 ## 2hu. Update batch 220 — Info musuh dari panel stage Story
 
 - `story.gd::_foe_info`: wajah musuh di panel stage bisa diketuk → popup avatar, nama (varian/BOSS), gelar, elemen, peran, level, skill + deskripsi, dan elemen yang efektif melawannya.
