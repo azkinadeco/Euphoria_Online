@@ -25,6 +25,7 @@ var _head_kick := 0.0     # reaction offsets (decay to 0)
 var _body_kick := 0.0
 var _jolt := 0.0
 var _flash := 0.0
+var _tilt := Vector2.ZERO   # 2.5D turn / light direction (see char_rig.gdshader)
 
 static func attach(rect: TextureRect) -> CharRig:
 	for c in rect.get_children():
@@ -100,6 +101,14 @@ func _check() -> void:
 	if not rig.has("blush"):
 		_mat.set_shader_parameter("blush", Color(0, 0, 0, 0))
 	_set_eyes(rig.get("eyes", []), float(tex.get_width()) / float(tex.get_height()))
+	# 2.5D layer: the art's depth map (tools/make_depth_auto.py) when it exists
+	var dp := "res://art/depth/%s_depth.png" % tex.resource_path.get_file().get_basename()
+	if ResourceLoader.exists(dp):
+		_mat.set_shader_parameter("depth_tex", load(dp))
+		_mat.set_shader_parameter("depth_on", 1.0)
+	else:
+		_mat.set_shader_parameter("depth_on", 0.0)
+	_mat.set_shader_parameter("volume", float(rig.get("volume", 1.0)))
 	_rect.material = _mat
 
 ## eyes: [[corner x, y, other corner x, y, top-lid y, bottom-lid y], …] measured on the art (UV).
@@ -261,6 +270,15 @@ func _process(delta: float) -> void:
 	var breath := sin(t * 1.55 * spd)
 	var ha: float = float(_rig.get("head_amp", 1.0))
 	var ba: float = float(_rig.get("body_amp", 1.0))
+	# tilt for the 2.5D layer: lean toward the pointer while it is over the art (mouse, or a finger held
+	# down), otherwise a slow irregular orbit so the turn and the moving light are always gently alive
+	var tgt := Vector2(sin(t * 0.45 + _seed) * 0.6 + sin(t * 0.17 + 1.3) * 0.2, sin(t * 0.9 + _seed) * 0.28 + sin(t * 0.23) * 0.1)
+	var gr := _rect.get_global_rect()
+	var mp := _rect.get_global_mouse_position()
+	if gr.size.x > 80.0 and gr.grow(gr.size.x * 0.4).has_point(mp) and (Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or not (OS.has_feature("mobile") or OS.has_feature("web_ios") or OS.has_feature("web_android"))):
+		tgt = ((mp - gr.get_center()) / (gr.size * 0.5)).clamp(Vector2(-1, -1), Vector2(1, 1))
+	_tilt = _tilt.lerp(tgt, clampf(delta * 3.0, 0.0, 1.0))
+	_mat.set_shader_parameter("tilt", _tilt)
 	_mat.set_shader_parameter("t", t * spd)
 	_mat.set_shader_parameter("calm", calm)
 	_mat.set_shader_parameter("breath", breath * calm)

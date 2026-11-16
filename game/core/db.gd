@@ -324,6 +324,58 @@ const ENEMIES := {
 	# ---- 8 November 2026 enemy
 	"octra": {"hp": 2400, "atk": 180, "def": 85, "role": "MAGE",
 		"skill": {"name": "Abyss Beast Maw", "aim": "front", "shape": "cross", "mult": 0.95, "silence": 0.25}},
+	# ---- 15 November 2026 enemies (17). Each build follows what the art shows.
+	# Amatera: chained demon whose cursed hands leak purple fire -> a curse that burns and stops healing
+	"amatera": {"hp": 1500, "atk": 185, "def": 50, "role": "MAGE",
+		"skill": {"name": "Shackled Hellgrasp", "aim": "front", "shape": "cross", "mult": 0.85, "burn": 0.2, "heal_block": 1}},
+	# Anthis: frail pale moth -> glass-cannon diver on the back line, loves crits
+	"anthis": {"hp": 1150, "atk": 190, "def": 40, "role": "ASSASSIN",
+		"skill": {"name": "Moonpowder Dive", "aim": "back", "shape": "single", "mult": 1.45, "crit_bonus": 0.25}},
+	# Cleara: pharaoh lounging on a golden sarcophagus -> a whole-column sand curse that weakens armour
+	"cleara": {"hp": 1700, "atk": 170, "def": 70, "role": "MAGE",
+		"skill": {"name": "Curse of the Gilded Tomb", "aim": "front", "shape": "column", "mult": 0.9, "def_down": 0.25}},
+	# Code Zero: armoured pilot riding a colossal skull worm -> heavy wall that pulls hits and shields itself
+	"code_zero": {"hp": 3000, "atk": 120, "def": 140, "role": "TANK",
+		"skill": {"name": "Skull Worm Protocol", "aim": "front", "shape": "pierce", "mult": 0.9, "shield_self": 0.2, "taunt": 1}},
+	# Cow Girl: cheerful bruiser with a spiked log -> big single smash that stuns
+	"cow_girl": {"hp": 2300, "atk": 165, "def": 95, "role": "WARRIOR",
+		"skill": {"name": "Meadow Log Smash", "aim": "front", "shape": "single", "mult": 1.35, "stun": 0.3}},
+	# Graeae: mummy with a fanged maw in her belly -> slow tank that eats HP back
+	"graeae": {"hp": 2700, "atk": 130, "def": 125, "role": "TANK",
+		"skill": {"name": "Hungering Wrappings", "aim": "front", "shape": "single", "mult": 1.2, "drain": 0.45}},
+	# Kurenai: mantis blades -> finisher that hunts wounded back-liners
+	"kurenai": {"hp": 1350, "atk": 195, "def": 55, "role": "ASSASSIN",
+		"skill": {"name": "Mantis Guillotine", "aim": "back", "shape": "single", "mult": 1.4, "execute": 0.6}},
+	# Lamia: violet reaver with a great scythe -> wide sweeping cuts that shred defence
+	"lamia": {"hp": 2000, "atk": 180, "def": 80, "role": "WARRIOR",
+		"skill": {"name": "Violet Reaping Arc", "aim": "front", "shape": "line", "mult": 0.85, "def_down": 0.2}},
+	# Lolth: spider broodmother wreathed in ghosts -> hits everyone lightly and silences (boss material)
+	"lolth": {"hp": 2600, "atk": 175, "def": 90, "role": "MAGE",
+		"skill": {"name": "Web of a Thousand Whispers", "aim": "front", "shape": "all", "mult": 0.55, "silence": 0.2}},
+	# Nagini: serpent-haired gorgon -> petrifying gaze down a column
+	"nagini": {"hp": 1600, "atk": 175, "def": 60, "role": "MAGE",
+		"skill": {"name": "Still-Lake Gaze", "aim": "front", "shape": "column", "mult": 0.8, "stun": 0.3}},
+	# Nox: grinning black gel -> soaks damage and steals life in a splash
+	"nox": {"hp": 2500, "atk": 135, "def": 110, "role": "TANK",
+		"skill": {"name": "Midnight Engulf", "aim": "front", "shape": "cross", "mult": 0.75, "drain": 0.35}},
+	# Octavia-Vex: giant octopus coils -> grabs a 2x2 area and silences casters
+	"octavia": {"hp": 2800, "atk": 125, "def": 130, "role": "TANK",
+		"skill": {"name": "Abyssal Coil", "aim": "front", "shape": "square", "mult": 0.75, "silence": 0.25}},
+	# Rin: azure stinger tail -> venom shot through a row that blocks healing
+	"rin": {"hp": 1300, "atk": 180, "def": 50, "role": "RANGER",
+		"skill": {"name": "Azure Venom Barb", "aim": "front", "shape": "line", "mult": 0.8, "heal_block": 1}},
+	# Roza Sha: two golden rifles on a pile of guns -> piercing shots with a high crit rate
+	"roza": {"hp": 1250, "atk": 190, "def": 45, "role": "RANGER",
+		"skill": {"name": "Gilded Barrage", "aim": "front", "shape": "pierce", "mult": 1.05, "crit_bonus": 0.3}},
+	# Selene: succubus -> kisses the back line and drinks the life she takes
+	"selene": {"hp": 1450, "atk": 180, "def": 50, "role": "MAGE",
+		"skill": {"name": "Nightwing Kiss", "aim": "back", "shape": "single", "mult": 1.3, "drain": 0.5}},
+	# Veyr-Nok: a bouquet of staring eyeball balloons -> the X-shaped stare exposes weak points
+	"veyr_nok": {"hp": 1400, "atk": 175, "def": 50, "role": "MAGE",
+		"skill": {"name": "Thousand-Eye Bouquet", "aim": "front", "shape": "x", "mult": 0.8, "def_down": 0.3}},
+	# Xa'niyus: horned herald on lashing tentacles -> a cross of whips that can stun
+	"xaniyus": {"hp": 2100, "atk": 170, "def": 85, "role": "WARRIOR",
+		"skill": {"name": "Lashing Tide", "aim": "front", "shape": "cross", "mult": 0.85, "stun": 0.2}},
 }
 
 const VOICE := {
@@ -497,7 +549,7 @@ const CHAPTERS := [
 			["shina", "And from your dragon! You're stuck with all of us, forever."], ["mora", "Then let's go home. The clocks are ticking again."],
 			["nar", "— END OF ARC 3 —   Euphoria's story will continue..."]]},
 	# ---- Arc 4: The Last Light (the third Eclipse — Noctis, the Hollow Star)
-	{"name": "Hollow Tide", "bg": "aqua", "pool": ["slime", "slarkoi", "eroghost", "evy_blood_sage"], "boss": "cthollia", "variant": "hollow", "mirror": true, "boss_hp": 3.0,
+	{"name": "Hollow Tide", "bg": "aqua", "pool": ["slime", "slarkoi", "eroghost", "evy_blood_sage", "octavia"], "boss": "cthollia", "variant": "hollow", "mirror": true, "boss_hp": 3.0,
 		"mod": {"elem": "EARTH", "atk": 0.2, "name": "Silent Sea: EARTH units +20% ATK"},
 		"intro": [["nar", "— ARC 4 —   THE LAST LIGHT"], ["nar", "Three weeks after the hourglass broke, the sea stopped making sound."],
 			["scylla", "Commander. The tide comes in. The tide goes out. But there is no sound at all."], ["mora", "...This is it. The third Eclipse. The one from my future."],
@@ -513,7 +565,7 @@ const CHAPTERS := [
 		"outro": [["cthollia", "...The tide. I can hear the tide again. Commander, I— something was inside me. Something cold and lonely."],
 			["cthollia", "It whispered a name before it left. Noctis. The Hollow Star."], ["gemora", "Searching... There is a dead star above Euphoria. It was not there yesterday."],
 			["mora", "In my future we never learned its name. We already know more than they did."]]},
-	{"name": "Hollow Garden", "bg": "forest", "pool": ["ex_nymph", "gumi_wolf", "scomantis", "slime"], "boss": "eurnipha", "variant": "hollow", "mirror": true, "boss_hp": 6.0,
+	{"name": "Hollow Garden", "bg": "forest", "pool": ["ex_nymph", "gumi_wolf", "scomantis", "slime", "anthis"], "boss": "eurnipha", "variant": "hollow", "mirror": true, "boss_hp": 6.0,
 		"mod": {"elem": "WIND", "atk": 0.2, "name": "Withered Wind: WIND units +20% ATK"},
 		"intro": [["glytta", "The Whispering Woods... the leaves are grey. Even the fox spirits went quiet."], ["lumeira", "The butterflies won't fly. They're just... sitting there. Waiting."],
 			["eurnipha", "I'll go ahead. Warmth is my specialty. If anything's cold here, I'll hug it until it isn't."],
@@ -567,7 +619,7 @@ const CHAPTERS := [
 			["shina", "Okay, everyone! Breakfast at the cathedral! Xylia, don't redesign the kitchen until AFTER we eat!"],
 			["nar", "— END OF ARC 4: THE LAST LIGHT —   Thank you for playing, Commander. Euphoria's sky has one more star now."]]},
 	# ---- Arc 5: The Starbound Expedition (astral beasts guarding dying stars)
-	{"name": "Starport Horizon", "bg": "space", "pool": ["slime", "ex_nymph", "eroghost", "gumi_wolf"], "boss": "slarkoi", "variant": "astral", "mirror": true, "boss_hp": 4.8, "boss_atk": 1.8,
+	{"name": "Starport Horizon", "bg": "space", "pool": ["slime", "ex_nymph", "eroghost", "gumi_wolf", "code_zero"], "boss": "slarkoi", "variant": "astral", "mirror": true, "boss_hp": 4.8, "boss_atk": 1.8,
 		"mod": {"elem": "WIND", "atk": 0.2, "name": "Ion Storm: WIND/LIGHTNING units +20% ATK"},
 		"intro": [["nar", "— ARC 5 —   THE STARBOUND EXPEDITION"], ["nar", "A month after Noctis began to shine, its light started to blink. Three short. Three long. Three short."],
 			["gemora", "It is a distress signal, Commander. Noctis is relaying it. Other stars are dying — far beyond Euphoria."],
@@ -582,7 +634,7 @@ const CHAPTERS := [
 			["fidelia", "It's not evil. It's hungry. Commander, we drive it off the platform — don't let it reach the engines!"]],
 		"outro": [["gemora", "Behemoth retreating. Launch window open. Engines... engaged."], ["nar", "And the starport tore free of Euphoria's sky, carrying twenty-seven lights toward the stars."],
 			["lumeira", "Look, Commander! The butterflies are floating! Everything is floating!"], ["mora", "First stop: a planet whose star is going grey. They call it Mycelia."]]},
-	{"name": "Mycelia, the Spore World", "bg": "alien", "pool": ["ex_nymph", "slime", "gumi_wolf", "evy_blood_sage"], "boss": "ex_nymph", "variant": "astral", "mirror": true, "boss_hp": 16.0, "boss_atk": 2.4,
+	{"name": "Mycelia, the Spore World", "bg": "alien", "pool": ["ex_nymph", "slime", "gumi_wolf", "evy_blood_sage", "xaniyus"], "boss": "ex_nymph", "variant": "astral", "mirror": true, "boss_hp": 16.0, "boss_atk": 2.4,
 		"mod": {"elem": "EARTH", "atk": 0.2, "name": "Spore Bloom: EARTH units +20% ATK"},
 		"intro": [["glytta", "The ground is GLOWING. And soft. Like dancing on a cloud made of mushrooms!"], ["hyeonxa", "Do not touch anything. Do not eat anything. Especially you, Micca."],
 			["micca", "...I already put one in my box."], ["lumeira", "The butterflies hear something. The spores are... talking. They're scared of us."]],
@@ -597,7 +649,7 @@ const CHAPTERS := [
 			["nar", "The Spore Queen bowed, and from her crown she offered a single seed, pulsing with green fire."],
 			["gemora", "Analysis: the seed is alive. And it is pointing. Toward the black hole at the centre of this system."],
 			["mora", "...All the light from these dying stars is falling into it. Something is drinking the stars."]]},
-	{"name": "Event Horizon", "bg": "blackhole", "pool": ["eroghost", "evy_blood_sage", "ygg_naar", "slime"], "boss": "eroghost", "variant": "astral", "mirror": true, "boss_hp": 4.5,
+	{"name": "Event Horizon", "bg": "blackhole", "pool": ["eroghost", "evy_blood_sage", "ygg_naar", "slime", "veyr_nok"], "boss": "eroghost", "variant": "astral", "mirror": true, "boss_hp": 4.5,
 		"mod": {"elem": "LIGHT", "def": 0.25, "name": "Gravity Well: LIGHT units +25% DEF"},
 		"intro": [["mora", "Commander... my hourglass is spinning. Time bends here. Hold on to something. Hold on to me."],
 			["valeria", "The ice in my sword is falling sideways. That's not normal."], ["scylla", "We're standing on a stone floating over nothing. Lovely."]],
@@ -612,7 +664,7 @@ const CHAPTERS := [
 			["gemora", "The light is flowing outward now. Toward... a tree? There is a tree on the far side of the black hole. Size: incalculable."],
 			["lucidria", "...I know that tree. Every flower I ever pressed came from its seeds. Yggdrasil. The World Tree."],
 			["shina", "Hang on. 'Ygg'? As in Ygg-Naar? The giant eye from Chapter Five?!"], ["fidelia", "...We are going to have to have a talk with that eye."]]},
-	{"name": "Crown of Yggdrasil", "bg": "bigtree", "pool": ["gumi_wolf", "ex_nymph", "slarkoi", "ygg_naar", "eroghost"], "boss": "ygg_naar", "variant": "astral", "mirror": true, "boss_hp": 4.0, "boss_atk": 0.9,
+	{"name": "Crown of Yggdrasil", "bg": "bigtree", "pool": ["gumi_wolf", "ex_nymph", "slarkoi", "ygg_naar", "eroghost", "kurenai"], "boss": "ygg_naar", "variant": "astral", "mirror": true, "boss_hp": 4.0, "boss_atk": 0.9,
 		"mod": {"elem": "WATER", "atk": 0.25, "name": "Canopy Rain: WATER units +25% ATK"},
 		"intro": [["nar", "The World Tree grew between stars. Its branches held whole villages. Its roots drank light from a hundred suns."],
 			["lucidria", "It's dying. The leaves are gold because they're starving, not because they're beautiful."],
@@ -652,7 +704,7 @@ const CHAPTERS := [
 			["nar", "The Echo knelt, smiled at Sven, and faded into motes of old gold — which drifted into Sven's chest and stayed there."],
 			["sven", "...I remember a campfire. And you, laughing. A thousand years ago."],
 			["lucidria", "Commander. I owe you the truth, and I am afraid of it. But not here. At the Archive. Please."]]},
-	{"name": "The Drowned Archive", "bg": "aqua", "pool": ["slime", "slarkoi", "evy_blood_sage", "ex_nymph"], "boss": "hyeonxa", "variant": "echo", "mirror": true, "boss_hp": 7.0, "boss_atk": 1.6,
+	{"name": "The Drowned Archive", "bg": "aqua", "pool": ["slime", "slarkoi", "evy_blood_sage", "ex_nymph", "nagini"], "boss": "hyeonxa", "variant": "echo", "mirror": true, "boss_hp": 7.0, "boss_atk": 1.6,
 		"mod": {"elem": "WATER", "atk": 0.25, "name": "Sunken Memory: WATER units +25% ATK"},
 		"intro": [["scylla", "Beneath the reef there's a library. The fish swim between the shelves like they're reading."],
 			["lucidria", "The Archive of the First Oath. Every hero's name was written here. Every hero but one was reborn."],
@@ -668,7 +720,7 @@ const CHAPTERS := [
 			["nar", "The last page held a single line, in a hand the Commander's own hand recognised: 'I will come back. And next time, I will not make you wait alone.'"],
 			["lucidria", "...You promised that. A thousand years ago. To me."],
 			["mora", "Then the Oath isn't finished. It's waiting for the second half. At the Forge where the first rings were made."]]},
-	{"name": "The Forge of Oaths", "bg": "hell", "pool": ["gumi_wolf", "evy_blood_sage", "slarkoi", "eroghost"], "boss": "siv", "variant": "echo", "mirror": true, "boss_hp": 7.5, "boss_atk": 1.8,
+	{"name": "The Forge of Oaths", "bg": "hell", "pool": ["gumi_wolf", "evy_blood_sage", "slarkoi", "eroghost", "amatera"], "boss": "siv", "variant": "echo", "mirror": true, "boss_hp": 7.5, "boss_atk": 1.8,
 		"mod": {"elem": "FIRE", "atk": 0.25, "name": "Forge Heat: FIRE units +25% ATK"},
 		"intro": [["siv", "A forge! A really, REALLY big forge! Commander, my hands are tingling. Is that normal?"],
 			["abadonia", "My lion is nervous. He doesn't get nervous."], ["fidelia", "Every Oath Ring we've ever worn was made here, wasn't it?"]],
@@ -704,7 +756,7 @@ const CHAPTERS := [
 			["fidelia", "The Second Oath. Not to seal anything. Just... to stay together."], ["mora", "No hourglass. No echoes. Just a promise for tomorrow."],
 			["nar", "— END OF ARC 6: ECHOES OF THE FIRST OATH —   A thousand years later, the Commander kept the promise. Thank you for playing."]]},
 	# ---- Arc 7: Ashes of Abaddon (Abadonia's lost kingdom)
-	{"name": "Abaddon City", "bg": "abaddon", "pool": ["slarkoi", "gumi_wolf", "eroghost", "ex_nymph"], "boss": "slarkoi", "variant": "ashen", "mirror": true, "boss_hp": 5.0, "boss_atk": 1.8,
+	{"name": "Abaddon City", "bg": "abaddon", "pool": ["slarkoi", "gumi_wolf", "eroghost", "ex_nymph", "lamia"], "boss": "slarkoi", "variant": "ashen", "mirror": true, "boss_hp": 5.0, "boss_atk": 1.8,
 		"mod": {"elem": "EARTH", "atk": 0.25, "name": "Rusted Iron: EARTH units +25% ATK"},
 		"intro": [["nar", "— ARC 7 —   ASHES OF ABADDON"], ["nar", "One morning, Abadonia's lion refused to eat. He stood at the cathedral gate, facing west, growling at nothing."],
 			["abadonia", "...He smells it. Iron and rain and ash. He smells home."], ["fidelia", "Home? You never told us where you came from."],
@@ -720,7 +772,7 @@ const CHAPTERS := [
 		"outro": [["abadonia", "...It was built to protect us. And it waited three hundred years for someone to come home."],
 			["nar", "In the Colossus' chest, a bronze plate glowed: 'BY ORDER OF CROWN PRINCE AURELION — SEAL THE EASTERN GATE.'"],
 			["abadonia", "He sealed the gate... from the inside. Why would he—"], ["atalanta", "The eastern gate's open now. And there's... a jungle behind it? With very big footprints."]]},
-	{"name": "Primeval Vale", "bg": "dino", "pool": ["gumi_wolf", "ex_nymph", "svormentis", "slime"], "boss": "gumi_wolf", "variant": "ashen", "mirror": true, "boss_hp": 3.2, "boss_atk": 1.35,
+	{"name": "Primeval Vale", "bg": "dino", "pool": ["gumi_wolf", "ex_nymph", "svormentis", "slime", "cow_girl"], "boss": "gumi_wolf", "variant": "ashen", "mirror": true, "boss_hp": 3.2, "boss_atk": 1.35,
 		"mod": {"elem": "WIND", "atk": 0.25, "name": "Ancient Wilds: WIND units +25% ATK"},
 		"intro": [["atalanta", "DINOSAURS. Commander. Real, actual dinosaurs. I'm going to race one."], ["zennyo", "The little dragons are bowing to them. They're... ancestors?"],
 			["mora", "Time is frozen here. This valley is a pocket of the past — Aurelion sealed it away. But why?"]],
@@ -734,7 +786,7 @@ const CHAPTERS := [
 		"outro": [["nar", "The alpha shook off its ashen coat and padded away, lighter, into the green."],
 			["abadonia", "There's a path behind the waterfall. Old stone steps, worn smooth. The royal procession road."],
 			["lucidria", "Royal roads always lead to the same place, Commander. The tombs."], ["abadonia", "...The Necropolis of Kings. Where my father sleeps."]]},
-	{"name": "Necropolis of Kings", "bg": "necro", "pool": ["eroghost", "hairly", "ymir", "evy_blood_sage"], "boss": "eroghost", "variant": "ashen", "mirror": true, "boss_hp": 6.5, "boss_atk": 1.8,
+	{"name": "Necropolis of Kings", "bg": "necro", "pool": ["eroghost", "hairly", "ymir", "evy_blood_sage", "graeae"], "boss": "eroghost", "variant": "ashen", "mirror": true, "boss_hp": 6.5, "boss_atk": 1.8,
 		"mod": {"elem": "DARK", "def": 0.25, "name": "Grave Chill: DARK units +25% DEF"},
 		"intro": [["rumi", "Okay. This is the most haunted place I have ever been. And I've been to the Hollow Star."], ["furu", "So many restless souls... they're all wearing crowns."],
 			["abadonia", "Every king of Abaddon is buried here. Except one. There was never a tomb for Aurelion."]],
@@ -771,7 +823,7 @@ const CHAPTERS := [
 			["xylia", "...I could rebuild it. Not the same. Better. If the Queen allows it."], ["abadonia", "The Queen allows it. On one condition: the Commander gets the tallest tower."],
 			["nar", "— END OF ARC 7: ASHES OF ABADDON —   The lion finally ate his breakfast. Thank you for playing, Commander."]]},
 	# ---- Arc 8: The Gilded Gate (the 4 November heroes)
-	{"name": "The Gilded Gate", "bg": "asgard", "pool": ["hairly", "voodoo", "lizamorph", "slime"], "boss": "hairly", "variant": "astral", "mirror": true, "boss_hp": 3.5, "boss_atk": 1.7,
+	{"name": "The Gilded Gate", "bg": "asgard", "pool": ["hairly", "voodoo", "lizamorph", "slime", "roza"], "boss": "hairly", "variant": "astral", "mirror": true, "boss_hp": 3.5, "boss_atk": 1.7,
 		"mod": {"elem": "LIGHT", "atk": 0.25, "name": "Heaven's Gate: LIGHT units +25% ATK"},
 		"intro": [["nar", "— ARC 8 —   THE GILDED GATE"], ["nar", "One morning, a golden gate appeared in the sky above Asgard. Nobody had built it. Nobody could open it."],
 			["angela", "Commander. I am Angela, guardian of that gate. And I have failed — something slipped through it last night."],
@@ -788,7 +840,7 @@ const CHAPTERS := [
 			["hairly", "I didn't surrender. I read your Commander's card. It said: 'Stay close to this one.' So I will."],
 			["nar", "And so the witch who stole fates became the Commander's fortune teller."],
 			["angela", "Commander. The gate shows four more cracks. Four more realms are bleeding through. ...Will you let me fly beside you?"]]},
-	{"name": "Thousand-Coin Bazaar", "bg": "blackmarket", "pool": ["svormentis", "slime", "gumi_wolf", "ex_nymph"], "boss": "svormentis", "variant": "astral", "mirror": true, "boss_hp": 3.0, "boss_atk": 1.3,
+	{"name": "Thousand-Coin Bazaar", "bg": "blackmarket", "pool": ["svormentis", "slime", "gumi_wolf", "ex_nymph", "cleara"], "boss": "svormentis", "variant": "astral", "mirror": true, "boss_hp": 3.0, "boss_atk": 1.3,
 		"mod": {"elem": "EARTH", "atk": 0.25, "name": "Golden Tide: EARTH units +25% ATK"},
 		"intro": [["ninger", "You there! Commander! Yes, you! Want to buy a lucky coin? Only one gold! ...Okay, ten gold."],
 			["rumi", "A fellow merchant. I respect the hustle."], ["ninger", "I'm Ning Er, Princess of a Thousand Coins! And my bazaar is being EATEN."]],
@@ -833,7 +885,7 @@ const CHAPTERS := [
 			["hairly", "...I already knew all of you would say that. I read the cards."],
 			["nar", "— END OF ARC 8: THE GILDED GATE —   Welcome, new friends. Thank you for playing, Commander."]]},
 	# ---- Arc 9: The Wild Hunt (Luby + the tamed beasts; 4 Nov part 2 foes)
-	{"name": "Howling Wilds", "bg": "outland", "pool": ["gumi_wolf", "scomantis", "skelinch", "ex_nymph"], "boss": "scomantis", "variant": "feral", "mirror": true, "boss_hp": 4.2, "boss_atk": 1.9,
+	{"name": "Howling Wilds", "bg": "outland", "pool": ["gumi_wolf", "scomantis", "skelinch", "ex_nymph", "kurenai"], "boss": "scomantis", "variant": "feral", "mirror": true, "boss_hp": 4.2, "boss_atk": 1.9,
 		"mod": {"elem": "WIND", "atk": 0.25, "name": "Hunting Gale: WIND units +25% ATK"},
 		"intro": [["nar", "— ARC 9 —   THE WILD HUNT"], ["nar", "Three nights after the Gilded Gate closed, a horn sounded across the Outlands. Long. Low. Hungry."],
 			["nar", "In every camp, every tamed beast lifted its head at once — and their eyes turned green."],
@@ -851,7 +903,7 @@ const CHAPTERS := [
 			["scomantis", "...Click. I was... somewhere loud. And angry. And you pulled me out."],
 			["luby", "Wanna come home with us? We have snacks. And a very forgiving Commander."],
 			["scomantis", "...Snacks. Yes. Click-click."], ["atalanta", "The tracks go south. Toward the hot springs. Something big is bathing there."]]},
-	{"name": "Serpent Springs", "bg": "pool", "pool": ["serpentia", "slime", "scomantis", "voodoo"], "boss": "serpentia", "variant": "feral", "mirror": true, "boss_hp": 3.5, "boss_atk": 1.8,
+	{"name": "Serpent Springs", "bg": "pool", "pool": ["serpentia", "slime", "scomantis", "voodoo", "nagini", "rin"], "boss": "serpentia", "variant": "feral", "mirror": true, "boss_hp": 3.5, "boss_atk": 1.8,
 		"mod": {"elem": "FIRE", "atk": 0.25, "name": "Scalding Springs: FIRE units +25% ATK"},
 		"intro": [["nar", "The springs of the south steam day and night. Today the water was boiling — and singing the horn's song."],
 			["zennyo", "That steam smells like dragon. Cousin dragon. Angry cousin dragon."],
@@ -867,7 +919,7 @@ const CHAPTERS := [
 			["serpentia", "...It's quiet. Oh, it's so quiet. Thank you, little cousin."], ["zennyo", "Anytime. ...I'm not little."],
 			["luby", "Two down! But the horn's still blowing. From the north now. From... a carnival?"],
 			["hairly", "I drew a card. The Puppet. Someone up there is pulling strings — and not only the beasts'."]]},
-	{"name": "The Puppet Fair", "bg": "necro", "pool": ["lizamorph", "eroghost", "skelinch"], "boss": "voodoo", "variant": "feral", "mirror": true, "boss_hp": 2.6, "boss_atk": 1.4,
+	{"name": "The Puppet Fair", "bg": "necro", "pool": ["lizamorph", "eroghost", "skelinch", "veyr_nok", "graeae"], "boss": "voodoo", "variant": "feral", "mirror": true, "boss_hp": 2.6, "boss_atk": 1.4,
 		"mod": {"elem": "LIGHT", "atk": 0.25, "name": "Fairground Lights: LIGHT units +25% ATK"},
 		"intro": [["nar", "A carnival nobody remembered building stood in the northern ruins. Music boxes played the horn's song, slightly out of tune."],
 			["vexira", "Ooh, a carnival! With rides! And clowns! ...Why are all the clowns staring at me?"],
@@ -905,7 +957,7 @@ const CHAPTERS := [
 			["nar", "That night, for the first time, every beast in the cathedral slept beside someone who loved it."],
 			["nar", "— END OF ARC 9: THE WILD HUNT —   Every bond held."]]},
 	# ---- Arc 10: The Abyss Choir (Gala, Morana, Seraph, Tamo; Octra rides out of the Abyss)
-	{"name": "Choir of the Abyss", "bg": "necro", "pool": ["lizamorph", "eroghost", "hairly", "voodoo"], "boss": "octra", "variant": "hollow", "mirror": true, "boss_hp": 4.0, "boss_atk": 1.9,
+	{"name": "Choir of the Abyss", "bg": "necro", "pool": ["lizamorph", "eroghost", "hairly", "voodoo", "selene", "lolth"], "boss": "octra", "variant": "hollow", "mirror": true, "boss_hp": 4.0, "boss_atk": 1.9,
 		"mod": {"elem": "LIGHT", "atk": 0.3, "name": "Holy Ground: LIGHT units +30% ATK"},
 		"intro": [["nar", "A week after the Hunt, the cathedral bells rang by themselves — thirteen times, at midnight."],
 			["morana", "Don't be alarmed, Commander. I rang them. ...Well. Something rang them THROUGH me."],
@@ -948,7 +1000,7 @@ const CHAPTERS := [
 			["morana", "Everyone is welcome under the cathedral roof. Even Abyss girls. Even foxes. ...Especially the Commander."],
 			["nar", "— END OF ARC 10: THE ABYSS CHOIR —   But far to the north, snow began to fall upward."]]},
 	# ---- Arc 11: The Frostbound Crown (Valeria, Schylua, Micca, Aqua, Rubby; the Winter Crown wakes)
-	{"name": "Frostvale Pass", "bg": "ice", "pool": ["slime", "scomantis", "skelinch", "ymir"], "boss": "schylua", "variant": "frost", "mirror": true, "boss_hp": 3.2, "boss_atk": 1.5,
+	{"name": "Frostvale Pass", "bg": "ice", "pool": ["slime", "scomantis", "skelinch", "ymir", "rin"], "boss": "schylua", "variant": "frost", "mirror": true, "boss_hp": 3.2, "boss_atk": 1.5,
 		"mod": {"elem": "FIRE", "atk": 0.3, "name": "Biting Cold: FIRE units +30% ATK"},
 		"intro": [["nar", "One morning the cathedral woke up under snow. Inside. On the altar, on the beds, in Gala's teacup."],
 			["gala", "Darling, my tea is a SNOWBALL. Who did this? Confess, and I'll only set you a little bit on fire."],
@@ -990,7 +1042,7 @@ const CHAPTERS := [
 			["valeria", "You're forgiven. You were tricked. ...But where is the Crown, Micca? The box is empty."],
 			["micca", "It jumped out on the first day. It said it wanted 'a queen who holds water'. Then it flew south, toward the sea."],
 			["aqua", "(far away, at the shore) ...Why is my chalice so cold?"]]},
-	{"name": "The Glass Sea", "bg": "aqua", "pool": ["serpentia", "slarkoi", "slime", "octra"], "boss": "aqua", "variant": "frost", "mirror": true, "boss_hp": 3.6, "boss_atk": 1.4,
+	{"name": "The Glass Sea", "bg": "aqua", "pool": ["serpentia", "slarkoi", "slime", "octra", "octavia"], "boss": "aqua", "variant": "frost", "mirror": true, "boss_hp": 3.6, "boss_atk": 1.4,
 		"mod": {"elem": "FIRE", "atk": 0.3, "name": "Thaw Line: FIRE units +30% ATK"},
 		"intro": [["nar", "The sea had frozen flat as a mirror, all the way to the horizon. Waves stood still in the middle of breaking."],
 			["rubby", "Whoa! We can WALK on the ocean! ...Commander, why does nobody else look excited?"],
@@ -1009,7 +1061,7 @@ const CHAPTERS := [
 			["cthollia", "Welcome back, little cup. ...Now unfreeze my tentacle, please."],
 			["aqua", "Commander, the Crown slipped off my head before the ice broke. It went home. To Frostvale. To the throne."],
 			["valeria", "...Then it's waiting for me. It always was."]]},
-	{"name": "Throne of Frostvale", "bg": "ice", "pool": ["ymir", "scomantis", "skelinch", "serpentia"], "boss": "valeria", "variant": "frost", "mirror": true, "boss_hp": 1.2, "boss_atk": 0.8,
+	{"name": "Throne of Frostvale", "bg": "ice", "pool": ["ymir", "scomantis", "skelinch", "serpentia", "cleara"], "boss": "valeria", "variant": "frost", "mirror": true, "boss_hp": 1.2, "boss_atk": 0.8,
 		"mod": {"elem": "FIRE", "atk": 0.35, "name": "Hearth Oath: FIRE units +35% ATK"},
 		"intro": [["nar", "The palace of Frostvale was carved out of a single glacier. In the throne room, the Winter Crown floated alone, waiting."],
 			["valeria", "Every hundred years it chooses. A hundred years ago, it chose my grandmother. She never smiled again."],
@@ -1031,7 +1083,7 @@ const CHAPTERS := [
 			["valeria", "...One snow day. Every winter. By royal decree. And the Commander builds the first snowman."],
 			["nar", "— END OF ARC 11: THE FROSTBOUND CROWN —   That night, a paper lantern nobody remembered lighting began to glow."]]},
 	# ---- Arc 12: The Dreaming Lantern (Lumeira, Glytta, Kara, Gemora; Rumi, Furu and Mora keep everyone awake)
-	{"name": "The Sleeping Cathedral", "bg": "lobby", "pool": ["slime", "ex_nymph", "eroghost", "hairly"], "boss": "glytta", "variant": "dream", "mirror": true, "boss_hp": 3.0, "boss_atk": 1.35,
+	{"name": "The Sleeping Cathedral", "bg": "lobby", "pool": ["slime", "ex_nymph", "eroghost", "hairly", "nox"], "boss": "glytta", "variant": "dream", "mirror": true, "boss_hp": 3.0, "boss_atk": 1.35,
 		"mod": {"elem": "LIGHT", "atk": 0.3, "name": "Morning Bell: LIGHT units +30% ATK"},
 		"intro": [["nar", "The morning bell did not ring. In every room of the cathedral, the heroes slept on, smiling, with a butterfly resting on each forehead."],
 			["rumi", "Commander! Finally, someone awake! I've been shaking people for an hour. Nobody pays me for this!"],
@@ -1055,7 +1107,7 @@ const CHAPTERS := [
 			["furu", "Three days, dear. Sit. Let me bandage them."],
 			["glytta", "...It was so nice, though. Everyone clapped. ...You'd clap for me even if I messed up, right?"],
 			["mora", "One awake. The butterflies are flying east, to the old graveyard. ...Kara sleeps there."]]},
-	{"name": "The Field Without Endings", "bg": "forest", "pool": ["gumi_wolf", "scomantis", "voodoo", "evy_blood_sage"], "boss": "kara", "variant": "dream", "mirror": true, "boss_hp": 2.4, "boss_atk": 1.6,
+	{"name": "The Field Without Endings", "bg": "forest", "pool": ["gumi_wolf", "scomantis", "voodoo", "evy_blood_sage", "anthis", "cow_girl"], "boss": "kara", "variant": "dream", "mirror": true, "boss_hp": 2.4, "boss_atk": 1.6,
 		"mod": {"elem": "WATER", "atk": 0.3, "name": "Morning Dew: WATER units +30% ATK"},
 		"intro": [["nar", "In Kara's dream the graveyard was gone. In its place lay a meadow where every flower was in bloom at once, and nothing had ever wilted."],
 			["glytta", "It's pretty. ...Too pretty. Even the fallen leaves are jumping back onto the trees."],
@@ -1076,7 +1128,7 @@ const CHAPTERS := [
 			["kara", "Commander. Next time I look that tired... don't wait three days. Bring tea. Sit with me."],
 			["rumi", "Two awake! That's two invoices. Where next, clock lady?"],
 			["mora", "Up. The butterflies are climbing past the clouds. Gemora is dreaming of the stars."]]},
-	{"name": "The Star That Stayed", "bg": "space", "pool": ["svormentis", "lizamorph", "ymir", "octra"], "boss": "gemora", "variant": "dream", "mirror": true, "boss_hp": 3.4, "boss_atk": 1.25,
+	{"name": "The Star That Stayed", "bg": "space", "pool": ["svormentis", "lizamorph", "ymir", "octra", "code_zero"], "boss": "gemora", "variant": "dream", "mirror": true, "boss_hp": 3.4, "boss_atk": 1.25,
 		"mod": {"elem": "EARTH", "atk": 0.3, "name": "Solid Ground: EARTH units +30% ATK"},
 		"intro": [["nar", "Gemora's dream had no ground. Only a small warm star, and around it a ring of houses made of light."],
 			["kara", "I know the look of a place that is already gone. This star died a long time ago."],
@@ -1097,7 +1149,7 @@ const CHAPTERS := [
 			["gemora", "New data: saying the word did not delete the star. It is still in memory. And you are all still here. Curious."],
 			["furu", "That's how it works, dear. Come, hold my hand on the way down."],
 			["mora", "Three awake. Only the dreamer is left. She is at the roots of the great tree, at the very bottom of her own sleep."]]},
-	{"name": "The Butterfly's Cradle", "bg": "bigtree", "pool": ["ex_nymph", "hairly", "serpentia", "skelinch"], "boss": "lumeira", "variant": "dream", "mirror": true, "boss_hp": 1.5, "boss_atk": 0.9,
+	{"name": "The Butterfly's Cradle", "bg": "bigtree", "pool": ["ex_nymph", "hairly", "serpentia", "skelinch", "lolth"], "boss": "lumeira", "variant": "dream", "mirror": true, "boss_hp": 1.5, "boss_atk": 0.9,
 		"mod": {"elem": "LIGHT", "atk": 0.35, "name": "First Light: LIGHT units +35% ATK"},
 		"intro": [["nar", "At the roots of the great tree hung the old festival lantern. Inside it, curled up like a cat, slept Lumeira, and a million butterflies breathed in time with her."],
 			["mora", "The lantern is a wish-catcher. It was never meant to stay lit after the festival. It heard one wish too many."],
@@ -1125,7 +1177,7 @@ const CHAPTERS := [
 			["rumi", "Breakfast is on the Commander. It's in the contract. I wrote it down."],
 			["nar", "— END OF ARC 12: THE DREAMING LANTERN —   A week later, an invitation arrived, sealed in green wax."]]},
 	# ---- Arc 13: The Jade Masquerade (Ning Er, Mei, Angela, Scylla; Atalanta, Gala, Seraph and Morana crash the ball)
-	{"name": "The Thousand-Coin Ball", "bg": "blackmarket", "pool": ["voodoo", "hairly", "scomantis", "svormentis"], "boss": "ninger", "variant": "jade", "mirror": true, "boss_hp": 3.0, "boss_atk": 1.35,
+	{"name": "The Thousand-Coin Ball", "bg": "blackmarket", "pool": ["voodoo", "hairly", "scomantis", "svormentis", "roza", "selene"], "boss": "ninger", "variant": "jade", "mirror": true, "boss_hp": 3.0, "boss_atk": 1.35,
 		"mod": {"elem": "WIND", "atk": 0.3, "name": "Whirling Waltz: WIND units +30% ATK"},
 		"intro": [["nar", "The invitation read: 'A masquerade at the Thousand-Coin Bazaar. Every guest receives a mask of jade. Every guest becomes who they wish to be.'"],
 			["gala", "Darling, a masked ball! I have nine gowns and a moral duty to wear all of them."],
@@ -1149,7 +1201,7 @@ const CHAPTERS := [
 			["morana", "Who sold you the mask, child?"],
 			["ninger", "A tall lady in a veil, smelling of salt. She paid in black pearls. She has three more masks. For 'the proud ones', she said."],
 			["nar", "Somewhere above the bazaar, steel rang against steel, again and again, like a clock that could not stop."]]},
-	{"name": "The Endless Duel", "bg": "dragonfire", "pool": ["skelinch", "ymir", "gumi_wolf", "serpentia"], "boss": "mei", "variant": "jade", "mirror": true, "boss_hp": 2.2, "boss_atk": 1.65,
+	{"name": "The Endless Duel", "bg": "dragonfire", "pool": ["skelinch", "ymir", "gumi_wolf", "serpentia", "lamia"], "boss": "mei", "variant": "jade", "mirror": true, "boss_hp": 2.2, "boss_atk": 1.65,
 		"mod": {"elem": "WATER", "atk": 0.3, "name": "Cool Heads: WATER units +30% ATK"},
 		"intro": [["nar", "The duelling hall above the bazaar was full of broken swords. In the middle stood one girl in a rabbit mask, still in her stance."],
 			["atalanta", "That's Mei! She's beaten forty challengers since yesterday. I counted the swords. She hasn't sat down once."],
@@ -1169,7 +1221,7 @@ const CHAPTERS := [
 			["ninger", "Carrots. On the house. I am never saying those words again, so enjoy them."],
 			["mei", "The veiled lady watched me fight. She said the next mask was for 'the one who judges everyone but herself'."],
 			["seraph", "...Angela. Sister, no."]]},
-	{"name": "The Hall of Verdicts", "bg": "asgard", "pool": ["lizamorph", "octra", "eroghost", "evy_blood_sage"], "boss": "angela", "variant": "jade", "mirror": true, "boss_hp": 3.4, "boss_atk": 1.3,
+	{"name": "The Hall of Verdicts", "bg": "asgard", "pool": ["lizamorph", "octra", "eroghost", "evy_blood_sage", "amatera"], "boss": "angela", "variant": "jade", "mirror": true, "boss_hp": 3.4, "boss_atk": 1.3,
 		"mod": {"elem": "DARK", "atk": 0.3, "name": "Honest Shadows: DARK units +30% ATK"},
 		"intro": [["nar", "The ballroom's upper gallery had become a courtroom. Masked guests stood in rows, each waiting to be told what they were guilty of."],
 			["seraph", "Angela is the kindest of the Valkyries. But she has always believed kindness must be earned. The mask has only removed the kindness."],
@@ -1189,7 +1241,7 @@ const CHAPTERS := [
 			["seraph", "And you will apologise to him yourself. That is my verdict. It comes with a hug."],
 			["angela", "The veiled one stood beside my chair the whole time. She whispered each sentence before I spoke it."],
 			["morana", "Then the last mask is her own. Commander — the lowest cellar of the bazaar opens onto the sea."]]},
-	{"name": "Maskmaker's Grotto", "bg": "aqua", "pool": ["slarkoi", "serpentia", "octra", "lizamorph"], "boss": "scylla", "variant": "jade", "mirror": true, "boss_hp": 1.6, "boss_atk": 0.9,
+	{"name": "Maskmaker's Grotto", "bg": "aqua", "pool": ["slarkoi", "serpentia", "octra", "lizamorph", "xaniyus", "nox"], "boss": "scylla", "variant": "jade", "mirror": true, "boss_hp": 1.6, "boss_atk": 0.9,
 		"mod": {"elem": "EARTH", "atk": 0.35, "name": "Solid Footing: EARTH units +35% ATK"},
 		"intro": [["nar", "Below the bazaar, the sea had carved a grotto. On every wall hung faces of jade: smiling, weeping, proud. In the middle, a workbench, and a veiled woman carving one more."],
 			["angela", "Scylla. The Kraken Queen. But she guards the deep trenches. She has not come ashore in years."],
@@ -2461,6 +2513,23 @@ const FORM_BOND := [0, 2, 4, 6, 8, 9, 10, 10]
 const PET_REWARDS := {3: {"gems": 50}, 5: {"gems": 80, "gold": 20000}, 7: {"summon_ticket": 1}, 10: {"gems": 200, "celestial_gem": 1}}
 ## personality per foe: [greeting when tamed, talk lines..., gift thanks, pat reaction]
 const PET_LINES := {
+	"amatera": ["Chains again? ...No. Yours are lighter. I will stay.", "These hands burned every door I touched. You left yours open anyway.", "The pit taught me to count in screams. Teach me something quieter.", "Careful. They're cursed. ...You held them anyway. Fool.", "A gift, for the thing in the chains? ...I have no pocket. I'll hold it."],
+	"anthis": ["I only followed your lantern. ...It's warm. May I stay near it?", "Moths don't choose the light. I did. Remember that.", "My powder stains everything. Your sleeve is silver now. Sorry.", "Soft... don't brush too hard. The wings tear.", "For me? I'll keep it where the dust won't reach."],
+	"cleara": ["Three thousand years asleep, and I wake to YOU. Acceptable.", "My tomb had gold, servants and silence. Your camp has bad tea. I prefer the tea.", "Kneel? No, no. Sit. A queen gets lonely on a coffin.", "You may fan me. ...You may also stop looking so pleased.", "An offering! Finally someone remembers the customs."],
+	"code_zero": ["Unit Code Zero. Pilot status: reassigned to... you. Confirm.", "The worm is called Byte. It ate my last commander's boots. Not yours. Yet.", "Running diagnostics. Heart rate elevated near you. Logging as 'error'.", "Helmet contact detected. ...Do it again. For calibration.", "Supply received. Byte says thank you. I also say it."],
+	"cow_girl": ["Moo~ You win! So I'm your problem now, Commander!", "I swing the log, you point where. Easy teamwork!", "Milk's fresh every morning. Don't make it weird.", "Hehe, the bell jingles when you pat! Again!", "A present?! I'll trade you a hug. No refunds!"],
+	"graeae": ["...Don't unwrap me. ...You may stay, if you don't unwrap me.", "The mouth is always hungry. I am not. We argue.", "It bit a priest once. It has never bitten you. It likes you. Awful.", "Mm. Gentle. The bandages remember gentle.", "It wants to eat the ribbon. I'm keeping the gift."],
+	"kurenai": ["You parried my blades. Nobody parries my blades. Train me.", "A mantis prays before she strikes. Lately I pray you'll watch.", "Stand still. There's a leaf in your hair. ...I wasn't going to cut it.", "Hm. Your hand is steady. Good. Keep it there.", "A gift before a duel is an insult. After one... it is allowed."],
+	"lamia": ["My scythe was tired of cutting strangers. It can rest on your wall.", "They call me Reaver. You call me by name. Keep doing that.", "Purple is the colour of a bruise healing. I looked it up for you.", "The armour bites. I don't. ...Mostly.", "Tch. Fine. I'll take it. Don't tell the others I smiled."],
+	"lolth": ["Come into my parlour~ ...No? Then I'll come into yours.", "My children whisper your name at night. All eight hundred of them.", "A web is just a letter nobody answered. You answered.", "Careful, darling. Eight legs, and all of them ticklish.", "For me? I'll wrap it in silk so it never leaves."],
+	"nagini": ["Don't meet my eyes— ...oh. You did. And you're still warm.", "The lake was so still I forgot my own voice. Say something. Anything.", "My hair hisses when I'm happy. Ignore it. Please.", "They coil around your wrist on their own. I'm not doing that.", "A gift... I'll keep it above the waterline."],
+	"nox": ["Hehehe~ You caught me! Now I stick to you. Forever. That's the rule.", "I'm made of midnight and bad ideas. Want some?", "I ate your left sock. It called to me.", "Squish~ again! Push harder, I bounce back!", "Shiny! I'll keep it inside me. You can see it float, look!"],
+	"octavia": ["Eight arms, Commander. One for you. The other seven for whoever's rude to you.", "The deep is quiet. You are loud. I've decided I like loud.", "Stop counting the suckers. ...Three hundred and twelve.", "Mm. Not the horns. ...Fine. The horns.", "A surface gift. It will rust below. I'll keep it up here, then."],
+	"rin": ["My sting didn't stop you. Nothing I have stops you. Fine. I yield.", "The venom's cold, not cruel. There's a difference. Learn it.", "I rest upside down. Don't stare. ...You're staring.", "Careful near the tail. It has opinions.", "For me? Hm. It's blue. You noticed I like blue."],
+	"roza": ["Ha! Outgunned by a commander with no gun. Sign me up.", "Every rifle here has a name. The newest one's named after you.", "Gold's heavy, boss. So's being alone with it.", "Whoa— easy. Safety's on. Mine isn't.", "A gift? I'd shoot the moon for you. Say the word."],
+	"selene": ["A commander who won't look away... dangerous. I'll stay and study you.", "I feed on longing. You have so little. It's maddening.", "Wings are for leaving. I keep folding them around you.", "Mm... that's my line, you know.", "No one gives a succubus gifts. They only take. ...Thank you."],
+	"veyr_nok": ["They all turned to look at you. All of them. So I did too.", "Each balloon is an eye I didn't want anymore. This one likes you.", "Don't pop them. They cry, and then I cry, and it's a whole thing.", "The braid is three metres. Yes, you may carry the end.", "A gift! Every eye is watching it. They approve."],
+	"xaniyus": ["The tide sent me to herald something. I think it was you.", "The horn hums when the sea is near. It hums near you too.", "I walk badly on land. Walk slowly with me.", "Not the horn— ...mm. All right. Once.", "The tide takes offerings. I am keeping this one."],
 	"octra": ["Hm. You tamed me — or my beast? ...Both of us bite, Commander.", "My beast has a hundred eyes. All of them sulk when you leave.", "I sat on an abyss for a thousand years. Your lap is... an upgrade.", "Mm... the beast is purring. So am I. Don't tell anyone.", "A gift? The abyss never gave me gifts. Only hunger. ...Thank you."],
 	"eroghost": ["...You see me? Nobody ever sees me. Fine. I'll haunt YOU now.", "I used to rattle chains at travellers. Now I rattle them at your door. Progress.", "Ghosts don't sleep. I just watch you sleep. ...Is that weird?", "Warm hands. Ugh. Do it again.", "Ooh, a gift! I'll keep it forever. Literally forever."],
 	"evy_blood_sage": ["A commander who tames witches... how delightfully reckless.", "My spells drink blood. I prefer tea, honestly. Bitter, like me.", "Stay still. I'm reading your fate in the candle wax. ...You'll spoil me rotten.", "Mm. Your touch is warmer than any blood rite.", "A present? You do know how to court a witch."],
@@ -2704,7 +2773,7 @@ static func fav_room(id: String) -> String:
 
 # ------------------------------------------------------------------ Starlight Rift (weekly roguelite climb)
 const RIFT_MAPS := ["space", "alien", "abaddon", "blackhole", "dino", "bigtree", "necro", "galaxy", "dragonfire", "asgard", "outland", "ice", "apocalypse", "hell", "aqua", "forest"]
-const RIFT_POOL := ["slime", "ex_nymph", "gumi_wolf", "slarkoi", "eroghost", "evy_blood_sage", "ygg_naar", "hairly", "svormentis", "ymir", "scomantis", "skelinch", "serpentia", "voodoo", "lizamorph", "octra"]
+const RIFT_POOL := ["slime", "ex_nymph", "gumi_wolf", "slarkoi", "eroghost", "evy_blood_sage", "ygg_naar", "hairly", "svormentis", "ymir", "scomantis", "skelinch", "serpentia", "voodoo", "lizamorph", "octra", "amatera", "anthis", "cleara", "code_zero", "cow_girl", "graeae", "kurenai", "lamia", "lolth", "nagini", "nox", "octavia", "rin", "roza", "selene", "veyr_nok", "xaniyus"]
 const RIFT_VARIANTS := ["mirror", "hollow", "astral", "echo", "ashen", "frost", "dream", "jade"]
 ## Blessings: picked 1-of-3 after every win; they stack for the rest of the run.
 const BLESSINGS := {
@@ -3576,8 +3645,8 @@ static func _rig_for(p: String) -> Dictionary:
 		return HERO_RIGS[p]
 	return form_rigs().get(p, {})
 
-## Pivot rigs for the other outfits / forms (data/char_rigs.json, built by measuring each art
-## against its stage1 rig). JSON arrays become the Vector/Color types the CharRig shader expects.
+## Pivot rigs for the other outfits / forms and for the 15 Nov enemies (data/char_rigs.json; new rigs are
+## measured per art, checked with tools/rig_preview.gd + rig_face.gd and merged by tools/merge_dev_rigs.py). JSON arrays become the Vector/Color types the CharRig shader expects.
 static func form_rigs() -> Dictionary:
 	if _form_rigs.is_empty():
 		_form_rigs["_loaded"] = {}

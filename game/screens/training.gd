@@ -45,7 +45,13 @@ func build() -> void:
 	rp.add_child(g)
 	for d in DB.training_dummies():
 		g.add_child(_card(str(d["elem"]), str(d["id"])))
-	g.add_child(_records_tile())
+	# five partners + the records tile fill 3 x 2; with six partners (a LIGHT one exists since the
+	# 15 Nov enemies) the grid is full and the records move into the left column
+	if DB.training_dummies().size() < 6:
+		g.add_child(_records_tile())
+	else:
+		lv.add_child(_records_tile())
+		lv.move_child(lv.get_child(lv.get_child_count() - 1), lv.get_child_count() - 2)
 	UI.stagger(g, 0.05)
 	tutorial("training")
 

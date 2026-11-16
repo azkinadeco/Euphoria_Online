@@ -2023,6 +2023,586 @@
     "res://art/characters/enemies/octra/sprite/octra_sprite_2.png",
     "res://art/characters/enemies/octra/sprite/octra_sprite_3.png"
    ]
+  },
+  "amatera": {
+   "id": "amatera",
+   "display_name": "Amatera",
+   "title": "CHAINED HAND OF THE PIT",
+   "element": "DARK",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/amatera/char/amatera_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/amatera/char/amatera_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/amatera/char/amatera_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/amatera/char/amatera_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/amatera/char/amatera_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/enemies/amatera/char/amatera_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/amatera/sprite/amatera_sprite_1.png",
+    "res://art/characters/enemies/amatera/sprite/amatera_sprite_2.png",
+    "res://art/characters/enemies/amatera/sprite/amatera_sprite_3.png",
+    "res://art/characters/enemies/amatera/sprite/amatera_sprite_4.png"
+   ]
+  },
+  "anthis": {
+   "id": "anthis",
+   "display_name": "Anthis",
+   "title": "PALE MOTH WANDERER",
+   "element": "WIND",
+   "class": "ASSASSIN",
+   "portrait": "res://art/characters/enemies/anthis/char/anthis_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/anthis/char/anthis_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/anthis/char/anthis_char_stage2.png",
+     "interactions": [
+      "res://art/characters/enemies/anthis/char/anthis_char_stage2_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/anthis/char/anthis_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/anthis/char/anthis_char_evo2.png",
+     "interactions": [
+      "res://art/characters/enemies/anthis/char/anthis_char_evo2_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/anthis/sprite/anthis_sprite_1.png",
+    "res://art/characters/enemies/anthis/sprite/anthis_sprite_2.png"
+   ]
+  },
+  "cleara": {
+   "id": "cleara",
+   "display_name": "Cleara",
+   "title": "PHARAOH OF THE GILDED TOMB",
+   "element": "EARTH",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/cleara/char/cleara_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/cleara/char/cleara_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/cleara/char/cleara_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/enemies/cleara/char/cleara_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/cleara/char/cleara_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/cleara/char/cleara_char_evo2.png",
+     "interactions": [
+      "res://art/characters/enemies/cleara/char/cleara_char_evo2_alt1.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/enemies/cleara/char/cleara_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/cleara/sprite/cleara_sprite_1.png",
+    "res://art/characters/enemies/cleara/sprite/cleara_sprite_2.png"
+   ]
+  },
+  "code_zero": {
+   "id": "code_zero",
+   "display_name": "Code Zero",
+   "title": "PILOT OF THE SKULL WORM",
+   "element": "LIGHTNING",
+   "class": "TANK",
+   "portrait": "res://art/characters/enemies/code_zero/char/code_zero_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/code_zero/char/code_zero_char_stage1.png",
+     "interactions": [
+      "res://art/characters/enemies/code_zero/char/code_zero_char_stage1_alt1.png"
+     ]
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/code_zero/char/code_zero_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/enemies/code_zero/char/code_zero_char_stage3.png",
+     "interactions": [
+      "res://art/characters/enemies/code_zero/char/code_zero_char_stage3_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/code_zero/char/code_zero_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/code_zero/char/code_zero_char_evo1_alt1.png",
+      "res://art/characters/enemies/code_zero/char/code_zero_char_evo1_alt2.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/code_zero/char/code_zero_char_evo2.png",
+     "interactions": [
+      "res://art/characters/enemies/code_zero/char/code_zero_char_evo2_alt1.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/enemies/code_zero/char/code_zero_char_evo3.png",
+     "interactions": [
+      "res://art/characters/enemies/code_zero/char/code_zero_char_evo3_alt1.png"
+     ]
+    },
+    "evo4": {
+     "base": "res://art/characters/enemies/code_zero/char/code_zero_char_evo4.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/code_zero/sprite/code_zero_sprite_1.png",
+    "res://art/characters/enemies/code_zero/sprite/code_zero_sprite_2.png",
+    "res://art/characters/enemies/code_zero/sprite/code_zero_sprite_3.png"
+   ]
+  },
+  "cow_girl": {
+   "id": "cow_girl",
+   "display_name": "Cow Girl",
+   "title": "MEADOW BRUISER",
+   "element": "EARTH",
+   "class": "WARRIOR",
+   "portrait": "res://art/characters/enemies/cow_girl/char/cow_girl_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/cow_girl/char/cow_girl_char_stage1.png",
+     "interactions": [
+      "res://art/characters/enemies/cow_girl/char/cow_girl_char_stage1_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/cow_girl/char/cow_girl_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/cow_girl/char/cow_girl_char_evo2.png",
+     "interactions": [
+      "res://art/characters/enemies/cow_girl/char/cow_girl_char_evo2_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/cow_girl/sprite/cow_girl_sprite_1.png",
+    "res://art/characters/enemies/cow_girl/sprite/cow_girl_sprite_2.png"
+   ]
+  },
+  "graeae": {
+   "id": "graeae",
+   "display_name": "Graeae",
+   "title": "THE BANDAGED MAW",
+   "element": "DARK",
+   "class": "TANK",
+   "portrait": "res://art/characters/enemies/graeae/char/graeae_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/graeae/char/graeae_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/graeae/char/graeae_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/graeae/char/graeae_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/graeae/char/graeae_char_evo1_alt1.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/graeae/char/graeae_char_evo2.png",
+     "interactions": [
+      "res://art/characters/enemies/graeae/char/graeae_char_evo2_alt1.png",
+      "res://art/characters/enemies/graeae/char/graeae_char_evo2_alt2.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/graeae/sprite/graeae_sprite_1.png",
+    "res://art/characters/enemies/graeae/sprite/graeae_sprite_2.png",
+    "res://art/characters/enemies/graeae/sprite/graeae_sprite_3.png"
+   ]
+  },
+  "kurenai": {
+   "id": "kurenai",
+   "display_name": "Kurenai",
+   "title": "EMERALD MANTIS BLADE",
+   "element": "WIND",
+   "class": "ASSASSIN",
+   "portrait": "res://art/characters/enemies/kurenai/char/kurenai_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/kurenai/char/kurenai_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/kurenai/char/kurenai_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/enemies/kurenai/char/kurenai_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/kurenai/char/kurenai_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/kurenai/char/kurenai_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/enemies/kurenai/char/kurenai_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/kurenai/sprite/kurenai_sprite_1.png",
+    "res://art/characters/enemies/kurenai/sprite/kurenai_sprite_2.png",
+    "res://art/characters/enemies/kurenai/sprite/kurenai_sprite_3.png"
+   ]
+  },
+  "lamia": {
+   "id": "lamia",
+   "display_name": "Lamia",
+   "title": "VIOLET REAVER",
+   "element": "DARK",
+   "class": "WARRIOR",
+   "portrait": "res://art/characters/enemies/lamia/char/lamia_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/lamia/char/lamia_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/lamia/char/lamia_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/lamia/char/lamia_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/lamia/char/lamia_char_evo1_alt1.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/lamia/char/lamia_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/enemies/lamia/char/lamia_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/lamia/sprite/lamia_sprite_1.png",
+    "res://art/characters/enemies/lamia/sprite/lamia_sprite_2.png",
+    "res://art/characters/enemies/lamia/sprite/lamia_sprite_3.png"
+   ]
+  },
+  "lolth": {
+   "id": "lolth",
+   "display_name": "Lolth",
+   "title": "BROODMOTHER OF WHISPERS",
+   "element": "DARK",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/lolth/char/lolth_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/lolth/char/lolth_char_stage1.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/lolth/char/lolth_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/lolth/sprite/lolth_sprite_1.png",
+    "res://art/characters/enemies/lolth/sprite/lolth_sprite_2.png"
+   ]
+  },
+  "nagini": {
+   "id": "nagini",
+   "display_name": "Nagini",
+   "title": "GORGON OF THE STILL LAKE",
+   "element": "WATER",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/nagini/char/nagini_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/nagini/char/nagini_char_stage1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/nagini/sprite/nagini_sprite_1.png"
+   ]
+  },
+  "nox": {
+   "id": "nox",
+   "display_name": "Nox",
+   "title": "MIDNIGHT GEL",
+   "element": "CHAOS",
+   "class": "TANK",
+   "portrait": "res://art/characters/enemies/nox/char/nox_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/nox/char/nox_char_stage1.png",
+     "interactions": [
+      "res://art/characters/enemies/nox/char/nox_char_stage1_alt1.png"
+     ]
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/nox/char/nox_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/nox/char/nox_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/nox/char/nox_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/nox/sprite/nox_sprite_1.png",
+    "res://art/characters/enemies/nox/sprite/nox_sprite_2.png"
+   ]
+  },
+  "octavia": {
+   "id": "octavia",
+   "display_name": "Octavia-Vex",
+   "title": "DEEP CURRENT WARDEN",
+   "element": "WATER",
+   "class": "TANK",
+   "portrait": "res://art/characters/enemies/octavia/char/octavia_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/octavia/char/octavia_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/octavia/char/octavia_char_stage2.png",
+     "interactions": [
+      "res://art/characters/enemies/octavia/char/octavia_char_stage2_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/octavia/char/octavia_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/octavia/char/octavia_char_evo1_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/octavia/sprite/octavia_sprite_1.png",
+    "res://art/characters/enemies/octavia/sprite/octavia_sprite_2.png",
+    "res://art/characters/enemies/octavia/sprite/octavia_sprite_3.png",
+    "res://art/characters/enemies/octavia/sprite/octavia_sprite_4.png"
+   ]
+  },
+  "rin": {
+   "id": "rin",
+   "display_name": "Rin",
+   "title": "AZURE STINGER",
+   "element": "ICE",
+   "class": "RANGER",
+   "portrait": "res://art/characters/enemies/rin/char/rin_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/rin/char/rin_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/rin/char/rin_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/enemies/rin/char/rin_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/rin/char/rin_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/rin/char/rin_char_evo1_alt1.png",
+      "res://art/characters/enemies/rin/char/rin_char_evo1_alt2.png",
+      "res://art/characters/enemies/rin/char/rin_char_evo1_alt3.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/rin/sprite/rin_sprite_1.png",
+    "res://art/characters/enemies/rin/sprite/rin_sprite_2.png",
+    "res://art/characters/enemies/rin/sprite/rin_sprite_3.png",
+    "res://art/characters/enemies/rin/sprite/rin_sprite_4.png"
+   ]
+  },
+  "roza": {
+   "id": "roza",
+   "display_name": "Roza Sha",
+   "title": "GILDED GUNSLINGER",
+   "element": "LIGHT",
+   "class": "RANGER",
+   "portrait": "res://art/characters/enemies/roza/char/roza_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/roza/char/roza_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/roza/char/roza_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/roza/char/roza_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/roza/sprite/roza_sprite_1.png",
+    "res://art/characters/enemies/roza/sprite/roza_sprite_2.png"
+   ]
+  },
+  "selene": {
+   "id": "selene",
+   "display_name": "Selene",
+   "title": "NIGHTWING SUCCUBUS",
+   "element": "DARK",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/selene/char/selene_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/selene/char/selene_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/selene/char/selene_char_stage2.png",
+     "interactions": [
+      "res://art/characters/enemies/selene/char/selene_char_stage2_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/selene/char/selene_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/selene/char/selene_char_evo1_alt1.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/selene/char/selene_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/selene/sprite/selene_sprite_1.png",
+    "res://art/characters/enemies/selene/sprite/selene_sprite_2.png",
+    "res://art/characters/enemies/selene/sprite/selene_sprite_3.png",
+    "res://art/characters/enemies/selene/sprite/selene_sprite_4.png"
+   ]
+  },
+  "veyr_nok": {
+   "id": "veyr_nok",
+   "display_name": "Veyr-Nok",
+   "title": "KEEPER OF THE WATCHING BALLOONS",
+   "element": "CHAOS",
+   "class": "MAGE",
+   "portrait": "res://art/characters/enemies/veyr_nok/char/veyr_nok_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/veyr_nok/char/veyr_nok_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/veyr_nok/char/veyr_nok_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/veyr_nok/char/veyr_nok_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/veyr_nok/char/veyr_nok_char_evo2.png",
+     "interactions": [
+      "res://art/characters/enemies/veyr_nok/char/veyr_nok_char_evo2_alt1.png",
+      "res://art/characters/enemies/veyr_nok/char/veyr_nok_char_evo2_alt2.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/veyr_nok/sprite/veyr_nok_sprite_1.png",
+    "res://art/characters/enemies/veyr_nok/sprite/veyr_nok_sprite_2.png",
+    "res://art/characters/enemies/veyr_nok/sprite/veyr_nok_sprite_3.png",
+    "res://art/characters/enemies/veyr_nok/sprite/veyr_nok_sprite_4.png"
+   ]
+  },
+  "xaniyus": {
+   "id": "xaniyus",
+   "display_name": "Xa'niyus",
+   "title": "HORNED TIDE HERALD",
+   "element": "WIND",
+   "class": "WARRIOR",
+   "portrait": "res://art/characters/enemies/xaniyus/char/xaniyus_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/enemies/xaniyus/char/xaniyus_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/enemies/xaniyus/char/xaniyus_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/enemies/xaniyus/char/xaniyus_char_stage3.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/enemies/xaniyus/char/xaniyus_char_evo1.png",
+     "interactions": [
+      "res://art/characters/enemies/xaniyus/char/xaniyus_char_evo1_alt1.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/enemies/xaniyus/char/xaniyus_char_evo2.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/enemies/xaniyus/sprite/xaniyus_sprite_1.png",
+    "res://art/characters/enemies/xaniyus/sprite/xaniyus_sprite_2.png",
+    "res://art/characters/enemies/xaniyus/sprite/xaniyus_sprite_3.png",
+    "res://art/characters/enemies/xaniyus/sprite/xaniyus_sprite_4.png"
+   ]
   }
  }
 }

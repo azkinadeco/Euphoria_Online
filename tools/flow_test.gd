@@ -1100,11 +1100,15 @@ func _run() -> void:
 	var en_ok := 0
 	for eid0 in DB.ENEMIES.keys():
 		var erl: Dictionary = DB.live_rig(DB.art(eid0, 0))
-		var prig: Dictionary = DB.enemy_rig(DB.art(eid0, 0))
+		var prig: Dictionary = DB.char_rig(DB.art(eid0, 0))   # hand rigs in db.gd or measured rigs in data/char_rigs.json
 		if (not erl.is_empty() and ResourceLoader.exists(str(erl["depth"]))) or (prig.has("neck") and prig.has("bones")):
 			en_ok += 1
 	check(en_ok == DB.ENEMIES.size(), "every enemy has a live rig (pivot or depth) (%d/%d)" % [en_ok, DB.ENEMIES.size()])
-	check(DB.ENEMY_RIGS.size() == DB.ENEMIES.size(), "every enemy's base art has a pivot rig")
+	var base_rigs := 0
+	for eid2 in DB.ENEMIES.keys():
+		if DB.char_rig(DB.art(eid2, 0)).has("neck"):
+			base_rigs += 1
+	check(base_rigs == DB.ENEMIES.size(), "every enemy's base art has a pivot rig (%d/%d)" % [base_rigs, DB.ENEMIES.size()])
 	check(DB.live_rig(DB.art("octra", 0)).is_empty() and DB.live_rig(DB.art("octra", 1)).is_empty() and not DB.live_rig(DB.tex("res://art/characters/heroes/glytta/char/glytta_char_evo2_a.png")).is_empty(), "pivot rig replaces depth tilt on rigged art; unrigged art keeps it")
 	print("[gear sets]")
 	check(DB.GEAR_SETS.has(DB.gear_set({"uid": 7})), "old gear gets a fixed set")
@@ -1938,6 +1942,29 @@ func _run() -> void:
 	for bm_id in G.s["heroes"].keys():
 		bm_total += G.bond_stories_new_for(str(bm_id))
 	check(bm_total == G.bond_stories_new(), "per-hero unread memories add up to the total (%d)" % bm_total)
+
+	print("[15 Nov enemies]")
+	var n15: Array = ["amatera", "anthis", "cleara", "code_zero", "cow_girl", "graeae", "kurenai", "lamia", "lolth", "nagini", "nox", "octavia", "rin", "roza", "selene", "veyr_nok", "xaniyus"]
+	var n15_bad: Array = []
+	var n15_story := {}
+	for chd15 in DB.CHAPTERS:
+		for pe in chd15["pool"]:
+			n15_story[str(pe)] = true
+	for ne15 in n15:
+		var okn: bool = DB.ENEMIES.has(ne15) and DB.art(ne15, 0) != null and DB.sprite(ne15, 1) != null and DB.face(ne15) != null
+		okn = okn and DB.PET_LINES.has(ne15) and (DB.PET_LINES[ne15] as Array).size() == 5 and DB.title_of(ne15) != "" and DB.RIFT_POOL.has(ne15) and n15_story.has(ne15)
+		okn = okn and str(DB.skill_of(ne15).get("name", "")) != "" and DB.ELEMENT_ICON.has(DB.element_of(ne15))
+		if not okn:
+			n15_bad.append(ne15)
+	check(n15_bad.is_empty(), "17 new enemies: art, sprite, face, skill, taming lines, rift + story pools %s" % str(n15_bad))
+	check(DB.training_dummies().size() == 6 and DB.training_dummies().any(func(d): return d["elem"] == "LIGHT"), "Training Ground now has a LIGHT partner")
+	var s15 := BattleSim.new()
+	var foes15: Array = []
+	for fi in 5:
+		foes15.append({"id": n15[fi * 3], "cell": Vector2i(fi % 3, fi / 3), "level": 20, "star": 3, "boss": fi == 0})
+	s15.setup(G.ally_team({"mode": "story", "stage": 1}), foes15, 15)
+	s15.run()
+	check(s15.events.size() > 10 and s15.events.any(func(ev): return ev["t"] == "act"), "new enemies fight in the simulator (%d events)" % s15.events.size())
 
 	print("[save / load]")
 	var path := "user://flow_test_save.json"

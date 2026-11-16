@@ -1,6 +1,6 @@
 extends SceneTree
 ## Dev tool: renders an enemy pivot rig (DB.ENEMY_RIGS) at several moments side by side,
-## plus a debug overlay of its pivots / bones. Godot --path . -s res://tools/rig_preview.gd -- <out.png> <enemy id> [stretch]
+## plus a debug overlay of its pivots / bones. Godot --path . -s res://tools/rig_preview.gd -- <out.png> <id or res://art path> [art index]
 var frame := 0
 var rects: Array = []
 var times := [0.0, 0.9, 1.8, 2.7]
@@ -17,7 +17,7 @@ func _process(_d: float) -> bool:
 		bg.size = Vector2(1280, 720)
 		root.add_child(bg)
 		var dbs = load("res://game/core/db.gd")
-		var tex: Texture2D = dbs.art(args[1], 0)
+		var tex: Texture2D = load(args[1]) if args[1].begins_with("res://") else dbs.art(args[1], int(args[2]) if args.size() > 2 else 0)
 		for i in 5:
 			var r := TextureRect.new()
 			r.texture = tex

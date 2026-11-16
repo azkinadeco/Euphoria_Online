@@ -42,6 +42,14 @@ uniform float breath = 0.0;      // -1..1
 uniform float bob = 0.0;         // whole-figure vertical offset (UV)
 uniform float jolt = 0.0;        // tap impulse: every bone swings harder for a moment
 uniform float flash = 0.0;
+// 2.5D on top of the rig (same idea as live25d.gdshader): the picture turns a few degrees toward the
+// pointer, near parts slide further than far parts (depth map), a key light and an edge light follow
+// the tilt, and a soft shadow sits behind the figure.
+uniform vec2 tilt = vec2(0.0);                 // -1..1, from char_rig.gd (pointer or a slow idle orbit)
+uniform sampler2D depth_tex : filter_linear;   // white = near (art/depth/<art>_depth.png)
+uniform float depth_on = 0.0;                  // 1 when depth_tex is set
+uniform float volume = 1.0;                    // strength of the light / shadow (0 = flat, as before)
+uniform vec4 rim_light : source_color = vec4(1.0, 0.92, 1.0, 1.0);
 varying vec4 mod_color;
 
 void vertex() {
@@ -113,7 +121,23 @@ vec3 ring_skin(sampler2D tex, vec2 c, vec2 ex, vec2 ey, vec2 to_uv, vec2 q, vec4
 }
 
 void fragment() {
-	vec2 uv = UV;
+	// 0) turn: the whole card rotates a little with the tilt (far side shorter, slightly narrower)
+	vec2 pc = UV - vec2(0.5);
+	float yaw = tilt.x * 0.07 * calm;
+	float pitch = tilt.y * 0.04 * calm;
+	pc.x *= 1.0 + abs(yaw) * 0.3;
+	pc.y *= 1.0 + pc.x * yaw * 1.5;
+	pc.x *= 1.0 + pc.y * pitch * 0.8;
+	vec2 buv = pc + vec2(0.5);
+	vec2 uv = buv;
+	// depth parallax (4 refinement steps): the body comes forward, wings / hair / tails stay back
+	if (depth_on > 0.5) {
+		vec2 off = tilt * 0.014 * calm;
+		for (int i = 0; i < 4; i++) {
+			float dd = texture(depth_tex, uv).r;
+			uv = mix(uv, buv - off * (dd - 0.45), 0.75);
+		}
+	}
 	uv.y += bob;
 	// 1) upper body leans around the hips (soft band above the waist)
 	float upper = 1.0 - smoothstep(hips.y - 0.08, hips.y + 0.05, uv.y);
@@ -229,10 +253,34 @@ void fragment() {
 	}
 	for (int i = 0; i < 6; i++) {
 		if (glows[i].z > 0.0) {
-			float d = length((UV - glows[i].xy) * vec2(aspect, 1.0)) / glows[i].z;
+			float d = length((buv - glows[i].xy) * vec2(aspect, 1.0)) / glows[i].z;
 			float flick = 0.55 + 0.25 * sin(t * 6.0 + float(i) * 2.3) + 0.2 * sin(t * 11.0 + float(i));
 			c.rgb += glow_color.rgb * (1.0 - smoothstep(0.0, 1.0, d)) * flick * 0.32 * c.a;
 		}
+	}
+	// 2.5D light. Key light from the depth slope, edge light on the silhouette side that faces the light,
+	// and a soft cast shadow behind the figure (pushed away from the light).
+	if (volume > 0.001) {
+		vec2 L2 = normalize(vec2(-0.6, -0.8) + tilt * 0.9);
+		if (depth_on > 0.5) {
+			float e = 0.006;
+			float dx = texture(depth_tex, uv + vec2(e, 0.0)).r - texture(depth_tex, uv - vec2(e, 0.0)).r;
+			float dy = texture(depth_tex, uv + vec2(0.0, e)).r - texture(depth_tex, uv - vec2(0.0, e)).r;
+			vec3 nrm = normalize(vec3(-dx * 7.0, -dy * 7.0, 1.0));
+			vec3 L = normalize(vec3(L2 * 0.9, 0.75));
+			float key = clamp(dot(nrm, L) - 0.64, -0.5, 0.5) * 2.0;
+			c.rgb += rim_light.rgb * max(key, 0.0) * 0.2 * volume * c.a;
+			c.rgb *= 1.0 + min(key, 0.0) * 0.16 * volume;
+		}
+		float a_lit = texture(TEXTURE, uv + L2 * 0.01).a;
+		c.rgb += rim_light.rgb * clamp(c.a - a_lit, 0.0, 1.0) * 0.4 * volume;
+		vec2 so = -L2 * 0.02 + vec2(0.0, 0.005);
+		float sh = texture(TEXTURE, uv + so).a * 0.4
+			+ texture(TEXTURE, uv + so * 1.5 + vec2(0.006, 0.0)).a * 0.2
+			+ texture(TEXTURE, uv + so * 1.5 - vec2(0.006, 0.0)).a * 0.2
+			+ texture(TEXTURE, uv + so * 2.0).a * 0.2;
+		float sa = sh * 0.38 * volume * (1.0 - c.a);
+		c = vec4(mix(vec3(0.02, 0.0, 0.06), c.rgb, c.a / max(c.a + sa, 0.0001)), c.a + sa);
 	}
 	c.rgb += vec3(flash) * c.a;
 	COLOR = c * mod_color;

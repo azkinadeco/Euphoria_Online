@@ -63,6 +63,15 @@ func _process(delta: float) -> void:
 	if _rect.texture != _last_tex:
 		_check()
 	if _rect.material != _rig_mat or _rig_mat == null:
+		# pivot-rigged art: CharRig owns the tilt; the backdrop still slides against it
+		if backdrop != null and is_instance_valid(backdrop):
+			for c in _rect.get_children():
+				if c is CharRig and (c as CharRig).active():
+					var k0: float = 0.35 if Game.reduce_fx() else 1.0
+					backdrop.pivot_offset = backdrop.size * 0.5
+					backdrop.scale = Vector2(1.05, 1.05)
+					backdrop.position = -(c as CharRig)._tilt * backdrop_px * k0
+					break
 		return
 	_t += delta
 	# target: pointer relative to the art centre, else a slow figure-eight orbit

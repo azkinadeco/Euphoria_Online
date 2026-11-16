@@ -1253,6 +1253,15 @@ tools/
 - **Musik**: tidak ada BGM di logo dan layar judul (`BGM["title"] = ""` → `Game.stop_bgm()`); lagu lobby mulai saat masuk game.
 - Pemetaan sentuhan saat halaman diputar diuji di Node dengan 5 titik (semua kembali tepat).
 
+## 2hq. Update 15 Nov — 17 musuh baru + 2.5D di semua pivot rig
+
+- **Impor** (`tools/import_nov15.py`): 17 musuh dari `Karakter Euphoria Online/enemy/New Enemy Update 15 nov /` → `art/characters/enemies/<id>/` (70 form + ekspresi alternatif, 51 sprite). ID: amatera, anthis, cleara, code_zero, cow_girl, graeae, kurenai, lamia, lolth, nagini, nox, octavia, rin, roza, selene, veyr_nok, xaniyus.
+- **Build** (`DB.ENEMIES`): stat, peran dan skill mengikuti art — mis. Code Zero TANK (pierce + shield + taunt), Kurenai ASSASSIN (execute), Nagini MAGE (kolom + stun), Selene (back line + drain 50%), Lolth (all + silence), Roza RANGER (pierce + crit), Rin (line + heal block), Veyr-Nok (X + DEF down).
+- **Kemunculan**: ditambahkan ke pool 28 chapter (ch. 15–52), `RIFT_POOL`, Tower (otomatis dari `ENEMIES`), Bestiary + taming (`PET_LINES`, 5 baris per musuh). Training Ground kini punya partner LIGHT (Roza); ubin rekor pindah ke kolom kiri bila partner 6.
+- **Pivot rig**: 70 rig diukur per art (kepala, leher, dada, pinggul, hingga 10 tulang, floats, glows, mata) → `data/char_rigs.json` lewat `tools/merge_dev_rigs.py`; face crop diambil dari lingkar kepala rig (pose menunggang/terbalik jadi benar). Diperiksa dengan `tools/rig_preview.gd` (kini menerima path art) dan `rig_face.gd`. Kedipan dimatikan untuk Xa'niyus (5 form), Lolth stage1 dan Lamia evo1 karena kelopak tampak seperti tambalan; 6 art lain memang tanpa mata terlihat. File rig mentah: `_recut_backup/rigs_dev_nov15/`.
+- **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
+- Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
+
 ## 2hp. Update batch 215 — Sumber Skill Book & helper `_source_row`
 
 - `hero_detail.gd::_source_row(parent, title, item, list)`: baris tombol GO dari daftar eksplisit atau `DB.item_sources(item)` (maks. 3, fitur terkunci/lobby dilewati). Dipakai untuk shard (Star Up) dan Skill Book (Skill Up yang terkunci). Baris memakai `HFlowContainer` agar tombol membungkus ke baris kedua di layar sempit (versi pertama membuat panel lebih lebar dari layar — tertangkap `tools/audit.sh`).
