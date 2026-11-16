@@ -1262,6 +1262,14 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2uu. Update batch 253: alur pemain baru lebih tenang (17 Nov 2026)
+
+- `DB.FIRST_STEPS` 8 → 5 langkah: mail, summon, stage1, level, chapter1. Langkah bond/stage3/gear dibuang; hadiahnya pindah (bouquet ×3 ke langkah Lv.5, gems +150 dan senjata SR ke Chapter 1). Petunjuk equip gear tetap muncul lewat `_next_goal_raw`.
+- Nomor STEP dihitung dari posisi langkah di daftar (`FIRST_STEPS.find`), bukan dari jumlah id tersimpan, jadi save lama yang sudah klaim bond/stage3 tetap menunjukkan angka yang benar.
+- Lobby sebelum Stage 1-1 selesai: hanya tombol yang ditunjuk guide yang memakai angka merah; badge lain (Missions, Login, Notices, MENU, dll.) jadi titik oranye kecil. Setelah menang pertama badge normal lagi.
+- Flow test: guide 5 langkah, hadiah bouquet/senjata, dan nomor langkah untuk save lama.
+- Batch 252 (download web lebih kecil) ditunda: perlu tes di browser/HP asli.
+
 ## 2tt. Update batch 250–251: teks lebih terbaca, halaman Summon lebih jelas (17 Nov 2026)
 
 - 250: `UI.MIN_FONT` 12 → 14 (semua `UI.label`/`wrap_label`; ukuran 9–13 di kode ikut naik). Kontras MUTED `#a79cc0` di atas panel sudah 5,9–7,4:1 (lolos WCAG 1.4.3), jadi warnanya tidak diubah. Satu-satunya yang rusak di `audit.sh`: petunjuk di dock Formation (mode bebas) mendorong tombol STORY keluar layar; teksnya dipendekkan. Audit 3 bentuk layar PASS.

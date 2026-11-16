@@ -609,8 +609,13 @@ func refresh() -> void:
 		var target := float(d[0]) / float(maxi(1, d[1]))
 		var rt := _ring.create_tween()
 		rt.tween_method(func(x: float): _ring_val = x; _ring.queue_redraw(), _ring_val, target, 0.8).set_trans(Tween.TRANS_CUBIC)
+	# First session (before Stage 1-1): only the button the STEP guide points at keeps a red number;
+	# everything else drops to a quiet dot so a new player sees one thing to do, not five.
+	var quiet := Game.stages_cleared() == 0
+	var guided := str(Game.next_goal().get("route", ""))
 	for r in ["mail", "quests", "messenger", "login", "event", "heroes", "news", "festival"]:
-		_set_badge(r, Game.feature_claim(r), Game.feature_badge(r))
+		var c := Game.feature_claim(r)
+		_set_badge(r, 0 if quiet and r != guided else c, maxi(c, Game.feature_badge(r)))
 	# MENU: red number = how many features have a reward to collect; a dot when there is only something to do
 	var menu_n := 0
 	var menu_any := 0
@@ -619,7 +624,7 @@ func refresh() -> void:
 			menu_n += 1
 		if Game.feature_badge(f[0]) > 0:
 			menu_any += 1
-	_set_badge("menu", menu_n, menu_any)
+	_set_badge("menu", 0 if quiet and guided != "menu" else menu_n, menu_any + menu_n)
 	_update_afk()
 
 func _set_badge(route: String, claim: int, total: int = -1) -> void:

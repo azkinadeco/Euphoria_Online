@@ -2621,9 +2621,6 @@ func first_step_done(id: String) -> bool:
 		"summon": return int(s["gacha"]["total"]) > 0
 		"stage1": return stages_cleared() >= 1
 		"level": return s["heroes"].values().any(func(h): return int(h["level"]) >= 5)
-		"bond": return s["heroes"].values().any(func(h): return int(h["bond"]) >= 2 or int(h["bond_exp"]) > 0)
-		"stage3": return stages_cleared() >= 3
-		"gear": return s["gear"].any(func(g): return str(g.get("owner", "")) != "")
 		"chapter1": return stages_cleared() >= DB.STAGES_PER_CHAPTER
 	return false
 
@@ -2646,7 +2643,8 @@ func claim_first_step() -> Dictionary:
 func next_goal() -> Dictionary:
 	var st := first_step()
 	if not st.is_empty():
-		var step := "STEP %d/%d" % [(s["first_steps"] as Array).size() + 1, DB.FIRST_STEPS.size()]
+		# Position in the current list (older saves may hold ids of steps that were since dropped).
+		var step := "STEP %d/%d" % [DB.FIRST_STEPS.find(st) + 1, DB.FIRST_STEPS.size()]
 		if first_step_done(st["id"]):
 			return {"text": "Done! Reward: %s" % reward_text(st["give"]), "route": "", "ready": true, "tag": step}
 		return {"text": st["text"], "route": st["route"], "params": st.get("params", {}), "tag": step}

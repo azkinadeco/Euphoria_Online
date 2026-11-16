@@ -41,7 +41,7 @@ func _run() -> void:
 	check(G.next_goal()["route"] == "mail", "guide: first goal is mailbox")
 
 	print("[first steps]")
-	check(G.next_goal().get("tag", "") == "STEP 1/8" and G.claim_first_step().is_empty(), "step can't be claimed before it is done")
+	check(G.next_goal().get("tag", "") == "STEP 1/5" and G.claim_first_step().is_empty(), "step can't be claimed before it is done")
 	var fs: Dictionary = G.new_state()
 	var fs_save: Dictionary = G.s
 	G.s = fs
@@ -58,16 +58,16 @@ func _run() -> void:
 	G.claim_first_step()
 	G.use_item("exp_potion", 2)
 	check(G.level_up("shina", 4) == 4, "step rewards are enough to reach Lv.5")
+	var fb0: int = G.amount("bouquet")
 	G.claim_first_step()
-	check(G.give_gift("shina", "bouquet") == "" and G.first_step_done("bond"), "starter bouquet completes the gift step")
-	G.claim_first_step()
-	G.claim_first_step()
-	check(G.s["gear"].size() == 1, "stage 3 step grants the weapon")
-	G.equip(int(G.s["gear"][0]["uid"]), "shina")
-	G.claim_first_step()
+	check(G.amount("bouquet") == fb0 + 3, "level step also hands out bouquets")
+	check(G.next_goal().get("tag", "") == "STEP 5/5", "guide is five steps long")
 	var ft0: int = G.amount("summon_ticket")
 	check(not G.claim_first_step().is_empty() and G.amount("summon_ticket") == ft0 + 2, "chapter step pays tickets")
 	check(G.first_step().is_empty() and not G.next_goal().has("tag"), "path ends, normal goals return")
+	check(G.s["gear"].size() == 1, "chapter step grants the weapon")
+	G.s["first_steps"] = ["mail", "summon", "stage1", "bond", "stage3"]
+	check(G.next_goal().get("tag", "") == "STEP 4/5", "old saves with dropped steps still count right")
 	G.s = fs_save
 
 	print("[mixed summon]")

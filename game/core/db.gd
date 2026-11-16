@@ -2088,11 +2088,8 @@ const FIRST_STEPS := [
 	{"id": "mail", "text": "Collect your gifts in the Mailbox", "route": "mail", "give": {"gold": 5000}},
 	{"id": "summon", "text": "Summon heroes at the Aether Gate", "route": "gacha", "give": {"gems": 100}},
 	{"id": "stage1", "text": "Clear Stage 1-1", "route": "story", "give": {"exp_potion": 2}},
-	{"id": "level", "text": "Raise any hero to Lv.5", "route": "hero_detail", "params": {"id": "shina", "tab": "UPGRADE"}, "give": {"gold": 10000}},
-	{"id": "bond", "text": "Give Shina a gift in the Bond tab", "route": "hero_detail", "params": {"id": "shina", "tab": "BOND"}, "give": {"bouquet": 3}},
-	{"id": "stage3", "text": "Clear Stage 1-3", "route": "story", "give": {"gear:weapon:SR": 1}},
-	{"id": "gear", "text": "Equip your new weapon on Shina", "route": "hero_detail", "params": {"id": "shina", "tab": "GEAR"}, "give": {"gems": 150}},
-	{"id": "chapter1", "text": "Clear Chapter 1", "route": "story", "give": {"summon_ticket": 2, "gems": 200}},
+	{"id": "level", "text": "Raise any hero to Lv.5", "route": "hero_detail", "params": {"id": "shina", "tab": "UPGRADE"}, "give": {"gold": 10000, "bouquet": 3}},
+	{"id": "chapter1", "text": "Clear Chapter 1", "route": "story", "give": {"summon_ticket": 2, "gems": 350, "gear:weapon:SR": 1}},
 ]
 
 ## Display name of a tutorial key for the Guide Archive (MENU label when the key is a screen).
