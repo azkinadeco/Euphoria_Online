@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2qq. Update batch 243: alat cek proporsi 2.5D (16 Nov 2026)
+
+- `tools/tilt_preview.gd`: render art ber-rig pivot dengan tilt dipaksa (-1,0), (0,0), (1,0), (1,1) + art asli di panel kelima. Dipakai untuk memverifikasi perbaikan batch 237: Morana Lv1 dengan shader lama menyempit dan melancip ke bawah pada tilt (1,1); dengan shader baru lebar dan tinggi hampir sama dengan art asli.
+- Pengukuran performa sesi ini tidak valid: Mac sedang load ~74 karena proses Chromium lain (bukan dari sesi ini), jadi angka tidak dibandingkan dengan batch 227.
+
 ## 2pp. Update batch 242: role di halaman hero sama dengan kartu (16 Nov 2026)
 
 - Baris atas halaman hero: label teks `role_of` (WARRIOR, KNIGHT…) diganti tulisan role art (`DB.role_badge`, tinggi 17) seperti di kartu; tooltip berisi nama role asli + penjelasan.

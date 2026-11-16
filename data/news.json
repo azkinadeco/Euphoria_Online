@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16A",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "2.5D Proportion Check",
+  "body": "Behind the scenes: a new check renders every 2.5D hero at the extremes of her turn next to the untouched art, so proportions stay true in future updates."
+ },
+ {
   "id": "n2026-11-16z",
   "date": "2026-11-16",
   "tag": "UPDATE",
