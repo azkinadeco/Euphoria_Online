@@ -64,6 +64,7 @@ func build() -> void:
 	_hero_art.anchor_top = 0.06
 	_hero_art.anchor_bottom = 1.0
 	_hero_art.offset_bottom = -70
+	_holder.add_child(UI.hero_aura(_hero_art, DB.theme_color(hid).lightened(0.25), 0.55))
 	_holder.add_child(_hero_art)
 	UI.live(_hero_art, DB.theme_color(hid).lightened(0.5))
 	_erig = CharRig.attach(_hero_art)

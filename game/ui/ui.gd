@@ -940,3 +940,42 @@ static func light_shafts(tint: Color = Color(1.0, 0.9, 0.72), strength: float = 
 			sm.set_shader_parameter("aspect", r.size.x / r.size.y)
 	r.resized.connect(fit)
 	return r
+
+# ----------------------------------------------------------------- hero aura
+## A soft glow in the hero's colour behind her art that slowly breathes (brightness only: nothing moves,
+## so it can never look like stutter). Add it to the art's parent right BEFORE the art. `art` is the
+## TextureRect it should sit behind; the glow follows its rect.
+static func hero_aura(art: Control, col: Color, strength: float = 0.55) -> TextureRect:
+	var g := Gradient.new()
+	g.set_color(0, Color(col, 1.0))
+	g.set_color(1, Color(col, 0.0))
+	g.add_point(0.45, Color(col, 0.35))
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.5)
+	gt.fill_to = Vector2(1.0, 0.5)
+	gt.width = 128
+	gt.height = 128
+	var a := TextureRect.new()
+	a.texture = gt
+	a.stretch_mode = TextureRect.STRETCH_SCALE
+	a.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	a.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var add := CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	a.material = add
+	var place := func():
+		if is_instance_valid(art) and is_instance_valid(a):
+			# an oval around the upper body (where the eye goes), a bit wider than the art
+			var r := art.get_rect()
+			a.position = r.position + Vector2(-r.size.x * 0.1, r.size.y * 0.02)
+			a.size = Vector2(r.size.x * 1.2, r.size.y * 0.85)
+	art.item_rect_changed.connect(place)
+	place.call_deferred()
+	a.modulate.a = strength * 0.6
+	if not Game.reduce_fx():
+		var tw := a.create_tween().set_loops()
+		tw.tween_property(a, "modulate:a", strength, 2.6).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(a, "modulate:a", strength * 0.55, 2.6).set_trans(Tween.TRANS_SINE)
+	return a

@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ie. Update batch 231 — Aura bernapas di belakang hero
+
+- `UI.hero_aura(art, color, strength)`: gradasi radial aditif warna tema hero di belakang art, hanya kecerahannya yang bernapas (2,6 dtk; tidak ada gerak posisi). Dipakai di lobby dan halaman hero; dimatikan animasinya saat Reduce effects.
+
 ## 2id. Update batch 230 — Uji otomatis lebih ketat
 
 - `tools/smoke.sh` juga gagal pada "Lambda capture … freed" dan "ERROR: Invalid" (regresi batch 227 tidak tertangkap smoke).

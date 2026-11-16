@@ -42,6 +42,7 @@ func build() -> void:
 	_art.anchor_right = 0.55
 	_art.offset_top = 70
 	_art.offset_left = 30
+	_holder.add_child(UI.hero_aura(_art, DB.theme_color(id).lightened(0.25), 0.5))
 	_holder.add_child(_art)
 	_art.resized.connect(func(): _art.pivot_offset = Vector2(_art.size.x * 0.5, _art.size.y))
 	UI.live(_art, DB.theme_color(id).lightened(0.5))
