@@ -4514,10 +4514,16 @@ func fortune_draw() -> Dictionary:
 
 func record_kills(ids: Array) -> void:
 	var b: Dictionary = s.get("bestiary", {})
+	var found: Array = []
 	for id in ids:
 		if DB.ENEMIES.has(id):
+			if int(b.get(id, 0)) == 0 and not found.has(id):
+				found.append(id)
 			b[id] = int(b.get(id, 0)) + 1
 	s["bestiary"] = b
+	# first defeat of a foe: say so (her Bestiary entry, art and forms just opened)
+	if not found.is_empty():
+		notify("NEW FOE DISCOVERED: %s!" % ", ".join(found.map(func(f): return DB.name_of(f))), Color("#c8f08f"))
 	stat_add("kills", ids.size())
 
 func kills_of(id: String) -> int:

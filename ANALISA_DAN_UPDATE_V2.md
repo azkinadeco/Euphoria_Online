@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2hx. Update batch 223 — Pemberitahuan musuh baru ditemukan
+
+- `Game.record_kills`: kill pertama sebuah musuh memunculkan toast "NEW FOE DISCOVERED: …" (beberapa musuh dalam satu battle digabung dalam satu toast lewat pengelompokan toast yang sudah ada).
+
 ## 2hw. Update batch 222 — Tiga World Boss baru
 
 - `DB.WORLD_BOSSES` 8 → 11: Lolth (necro), Code Zero (space), Octavia-Vex (aqua). Urutan dipilih supaya minggu pembaruan (week 2967 → indeks 8) tetap Serpentia; progres mingguan pemain tidak berpindah boss.
