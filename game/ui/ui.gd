@@ -149,7 +149,7 @@ static func theme() -> Theme:
 
 # ------------------------------------------------------------------ builders
 
-const MIN_FONT := 12
+const MIN_FONT := 14
 
 static func label(text: String, size: int = 16, color: Color = TEXT, outline: int = 0) -> Label:
 	var l := Label.new()

@@ -1,5 +1,19 @@
 [
  {
+  "id": "n2026-11-17e",
+  "date": "2026-11-17",
+  "tag": "UPDATE",
+  "title": "A Clearer Summon Page",
+  "body": "The banner panel now shows the top drop rates, pity and Summon Points at a glance with RATES & HERO LIST and HISTORY always on screen. The summon rules moved to the top of the Rates list in short lines, and tiers without heroes yet are listed once at the end."
+ },
+ {
+  "id": "n2026-11-17d",
+  "date": "2026-11-17",
+  "tag": "UPDATE",
+  "title": "Easier to Read",
+  "body": "The smallest text in the game is a little bigger (14 instead of 12), so costs, effects and hints are easier to read on a phone."
+ },
+ {
   "id": "n2026-11-17c",
   "date": "2026-11-17",
   "tag": "UPDATE",

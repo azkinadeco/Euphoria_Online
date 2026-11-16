@@ -125,7 +125,7 @@ func _render() -> void:
 		_info.add_child(UI.label(DB.title_of(fid2), 14, DB.theme_color(fid2).lightened(0.35), 3))
 		_info.add_child(UI.wrap_label(DB.skill_of(fid2)["name"] + ": " + str(DB.skill_of(fid2).get("desc", "")), 13, UI.TEXT))
 	_info.add_child(UI.wrap_label(b["desc"], 14, UI.MUTED))
-	# the banner's own drop rates, rarest first (wraps on narrow screens)
+	# the banner's top drop rates, rarest first (one row; every tier is in RATES & HERO LIST)
 	var rates := HFlowContainer.new()
 	rates.add_theme_constant_override("h_separation", 5)
 	rates.add_theme_constant_override("v_separation", 5)
@@ -135,6 +135,8 @@ func _render() -> void:
 	order.reverse()
 	for r0 in order:
 		if not rt_map.has(r0):
+			continue
+		if not b.has("tiers") and DB.rarity_rank(r0) < DB.rarity_rank("SSR"):
 			continue
 		var rcol: Color = DB.RARITY_COLOR[r0]
 		var rp := UI.styled_panel(Color(rcol, 0.15), Color(rcol, 0.6), 8, 1, 4.0)
@@ -175,10 +177,7 @@ func _render() -> void:
 		mv.add_child(sr)
 	else:
 		mv.add_child(_wish_row())
-	if b.has("tiers"):
-		_info.add_child(UI.wrap_label("10x summon guarantees at least one SR. Duplicates turn into hero shards.", 12, UI.MUTED))
-	else:
-		_info.add_child(UI.wrap_label("10x summon guarantees at least one SR. Duplicates turn into hero shards. Each pull on a rate-up banner gives 1 Summon Point — %d points = the featured hero." % DB.SPARK_COST, 12, UI.MUTED))
+	# the summon rules live in RATES & HERO LIST, so the buttons below stay on screen without scrolling
 	var ir := UI.hbox(8)
 	var rb := UI.button("RATES & HERO LIST", _show_rates, "", Vector2(0, 40))
 	rb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -376,13 +375,26 @@ func _show_rates() -> void:
 	var v: VBoxContainer = main.popup("RATES", 720)
 	var bnr: Dictionary = DB.BANNERS[_banner_i]
 	var rt_map := DB.gacha_rates(bnr.get("tiers", []))
-	if not bnr.has("tiers"):
-		v.add_child(UI.wrap_label("Pity: %s or better guaranteed within %d summons. The %s rate includes the share of tiers that have no heroes yet." % [DB.PITY_RARITY, DB.GACHA_PITY, DB.RARITY_ORDER[0]], 13, UI.MUTED))
+	# the rules first, in short lines
+	var rules: Array = ["10x summon: at least one SR or better.", "Duplicates turn into hero shards."]
+	if bnr.has("tiers"):
+		rules.append("Paid with Gold. No pity or Summon Points on this banner.")
+	else:
+		rules.append("Pity: %s or better guaranteed within %d summons." % [DB.PITY_RARITY, DB.GACHA_PITY])
+		if str(bnr.get("featured", "")) != "":
+			rules.append("Each pull here gives 1 Summon Point; %d points = %s." % [DB.SPARK_COST, DB.name_of(str(bnr["featured"]))])
+		rules.append("The %s rate includes the share of tiers that have no heroes yet." % DB.RARITY_ORDER[0])
+	for rule in rules:
+		v.add_child(UI.wrap_label("•  " + str(rule), 14, UI.TEXT))
 	var order2: Array = DB.RARITY_ORDER.duplicate()
 	order2.reverse()
+	var soon: Array = []
 	for r in order2:
 		var ids: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == r)
 		if bnr.has("tiers") and not (bnr["tiers"] as Array).has(r):
+			continue
+		if ids.is_empty() and not rt_map.has(r):
+			soon.append(r)   # tiers without heroes: one short line at the end, not a row each at the top
 			continue
 		var hr := UI.hbox(8)
 		hr.add_child(UI.rarity_tag(r, 15))
@@ -400,6 +412,12 @@ func _show_rates() -> void:
 		for id in ids:
 			f.add_child(HeroCard.new(id, Vector2(84, 108), {"show_level": false, "lazy": true}))
 		v.add_child(f)
+	if not soon.is_empty():
+		var sh := UI.hbox(8)
+		sh.add_child(UI.label("Coming soon:", 14, UI.MUTED, 2))
+		for r in soon:
+			sh.add_child(UI.rarity_text(r, 14))
+		v.add_child(sh)
 	var ok := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
 	ok.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	v.add_child(ok)

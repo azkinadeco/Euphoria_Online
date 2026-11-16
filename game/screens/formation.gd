@@ -192,7 +192,8 @@ func build() -> void:
 			rb.add_theme_color_override("font_color", Color("#9fd0ff"))
 			start_row.add_child(rb)
 	else:
-		btns.add_child(UI.wrap_label("Tap a hero to select, tap an empty tile to move. Drag onto another hero to swap. Numbers = action order.", 13, UI.MUTED))
+		# short enough for two lines at the 14 px minimum (the full how-to is in the formation tutorial / ALL TIPS)
+		btns.add_child(UI.wrap_label("Tap to select, tap a tile to move, drag to swap. Numbers = action order.", 14, UI.MUTED))
 		btns.add_child(UI.button("STORY ▶", func(): main.go("story"), "GoldButton", Vector2(0, 48)))
 	_render()
 	if tutorial("formation"):
