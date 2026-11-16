@@ -44,8 +44,9 @@ const RARITY_NAME := {"N": "Normal", "R": "Rare", "SR": "Super Rare", "SSR": "Su
 const RARITY_COLOR := {"N": Color("#9aa0ab"), "R": Color("#5fa8ff"), "SR": Color("#c77dff"), "SSR": Color("#ffc94a"),
 	"UR": Color("#ff4747"), "LR": Color("#7ef0ff"), "MR": Color("#ff2f86"), "GR": Color("#f4f6ff"), "OR": Color("#8f6cff")}
 ## Summon drop rate of each tier (the sheet's numbers). Tiers without heroes yet, and whatever the sheet
-## leaves over (its numbers add up to 94.1%), go to N - see gacha_rates().
-const RARITY_RATE := {"N": 0.30, "R": 0.25, "SR": 0.20, "SSR": 0.10, "UR": 0.05, "LR": 0.03, "MR": 0.01, "GR": 0.001, "OR": 0.000001}
+## leaves over, go to N - see gacha_rates(). Owner's revised sheet (16 Nov 2026, "too easy"): SSR 7%, UR 3%,
+## LR 1%, MR 0.01%, GR 0.001%, OR 0.0001%.
+const RARITY_RATE := {"N": 0.30, "R": 0.25, "SR": 0.20, "SSR": 0.07, "UR": 0.03, "LR": 0.01, "MR": 0.0001, "GR": 0.00001, "OR": 0.000001}
 const RARITY_START_STAR := {"N": 1, "R": 1, "SR": 2, "SSR": 3, "UR": 3, "LR": 3, "MR": 3, "GR": 3, "OR": 3}
 
 ## Rarity badge art (art/ui/rarity/, cut from the owner's "rarerity image.jpg").

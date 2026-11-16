@@ -304,14 +304,14 @@ func _run() -> void:
 	for rv in DB.gacha_rates().values():
 		rsum += float(rv)
 	check(absf(rsum - 1.0) < 0.000001 and not DB.gacha_rates().has("GR") and not DB.gacha_rates().has("OR"), "full table adds to 100%, empty tiers left out")
-	check(absf(float(DB.gacha_rates()["MR"]) - 0.01) < 0.0000001 and absf(float(DB.gacha_rates()["LR"]) - 0.03) < 0.0000001, "MR 1% and LR 3% as on the sheet")
+	check(absf(float(DB.gacha_rates()["MR"]) - 0.0001) < 0.0000001 and absf(float(DB.gacha_rates()["LR"]) - 0.01) < 0.0000001 and absf(float(DB.gacha_rates()["SSR"]) - 0.07) < 0.0000001, "MR 0.01%, LR 1%, SSR 7% as on the sheet")
 	check(DB.rarity_of("cthollia") == "MR" and DB.rarity_of("morana") == "LR" and DB.rarity_of("valeria") == "UR" and DB.rarity_of("sven") == "SSR" and DB.rarity_of("rumi") == "N", "heroes moved to their new tiers")
 	check(DB.BANNERS.size() == 4 and DB.BANNERS.filter(func(b): return str(b["featured"]) != "").size() == 2, "two rate-up banners + Standard + Normal")
 	var nrt := DB.gacha_rates(["N", "R", "SR", "SSR"])
 	var nsum := 0.0
 	for rv in nrt.values():
 		nsum += float(rv)
-	check(absf(nsum - 1.0) < 0.000001 and nrt.size() == 4 and absf(float(nrt["SSR"]) - 0.1) < 0.000001, "Normal Summon rates cover N..SSR only, SSR 10%")
+	check(absf(nsum - 1.0) < 0.000001 and nrt.size() == 4 and absf(float(nrt["SSR"]) - 0.07) < 0.000001, "Normal Summon rates cover N..SSR only, SSR 7%")
 	G.s["cur"]["gold"] = 120000
 	var npity := int(G.s["gacha"]["pity"])
 	var nres: Dictionary = G.pull("normal", 10, "gold")

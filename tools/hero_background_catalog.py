@@ -17,37 +17,37 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Angela",
         "title": "SERAPHIC VALKYRIE",
         "element": "LIGHT",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_angela.jpg",
-        "tone": "Divine Celestial Gold & Feather White",
-        "concept": "Heavenly floating sanctuary above clouds with golden marble pillars, angelic arches, divine rays of sun, and drifting holy feathers."
+        "tone": "Radiant Celestial Gold, Sunburst Amber & Luminous White",
+        "concept": "Heavenly floating sanctuary high above endless golden clouds, glowing gold marble pillars, sunburst rays of holy light, and drifting white feathers."
     },
     "aqua": {
         "name": "Aqua",
         "title": "CHALICE OF THE TIDES",
         "element": "WATER",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_aqua.jpg",
-        "tone": "Pure Aquamarine, Cyan & Floral White",
-        "concept": "Sacred tidal water garden with glowing crystal water basins overflowing with holy spring water, waterfalls, water lilies, and white hydrangeas."
+        "tone": "Pure Aquamarine, Crystal Cyan & Soft Turquoise Water",
+        "concept": "Sacred tidal water sanctuary, stepped crystal pools overflowing with pristine aquamarine healing waters, white lotus, and cyan mist."
     },
     "atalanta": {
         "name": "Atalanta",
         "title": "THUNDERSTEP HUNTRESS",
         "element": "LIGHTNING",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_atalanta.jpg",
-        "tone": "Electric Sky Blue & Tempest Twilight",
-        "concept": "Wind-swept stormy mountain ridge at twilight with electric blue lightning arcs dancing across clouds and an ancient stone watchtower."
+        "tone": "Electric Sky Blue, Cyan Lightning & Tempest Indigo",
+        "concept": "Rugged stormy mountain ridge at twilight with dramatic electric sky-blue lightning bolts leaping across dark tempest clouds."
     },
     "cthollia": {
         "name": "Cthollia",
         "title": "ABYSS TENTACLE SOVEREIGN",
         "element": "WATER",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_cthollia.jpg",
-        "tone": "Bioluminescent Cyan & Abyssal Purple",
-        "concept": "Ancient sunken abyssal underwater sanctuary, bioluminescent cyan and deep purple coral reefs, ocean stone pillars, and drifting glowing jellyfish."
+        "tone": "Bioluminescent Deep Rose Pink, Neon Magenta & Abyssal Violet",
+        "concept": "Sunken abyssal temple with glowing bioluminescent deep pink/magenta corals and colossal glowing pink tentacles in deep ocean waters."
     },
     "eropatra": {
         "name": "Eropatra",
@@ -71,10 +71,10 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Fidelia",
         "title": "VALKYRIE TIDAL SHIELD",
         "element": "WATER",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_fidelia.jpg",
-        "tone": "Azure Blue, Seafoam & White Marble",
-        "concept": "White marble coastal fortress terrace, azure blue ocean waves crashing against sea walls, fluttering valkyrie banners in morning light."
+        "tone": "Radiant Azure Blue, Pure White Marble & Silver Dawn",
+        "concept": "Majestic valkyrie coastal fortress terrace, grand white marble spires and silver arches overlooking vivid azure waves crashing on sea cliffs."
     },
     "furu": {
         "name": "Furu",
@@ -89,19 +89,19 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Gala",
         "title": "NEBULA FLAME TEMPTRESS",
         "element": "FIRE",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_gala.jpg",
-        "tone": "Warm Amber Lanterns & Cosmic Purple Nebula",
-        "concept": "Cosmic nebula festival harbor at night with colorful glowing lanterns, warm amber boardwalk lights, and purple cosmos reflected on water."
+        "tone": "Swirling Cosmic Orange Flame, Fiery Amber & Violet Cosmos",
+        "concept": "Cosmic flame festival terrace overlooking swirling deep orange nebula cosmos, glowing fire lanterns and fiery braziers over water."
     },
     "gemora": {
         "name": "Gemora",
         "title": "COSMIC VOID ENVOY",
         "element": "LIGHTNING",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_gemora.jpg",
-        "tone": "Neon Cyan, Electric Indigo & Star Navy",
-        "concept": "Advanced cosmic orbital observatory, sleek command deck with holographic blue star maps and panoramic viewport facing an electric nebula."
+        "tone": "Deep Violet Purple, Electric Magenta & Cosmic Obsidian",
+        "concept": "Alien space station command bridge with panoramic observation windows overlooking a swirling deep violet and neon magenta cosmic nebula."
     },
     "glytta": {
         "name": "Glytta",
@@ -134,10 +134,10 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Kali",
         "title": "HUNDRED BLADE SAINT",
         "element": "WIND",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_kali.jpg",
-        "tone": "Autumn Crimson, Bamboo Jade & Steel Grey",
-        "concept": "Ancient sword cemetery in a serene bamboo forest with masterwork katanas embedded into stone mounds beneath swirling crimson autumn leaves."
+        "tone": "Monochrome Steel Grey, Charcoal Mist & Crimson Autumn Accents",
+        "concept": "Ancient Japanese sword cemetery in misty bamboo forest, hundreds of masterwork steel katanas planted in stone mounds with fluttering crimson leaves."
     },
     "kara": {
         "name": "Kara",
@@ -170,10 +170,10 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Lumeira",
         "title": "ASTRAL BUTTERFLY SAGE",
         "element": "WIND",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_lumeira.jpg",
-        "tone": "Teal, Violet Lavender & Starlight",
-        "concept": "Ethereal astral butterfly grove, glowing purple and teal giant mushrooms, swarms of luminous spirit butterflies under a starlit twilight canopy."
+        "tone": "Radiant Emerald Teal, Jade Green & Luminous Mint",
+        "concept": "Enchanted astral butterfly grove, glowing giant emerald-teal mushrooms, weeping willows with bioluminescent jade vines, and dancing spirit butterflies."
     },
     "mei": {
         "name": "Mei",
@@ -188,10 +188,10 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Micca Pandora",
         "title": "CHAOS BOX SOVEREIGN",
         "element": "CHAOS",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_micca.jpg",
-        "tone": "Cosmic Pastel Pink, Hot Magenta & Neon Violet",
-        "concept": "Surrealistic whimsical toy realm, floating glowing Pandora boxes, neon crystals, ribbons, and playing cards in pastel cosmos."
+        "tone": "Vivid Hot Pink, Magenta & Pastel Wonderland",
+        "concept": "Whimsical surreal chaos toybox dreamland, glowing Pandora jack-in-the-boxes, floating pink stardust, ribbons, playing cards, and neon dice."
     },
     "mora": {
         "name": "Mora",
@@ -206,10 +206,10 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Morana",
         "title": "THE BLACK PRIESTESS",
         "element": "DARK",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_morana.jpg",
-        "tone": "Midnight Obsidian, Silver Moonlight & Dark Candlelight",
-        "concept": "Black Chapel interior with soaring gothic vaulted ceilings, lit black candles, holy altar, incense haze, and moonlight through stained glass."
+        "tone": "Midnight Obsidian, Gothic Violet-Charcoal & Eerie Candlelight",
+        "concept": "Black Chapel interior, soaring gothic obsidian ribbed vaults, tall black candelabras with flickering violet-amber candles, incense mist, and stained glass."
     },
     "ninger": {
         "name": "Ning Er",
@@ -268,11 +268,11 @@ HERO_BACKGROUND_CATALOG = {
     "shina": {
         "name": "Shina",
         "title": "DRAGONIC FLAME MONARCH",
-        "element": "FIRE",
-        "status": "COMPLETED",
+        "element": "FIRE (TOXIC GREEN DRAGON FIRE)",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_shina.jpg",
-        "tone": "Draconic Magma Red, Obsidian Black & Ember Orange",
-        "concept": "Ancient volcanic dragon sanctuary, glowing magma rivers, obsidian cliffs, golden dragon statues, and drifting embers in twilight."
+        "tone": "Toxic Neon Green, Jade Emerald Magma & Obsidian Black",
+        "concept": "Ancient toxic green dragon fire hellscape and dragon sanctuary, glowing neon-green magma rivers, emerald flame plumes, jade runes, and glowing green embers."
     },
     "siv": {
         "name": "Siv",
@@ -296,10 +296,10 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Sven",
         "title": "GREATSWORD WANDERER",
         "element": "EARTH",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_sven.jpg",
-        "tone": "Autumn Pine Green, Campfire Amber & Mountain Dusk",
-        "concept": "Rustic lone traveler campsite at dusk with campfire, iron kettle, dirt road through an autumn pine forest, and mountain silhouette."
+        "tone": "Earthy Cedar Brown, Campfire Amber & Mountain Dusk",
+        "concept": "Lone rugged warrior campsite in pine wilderness at dusk, crackling amber campfire with warm embers, timber lean-to, and misty mountain silhouettes."
     },
     "tamo": {
         "name": "Tamo",
@@ -323,10 +323,10 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Valeria",
         "title": "FROSTVALE EMPRESS",
         "element": "ICE",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_valeria.jpg",
-        "tone": "Crystalline Ice Cyan, Snow White & Polar Aurora",
-        "concept": "Frostvale Imperial palace terrace of snowy white marble overlooking crystalline ice spires and pine forest under a vivid aurora borealis."
+        "tone": "Roman Imperial Bronze, Burnished Gold & Crimson Velvet",
+        "concept": "Majestic Roman imperial gladiator fortress terrace and grand arena pavilion, classical marble arches, crimson banners, bronze braziers, and golden hour sunset."
     },
     "vexira": {
         "name": "Vexira",

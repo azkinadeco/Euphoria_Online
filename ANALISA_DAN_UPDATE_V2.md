@@ -1262,6 +1262,12 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ll. Update batch: rate gacha direvisi (16 Nov 2026)
+
+- Pemilik merevisi dokumen rarity karena hero terlalu mudah didapat: SSR 10→7%, UR 5→3%, LR 3→1%, MR 1→0,01%, GR 0,1→0,001%; OR 0,0001%, SR 20%, R 25%, N 30% tetap (`DB.RARITY_RATE`).
+- Sisa persen tetap masuk ke N: Standard / rate-up N 43,99%, Normal Summon (N–SSR) SSR 7% SR 20% R 25% N 48%.
+- Pity (LR+ di 80) dan jaminan 10x pertama (UR+) tidak diubah.
+
 ## 2kk. Update batch: logo rarity, tulisan role, warna nama rarity (16 Nov 2026)
 
 - Aset dari pemilik: `rarerity image.jpg` (9 logo rarity) dan `Role Hero.jpg` (5 tulisan role) dipotong jadi PNG transparan: `art/ui/rarity/{n,r,sr,ssr,ur,lr,mr,gr,or}.png` (tinggi 192) dan `art/ui/role/{mage,fighter,tank,assassin,support}.png` (tinggi 96), dengan mipmap supaya halus saat kecil. Latar hitam dibuang: inti gambar dipertahankan penuh, cahaya di sekelilingnya jadi semi-transparan. Dua JPG sumber di root diberi `importer="skip"` supaya tidak masuk build.
