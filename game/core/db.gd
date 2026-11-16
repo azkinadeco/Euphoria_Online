@@ -4084,7 +4084,46 @@ static func role_of(id: String) -> String:
 static func skill_of(id: String) -> Dictionary:
 	if HEROES.has(id):
 		return HEROES[id]["skill"]
-	return ENEMIES.get(id, {}).get("skill", {"name": "Strike", "aim": "front", "shape": "single", "mult": 1.0})
+	if not _enemy_skill.has(id):
+		# enemies carry no written description: a copy gets one built from the skill's numbers
+		var sk: Dictionary = (ENEMIES.get(id, {}).get("skill", {"name": "Strike", "aim": "front", "shape": "single", "mult": 1.0}) as Dictionary).duplicate()
+		if not sk.has("desc"):
+			sk["desc"] = skill_desc(sk)
+		_enemy_skill[id] = sk
+	return _enemy_skill[id]
+
+static var _enemy_skill: Dictionary = {}
+
+## Plain-English description of a skill from its data (aim, shape, multiplier and effects).
+static func skill_desc(sk: Dictionary) -> String:
+	var area: String = {"single": "one enemy", "line": "a whole row", "column": "a whole column", "pierce": "the target and the one behind it",
+		"cross": "the target and its four neighbours", "square": "a 2x2 area", "x": "the target and its four corners", "all": "every enemy"}.get(str(sk.get("shape", "single")), "one enemy")
+	var who: String = "the back line" if str(sk.get("aim", "front")) == "back" else "the front"
+	var txt := "Hits %s (aimed at %s) for %d%% ATK." % [area, who, int(round(float(sk.get("mult", 1.0)) * 100.0))]
+	var fx: Array = []
+	if sk.has("burn"):
+		fx.append("Burns for %d%% ATK each round" % int(float(sk["burn"]) * 100.0))
+	if sk.has("stun"):
+		fx.append("%d%% chance to Stun" % int(float(sk["stun"]) * 100.0))
+	if sk.has("silence"):
+		fx.append("%d%% chance to Silence" % int(float(sk["silence"]) * 100.0))
+	if sk.has("def_down"):
+		fx.append("lowers DEF by %d%%" % int(float(sk["def_down"]) * 100.0))
+	if sk.has("heal_block"):
+		fx.append("blocks healing")
+	if sk.has("drain"):
+		fx.append("heals herself for %d%% of the damage" % int(float(sk["drain"]) * 100.0))
+	if sk.has("execute"):
+		fx.append("+%d%% damage to targets under 35%% HP" % int(float(sk["execute"]) * 100.0))
+	if sk.has("crit_bonus"):
+		fx.append("+%d%% crit chance" % int(float(sk["crit_bonus"]) * 100.0))
+	if sk.has("shield_self"):
+		fx.append("shields herself for %d%% Max HP" % int(float(sk["shield_self"]) * 100.0))
+	if sk.has("taunt"):
+		fx.append("Taunts for %d round%s" % [int(sk["taunt"]), "" if int(sk["taunt"]) == 1 else "s"])
+	if not fx.is_empty():
+		txt += " " + ", ".join(fx).capitalize().left(1) + ", ".join(fx).substr(1) + "."
+	return txt
 
 static func base_stats(id: String) -> Dictionary:
 	var d: Dictionary = HEROES.get(id, ENEMIES.get(id, {}))

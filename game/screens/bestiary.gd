@@ -215,8 +215,9 @@ func _render_detail() -> void:
 	el.add_child(UI.tex_rect(DB.icon(DB.ELEMENT_ICON.get(DB.element_of(id), "elem_light")), Vector2(22, 22)))
 	el.add_child(UI.label("%s  •  %s" % [DB.element_of(id), DB.role_of(id)], 14, DB.ELEMENT_COLOR.get(DB.element_of(id), UI.TEXT), 2))
 	_detail.add_child(el)
-	var sk: Dictionary = DB.ENEMIES[id]["skill"]
+	var sk: Dictionary = DB.skill_of(id)   # with its generated description
 	_detail.add_child(UI.label("Skill: " + str(sk["name"]), 14, UI.GOLD, 2))
+	_detail.add_child(UI.wrap_label(str(sk.get("desc", "")), 12, UI.MUTED))   # what the skill does
 	_detail.add_child(UI.label("Defeated: %s" % Game.fmt(Game.kills_of(id)), 16, UI.GREEN, 3))
 	var in_lobby := Game.lobby_enemy() == id and Game.lobby_enemy_form() == _form
 	var lb := UI.button("IN LOBBY ✓" if in_lobby else "SET AS LOBBY", func():

@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16d",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Enemy skills explained",
+  "body": "Every enemy skill now has a plain description, e.g. \"Hits one enemy (aimed at the back line) for 130% ATK. Heals herself for 50% of the damage.\" It shows when you tap an enemy in battle and on her Bestiary page."
+ },
+ {
   "id": "n2026-11-16c",
   "date": "2026-11-16",
   "tag": "UPDATE",

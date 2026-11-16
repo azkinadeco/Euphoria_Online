@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ht. Update batch 219 — Deskripsi skill musuh
+
+- `DB.skill_desc(sk)` menulis deskripsi dari data skill (area, sasaran, % ATK, burn/stun/silence/DEF down/heal block/drain/execute/crit/shield/taunt). `DB.skill_of(id)` untuk musuh mengembalikan salinan ber-`desc` (cache `_enemy_skill`; tabel const tidak diubah).
+- Tampil di info unit saat musuh diketuk dalam battle dan di halaman Bestiary (yang kini memakai `DB.skill_of`).
+
 ## 2hs. Update batch 218 — 13 realm hero baru, penjaga ukuran impor
 
 - File background hero baru dari user (abadonia, eropatra, furu, glytta, hyeonxa, luby, micca, ninger, rubby, schylua, seraph, siv, spimei) otomatis terbaca `DB.hero_bg_key`; impornya disetel lossy 0,85 tanpa mipmap (tadinya lossless). Total 27 hero + 1 skin khusus punya realm.

@@ -1966,6 +1966,15 @@ func _run() -> void:
 	s15.run()
 	check(s15.events.size() > 10 and s15.events.any(func(ev): return ev["t"] == "act"), "new enemies fight in the simulator (%d events)" % s15.events.size())
 
+	print("[enemy skill descriptions]")
+	var esd_missing: Array = []
+	for esd in DB.ENEMIES.keys():
+		if str(DB.skill_of(esd).get("desc", "")).length() < 20:
+			esd_missing.append(esd)
+	check(esd_missing.is_empty(), "every enemy skill has a description %s" % str(esd_missing))
+	check(DB.skill_of("selene")["desc"].contains("130%") and DB.skill_of("lolth")["desc"].contains("Silence"), "descriptions follow the skill numbers")
+	check(not DB.ENEMIES["selene"]["skill"].has("desc"), "the const enemy table stays untouched")
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)
