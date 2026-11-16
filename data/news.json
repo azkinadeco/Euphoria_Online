@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16q",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Screen changes glide",
+  "body": "Screen changes glide instead of jumping. Big screens (Heroes, Story, the lobby) take a moment to build, and that moment used to swallow most of the slide-in animation; the slide now starts right after, so it always plays in full."
+ },
+ {
   "id": "n2026-11-16p",
   "date": "2026-11-16",
   "tag": "UPDATE",

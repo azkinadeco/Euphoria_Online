@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ig. Update batch 233 — Transisi layar tidak melompat
+
+- `main.go`: animasi geser/pudar layar baru dan lama dimulai satu frame setelah `build()` (`_start_transition`). Tween yang dimulai di frame build mendapat seluruh waktu build (mis. ±200 ms Heroes) sebagai langkah pertamanya, sehingga sebagian besar gerakan terjadi sekaligus.
+
 ## 2if. Update batch 232 — Frame pacing yang rata di layar 90/120/144 Hz
 
 - Shell web mengukur refresh rate (60 frame rAF → `window.__eoHz`). `Game.display_hz()` membacanya (desktop: `DisplayServer.screen_get_refresh_rate`).

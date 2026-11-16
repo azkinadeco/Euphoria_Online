@@ -589,13 +589,21 @@ func go(name: String, params: Dictionary = {}, push: bool = true) -> void:
 	scr.modulate.a = 0.0
 	var dir := -1.0 if _going_back else 1.0
 	scr.position.x = 60.0 * dir
-	var tw := scr.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tw.tween_property(scr, "modulate:a", 1.0, 0.25)
-	tw.tween_property(scr, "position:x", 0.0, 0.3)
 	_going_back = false
 	if is_instance_valid(old):
 		old.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		old.set_process(false)
+	# Start both slides one frame later. Building a big screen takes a long frame, and a tween started in
+	# that frame gets the whole build time as its first step: most of the slide happened at once (a jump).
+	_start_transition.call_deferred(scr, old, dir)
+
+func _start_transition(scr: Control, old: Control, dir: float) -> void:
+	await get_tree().process_frame
+	if is_instance_valid(scr):
+		var tw := scr.create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tw.tween_property(scr, "modulate:a", 1.0, 0.25)
+		tw.tween_property(scr, "position:x", 0.0, 0.3)
+	if is_instance_valid(old):
 		# tween owned by Main so it still runs even if the old screen stops processing
 		var ot := create_tween().set_parallel(true)
 		ot.tween_property(old, "modulate:a", 0.0, 0.15)
