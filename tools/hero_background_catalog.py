@@ -341,10 +341,10 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Xylia",
         "title": "ARCH-DEMON ARCHITECT",
         "element": "DARK",
-        "status": "COMPLETED",
+        "status": "QUEUED_FOR_REGEN",
         "file": "bg_xylia.jpg",
-        "tone": "Gothic Nether Purple, Arcane Violet & Obsidian",
-        "concept": "Arch-demon grand library and workshop, towering obsidian Gothic cathedral arches, floating purple glowing blueprints overlooking a starry nether sky."
+        "tone": "Deep Amethyst Violet, Nether Purple & Obsidian Sanctum",
+        "concept": "Arch-demon grand gothic sanctum and arcane workshop, soaring obsidian vaulted cathedral arches, glowing purple runic blueprints, and dark maroon banners."
     },
     "yumi": {
         "name": "Yumi",
