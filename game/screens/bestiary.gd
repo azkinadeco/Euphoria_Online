@@ -557,7 +557,14 @@ func _unknown_detail(id: String) -> void:
 	for d in DB.DUNGEONS:
 		if (d["pool"] as Array).has(id):
 			where.append([str(d["name"]), "dungeon", {"dungeon": d["id"]}])
-	where.append(["Story stages", "story", {}])
+	# the earliest chapter she appears in, opened straight on its first stage
+	var chs := DB.chapters_with(id)
+	if chs.is_empty():
+		where.append(["Story stages", "story", {}])
+	else:
+		var c0: int = chs[0]
+		var more := "" if chs.size() == 1 else "  (+%d more)" % (chs.size() - 1)
+		where.append(["Story Ch.%d %s%s" % [c0 + 1, str(DB.CHAPTERS[c0]["name"]), more], "story", {"select": c0 * DB.STAGES_PER_CHAPTER}])
 	_detail.add_child(UI.label("WHERE TO FIND HER", 13, Color("#9fd0ff"), 2))
 	for e in where:
 		var scr: String = e[1]

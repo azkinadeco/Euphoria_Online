@@ -4100,6 +4100,15 @@ static func skill_of(id: String) -> Dictionary:
 static var _enemy_skill: Dictionary = {}
 
 ## Plain-English description of a skill from its data (aim, shape, multiplier and effects).
+## Story chapters (0-based) whose enemy pool or boss includes this foe, in order.
+static func chapters_with(id: String) -> Array:
+	var out: Array = []
+	for i in CHAPTERS.size():
+		var chd: Dictionary = CHAPTERS[i]
+		if (chd["pool"] as Array).has(id) or str(chd.get("boss", "")) == id:
+			out.append(i)
+	return out
+
 static func skill_desc(sk: Dictionary) -> String:
 	var area: String = {"single": "one enemy", "line": "a whole row", "column": "a whole column", "pierce": "the target and the one behind it",
 		"cross": "the target and its four neighbours", "square": "a 2x2 area", "x": "the target and its four corners", "all": "every enemy"}.get(str(sk.get("shape", "single")), "one enemy")

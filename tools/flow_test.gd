@@ -1980,6 +1980,14 @@ func _run() -> void:
 	check(str(DB.world_boss(2967)["id"]) == "serpentia", "the update week keeps its boss")
 	check(DB.WORLD_BOSSES.any(func(b): return b["id"] == "lolth") and DB.WORLD_BOSSES.any(func(b): return b["id"] == "code_zero") and DB.WORLD_BOSSES.any(func(b): return b["id"] == "octavia"), "three 15 Nov foes join the rotation")
 
+	print("[where foes live]")
+	var wf_none: Array = []
+	for wf_id in DB.ENEMIES.keys():
+		if DB.chapters_with(wf_id).is_empty():
+			wf_none.append(wf_id)
+	check(wf_none.size() <= 2, "almost every foe appears in a story chapter (missing: %s)" % str(wf_none))
+	check(DB.chapters_with("selene")[0] == 38, "Selene first appears in Ch.39")
+
 	print("[save / load]")
 	var path := "user://flow_test_save.json"
 	var f := FileAccess.open(path, FileAccess.WRITE)
