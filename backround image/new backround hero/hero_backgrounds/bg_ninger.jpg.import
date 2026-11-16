@@ -15,9 +15,9 @@ dest_files=["res://.godot/imported/bg_ninger.jpg-256e0a36d2a7091bf728e454c07020a
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.85
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

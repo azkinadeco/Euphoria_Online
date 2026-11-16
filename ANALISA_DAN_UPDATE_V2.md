@@ -1262,6 +1262,12 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2hs. Update batch 218 — 13 realm hero baru, penjaga ukuran impor
+
+- File background hero baru dari user (abadonia, eropatra, furu, glytta, hyeonxa, luby, micca, ninger, rubby, schylua, seraph, siv, spimei) otomatis terbaca `DB.hero_bg_key`; impornya disetel lossy 0,85 tanpa mipmap (tadinya lossless). Total 27 hero + 1 skin khusus punya realm.
+- Banner event Octra & Hyeonxa juga diimpor lossy.
+- `tools/check_refs.py` kini gagal bila ada art karakter, background atau banner yang diimpor lossless.
+
 ## 2hr. Update batch 217 — Build web kembali ±136 MB
 
 - 210 file `.import` di `art/characters/` masih lossless (`compress/mode=0`, `size_limit=0`): semua musuh 15 Nov, Octra, serta hero gala, hyeonxa, morana, seraph, tamo. Disamakan dengan standar proyek: lossy 0,85, `size_limit` 1200 (art) / 512 (sprite). PCK 235 MB → 136 MB. Koordinat rig berbasis UV, jadi tidak terpengaruh.

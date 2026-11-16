@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Finds asset references that fail silently: icons, sound effects and background keys that do not exist.
+"""Finds asset references that fail silently: icons, sound effects and background keys that do not exist,
+and big pictures imported lossless (they bloat the web build).
 
 A missing icon is just a blank square and a missing sound is silence, so nothing ever reports them.
 Run from the project root:  python3 tools/check_refs.py   (exit code 1 when something is missing)
@@ -39,6 +40,10 @@ for p, t in sorted(src.items()):
 for it in json.load(open('data/news.json', encoding='utf-8')):
     if it.get('bg', 'lobby') not in bg:
         bad.append('bg     %-24s data/news.json (%s)' % (it.get('bg'), it['id']))
+# big pictures must be imported lossy (a lossless character art or backdrop adds megabytes to the web build)
+for f in glob.glob('art/characters/**/*.import', recursive=True) + glob.glob('backround image/**/*.import', recursive=True) + glob.glob('art/banners_event/*.import'):
+    if re.search(r'^compress/mode=0', open(f, encoding='utf-8').read(), re.M):
+        bad.append('import %-22s %s (lossless: set compress/mode=1, lossy 0.85)' % ('', f))
 bad = sorted(set(bad))
 print('\n'.join(bad) if bad else 'check_refs: all %d icons, %d sounds and %d backgrounds referenced exist' % (len(icons), len(audio), len(bg)))
 sys.exit(1 if bad else 0)
