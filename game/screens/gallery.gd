@@ -82,11 +82,25 @@ func _build_list() -> void:
 		c.queue_free()
 	var tiers: Array = DB.RARITY_ORDER.duplicate()
 	tiers.reverse()
+	# tiers with no heroes yet (Void, God): one "?" card each, together in a single row at the top
+	var empty: Array = tiers.filter(func(t): return DB.heroes_of_rarity(t).is_empty())
+	if not empty.is_empty() and _filter != "OWNED":
+		var eh := UI.hbox(8)
+		eh.add_child(UI.label("COMING SOON", 16, UI.GOLD, 3))
+		eh.add_child(UI.label("new rarities in a future update", 13, UI.MUTED, 2))
+		_list.add_child(eh)
+		var eg := GridContainer.new()
+		eg.columns = clampi(int((_sc.size.x - 12) / 176.0), 3, 6) if _sc.size.x > 0 else 6
+		eg.add_theme_constant_override("h_separation", 12)
+		_list.add_child(eg)
+		_grids.append(eg)
+		for t in empty:
+			eg.add_child(_mystery_card(t))
 	for tier in tiers:
 		var all_ids: Array = DB.hero_ids().filter(func(h): return DB.rarity_of(h) == tier)
 		var ids: Array = all_ids.filter(func(h): return _filter == "ALL" or (_filter == "OWNED") == Game.owns(h))
-		var coming: bool = all_ids.is_empty() and _filter != "OWNED"   # a tier with no heroes yet: one "?" card
-		if ids.is_empty() and not coming:
+		var coming := false
+		if ids.is_empty():
 			continue
 		ids.sort_custom(func(x, y): return int(Game.owns(x)) > int(Game.owns(y)))
 		var have := all_ids.filter(func(h): return Game.owns(h)).size()
@@ -107,17 +121,22 @@ func _build_list() -> void:
 		_grids.append(g)
 		for id in ids:
 			g.add_child(_hero_card(id))
-		if coming:
-			g.add_child(_mystery_card(tier))
 	UI.stagger(_list, 0.02, 20)
 
 ## Placeholder for a rarity tier that has no heroes yet.
 func _mystery_card(tier: String) -> Control:
 	var rc: Color = DB.RARITY_COLOR[tier]
+	var btn := Button.new()
+	btn.theme_type_variation = "FlatButton"
+	btn.focus_mode = Control.FOCUS_NONE
+	btn.custom_minimum_size = Vector2(164, 214)
+	btn.pressed.connect(func(): main.toast("%s heroes are coming in a future update." % DB.RARITY_NAME[tier], UI.MUTED))
 	var fr := Panel.new()
-	fr.custom_minimum_size = Vector2(164, 214)
+	fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn.add_child(fr)
 	fr.add_theme_stylebox_override("panel", UI.style(Color(0.04, 0.03, 0.08, 1.0), Color(rc, 0.7), 10, 2, 0))
-	fr.tooltip_text = "%s heroes are coming in a future update." % DB.RARITY_NAME[tier]
+	btn.tooltip_text = "%s heroes are coming in a future update." % DB.RARITY_NAME[tier]
 	var q := UI.label("?", 84, Color(rc, 0.75), 6)
 	q.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	q.offset_bottom = -40
@@ -131,13 +150,13 @@ func _mystery_card(tier: String) -> Control:
 	cap.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fr.add_child(cap)
 	UI.rarity_frame(fr, tier, 10.0, 2.5, 9.0, 0.6)
-	var nm := UI.label("???", 14, UI.MUTED, 3)
+	var nm := UI.rarity_text(tier, 14)
 	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	cap.add_child(nm)
 	var cl := UI.label("Coming soon", 11, Color(rc, 0.9), 2)
 	cl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	cap.add_child(cl)
-	return fr
+	return btn
 
 func _unlocked_count(id: String) -> int:
 	if not Game.owns(id):

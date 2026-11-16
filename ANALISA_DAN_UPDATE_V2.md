@@ -1262,6 +1262,12 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2rr. Update batch 244–246: Gallery "Coming Soon", tap di HP (16 Nov 2026)
+
+- 244: cek semua 37 art Lv1 dengan `tools/tilt_preview.gd` (lebar/tinggi siluet saat tilt dibanding art asli): semua ~1,00 setelah batch 237; Siv terukur lebih lebar hanya karena bayangan lantai di art-nya, figurnya tidak berubah. Kartu "?" Gallery jadi Button (ketuk → toast), form avatar terkunci tidak lagi `disabled` tapi memberi toast "Reach N★…" (HP tidak punya tooltip).
+- 245: tier tanpa hero (Void, God) digabung dalam satu baris "COMING SOON" di atas Gallery; caption kartu memakai `UI.rarity_text` (VOID / GOD) bukan "???".
+- 246: daftar Rates menulis "coming soon" untuk tier kosong (sebelumnya "no heroes yet").
+
 ## 2qq. Update batch 243: alat cek proporsi 2.5D (16 Nov 2026)
 
 - `tools/tilt_preview.gd`: render art ber-rig pivot dengan tilt dipaksa (-1,0), (0,0), (1,0), (1,1) + art asli di panel kelima. Dipakai untuk memverifikasi perbaikan batch 237: Morana Lv1 dengan shader lama menyempit dan melancip ke bawah pada tilt (1,1); dengan shader baru lebar dan tinggi hampir sama dengan art asli.

@@ -1177,7 +1177,6 @@ func _open_profile() -> void:
 				ft.theme_type_variation = "FlatButton"
 				ft.focus_mode = Control.FOCUS_NONE
 				ft.custom_minimum_size = Vector2(70, 84)
-				ft.disabled = not open
 				var fv := UI.vbox(1)
 				fv.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 				fv.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1192,6 +1191,10 @@ func _open_profile() -> void:
 				fv.add_child(fl)
 				ft.tooltip_text = "" if open else "Reach %d★ to unlock this form." % DB.sprite_form_star(cur_id, f_i)
 				ft.pressed.connect(func():
+					if not Game.sprite_form_unlocked(cur_id, f_i):
+						# phones have no tooltips: say why on tap
+						main.toast("Reach %d★ with %s to use this form." % [DB.sprite_form_star(cur_id, f_i), DB.name_of(cur_id).split(" ")[0]], UI.MUTED)
+						return
 					Game.sfx("ui_click")
 					Game.set_avatar(cur_id, f_i)
 					main.close_popup(v)
