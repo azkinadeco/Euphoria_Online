@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ic. Update batch 229 — Timer milik layar/popup, avatar ulang tahun
+
+- Regresi batch 227: pemeriksaan layout memakai `get_tree().create_timer`, sehingga bisa memanggil popup/layar yang sudah ditutup ("Lambda capture was freed"). Kini `main._owned_timer(owner, …)` dan Timer milik Screen — ikut hilang bersama pemiliknya; tween tombol ✕ dibuat di layer popup.
+- Schedule: ulang tahun mendatang memakai `UI.avatar`.
+
 ## 2ib. Update batch 228 — Rune papan battle berputar halus
 
 - `grid_board.gd::_process`: rune idle digambar ulang tiap frame (dulu tiap 3 frame ≈ 20 fps, meloncat ±1° per gambar — salah satu "gerakan kaku" di battle). Geometrinya sudah di-cache, jadi biayanya kecil.

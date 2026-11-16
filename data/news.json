@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16m",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Cleaner popups",
+  "body": "Fixed error messages that the last update could leave behind when a popup was closed quickly. Upcoming birthdays in the Schedule now use the same full-body avatars as the rest of the game."
+ },
+ {
   "id": "n2026-11-16l",
   "date": "2026-11-16",
   "tag": "UPDATE",

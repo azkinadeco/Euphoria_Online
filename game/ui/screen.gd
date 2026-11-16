@@ -34,10 +34,16 @@ func _fit_soon() -> void:
 	if not is_inside_tree():
 		return
 	for d in [0.12, 0.5, 1.2]:
-		get_tree().create_timer(d).timeout.connect(func():
-			if is_inside_tree():
-				_fit_header()
-				_fit_scan(self, 0))
+		# owned by the screen: it can never fire after the screen is gone
+		var t := Timer.new()
+		t.one_shot = true
+		t.wait_time = d
+		t.timeout.connect(func():
+			_fit_header()
+			_fit_scan(self, 0)
+			t.queue_free())
+		add_child(t)
+		t.start()
 
 ## Called by Main when Game.changed fires while this screen is visible.
 func refresh() -> void:

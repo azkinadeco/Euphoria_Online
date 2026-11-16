@@ -437,7 +437,7 @@ func show_schedule() -> void:
 			bh.add_child(bp)
 			var bx := UI.hbox(8)
 			bp.add_child(bx)
-			var fr := UI.face_rect(str(b["id"]), Vector2(46, 46))
+			var fr := UI.avatar(str(b["id"]), 46, Color("#ff8fb8") if own else Color(1, 1, 1, 0.2), 1)
 			if not own:
 				fr.modulate = Color(0.5, 0.5, 0.55)
 			bx.add_child(fr)
@@ -726,6 +726,17 @@ func _toast_glyph(text: String, color: Color) -> String:
 	return "★"
 
 ## Modal popup. Returns the content VBox to fill.
+## One-shot timer owned by `owner`: never fires after the owner is gone.
+static func _owned_timer(owner: Node, delay: float, cb: Callable) -> void:
+	var t := Timer.new()
+	t.one_shot = true
+	t.wait_time = delay
+	t.timeout.connect(func():
+		cb.call()
+		t.queue_free())
+	owner.add_child(t)
+	t.start()
+
 func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxContainer:
 	var layer := Control.new()
 	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -788,7 +799,7 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 				xb.modulate.a = p.modulate.a
 		p.item_rect_changed.connect(place)
 		# follow the panel only while its pop-in animation runs, then stay put (no endless timer)
-		var follow := create_tween()
+		var follow := layer.create_tween()   # stops when the popup is freed
 		follow.tween_method(func(_v: float): place.call(), 0.0, 1.0, 0.45)
 		place.call_deferred()
 	Game.sfx("ui/open")
@@ -802,7 +813,7 @@ func popup(title: String, width: float = 560.0, closable: bool = true) -> VBoxCo
 				UI.fit_tall(p, head, room)
 	# after the first layout (see UI.fit_tall), then twice more while the content settles (no endless timer)
 	for fd in [0.08, 0.4, 1.0]:
-		get_tree().create_timer(fd).timeout.connect(fit)
+		_owned_timer(layer, fd, fit)   # dies with the popup (a tree timer called into a freed popup)
 	p.minimum_size_changed.connect(fit)
 	return v
 
