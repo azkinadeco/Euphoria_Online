@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2ii. Update batch 235 — Entrance baris yang bertahap utuh
+
+- `UI.stagger`: item disembunyikan langsung, tween-nya dimulai satu frame setelah layar dibangun (alasan sama dengan batch 233/234; baris-baris pertama dulu muncul sekaligus). Dipakai di ±36 tempat.
+
 ## 2ih. Update batch 234 — Animasi pop popup utuh
 
 - `UI.pop`: tween skala/pudar dimulai satu frame kemudian (isi popup dibangun setelah `pop()` di frame yang sama; tween di frame itu kehilangan sebagian besar durasinya). Berlaku untuk 14 pemakai `UI.pop`, termasuk semua `main.popup()`.

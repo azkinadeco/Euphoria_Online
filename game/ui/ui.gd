@@ -300,22 +300,35 @@ static func hover_fx(b: BaseButton, grow: float = 1.04) -> void:
 
 ## Staggered entrance for all children of a container (fade + scale pop).
 static func stagger(container: Node, step: float = 0.035, max_items: int = 30) -> void:
-	var i := 0
+	var items: Array = []
 	for c in container.get_children():
 		if not (c is CanvasItem) or c.is_queued_for_deletion():
 			continue
-		var ci := c as CanvasItem
-		ci.modulate.a = 0.0
-		var d := minf(i, max_items) * step
-		var tw := ci.create_tween()
-		tw.tween_interval(d)
-		tw.tween_property(ci, "modulate:a", 1.0, 0.22)
+		(c as CanvasItem).modulate.a = 0.0
 		if c is Control:
-			var cc := c as Control
-			cc.scale = Vector2(0.92, 0.92)
-			tw.parallel().tween_callback(func(): cc.pivot_offset = cc.size * 0.5)
-			tw.parallel().tween_property(cc, "scale", Vector2.ONE, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		i += 1
+			(c as Control).scale = Vector2(0.92, 0.92)
+		items.append(c)
+	# the tweens start one frame later: stagger() runs while a screen is being built, a long frame whose
+	# whole duration a tween started there would take as its first step (the first rows popped in at once)
+	var start := func():
+		if not is_instance_valid(container) or not container.is_inside_tree():
+			return
+		await container.get_tree().process_frame
+		var i := 0
+		for c in items:
+			if not is_instance_valid(c):
+				continue
+			var ci := c as CanvasItem
+			var d := minf(i, max_items) * step
+			var tw := ci.create_tween()
+			tw.tween_interval(d)
+			tw.tween_property(ci, "modulate:a", 1.0, 0.22)
+			if c is Control:
+				var cc := c as Control
+				tw.parallel().tween_callback(func(): cc.pivot_offset = cc.size * 0.5)
+				tw.parallel().tween_property(cc, "scale", Vector2.ONE, 0.28).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			i += 1
+	start.call_deferred()
 
 ## Counts a label's number up/down from `from` to `to`.
 static func count_to(l: Label, from: int, to: int, fmt_fn: Callable, dur: float = 0.5) -> void:

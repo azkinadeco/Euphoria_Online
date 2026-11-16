@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16s",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Rows cascade in smoothly",
+  "body": "Lists that appear row by row (missions, Tower floors, cards, menus) now cascade in smoothly from the first row instead of the first few appearing all at once."
+ },
+ {
   "id": "n2026-11-16r",
   "date": "2026-11-16",
   "tag": "UPDATE",
