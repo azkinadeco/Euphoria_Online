@@ -59,9 +59,8 @@ void fragment() {
 	vec2 pc = UV - vec2(0.5);
 	float yaw = tilt.x * 0.085 * turn * calm;
 	float pitch = tilt.y * 0.05 * turn * calm;
-	pc.x *= 1.0 + abs(yaw) * 0.35;
-	pc.y *= 1.0 + pc.x * yaw * 1.6;
-	pc.x *= 1.0 + pc.y * pitch * 0.9;
+	pc.y *= 1.0 + pc.x * yaw * 0.7 * min(aspect, 1.0);   // keystone in proportion to the width (no squash on slim art)
+	pc.x *= 1.0 + pc.y * pitch * 0.25;
 	vec2 base_uv = pc + vec2(0.5);
 	uv = base_uv;
 	// --- 1) parallax: near parts slide further than far parts. Six refinement steps keep edges clean at

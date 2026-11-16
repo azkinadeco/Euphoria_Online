@@ -124,13 +124,14 @@ vec3 ring_skin(sampler2D tex, vec2 c, vec2 ex, vec2 ey, vec2 to_uv, vec2 q, vec4
 }
 
 void fragment() {
-	// 0) turn: the whole card rotates a little with the tilt (far side shorter, slightly narrower)
+	// 0) turn: the whole card rotates a little with the tilt (far side a touch shorter). The keystone is
+	// scaled by the art's width/height so tall slim figures are not sheared, and the figure is never
+	// narrowed (the old narrowing made slim heroes look squashed).
 	vec2 pc = UV - vec2(0.5);
 	float yaw = tilt.x * 0.07 * calm;
 	float pitch = tilt.y * 0.04 * calm;
-	pc.x *= 1.0 + abs(yaw) * 0.3;
-	pc.y *= 1.0 + pc.x * yaw * 1.5;
-	pc.x *= 1.0 + pc.y * pitch * 0.8;
+	pc.y *= 1.0 + pc.x * yaw * 0.7 * min(aspect, 1.0);
+	pc.x *= 1.0 + pc.y * pitch * 0.25;
 	vec2 buv = pc + vec2(0.5);
 	vec2 uv = buv;
 	// depth parallax (4 refinement steps): the body comes forward, wings / hair / tails stay back

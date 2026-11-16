@@ -1262,6 +1262,12 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2mm. Update batch 237: badge proporsional + 2.5D tidak menggencet (16 Nov 2026)
+
+- Keluhan pemilik: logo rarity dan tulisan role terlalu besar / tidak proporsional; Morana terlihat gepeng oleh efek 2.5D.
+- Kartu: logo rarity setinggi ikon elemen (`card_w * 0.18`, 15–26 px, di pojok kanan atas); tulisan role dipindah ke pita gelap bawah, rata kanan sejajar Lv (`card_w * 0.085`, 9–13 px, lebar maks 48% kartu). `UI.rarity_tag` 2.2 → 1.6 x ukuran. Nama VOID di `UI.rarity_text` diberi garis tepi ungu supaya terbaca.
+- 2.5D: bagian "turn" di `char_rig.gdshader` dan `live25d.gdshader` tidak lagi menyempitkan gambar (`pc.x *= 1 + |yaw|…` dihapus); keystone dikali `min(aspect, 1)` dan dikecilkan (1.5 → 0.7), pitch 0.8 → 0.25. Art ramping (Morana Lv1 memakai depth otomatis) tidak lagi tergencet; parallax dan cahaya tetap.
+
 ## 2ll. Update batch: rate gacha direvisi (16 Nov 2026)
 
 - Pemilik merevisi dokumen rarity karena hero terlalu mudah didapat: SSR 10→7%, UR 5→3%, LR 3→1%, MR 1→0,01%, GR 0,1→0,001%; OR 0,0001%, SR 20%, R 25%, N 30% tetap (`DB.RARITY_RATE`).

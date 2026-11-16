@@ -604,10 +604,9 @@ static func rarity_text(rarity: String, size: int = 16, long_name: bool = true) 
 	var c: Color = DB.RARITY_COLOR.get(rarity, ACCENT)
 	var mode := int(RARITY_FRAME_MODE.get(rarity, 0))
 	var l := label(txt, size, Color.WHITE if mode != 0 else c.lightened(0.15), 4)
-	l.add_theme_color_override("font_outline_color", Color(0.04, 0.02, 0.08) if rarity != "OR" else Color(0.75, 0.6, 1.0, 0.0))
-	if rarity == "OR":
-		l.add_theme_color_override("font_shadow_color", Color(0.6, 0.45, 1.0, 0.9))
-		l.add_theme_constant_override("shadow_outline_size", 4)
+	# Void is a dark fill, so it gets a violet rim instead of the black one (kept dim enough that
+	# rarity_text.gdshader still treats it as the outline pass)
+	l.add_theme_color_override("font_outline_color", Color(0.04, 0.02, 0.08) if rarity != "OR" else Color(0.5, 0.32, 0.62))
 	if mode != 0:
 		if _rarity_text_shader == null:
 			_rarity_text_shader = load("res://game/ui/rarity_text.gdshader")
@@ -619,7 +618,7 @@ static func rarity_text(rarity: String, size: int = 16, long_name: bool = true) 
 		l.material = m
 	return l
 
-## Rarity logo badge (art/ui/rarity/) about 2.2 x `size` tall; a text chip if the art is missing.
+## Rarity logo badge (art/ui/rarity/) about 1.6 x `size` tall; a text chip if the art is missing.
 static func rarity_tag(rarity: String, size: int = 14) -> PanelContainer:
 	var bt := DB.rarity_badge(rarity)
 	if bt != null:
@@ -628,7 +627,7 @@ static func rarity_tag(rarity: String, size: int = 14) -> PanelContainer:
 		bp.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		bp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		bp.tooltip_text = str(DB.RARITY_NAME.get(rarity, rarity))
-		bp.add_child(badge_rect(bt, size * 2.2))
+		bp.add_child(badge_rect(bt, size * 1.6))
 		return bp
 	var c: Color = DB.RARITY_COLOR.get(rarity, ACCENT)
 	var p := styled_panel(c.darkened(0.55), c, 6, 2, 6)

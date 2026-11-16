@@ -114,22 +114,25 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	frame.add_child(elem)
 
 	# rarity logo in the top-right corner (owner's badge art)
-	var rb_h := clampf(card_size.x * 0.26, 22.0, 40.0)
+	# about the height of the element icon, so the corner reads as one row of small marks
+	var rb_h := clampf(card_size.x * 0.18, 15.0, 26.0)
 	var rbadge := UI.badge_rect(DB.rarity_badge(rarity), rb_h)
-	rbadge.position = Vector2(card_size.x - rbadge.size.x - 1, 1)
+	rbadge.position = Vector2(card_size.x - rbadge.size.x - 3, 4)
 	if not owned:
 		rbadge.modulate = Color(0.75, 0.75, 0.8)
 	frame.add_child(rbadge)
 
-	# battle role word under the element icon (owner's role lettering: MAGE / FIGHTER / TANK / ASSASSIN / SUPPORT)
+	# battle role word (owner's role lettering: MAGE / FIGHTER / TANK / ASSASSIN / SUPPORT) on the dark band
+	# at the bottom, right side of the Lv line: readable, and never over her face
 	if card_size.x >= 84:
-		var role_h := clampf(card_size.x * 0.13, 11.0, 20.0)
-		var rrole := UI.badge_rect(DB.role_badge(id), role_h)
-		if rrole.size.x > card_size.x * 0.62:   # long words (FIGHTER, SUPPORT) shrink to fit beside the badge
-			var k := card_size.x * 0.62 / rrole.size.x
-			rrole.custom_minimum_size *= k
-			rrole.size *= k
-		rrole.position = Vector2(4, 31)
+		var rt := DB.role_badge(id)
+		var role_h := clampf(card_size.x * 0.085, 9.0, 13.0)
+		var rrole := UI.badge_rect(rt, role_h)
+		if rrole.size.x > card_size.x * 0.48:
+			var kk := card_size.x * 0.48 / rrole.size.x
+			rrole.custom_minimum_size *= kk
+			rrole.size *= kk
+		rrole.position = Vector2(card_size.x - rrole.size.x - 6, card_size.y - 63 + (13.0 - rrole.size.y) * 0.5)
 		rrole.tooltip_text = str(DB.role_info(id)[0])
 		frame.add_child(rrole)
 
