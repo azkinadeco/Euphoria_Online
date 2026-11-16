@@ -174,15 +174,26 @@ func _render() -> void:
 	rname.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	top.add_child(rname)
 	top.add_child(UI.element_tag(DB.element_of(id), 15))
-	top.add_child(UI.label(DB.role_of(id), 15, UI.MUTED, 3))
+	# the same role lettering as on her card (FIGHTER / TANK / MAGE / ASSASSIN / SUPPORT)
+	var rword := UI.badge_rect(DB.role_badge(id), 17)
+	rword.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	rword.tooltip_text = DB.role_of(id)
+	rword.mouse_filter = Control.MOUSE_FILTER_PASS
+	top.add_child(rword)
 	var ri := DB.role_info(id)
 	var rc := Color(str(ri[1]))
-	var rchip := UI.styled_panel(Color(rc, 0.18), Color(rc, 0.8), 8, 1, 0)
-	rchip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	rchip.add_child(UI.margin(UI.label(str(ri[0]), 12, rc.lightened(0.2), 2), 7, 1, 7, 1))
-	rchip.tooltip_text = str(ri[2])
-	rchip.mouse_filter = Control.MOUSE_FILTER_PASS
-	top.add_child(rchip)
+	# the chip only adds what the role word does not say ("MAGE • AoE" beside MAGE -> "AoE"; plain TANK -> none)
+	var parts: Array = str(ri[0]).split(" • ")
+	if str(parts[0]) == str(DB.ROLE_BADGE.get(DB.role_of(id), "")).to_upper():
+		parts.remove_at(0)
+	rword.tooltip_text = "%s: %s" % [DB.role_of(id), str(ri[2])]
+	if not parts.is_empty():
+		var rchip := UI.styled_panel(Color(rc, 0.18), Color(rc, 0.8), 8, 1, 0)
+		rchip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		rchip.add_child(UI.margin(UI.label(" • ".join(parts), 12, rc.lightened(0.2), 2), 7, 1, 7, 1))
+		rchip.tooltip_text = str(ri[2])
+		rchip.mouse_filter = Control.MOUSE_FILTER_PASS
+		top.add_child(rchip)
 	_name_box.add_child(top)
 	# name with the rarity logo beside it
 	var nrow := UI.hbox(10)

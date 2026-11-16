@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16z",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Matching Role Names",
+  "body": "Polish: a hero's page now uses the same role lettering as her card (FIGHTER, TANK, MAGE, ASSASSIN, SUPPORT), with a small chip only for what the word does not already say, such as AoE or HEALER."
+ },
+ {
   "id": "n2026-11-16y",
   "date": "2026-11-16",
   "tag": "UPDATE",

@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2pp. Update batch 242: role di halaman hero sama dengan kartu (16 Nov 2026)
+
+- Baris atas halaman hero: label teks `role_of` (WARRIOR, KNIGHT…) diganti tulisan role art (`DB.role_badge`, tinggi 17) seperti di kartu; tooltip berisi nama role asli + penjelasan.
+- Chip role hanya menampilkan bagian yang belum dikatakan tulisan itu ("MAGE • AoE" → "AoE", "SUPPORT • HEALER" → "HEALER", "TANK" → tanpa chip).
+
 ## 2oo. Update batch 240–241: riwayat summon + harga "Summon Again" (16 Nov 2026)
 
 - 240: baris Summon History memakai logo rarity (`UI.rarity_tag` 12, kolom lebar tetap 44 px) di depan nama, bukan teks "SR Vexira".
