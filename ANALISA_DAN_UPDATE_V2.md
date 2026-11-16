@@ -1262,6 +1262,15 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2kk. Update batch: logo rarity, tulisan role, warna nama rarity (16 Nov 2026)
+
+- Aset dari pemilik: `rarerity image.jpg` (9 logo rarity) dan `Role Hero.jpg` (5 tulisan role) dipotong jadi PNG transparan: `art/ui/rarity/{n,r,sr,ssr,ur,lr,mr,gr,or}.png` (tinggi 192) dan `art/ui/role/{mage,fighter,tank,assassin,support}.png` (tinggi 96), dengan mipmap supaya halus saat kecil. Latar hitam dibuang: inti gambar dipertahankan penuh, cahaya di sekelilingnya jadi semi-transparan. Dua JPG sumber di root diberi `importer="skip"` supaya tidak masuk build.
+- `DB.rarity_badge(r)`, `DB.role_badge(id)` + `DB.ROLE_BADGE` (TANK/KNIGHT/PALADIN → TANK, WARRIOR/RANGER → FIGHTER, ASSASSIN, MAGE/WARLOCK → MAGE, HEALER/BUFFER → SUPPORT), `UI.badge_rect(tex, h)`.
+- Kartu hero: chip teks rarity diganti logo di pojok kanan atas; chip role diganti tulisan role di bawah ikon elemen.
+- `UI.rarity_tag` sekarang memakai logo (tinggi sekitar 2,2 x ukuran lama), jadi Summon, Rates, Gallery, splash summon dan viewer ikut berganti.
+- `UI.rarity_text(r, size)` + `game/ui/rarity_text.gdshader`: nama rarity (NORMAL, RARE, SUPER RARE, SSR, ULTRA RARE, LEGEND, MYTHIC, GOD, VOID) dengan warna border-nya; LR pelangi berjalan, MR magenta-merah, GR putih hologram berkilau, OR hitam kosmik dengan bayangan ungu. Dipakai di halaman hero (baris atas), daftar Rates dan judul Gallery. Halaman hero: logo pindah ke samping nama.
+- Perbaikan: 13 latar hero baru di `backround image/new backround hero/hero_backgrounds/` ter-import lossless di build sebelumnya; sekarang lossy 0.85 (check_refs lulus).
+
 ## 2jj. Update batch: rarity baru 9 tier, 4 banner, Gallery Lv1, avatar form (16 Nov 2026)
 
 Sumber: dokumen pemilik "Rarerity Hero 16 nov 2026.docx".

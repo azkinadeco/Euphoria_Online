@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16u",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "New Rarity Crests & Role Lettering",
+  "body": "Hero cards now wear the new rarity crests in the top-right corner (Normal, R, SR, SSR, Ultra Rare, Legend, Mythic, God and Void) and the new role lettering under the element icon: MAGE, FIGHTER, TANK, ASSASSIN and SUPPORT.\n\nOn a hero's page the rarity name is written in its own colours: rainbow for Legend, magenta-red for Mythic, white hologram for God, cosmic black for Void, and the border colour for the others. The crest sits beside her name."
+ },
+ {
   "id": "n2026-11-16t",
   "date": "2026-11-16",
   "tag": "UPDATE",

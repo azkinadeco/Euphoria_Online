@@ -170,7 +170,9 @@ func _render() -> void:
 	for c in _name_box.get_children():
 		c.queue_free()
 	var top := UI.hbox(8)
-	top.add_child(UI.rarity_tag(DB.rarity_of(id), 16))
+	var rname := UI.rarity_text(DB.rarity_of(id), 16)
+	rname.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top.add_child(rname)
 	top.add_child(UI.element_tag(DB.element_of(id), 15))
 	top.add_child(UI.label(DB.role_of(id), 15, UI.MUTED, 3))
 	var ri := DB.role_info(id)
@@ -182,7 +184,13 @@ func _render() -> void:
 	rchip.mouse_filter = Control.MOUSE_FILTER_PASS
 	top.add_child(rchip)
 	_name_box.add_child(top)
-	_name_box.add_child(UI.label(DB.name_of(id), 44, Color.WHITE, 8))
+	# name with the rarity logo beside it
+	var nrow := UI.hbox(10)
+	nrow.add_child(UI.label(DB.name_of(id), 44, Color.WHITE, 8))
+	var nb := UI.rarity_tag(DB.rarity_of(id), 22)
+	nb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	nrow.add_child(nb)
+	_name_box.add_child(nrow)
 	_name_box.add_child(UI.label(DB.title_of(id), 16, DB.theme_color(id).lightened(0.4), 4))
 	var star_n: int = int(h.get("star", DB.RARITY_START_STAR[DB.rarity_of(id)]))
 	var srow := UI.hbox(8)

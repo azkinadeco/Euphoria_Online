@@ -48,6 +48,19 @@ const RARITY_COLOR := {"N": Color("#9aa0ab"), "R": Color("#5fa8ff"), "SR": Color
 const RARITY_RATE := {"N": 0.30, "R": 0.25, "SR": 0.20, "SSR": 0.10, "UR": 0.05, "LR": 0.03, "MR": 0.01, "GR": 0.001, "OR": 0.000001}
 const RARITY_START_STAR := {"N": 1, "R": 1, "SR": 2, "SSR": 3, "UR": 3, "LR": 3, "MR": 3, "GR": 3, "OR": 3}
 
+## Rarity badge art (art/ui/rarity/, cut from the owner's "rarerity image.jpg").
+static func rarity_badge(r: String) -> Texture2D:
+	var p := "res://art/ui/rarity/%s.png" % r.to_lower()
+	return tex(p) if ResourceLoader.exists(p) else null
+
+## Role word art (art/ui/role/, from the owner's "Role Hero.jpg") for each battle role.
+const ROLE_BADGE := {"TANK": "tank", "KNIGHT": "tank", "PALADIN": "tank", "WARRIOR": "fighter", "RANGER": "fighter",
+	"ASSASSIN": "assassin", "MAGE": "mage", "WARLOCK": "mage", "HEALER": "support", "BUFFER": "support"}
+
+static func role_badge(id: String) -> Texture2D:
+	var p := "res://art/ui/role/%s.png" % str(ROLE_BADGE.get(role_of(id), "fighter"))
+	return tex(p) if ResourceLoader.exists(p) else null
+
 static func rarity_rank(r: String) -> int:
 	var i := RARITY_ORDER.find(r)
 	return i if i >= 0 else 1

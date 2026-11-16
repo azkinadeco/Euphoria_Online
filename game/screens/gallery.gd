@@ -92,7 +92,7 @@ func _build_list() -> void:
 		var have := all_ids.filter(func(h): return Game.owns(h)).size()
 		var hd := UI.hbox(8)
 		hd.add_child(UI.rarity_tag(tier, 18))
-		var hl := UI.label("%s HEROES" % str(DB.RARITY_NAME[tier]).to_upper(), 16, DB.RARITY_COLOR[tier], 3)
+		var hl := UI.rarity_text(tier, 16)
 		hl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		hd.add_child(hl)
 		var hc := UI.label("coming soon" if coming else "%d / %d" % [have, all_ids.size()], 13, UI.MUTED, 2)

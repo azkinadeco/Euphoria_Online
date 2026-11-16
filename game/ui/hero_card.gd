@@ -113,28 +113,25 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	elem.size = Vector2(24, 24)
 	frame.add_child(elem)
 
-	var rchip := PanelContainer.new()
-	rchip.add_theme_stylebox_override("panel", UI.style(Color(0, 0, 0, 0.55), Color(rc, 0.85), 6, 1, 0))
-	rchip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var rtag := UI.label(rarity, 11, rc.lightened(0.35), 3)
-	rtag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	rchip.add_child(UI.margin(rtag, 5, 0, 5, 0))
-	rchip.position = Vector2(card_size.x - (24 + 8 * rarity.length()), 6)
-	frame.add_child(rchip)
+	# rarity logo in the top-right corner (owner's badge art)
+	var rb_h := clampf(card_size.x * 0.26, 22.0, 40.0)
+	var rbadge := UI.badge_rect(DB.rarity_badge(rarity), rb_h)
+	rbadge.position = Vector2(card_size.x - rbadge.size.x - 1, 1)
+	if not owned:
+		rbadge.modulate = Color(0.75, 0.75, 0.8)
+	frame.add_child(rbadge)
 
-	# battle role tag under the element icon (TANK / DPS / MAGE / SUP)
-	if card_size.x >= 100:
-		var ri := DB.role_info(id)
-		var short := str(ri[0]).split(" ")[0]
-		if short == "SUPPORT":
-			short = "SUP"
-		var rcol := Color(str(ri[1]))
-		var role_chip := PanelContainer.new()
-		role_chip.add_theme_stylebox_override("panel", UI.style(Color(0, 0, 0, 0.6), Color(rcol, 0.8), 5, 1, 0))
-		role_chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		role_chip.add_child(UI.margin(UI.label(short, 9, rcol.lightened(0.25), 2), 4, 0, 4, 0))
-		role_chip.position = Vector2(5, 32)
-		frame.add_child(role_chip)
+	# battle role word under the element icon (owner's role lettering: MAGE / FIGHTER / TANK / ASSASSIN / SUPPORT)
+	if card_size.x >= 84:
+		var role_h := clampf(card_size.x * 0.13, 11.0, 20.0)
+		var rrole := UI.badge_rect(DB.role_badge(id), role_h)
+		if rrole.size.x > card_size.x * 0.62:   # long words (FIGHTER, SUPPORT) shrink to fit beside the badge
+			var k := card_size.x * 0.62 / rrole.size.x
+			rrole.custom_minimum_size *= k
+			rrole.size *= k
+		rrole.position = Vector2(4, 31)
+		rrole.tooltip_text = str(DB.role_info(id)[0])
+		frame.add_child(rrole)
 
 	# rarity accent line above the name plate
 	var accent := ColorRect.new()

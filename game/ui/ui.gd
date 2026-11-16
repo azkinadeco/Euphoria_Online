@@ -580,7 +580,56 @@ static func rarity_frame(card: Control, rarity: String, radius: float = 10.0, wi
 	sync.call()
 	return r
 
+## Picture badge (rarity logo or role word) `h` px tall, aspect kept, smooth when scaled down.
+static func badge_rect(t: Texture2D, h: float) -> TextureRect:
+	var r := TextureRect.new()
+	r.texture = t
+	r.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	r.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	r.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var w := h * (float(t.get_width()) / float(t.get_height())) if t != null else h
+	r.custom_minimum_size = Vector2(w, h)
+	r.size = Vector2(w, h)
+	return r
+
+static var _rarity_text_shader: Shader
+
+## Rarity name ("LEGEND") in the rarity's border colours: solid N..UR, animated rainbow LR, magenta-red MR,
+## white hologram GR, cosmic black OR (game/ui/rarity_text.gdshader).
+static func rarity_text(rarity: String, size: int = 16, long_name: bool = true) -> Label:
+	# the words on the badge art (SSR stays SSR)
+	var shown := {"N": "NORMAL", "R": "RARE", "SR": "SUPER RARE", "SSR": "SSR", "UR": "ULTRA RARE", "LR": "LEGEND", "MR": "MYTHIC", "GR": "GOD", "OR": "VOID"}
+	var txt: String = str(shown.get(rarity, rarity)) if long_name else rarity
+	var c: Color = DB.RARITY_COLOR.get(rarity, ACCENT)
+	var mode := int(RARITY_FRAME_MODE.get(rarity, 0))
+	var l := label(txt, size, Color.WHITE if mode != 0 else c.lightened(0.15), 4)
+	l.add_theme_color_override("font_outline_color", Color(0.04, 0.02, 0.08) if rarity != "OR" else Color(0.75, 0.6, 1.0, 0.0))
+	if rarity == "OR":
+		l.add_theme_color_override("font_shadow_color", Color(0.6, 0.45, 1.0, 0.9))
+		l.add_theme_constant_override("shadow_outline_size", 4)
+	if mode != 0:
+		if _rarity_text_shader == null:
+			_rarity_text_shader = load("res://game/ui/rarity_text.gdshader")
+		var m := ShaderMaterial.new()
+		m.shader = _rarity_text_shader
+		m.set_shader_parameter("mode", mode)
+		m.set_shader_parameter("speed", 0.0 if Game.reduce_fx() else 1.0)
+		m.set_shader_parameter("width", float(txt.length() * size) * 0.7)
+		l.material = m
+	return l
+
+## Rarity logo badge (art/ui/rarity/) about 2.2 x `size` tall; a text chip if the art is missing.
 static func rarity_tag(rarity: String, size: int = 14) -> PanelContainer:
+	var bt := DB.rarity_badge(rarity)
+	if bt != null:
+		var bp := PanelContainer.new()
+		bp.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		bp.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		bp.tooltip_text = str(DB.RARITY_NAME.get(rarity, rarity))
+		bp.add_child(badge_rect(bt, size * 2.2))
+		return bp
 	var c: Color = DB.RARITY_COLOR.get(rarity, ACCENT)
 	var p := styled_panel(c.darkened(0.55), c, 6, 2, 6)
 	var l := label(rarity, size, c.lightened(0.2), 2)

@@ -383,7 +383,7 @@ func _show_rates() -> void:
 			continue
 		var hr := UI.hbox(8)
 		hr.add_child(UI.rarity_tag(r, 15))
-		hr.add_child(UI.label(DB.RARITY_NAME[r], 15, DB.RARITY_COLOR[r], 2))
+		hr.add_child(UI.rarity_text(r, 15))
 		var rl2 := UI.label(rate_text(float(rt_map[r])) if rt_map.has(r) else "no heroes yet", 15, Color.WHITE if rt_map.has(r) else UI.MUTED, 2)
 		rl2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		rl2.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
