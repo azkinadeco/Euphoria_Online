@@ -718,9 +718,16 @@ static func pop(node: Control, dur: float = 0.3) -> void:
 		node.resized.connect(piv)
 	node.scale = Vector2(0.6, 0.6)
 	node.modulate.a = 0.0
-	var tw := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tw.tween_property(node, "scale", Vector2.ONE, dur)
-	tw.tween_property(node, "modulate:a", 1.0, dur * 0.6)
+	# the tween starts one frame later: content is usually built right after pop() in the same (long) frame,
+	# and a tween started there would spend most of its time in that single first step
+	var start := func():
+		if is_instance_valid(node) and node.is_inside_tree():
+			await node.get_tree().process_frame
+			if is_instance_valid(node):
+				var tw := node.create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+				tw.tween_property(node, "scale", Vector2.ONE, dur)
+				tw.tween_property(node, "modulate:a", 1.0, dur * 0.6)
+	start.call_deferred()
 
 static func breathe(node: Control, amount: float = 0.012, period: float = 3.2) -> void:
 	node.pivot_offset = Vector2(node.size.x * 0.5, node.size.y)

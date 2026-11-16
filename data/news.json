@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-16r",
+  "date": "2026-11-16",
+  "tag": "UPDATE",
+  "title": "Popups open in full",
+  "body": "Popups (Menu, Codex, rewards, profiles…) now open with their full bounce instead of popping in half-way, for the same reason as screen changes: the animation starts once the popup's content is built."
+ },
+ {
   "id": "n2026-11-16q",
   "date": "2026-11-16",
   "tag": "UPDATE",
