@@ -1,7 +1,7 @@
 extends SceneTree
 ## Dev tool: a pivot-rigged art with the 2.5D turn forced to its extremes, to check that a figure keeps its
 ## proportions. Panels: tilt (-1,0), (0,0), (1,0), (1,1), then the plain art for comparison.
-## Godot --path . -s res://tools/tilt_preview.gd -- <out.png> <hero id or res://art path> [art index]
+## Godot --path . -s res://tools/tilt_preview.gd -- <out.png> <hero id or res://art path> [art index] (env BG=light: light backdrop)
 var frame := 0
 var rects: Array = []
 var times := [0.0, 0.9, 1.8, 2.7]
@@ -14,7 +14,7 @@ func _process(_d: float) -> bool:
 		g.name = "Game"
 		root.add_child(g)
 		var bg := ColorRect.new()
-		bg.color = Color(0.16, 0.14, 0.22)
+		bg.color = Color(0.86, 0.82, 0.78) if OS.get_environment("BG") == "light" else Color(0.16, 0.14, 0.22)   # BG=light shows the cast shadow
 		bg.size = Vector2(1280, 720)
 		root.add_child(bg)
 		var dbs = load("res://game/core/db.gd")

@@ -1262,6 +1262,12 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2vv. Update batch 254: bayangan 2.5D tanpa garis tepi, crest kartu lebih besar (17 Nov 2026)
+
+- Bayangan jatuh di `live25d.gdshader` dan `char_rig.gdshader` adalah salinan siluet yang digeser ±2%. Di art yang terpotong di tepi gambar (±250 file, mis. Zennyo, Fidelia, Kali, Siv, Atalanta), sampel bayangan membaca di luar gambar; Godot mengulang piksel tepi sehingga bayangan jadi pita bergaris. Fungsi baru `shadow_in(p)`: bobot 0 di luar gambar dan memudar di 3% terakhir sebelum tepi. Art yang tidak menyentuh tepi tidak berubah.
+- `tools/tilt_preview.gd`: env `BG=light` untuk latar terang (bayangan terlihat jelas).
+- Kartu hero (permintaan user): crest rarity +40% (`clampf(w*0.21, 18, 28)`), tulisan role +20%, MAGE +40% (kata paling pendek).
+
 ## 2uu. Update batch 253: alur pemain baru lebih tenang (17 Nov 2026)
 
 - `DB.FIRST_STEPS` 8 → 5 langkah: mail, summon, stage1, level, chapter1. Langkah bond/stage3/gear dibuang; hadiahnya pindah (bouquet ×3 ke langkah Lv.5, gems +150 dan senjata SR ke Chapter 1). Petunjuk equip gear tetap muncul lewat `_next_goal_raw`.

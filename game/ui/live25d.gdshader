@@ -44,6 +44,13 @@ vec3 hue_rot(vec3 c, float h) {
 	return c * ca + cross(k, c) * sin(a) + k * dot(k, c) * (1.0 - ca);
 }
 
+// Cast-shadow sample weight: 0 outside the image and fading in over the last 3% before its border, so
+// art that is cut off at the image edge (legs, hair, weapons) never smears into straight streaks.
+float shadow_in(vec2 p) {
+	float d = min(min(p.x, 1.0 - p.x), min(p.y, 1.0 - p.y));
+	return smoothstep(0.0, 0.03, d);
+}
+
 vec2 rot_about(vec2 uv, vec2 piv, float a) {
 	vec2 d = (uv - piv) * vec2(aspect, 1.0);
 	float c = cos(a), s = sin(a);
@@ -165,10 +172,10 @@ void fragment() {
 	// cast shadow: a soft copy of the silhouette behind the figure, pushed away from the light, so she
 	// stands in front of the background instead of being printed on it
 	vec2 so = -L2 * 0.022 + vec2(0.0, 0.006);
-	float sh = texture(TEXTURE, uv + so).a * 0.4
-		+ texture(TEXTURE, uv + so * 1.5 + vec2(0.006, 0.0)).a * 0.2
-		+ texture(TEXTURE, uv + so * 1.5 - vec2(0.006, 0.0)).a * 0.2
-		+ texture(TEXTURE, uv + so * 2.0).a * 0.2;
+	float sh = texture(TEXTURE, uv + so).a * shadow_in(uv + so) * 0.4
+		+ texture(TEXTURE, uv + so * 1.5 + vec2(0.006, 0.0)).a * shadow_in(uv + so * 1.5 + vec2(0.006, 0.0)) * 0.2
+		+ texture(TEXTURE, uv + so * 1.5 - vec2(0.006, 0.0)).a * shadow_in(uv + so * 1.5 - vec2(0.006, 0.0)) * 0.2
+		+ texture(TEXTURE, uv + so * 2.0).a * shadow_in(uv + so * 2.0) * 0.2;
 	float sa = sh * shadow_color.a * volume * (1.0 - c.a);
 	c = vec4(mix(shadow_color.rgb, c.rgb, c.a / max(c.a + sa, 0.0001)), c.a + sa);
 	COLOR = c * mod_color;

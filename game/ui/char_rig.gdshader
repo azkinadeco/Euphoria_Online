@@ -59,6 +59,13 @@ void vertex() {
 	mod_color = COLOR;
 }
 
+// Cast-shadow sample weight: 0 outside the image and fading in over the last 3% before its border, so
+// art that is cut off at the image edge (legs, hair, weapons) never smears into straight streaks.
+float shadow_in(vec2 p) {
+	float d = min(min(p.x, 1.0 - p.x), min(p.y, 1.0 - p.y));
+	return smoothstep(0.0, 0.03, d);
+}
+
 vec2 rot_about(vec2 uv, vec2 piv, float a) {
 	vec2 d = (uv - piv) * vec2(aspect, 1.0);
 	float c = cos(a), s = sin(a);
@@ -283,10 +290,10 @@ void fragment() {
 		float a_lit = texture(TEXTURE, uv + L2 * 0.01).a;
 		c.rgb += rim_light.rgb * clamp(c.a - a_lit, 0.0, 1.0) * 0.4 * volume;
 		vec2 so = -L2 * 0.02 + vec2(0.0, 0.005);
-		float sh = texture(TEXTURE, uv + so).a * 0.4
-			+ texture(TEXTURE, uv + so * 1.5 + vec2(0.006, 0.0)).a * 0.2
-			+ texture(TEXTURE, uv + so * 1.5 - vec2(0.006, 0.0)).a * 0.2
-			+ texture(TEXTURE, uv + so * 2.0).a * 0.2;
+		float sh = texture(TEXTURE, uv + so).a * shadow_in(uv + so) * 0.4
+			+ texture(TEXTURE, uv + so * 1.5 + vec2(0.006, 0.0)).a * shadow_in(uv + so * 1.5 + vec2(0.006, 0.0)) * 0.2
+			+ texture(TEXTURE, uv + so * 1.5 - vec2(0.006, 0.0)).a * shadow_in(uv + so * 1.5 - vec2(0.006, 0.0)) * 0.2
+			+ texture(TEXTURE, uv + so * 2.0).a * shadow_in(uv + so * 2.0) * 0.2;
 		float sa = sh * 0.38 * volume * (1.0 - c.a);
 		c = vec4(mix(vec3(0.02, 0.0, 0.06), c.rgb, c.a / max(c.a + sa, 0.0001)), c.a + sa);
 	}

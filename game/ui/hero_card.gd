@@ -115,7 +115,7 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 
 	# rarity logo in the top-right corner (owner's badge art), fitted in a small box so the wide
 	# crests (LEGEND, ULTRA RARE) take the same corner space as SSR and never cover her head
-	var rbadge := _fit_badge(DB.rarity_badge(rarity), clampf(card_size.x * 0.15, 13.0, 20.0), clampf(card_size.x * 0.30, 26.0, 44.0))
+	var rbadge := _fit_badge(DB.rarity_badge(rarity), clampf(card_size.x * 0.21, 18.0, 28.0), clampf(card_size.x * 0.42, 36.0, 62.0))
 	rbadge.position = Vector2(card_size.x - rbadge.size.x - 5, 5 + (24.0 - rbadge.size.y) * 0.5)   # centred on the element icon row
 	if not owned:
 		rbadge.modulate = Color(0.75, 0.75, 0.8)
@@ -124,7 +124,9 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	# battle role word (owner's role lettering: MAGE / FIGHTER / TANK / ASSASSIN / SUPPORT): small, right end
 	# of the Lv line, so it reads as a label next to the level instead of a title over the art
 	if card_size.x >= 84:
-		var rrole := _fit_badge(DB.role_badge(id), clampf(card_size.x * 0.07, 7.0, 10.0), card_size.x * 0.34)
+		# MAGE is the shortest word, so it gets a larger scale to read as the same weight as the others
+		var rk := 1.4 if str(DB.ROLE_BADGE.get(DB.role_of(id), "")) == "mage" else 1.2
+		var rrole := _fit_badge(DB.role_badge(id), clampf(card_size.x * 0.07, 7.0, 10.0) * rk, card_size.x * 0.34 * rk)
 		rrole.position = Vector2(card_size.x - rrole.size.x - 7, card_size.y - 64 + (16.0 - rrole.size.y) * 0.5)
 		rrole.tooltip_text = str(DB.role_info(id)[0])
 		frame.add_child(rrole)
