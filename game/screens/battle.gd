@@ -537,6 +537,7 @@ func _play() -> void:
 		i += 1
 
 const UltBackdrop = preload("res://game/ui/ult_backdrop.gd")
+const CUTIN_FADE = preload("res://game/ui/cutin_fade.gdshader")
 const MELEE_ROLES := ["WARRIOR", "ASSASSIN", "KNIGHT", "PALADIN", "TANK"]
 const ELEMENT_SFX := {"FIRE": "fire", "WATER": "water", "ICE": "ice", "WIND": "wind", "LIGHTNING": "thunder",
 	"EARTH": "earth", "LIGHT": "light", "DARK": "dark", "CHAOS": "dark"}
@@ -1034,7 +1035,7 @@ func _ultimate(u: Dictionary) -> float:
 	var art_tex: Texture2D = DB.art(hid, int(Game.hero(hid).get("skin", 0))) if Game.owns(hid) else DB.art(hid, 0)
 	var frame := Control.new()
 	frame.set_anchors_preset(Control.PRESET_FULL_RECT)
-	frame.anchor_right = 0.54
+	frame.anchor_right = 0.6   # the art fades out between 46% and 58% (cutin_fade.gdshader), no hard clip line
 	frame.clip_contents = true
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(frame)
@@ -1043,6 +1044,9 @@ func _ultimate(u: Dictionary) -> float:
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_SCALE
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var fade := ShaderMaterial.new()
+	fade.shader = CUTIN_FADE
+	art.material = fade
 	frame.add_child(art)
 	var place_art := func():
 		if art_tex == null or frame.size.y < 10.0:
@@ -1055,8 +1059,8 @@ func _ultimate(u: Dictionary) -> float:
 		var art_h: float = clampf(frame.size.y * 0.27 / face_h, frame.size.y * 1.05, frame.size.y * 2.3)
 		var art_w: float = art_h * tw0 / th0
 		art.size = Vector2(art_w, art_h)
-		# face centre at 42% of the frame height, horizontally in the middle
-		var px: float = frame.size.x * 0.5 - ff.x * art_w
+		# face centre at 42% of the frame height, at 27% of the screen width (45% of the 0.6-wide frame)
+		var px: float = frame.size.x * 0.45 - ff.x * art_w
 		var py: float = frame.size.y * 0.42 - ff.y * art_h
 		py = minf(py, 64.0)   # no gap between the top bar and the top of the picture
 		art.position = Vector2(px, py)

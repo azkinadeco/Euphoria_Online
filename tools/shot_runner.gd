@@ -239,6 +239,16 @@ func _next() -> void:
 		print("TAME ", g.tame(tid))
 		g.pet(tid)["bond"] = 6
 		g.set_companion(tid)
+	elif v.begins_with("team:"):
+		# team:aura|kyra|yumi -> owns them and deploys exactly these heroes (front column first)
+		var g := root.get_node("Game")
+		var cells := [[0, 1], [0, 0], [0, 2], [1, 1], [1, 0]]
+		g.s["formation"] = []
+		var tp := v.substr(5).split("|")
+		for i in mini(tp.size(), cells.size()):
+			if not g.owns(tp[i]):
+				g.add_hero(tp[i])
+			g.s["formation"].append([tp[i], cells[i][0], cells[i][1]])
 	elif v.begins_with("wear:"):
 		# wear:<hero>|<skin index>  (also makes her the secretary)
 		var g := root.get_node("Game")
