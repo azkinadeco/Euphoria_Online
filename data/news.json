@@ -1,5 +1,26 @@
 [
  {
+  "id": "n2026-11-20a",
+  "date": "2026-11-20",
+  "tag": "UPDATE",
+  "title": "New Rarity Table",
+  "body": "The rarity sheet was updated. Sven is now Legend (LR). Eropatra and Tamo are Ultra Rare (UR). Tora is SSR, Vila is SR and Vexira is N. Drop rates: Legend 0.01%, Mythic 0.001%, God 0.0001%, Void 0.00001%. Legend heroes still come for sure from the 80-pull pity. Tamo's rate-up banner now boosts UR pulls."
+ },
+ {
+  "id": "n2026-11-20b",
+  "date": "2026-11-20",
+  "tag": "UPDATE",
+  "title": "Skins Become Last Evolutions",
+  "body": "The Special Skins of Ning Er, Spimei, Luby, Morana and Tamo are now each hero's last evolution form instead of Wardrobe items. Anyone who already bought one keeps it. The Wardrobe now sells 5 skins: Hyeonxa, Angela, Mei, Eropatra and Rubby."
+ },
+ {
+  "id": "n2026-11-20c",
+  "date": "2026-11-20",
+  "tag": "UPDATE",
+  "title": "Better Blinks and Livelier 2.5D for the New Heroes",
+  "body": "The eyes of Kyra, Toka, Aura, Fuji, Tsundae, Tora, Sharas and Vila were measured again, so their blinks now close right over the eye. Hair, wings and tails of the new heroes sway more, like the older heroes. Glytta's art was replaced with the clean version, without the white background left around her. Ultimate cut-ins now fade wide art out softly instead of cutting it with a straight line."
+ },
+ {
   "id": "n2026-11-19a",
   "date": "2026-11-19",
   "tag": "NEW",

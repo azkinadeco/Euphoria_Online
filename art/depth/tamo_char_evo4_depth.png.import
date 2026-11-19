@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lhbd2aqn5ouw"
-path="res://.godot/imported/morana_char_special_depth.png-10734b8b3ed190353718856b8eabf433.ctex"
+uid="uid://di7namqtppt8l"
+path="res://.godot/imported/tamo_char_evo4_depth.png-70f6416a6c5ca60a8c32d0134cd44c45.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/depth/morana_char_special_depth.png"
-dest_files=["res://.godot/imported/morana_char_special_depth.png-10734b8b3ed190353718856b8eabf433.ctex"]
+source_file="res://art/depth/tamo_char_evo4_depth.png"
+dest_files=["res://.godot/imported/tamo_char_evo4_depth.png-70f6416a6c5ca60a8c32d0134cd44c45.ctex"]
 
 [params]
 

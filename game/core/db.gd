@@ -44,9 +44,9 @@ const RARITY_NAME := {"N": "Normal", "R": "Rare", "SR": "Super Rare", "SSR": "Su
 const RARITY_COLOR := {"N": Color("#9aa0ab"), "R": Color("#5fa8ff"), "SR": Color("#c77dff"), "SSR": Color("#ffc94a"),
 	"UR": Color("#ff4747"), "LR": Color("#7ef0ff"), "MR": Color("#ff2f86"), "GR": Color("#f4f6ff"), "OR": Color("#8f6cff")}
 ## Summon drop rate of each tier (the sheet's numbers). Tiers without heroes yet, and whatever the sheet
-## leaves over, go to N - see gacha_rates(). Owner's revised sheet (16 Nov 2026, "too easy"): SSR 7%, UR 3%,
-## LR 1%, MR 0.01%, GR 0.001%, OR 0.0001%.
-const RARITY_RATE := {"N": 0.30, "R": 0.25, "SR": 0.20, "SSR": 0.07, "UR": 0.03, "LR": 0.01, "MR": 0.0001, "GR": 0.00001, "OR": 0.000001}
+## leaves over, go to N - see gacha_rates(). Owner's sheet as revised on 20 Nov 2026: SSR 7%, UR 3%,
+## LR 0.01%, MR 0.001%, GR 0.0001%, OR 0.00001% (LR still comes from pity, see GACHA_PITY).
+const RARITY_RATE := {"N": 0.30, "R": 0.25, "SR": 0.20, "SSR": 0.07, "UR": 0.03, "LR": 0.0001, "MR": 0.00001, "GR": 0.000001, "OR": 0.0000001}
 const RARITY_START_STAR := {"N": 1, "R": 1, "SR": 2, "SSR": 3, "UR": 3, "LR": 3, "MR": 3, "GR": 3, "OR": 3}
 
 ## Rarity badge art (art/ui/rarity/, cut from the owner's "rarerity image.jpg").
@@ -276,7 +276,7 @@ const HEROES := {
 	"valeria": {"rarity": "UR", "role": "KNIGHT", "hp": 3000, "atk": 220, "def": 150,
 		"skill": {"name": "Frostvale Judgement", "aim": "front", "shape": "column", "mult": 1.0, "stun": 0.4, "shield_self": 0.2,
 		"desc": "Freezes a whole column for 100% ATK (40% Freeze) and shields herself for 20% Max HP."}},
-	"eropatra": {"rarity": "SSR", "role": "ASSASSIN", "hp": 1900, "atk": 310, "def": 70,
+	"eropatra": {"rarity": "UR", "role": "ASSASSIN", "hp": 1900, "atk": 310, "def": 70,
 		"skill": {"name": "Serpent Empress Fang", "aim": "back", "shape": "pierce", "mult": 2.0, "burn": 0.3,
 		"heal_block": 1, "desc": "Strikes the furthest enemy in her row (and behind) for 200% ATK, Burning for 2 rounds. Blocks healing for 2 rounds."}},
 	# ---- November 2026 heroes
@@ -301,13 +301,13 @@ const HEROES := {
 	"schylua": {"rarity": "SSR", "role": "WARRIOR", "hp": 2050, "atk": 200, "def": 85,
 		"skill": {"name": "Glacial Reap", "aim": "front", "shape": "line", "mult": 0.95, "stun": 0.25,
 		"heal_block": 1, "desc": "An ice scythe sweep across the whole row for 95% ATK. 25% chance to Freeze. Blocks healing for 2 rounds."}},
-	"vexira": {"rarity": "SR", "role": "WARLOCK", "hp": 1600, "atk": 205, "def": 60,
+	"vexira": {"rarity": "N", "role": "WARLOCK", "hp": 1600, "atk": 205, "def": 60,
 		"skill": {"name": "Charm of Ruin", "aim": "front", "shape": "cross", "mult": 0.8, "def_down": 0.3,
 		"silence": 0.4, "desc": "Cross-shaped imp swarm for 80% ATK. Charmed enemies lose 30% DEF for 2 rounds. 40% chance to Silence."}},
 	"siv": {"rarity": "SSR", "role": "TANK", "hp": 2400, "atk": 140, "def": 125,
 		"skill": {"name": "Thunder Tap", "aim": "front", "shape": "pierce", "mult": 1.0, "stun": 0.3,
 		"desc": "A hammer strike through the front enemy and the one behind for 100% ATK. 30% chance to Stun."}},
-	"sven": {"rarity": "SSR", "role": "WARRIOR", "hp": 2200, "atk": 165, "def": 95,
+	"sven": {"rarity": "LR", "role": "WARRIOR", "hp": 2200, "atk": 165, "def": 95,
 		"skill": {"name": "Rift Cleaver", "aim": "front", "shape": "column", "mult": 0.9,
 		"desc": "A greatsword cleave down the whole column for 90% ATK."}},
 	# ---- 4 November 2026 heroes
@@ -339,7 +339,7 @@ const HEROES := {
 	"seraph": {"rarity": "LR", "role": "MAGE", "hp": 1800, "atk": 305, "def": 65,
 		"skill": {"name": "Thousand-Eye Judgement", "aim": "back", "shape": "cross", "mult": 1.3, "stun": 0.2,
 		"desc": "The eyes on her wings open and smite the furthest enemy in a cross for 130% ATK (20% Stun)."}},
-	"tamo": {"rarity": "LR", "role": "WARRIOR", "hp": 2700, "atk": 270, "def": 105,
+	"tamo": {"rarity": "UR", "role": "WARRIOR", "hp": 2700, "atk": 270, "def": 105,
 		"skill": {"name": "Nine-Tail Greatsword", "aim": "front", "shape": "line", "mult": 1.25, "burn": 0.15, "def_down": 0.2,
 		"desc": "A foxfire greatsword sweep hits the front line for 125% ATK, burns (15% ATK) and lowers DEF by 20%."}},
 	# ---- 19 November 2026 heroes
@@ -358,13 +358,13 @@ const HEROES := {
 	"toka": {"rarity": "SSR", "role": "WARRIOR", "hp": 2100, "atk": 240, "def": 80,
 		"skill": {"name": "Blazing Uppercut", "aim": "front", "shape": "pierce", "mult": 1.5, "stun": 0.25, "burn": 0.15,
 		"desc": "A flaming one-two through the front enemy and the one behind for 150% ATK. 25% chance to Stun, Burns for 2 rounds."}},
-	"tora": {"rarity": "LR", "role": "ASSASSIN", "hp": 1950, "atk": 325, "def": 70,
+	"tora": {"rarity": "SSR", "role": "ASSASSIN", "hp": 1950, "atk": 325, "def": 70,
 		"skill": {"name": "Jade Dragon Split", "aim": "back", "shape": "cross", "mult": 1.45, "crit_bonus": 0.25,
 		"desc": "A high-kick sword dance hits the furthest enemy in a cross for 145% ATK. +25% Crit chance."}},
 	"tsundae": {"rarity": "SR", "role": "MAGE", "hp": 1550, "atk": 210, "def": 55,
 		"skill": {"name": "Azure Flame Burst", "aim": "front", "shape": "square", "mult": 1.0, "burn": 0.25,
 		"desc": "Blue-and-gold fire bursts over a 2x2 area for 100% ATK and Burns for 2 rounds. ...Not that she did it for you."}},
-	"vila": {"rarity": "SSR", "role": "ASSASSIN", "hp": 1750, "atk": 290, "def": 60,
+	"vila": {"rarity": "SR", "role": "ASSASSIN", "hp": 1750, "atk": 290, "def": 60,
 		"skill": {"name": "Crimson Wing Encore", "aim": "back", "shape": "single", "mult": 2.0, "drain": 0.3,
 		"desc": "Her blazing wings sweep down on the furthest enemy for 200% ATK and drain 30% of the damage as HP."}},
 	"yumi": {"rarity": "UR", "role": "TANK", "hp": 3000, "atk": 170, "def": 140,
@@ -1833,7 +1833,7 @@ const TITLES := [
 
 const BANNERS := [
 	{"id": "nov8_morana", "name": "Black Priestess Rate-Up", "featured": "morana", "desc": "Morana rate UP! 50% of Legend (LR) pulls are Morana.", "bg": "necro"},
-	{"id": "nov8_tamo", "name": "Nine-Tail Queen Rate-Up", "featured": "tamo", "desc": "Tamo rate UP! 50% of Legend (LR) pulls are Tamo.", "bg": "dragonfire"},
+	{"id": "nov8_tamo", "name": "Nine-Tail Queen Rate-Up", "featured": "tamo", "desc": "Tamo rate UP! 50% of Ultra Rare (UR) pulls are Tamo.", "bg": "dragonfire"},
 	{"id": "standard", "name": "Standard Summon", "featured": "", "desc": "Every hero, every rarity. Pick up to 3 favourites with the Wishlist.", "bg": "asgard"},
 	# Normal Summon: N to SSR heroes only, paid with Gold (no pity, no spark)
 	{"id": "normal", "name": "Normal Summon", "featured": "", "desc": "N, R, SR and SSR heroes for Gold.", "bg": "forest",
@@ -2232,9 +2232,10 @@ static func costume_price(idx: int) -> int:
 
 ## ---- Special skins (Wardrobe-exclusive outfits, state key "special")
 const SPECIAL_PRICE := 1280
+## Ning Er, Spimei, Luby, Morana and Tamo's former special skins became their last evolution (20 Nov 2026);
+## saves that bought one keep it unlocked through skins_bought.
 const SPECIAL_SKINS := {
-	"ninger": "Golden Jackpot", "spimei": "Scarlet Overdrive", "luby": "Plush Panther Purr",
-	"morana": "Moonlit Vigil Veil", "tamo": "White Fox Bride", "hyeonxa": "Scarlet Mistletoe",
+	"hyeonxa": "Scarlet Mistletoe",
 	"angela": "Flamingo Feather Summer", "mei": "Surf Bunny Splash", "eropatra": "Pumpkin Pharaoh Night", "rubby": "Rubber Duck Holiday",
 }
 ## Heroes whose special skin was taken out of the game. Saves that bought one get a Skin Ticket back.
@@ -3714,78 +3715,86 @@ const HERO_RIGS := {
 		"hips": Vector2(0.47, 0.5),
 		"chest": Vector2(0.4, 0.31),
 		"chest_w": 0.07,
-		"eyes": [[0.355, 0.168, 0.396, 0.16, 0.153, 0.177], [0.428, 0.142, 0.475, 0.134, 0.127, 0.152]],
+		"eyes": [[0.347, 0.166, 0.377, 0.159, 0.1555, 0.1685], [0.436, 0.139, 0.476, 0.134, 0.13, 0.147]],
+		"lid_reach": 0.6,
 		"glows": [[0.62, 0.065, 0.03], [0.55, 0.68, 0.04], [0.62, 0.37, 0.04]],
 		"glow_color": Color(0.4, 0.85, 1.0),
-		"bones": [[0.3, 0.15, 0.12, 0.55, 0.06, 0.02, 0.9, 0], [0.56, 0.15, 0.8, 0.55, 0.05, 0.02, 0.9, 1], [0.3, 0.55, 0.12, 0.88, 0.08, 0.015, 0.8, 2], [0.6, 0.58, 0.85, 0.9, 0.08, 0.015, 0.8, 3], [0.85, 0.35, 0.95, 0.05, 0.05, 0.008, 0.7, 4]]},
+		"bones": [[0.3, 0.15, 0.12, 0.55, 0.06, 0.029, 0.9, 0], [0.56, 0.15, 0.8, 0.55, 0.05, 0.029, 0.9, 1], [0.3, 0.55, 0.12, 0.88, 0.08, 0.0217, 0.8, 2], [0.6, 0.58, 0.85, 0.9, 0.08, 0.0217, 0.8, 3], [0.85, 0.35, 0.95, 0.05, 0.05, 0.008, 0.7, 4]]},
 	"res://art/characters/heroes/fuji/char/fuji_char_stage1.png": {
 		"head": Vector3(0.53, 0.18, 0.06),
 		"neck": Vector2(0.55, 0.26),
 		"hips": Vector2(0.55, 0.6),
 		"chest": Vector2(0.52, 0.4),
 		"chest_w": 0.07,
-		"eyes": [[0.468, 0.172, 0.508, 0.168, 0.162, 0.179], []],
-		"bones": [[0.46, 0.12, 0.4, 0.35, 0.05, 0.015, 0.9, 0], [0.62, 0.12, 0.75, 0.38, 0.06, 0.015, 0.9, 1], [0.88, 0.75, 0.92, 0.05, 0.04, 0.005, 0.6, 2]]},
+		"eyes": [[0.465, 0.164, 0.49, 0.1655, 0.1597, 0.1702], []],
+		"lid_reach": 0.6,
+		"bones": [[0.46, 0.12, 0.4, 0.35, 0.05, 0.0217, 0.9, 0], [0.62, 0.12, 0.75, 0.38, 0.06, 0.0217, 0.9, 1], [0.88, 0.75, 0.92, 0.05, 0.04, 0.005, 0.6, 2]]},
 	"res://art/characters/heroes/kyra/char/kyra_char_stage1.png": {
 		"head": Vector3(0.5, 0.24, 0.075),
 		"neck": Vector2(0.5, 0.33),
 		"hips": Vector2(0.5, 0.68),
 		"chest": Vector2(0.5, 0.48),
 		"chest_w": 0.09,
-		"eyes": [[0.38, 0.222, 0.458, 0.235, 0.213, 0.243], [0.535, 0.233, 0.612, 0.218, 0.208, 0.24]],
+		"eyes": [[0.411, 0.228, 0.469, 0.23, 0.221, 0.241], [0.553, 0.234, 0.604, 0.231, 0.226, 0.241]],
+		"lid_reach": 0.6,
 		"glows": [[0.23, 0.69, 0.05], [0.7, 0.81, 0.03], [0.86, 0.58, 0.04]],
 		"glow_color": Color(0.3, 1.0, 0.5),
-		"bones": [[0.38, 0.15, 0.1, 0.7, 0.08, 0.02, 0.8, 0], [0.62, 0.15, 0.9, 0.7, 0.08, 0.02, 0.8, 1]]},
+		"bones": [[0.38, 0.15, 0.1, 0.7, 0.08, 0.029, 0.8, 0], [0.62, 0.15, 0.9, 0.7, 0.08, 0.029, 0.8, 1]]},
 	"res://art/characters/heroes/sharas/char/sharas_char_stage1.png": {
 		"head": Vector3(0.44, 0.18, 0.05),
 		"neck": Vector2(0.45, 0.24),
 		"hips": Vector2(0.48, 0.47),
 		"chest": Vector2(0.5, 0.33),
 		"chest_w": 0.07,
-		"eyes": [],
-		"bones": [[0.5, 0.25, 0.95, 0.45, 0.07, 0.02, 0.9, 0], [0.52, 0.3, 0.85, 0.55, 0.06, 0.02, 0.8, 1], [0.2, 0.1, 0.08, 0.7, 0.05, 0.004, 0.5, 2], [0.65, 0.6, 0.85, 0.75, 0.05, 0.005, 0.5, 3]]},
+		"eyes": [[0.432, 0.18, 0.465, 0.178, 0.174, 0.184], []],
+		"lid_reach": 0.6,
+		"bones": [[0.5, 0.25, 0.95, 0.45, 0.07, 0.029, 0.9, 0], [0.52, 0.3, 0.85, 0.55, 0.06, 0.029, 0.8, 1], [0.2, 0.1, 0.08, 0.7, 0.05, 0.004, 0.5, 2], [0.65, 0.6, 0.85, 0.75, 0.05, 0.005, 0.5, 3]]},
 	"res://art/characters/heroes/toka/char/toka_char_stage1.png": {
 		"head": Vector3(0.47, 0.24, 0.085),
 		"neck": Vector2(0.47, 0.33),
 		"hips": Vector2(0.56, 0.63),
 		"chest": Vector2(0.5, 0.48),
 		"chest_w": 0.09,
-		"eyes": [[0.398, 0.215, 0.468, 0.222, 0.198, 0.238], [0.512, 0.228, 0.568, 0.24, 0.215, 0.255]],
-		"bones": [[0.36, 0.2, 0.18, 0.4, 0.08, 0.02, 1.0, 0], [0.62, 0.2, 0.7, 0.38, 0.06, 0.02, 1.0, 1], [0.68, 0.3, 0.7, 0.08, 0.05, 0.01, 0.8, 2], [0.65, 0.62, 0.92, 0.42, 0.06, 0.01, 0.8, 3]]},
+		"eyes": [[0.4, 0.216, 0.447, 0.221, 0.196, 0.234], [0.491, 0.233, 0.533, 0.24, 0.216, 0.253]],
+		"lid_reach": 0.45,
+		"bones": [[0.36, 0.2, 0.18, 0.4, 0.08, 0.029, 1.0, 0], [0.62, 0.2, 0.7, 0.38, 0.06, 0.029, 1.0, 1], [0.68, 0.3, 0.7, 0.08, 0.05, 0.01, 0.8, 2], [0.65, 0.62, 0.92, 0.42, 0.06, 0.01, 0.8, 3]]},
 	"res://art/characters/heroes/tora/char/tora_char_stage1.png": {
 		"head": Vector3(0.585, 0.2, 0.05),
 		"neck": Vector2(0.58, 0.26),
 		"hips": Vector2(0.52, 0.48),
 		"chest": Vector2(0.55, 0.33),
 		"chest_w": 0.07,
-		"eyes": [[0.552, 0.181, 0.585, 0.178, 0.172, 0.187], []],
-		"bones": [[0.6, 0.2, 0.8, 0.55, 0.06, 0.02, 0.9, 0], [0.3, 0.45, 0.2, 0.75, 0.08, 0.015, 0.7, 1], [0.85, 0.7, 0.68, 0.95, 0.04, 0.005, 0.6, 2]]},
+		"eyes": [[0.5534, 0.18, 0.5876, 0.176, 0.1725, 0.1835], []],
+		"lid_reach": 0.6,
+		"bones": [[0.6, 0.2, 0.8, 0.55, 0.06, 0.029, 0.9, 0], [0.3, 0.45, 0.2, 0.75, 0.08, 0.0217, 0.7, 1], [0.85, 0.7, 0.68, 0.95, 0.04, 0.005, 0.6, 2]]},
 	"res://art/characters/heroes/tsundae/char/tsundae_char_stage1.png": {
 		"head": Vector3(0.555, 0.13, 0.055),
 		"neck": Vector2(0.565, 0.19),
 		"hips": Vector2(0.55, 0.45),
 		"chest": Vector2(0.55, 0.26),
 		"chest_w": 0.07,
-		"eyes": [[0.5, 0.12, 0.555, 0.122, 0.112, 0.128], [0.585, 0.132, 0.62, 0.137, 0.128, 0.142]],
+		"eyes": [[0.489, 0.119, 0.53, 0.121, 0.1145, 0.128], [0.5739, 0.131, 0.6061, 0.136, 0.1265, 0.1405]],
 		"glows": [[0.22, 0.25, 0.07]],
 		"glow_color": Color(0.4, 0.6, 1.0),
-		"bones": [[0.45, 0.1, 0.2, 0.7, 0.08, 0.02, 0.8, 0], [0.62, 0.12, 0.9, 0.65, 0.07, 0.02, 0.8, 1], [0.5, 0.05, 0.4, 0.02, 0.04, 0.02, 1.0, 2]]},
+		"bones": [[0.4, 0.1, 0.14, 0.7, 0.07, 0.029, 0.8, 0], [0.71, 0.15, 0.94, 0.62, 0.045, 0.029, 0.8, 1], [0.5, 0.05, 0.4, 0.02, 0.04, 0.029, 1.0, 2]]},
 	"res://art/characters/heroes/vila/char/vila_char_stage1.png": {
 		"head": Vector3(0.43, 0.1, 0.05),
 		"neck": Vector2(0.44, 0.16),
 		"hips": Vector2(0.5, 0.46),
 		"chest": Vector2(0.47, 0.27),
 		"chest_w": 0.07,
-		"eyes": [],
-		"bones": [[0.15, 0.15, 0.02, 0.3, 0.08, 0.02, 0.7, 0], [0.8, 0.15, 0.95, 0.25, 0.08, 0.02, 0.7, 1], [0.6, 0.12, 0.72, 0.4, 0.05, 0.015, 0.9, 2], [0.8, 0.55, 0.98, 0.7, 0.04, 0.02, 1.0, 3]]},
+		"eyes": [[], [0.386, 0.0885, 0.416, 0.0865, 0.0835, 0.092]],
+		"lid_reach": 0.6,
+		"bones": [[0.15, 0.15, 0.02, 0.3, 0.08, 0.029, 0.7, 0], [0.8, 0.15, 0.95, 0.25, 0.08, 0.029, 0.7, 1], [0.6, 0.12, 0.72, 0.4, 0.05, 0.0217, 0.9, 2], [0.8, 0.55, 0.98, 0.7, 0.04, 0.029, 1.0, 3]]},
 	"res://art/characters/heroes/yumi/char/yumi_char_stage1.png": {
 		"head": Vector3(0.43, 0.2, 0.06),
 		"neck": Vector2(0.45, 0.27),
 		"hips": Vector2(0.45, 0.52),
 		"chest": Vector2(0.44, 0.36),
 		"chest_w": 0.07,
-		"eyes": [[0.373, 0.224, 0.412, 0.22, 0.212, 0.235], [0.44, 0.192, 0.49, 0.19, 0.182, 0.207]],
-		"bones": [[0.35, 0.2, 0.25, 0.6, 0.06, 0.015, 0.8, 0], [0.55, 0.2, 0.85, 0.9, 0.08, 0.015, 0.7, 1], [0.36, 0.1, 0.3, 0.01, 0.04, 0.03, 1.2, 2], [0.42, 0.1, 0.42, 0.01, 0.04, 0.03, 1.2, 3], [0.7, 0.2, 0.78, 0.1, 0.1, 0.005, 0.6, 4]]},
+		"eyes": [],
+		"lid_reach": 0.6,
+		"bones": [[0.35, 0.2, 0.25, 0.6, 0.06, 0.0217, 0.8, 0], [0.55, 0.2, 0.85, 0.9, 0.08, 0.0217, 0.7, 1], [0.36, 0.1, 0.3, 0.01, 0.04, 0.034, 1.2, 2], [0.42, 0.1, 0.42, 0.01, 0.04, 0.034, 1.2, 3], [0.7, 0.2, 0.78, 0.1, 0.1, 0.005, 0.6, 4]]},
 }
 
 ## Pivot rig (hero or enemy) for the art shown, or {}.

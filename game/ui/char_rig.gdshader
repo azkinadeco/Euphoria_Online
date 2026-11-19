@@ -36,6 +36,7 @@ uniform vec4 skin_hint = vec4(0.0);   // rgb = face skin colour for non-human sk
 uniform vec4 blush = vec4(0.0);       // blushing face: rgb = blush colour, a = strength; the closed lid runs from skin (top) into it (bottom)
 uniform float lash = 0.34;        // thickness of the upper lash line (in eye half-heights)
 uniform float lid_close = 0.42;   // where the closed lash line rests (0 = eye centre, 1 = lower rim)
+uniform float lid_reach = 1.0;    // how far above the measured top the lid skin reaches (lower for big eyes with hair close above)
 // animated values
 uniform float t = 0.0;
 uniform float calm = 1.0;
@@ -244,7 +245,7 @@ void fragment() {
 			float k = clamp((q.y - top) / max(edge - lt - top, 0.001), 0.0, 1.0);
 			vec3 col = skin * mix(1.0, 0.9, smoothstep(0.4, 1.0, k) * bk);
 			// reaches above the measured top so the painted upper lash is covered too (eases in with the blink)
-			float w = smoothstep(top - 0.85, top - 0.45, q.y) * side * smoothstep(0.0, 0.25, bk);
+			float w = smoothstep(top - 0.85 * lid_reach, top - 0.45 * lid_reach, q.y) * side * smoothstep(0.0, 0.25, bk);
 			outc.rgb = mix(c.rgb, col, w * pick);
 		} else if (q.y <= edge) {
 			// the lash line, carried down from its painted band

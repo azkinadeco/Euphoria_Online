@@ -2,22 +2,22 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcm5vq7v70d1u"
-path="res://.godot/imported/tamo_char_special.png-fbbde24c3561879c334126fa2ac1f26b.ctex"
+uid="uid://b7e0ntrims3lk"
+path="res://.godot/imported/luby_char_evo4_depth.png-7c19a5d0300f6928fe144d5b0c355d73.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/characters/heroes/tamo/char/tamo_char_special.png"
-dest_files=["res://.godot/imported/tamo_char_special.png-fbbde24c3561879c334126fa2ac1f26b.ctex"]
+source_file="res://art/depth/luby_char_evo4_depth.png"
+dest_files=["res://.godot/imported/luby_char_evo4_depth.png-7c19a5d0300f6928fe144d5b0c355d73.ctex"]
 
 [params]
 
-compress/mode=1
+compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.85
+compress/lossy_quality=0.7
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
@@ -36,5 +36,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=1200
+process/size_limit=0
 detect_3d/compress_to=1

@@ -197,9 +197,9 @@ func _render_buttons() -> void:
 	_btns.add_child(_pull_btn("SUMMON x1\n%s" % _price(1), 1, Game.pull_pay(1, bid0)))
 	_btns.add_child(_pull_btn("SUMMON x10\n%s" % _price(10), 10, Game.pull_pay(10, bid0)))
 
-## A drop rate as text: 30%, 0.1%, 0.0001%.
+## A drop rate as text: 30%, 0.1%, 0.00001% (six decimals: the Void tier is 0.00001%).
 static func rate_text(r: float) -> String:
-	var t := "%.4f" % (r * 100.0)
+	var t := "%.6f" % (r * 100.0)
 	t = t.rstrip("0").rstrip(".")
 	return t + "%"
 

@@ -302,7 +302,7 @@ func _build_right_cards() -> void:
 		_slides.append({"tag": "SEASONAL FESTIVAL", "tag_col": Color(str(fest["color"])), "title": str(fest["name"]).to_upper(), "sub": "Lantern Charms • %s & %s" % [DB.name_of(fest["featured"][0]).split(" ")[0], DB.name_of(fest["featured"][1]).split(" ")[0]],
 			"bg": fest["bg"], "art": fest["featured"][0], "btn": "VISIT", "route": "festival", "params": {}})
 	_slides.append({"tag": "WARDROBE", "tag_col": Color("#ffd479"), "title": "SPECIAL SKINS", "sub": "%d exclusive outfits • +10%% ATK & HP while worn" % DB.SPECIAL_SKINS.size(),
-		"bg": "blackmarket", "art": "ninger", "img": ["res://art/characters/heroes/ninger/char/ninger_char_special.png"], "btn": "WARDROBE", "route": "wardrobe", "params": {}})
+		"bg": "blackmarket", "art": "eropatra", "img": ["res://art/characters/heroes/eropatra/char/eropatra_char_special_alt1.png"], "btn": "WARDROBE", "route": "wardrobe", "params": {}})
 	if Game.feature_unlocked("pass"):
 		_slides.append({"tag": "SEASON PASS", "tag_col": Color("#c77dff"), "title": "PASS Lv.%d / %d" % [Game.pass_level(), DB.PASS_LEVELS], "sub": "Free + Premium rewards • Oath Ring at Lv.30",
 		"bg": "galaxy", "art": "micca", "btn": "OPEN", "route": "pass", "params": {}})

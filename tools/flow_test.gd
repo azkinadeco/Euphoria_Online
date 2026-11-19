@@ -304,8 +304,8 @@ func _run() -> void:
 	for rv in DB.gacha_rates().values():
 		rsum += float(rv)
 	check(absf(rsum - 1.0) < 0.000001 and not DB.gacha_rates().has("GR") and not DB.gacha_rates().has("OR"), "full table adds to 100%, empty tiers left out")
-	check(absf(float(DB.gacha_rates()["MR"]) - 0.0001) < 0.0000001 and absf(float(DB.gacha_rates()["LR"]) - 0.01) < 0.0000001 and absf(float(DB.gacha_rates()["SSR"]) - 0.07) < 0.0000001, "MR 0.01%, LR 1%, SSR 7% as on the sheet")
-	check(DB.rarity_of("cthollia") == "MR" and DB.rarity_of("morana") == "LR" and DB.rarity_of("valeria") == "UR" and DB.rarity_of("sven") == "SSR" and DB.rarity_of("rumi") == "N", "heroes moved to their new tiers")
+	check(absf(float(DB.gacha_rates()["MR"]) - 0.00001) < 0.00000001 and absf(float(DB.gacha_rates()["LR"]) - 0.0001) < 0.0000001 and absf(float(DB.gacha_rates()["SSR"]) - 0.07) < 0.0000001, "MR 0.001%, LR 0.01%, SSR 7% as on the 20 Nov sheet")
+	check(DB.rarity_of("cthollia") == "MR" and DB.rarity_of("morana") == "LR" and DB.rarity_of("valeria") == "UR" and DB.rarity_of("sven") == "LR" and DB.rarity_of("rumi") == "N" and DB.rarity_of("tamo") == "UR" and DB.rarity_of("vexira") == "N" and DB.rarity_of("eropatra") == "UR" and DB.rarity_of("tora") == "SSR" and DB.rarity_of("vila") == "SR", "heroes moved to their new tiers (20 Nov sheet)")
 	check(DB.BANNERS.size() == 4 and DB.BANNERS.filter(func(b): return str(b["featured"]) != "").size() == 2, "two rate-up banners + Standard + Normal")
 	var nrt := DB.gacha_rates(["N", "R", "SR", "SSR"])
 	var nsum := 0.0
@@ -1295,10 +1295,10 @@ func _run() -> void:
 	check(DB.HEROES.size() == 46, "46 heroes (%d)" % DB.HEROES.size())
 	for ne in ["scomantis", "skelinch", "serpentia", "voodoo", "lizamorph"]:
 		check(DB.ENEMIES.has(ne) and DB.art(ne, 0) != null and DB.sprite(ne, 1) != null, "new enemy %s" % ne) if not (DB.ENEMIES.has(ne) and DB.art(ne, 0) != null) else null
-	check(DB.special_index("luby") > 0 and DB.art_list("luby").size() == 6 and DB.alt_art("luby", 4) != null, "Luby: 5 outfits + special + alt expressions")
+	check(DB.special_index("luby") == -1 and DB.art_list("luby").size() == 6 and DB.art_path("luby", 5).ends_with("luby_char_evo4.png") and DB.alt_art("luby", 4) != null, "Luby: 6 outfits, the old special skin is her last evolution")
 	for nh in ["gala", "morana", "seraph", "tamo"]:
 		check(DB.HEROES.has(nh) and DB.art(nh, 0) != null and DB.sprite(nh) != null, "8 Nov hero %s has stats, art and sprite" % nh)
-	check(DB.special_index("morana") > 0 and DB.special_index("tamo") > 0, "Morana and Tamo special skins")
+	check(DB.special_index("morana") == -1 and DB.special_index("tamo") == -1 and DB.art_path("tamo", 99).ends_with("tamo_char_evo4.png"), "Morana and Tamo: former special skins are the last evolution")
 	check(DB.ENEMIES.has("octra") and DB.art("octra", 0) != null and DB.PET_LINES.has("octra"), "Octra enemy is fightable and tameable")
 	check(DB.ENEMIES.has("hairly") and DB.ENEMIES.has("svormentis") and DB.ENEMIES.has("ymir") and DB.art("ymir", 0) != null, "3 new enemies with art")
 	check(DB.lobby_art("angela") != null and not DB.art_list("angela").any(func(p): return "lobby" in str(p)), "lobby pose separate from outfits")

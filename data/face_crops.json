@@ -1103,12 +1103,6 @@
 0.3399,
 0.2746
 ],
-"res://art/characters/heroes/luby/char/luby_char_special.png": [
-0.4408,
-0.0,
-0.3153,
-0.2707
-],
 "res://art/characters/heroes/luby/char/luby_char_stage1.png": [
 0.2903,
 0.0,
@@ -1253,12 +1247,6 @@
 0.3486,
 0.2739
 ],
-"res://art/characters/heroes/morana/char/morana_char_special.png": [
-0.3689,
-0.0,
-0.3476,
-0.2735
-],
 "res://art/characters/heroes/morana/char/morana_char_stage1.png": [
 0.2644,
 0.0,
@@ -1282,12 +1270,6 @@
 0.0,
 0.3145,
 0.2737
-],
-"res://art/characters/heroes/ninger/char/ninger_char_special.png": [
-0.3259,
-0.0272,
-0.3149,
-0.2414
 ],
 "res://art/characters/heroes/ninger/char/ninger_char_stage1.png": [
 0.3109,
@@ -1565,12 +1547,6 @@
 0.4603,
 0.2739
 ],
-"res://art/characters/heroes/spimei/char/spimei_char_special.png": [
-0.3454,
-0.0511,
-0.3547,
-0.272
-],
 "res://art/characters/heroes/spimei/char/spimei_char_stage1.png": [
 0.2615,
 0.0971,
@@ -1666,12 +1642,6 @@
 0.0,
 0.3382,
 0.2725
-],
-"res://art/characters/heroes/tamo/char/tamo_char_special.png": [
-0.3493,
-0.0,
-0.4756,
-0.2744
 ],
 "res://art/characters/heroes/tamo/char/tamo_char_stage1.png": [
 0.2818,
@@ -2302,5 +2272,35 @@
 0.0526,
 0.2332,
 0.126
+],
+"res://art/characters/heroes/ninger/char/ninger_char_evo3.png": [
+0.3259,
+0.0272,
+0.3149,
+0.2414
+],
+"res://art/characters/heroes/spimei/char/spimei_char_evo3.png": [
+0.3454,
+0.0511,
+0.3547,
+0.272
+],
+"res://art/characters/heroes/luby/char/luby_char_evo4.png": [
+0.4408,
+0.0,
+0.3153,
+0.2707
+],
+"res://art/characters/heroes/morana/char/morana_char_evo4.png": [
+0.3689,
+0.0,
+0.3476,
+0.2735
+],
+"res://art/characters/heroes/tamo/char/tamo_char_evo4.png": [
+0.3493,
+0.0,
+0.4756,
+0.2744
 ]
 }

@@ -1294,8 +1294,8 @@
      "base": "res://art/characters/heroes/ninger/char/ninger_char_lobby.png",
      "interactions": []
     },
-    "special": {
-     "base": "res://art/characters/heroes/ninger/char/ninger_char_special.png",
+    "evo3": {
+     "base": "res://art/characters/heroes/ninger/char/ninger_char_evo3.png",
      "interactions": []
     }
    },
@@ -1346,8 +1346,8 @@
      "base": "res://art/characters/heroes/spimei/char/spimei_char_lobby.png",
      "interactions": []
     },
-    "special": {
-     "base": "res://art/characters/heroes/spimei/char/spimei_char_special.png",
+    "evo3": {
+     "base": "res://art/characters/heroes/spimei/char/spimei_char_evo3.png",
      "interactions": []
     }
    },
@@ -1392,8 +1392,8 @@
       "res://art/characters/heroes/luby/char/luby_char_evo3_alt2.png"
      ]
     },
-    "special": {
-     "base": "res://art/characters/heroes/luby/char/luby_char_special.png",
+    "evo4": {
+     "base": "res://art/characters/heroes/luby/char/luby_char_evo4.png",
      "interactions": []
     }
    },
@@ -1484,8 +1484,8 @@
       "res://art/characters/heroes/morana/char/morana_char_evo3_alt4.png"
      ]
     },
-    "special": {
-     "base": "res://art/characters/heroes/morana/char/morana_char_special.png",
+    "evo4": {
+     "base": "res://art/characters/heroes/morana/char/morana_char_evo4.png",
      "interactions": []
     }
    },
@@ -1575,8 +1575,8 @@
       "res://art/characters/heroes/tamo/char/tamo_char_evo3_alt1.png"
      ]
     },
-    "special": {
-     "base": "res://art/characters/heroes/tamo/char/tamo_char_special.png",
+    "evo4": {
+     "base": "res://art/characters/heroes/tamo/char/tamo_char_evo4.png",
      "interactions": []
     }
    },
