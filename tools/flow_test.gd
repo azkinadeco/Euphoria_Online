@@ -1292,7 +1292,7 @@ func _run() -> void:
 	G.s["gear"].clear()
 	var grig: Dictionary = DB.live_rig(DB.art("glytta", 3))
 	check(not grig.is_empty() and ResourceLoader.exists(str(grig["depth"])) and not grig.get("generic", false) and not DB.char_rig(DB.art("glytta", 1)).is_empty() and not DB.char_rig(DB.art("glytta", 0)).is_empty(), "Glytta evo2 keeps her hand-made rig; other forms = pivot rigs")
-	check(DB.HEROES.size() == 37, "37 heroes (%d)" % DB.HEROES.size())
+	check(DB.HEROES.size() == 46, "46 heroes (%d)" % DB.HEROES.size())
 	for ne in ["scomantis", "skelinch", "serpentia", "voodoo", "lizamorph"]:
 		check(DB.ENEMIES.has(ne) and DB.art(ne, 0) != null and DB.sprite(ne, 1) != null, "new enemy %s" % ne) if not (DB.ENEMIES.has(ne) and DB.art(ne, 0) != null) else null
 	check(DB.special_index("luby") > 0 and DB.art_list("luby").size() == 6 and DB.alt_art("luby", 4) != null, "Luby: 5 outfits + special + alt expressions")

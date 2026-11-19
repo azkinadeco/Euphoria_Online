@@ -294,5 +294,77 @@
   "dislikes": "Wet fur, disrespect, ear-tugging",
   "hobby": "Sharpening her greatsword at dawn",
   "cv": "TBA"
+ },
+ "aura": {
+  "birthday": "02-14",
+  "height": 166,
+  "likes": "Starlit archery ranges, quiet libraries",
+  "dislikes": "Crowds, being touched without warning",
+  "hobby": "Polishing her arcane rings",
+  "cv": "TBA"
+ },
+ "fuji": {
+  "birthday": "05-12",
+  "height": 165,
+  "likes": "Clean bandages, warm tea, healthy patients",
+  "dislikes": "People who skip check-ups",
+  "hobby": "Collecting syringe charms",
+  "cv": "TBA"
+ },
+ "kyra": {
+  "birthday": "10-31",
+  "height": 170,
+  "likes": "Jade lanterns, rainy nights, being called cool",
+  "dislikes": "People staring at her horns",
+  "hobby": "Staring contests (undefeated)",
+  "cv": "TBA"
+ },
+ "sharas": {
+  "birthday": "08-08",
+  "height": 172,
+  "likes": "Engine oil, bonfires, snacks",
+  "dislikes": "Blunt blades, boredom",
+  "hobby": "Tuning her chainsaws",
+  "cv": "TBA"
+ },
+ "toka": {
+  "birthday": "07-07",
+  "height": 156,
+  "likes": "Sparring, spicy ramen, her dad's gloves",
+  "dislikes": "Giving up, cold showers",
+  "hobby": "Morning runs",
+  "cv": "TBA"
+ },
+ "tora": {
+  "birthday": "03-21",
+  "height": 171,
+  "likes": "Jade dragons, stretching, applause",
+  "dislikes": "Stiff joints, rushed dances",
+  "hobby": "Sword dancing at dawn",
+  "cv": "TBA"
+ },
+ "tsundae": {
+  "birthday": "01-22",
+  "height": 168,
+  "likes": "Sweets (secretly), blue fire, being praised",
+  "dislikes": "Admitting she likes things",
+  "hobby": "Baking (badly, she says)",
+  "cv": "TBA"
+ },
+ "vila": {
+  "birthday": "06-06",
+  "height": 167,
+  "likes": "Live streams, red lace, followers",
+  "dislikes": "Bad lighting, trolls",
+  "hobby": "Dance challenges",
+  "cv": "TBA"
+ },
+ "yumi": {
+  "birthday": "04-04",
+  "height": 150,
+  "likes": "Bunnies, carrots, her big hammer",
+  "dislikes": "People pulling her ears",
+  "hobby": "Bunny patrol",
+  "cv": "TBA"
  }
 }

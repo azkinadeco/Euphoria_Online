@@ -76,12 +76,33 @@
     "evo3": {
      "base": "res://art/characters/heroes/eropatra/char/eropatra_char_evo3.png",
      "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special.png",
+     "interactions": [
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt1.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt2.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt3.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt4.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt5.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt6.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt7.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt8.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt9.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt10.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt11.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt12.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt13.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt14.png"
+     ]
     }
    },
    "sprites": [
     "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_stage1.png",
     "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_evo1.png"
-   ]
+   ],
+   "special_sprite": "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_special.png",
+   "special_sprite_evo": "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_special_3.png"
   },
   "eurnipha": {
    "id": "eurnipha",
@@ -858,6 +879,14 @@
     "evo4": {
      "base": "res://art/characters/heroes/rubby/char/rubby_char_evo4.png",
      "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_special.png",
+     "interactions": [
+      "res://art/characters/heroes/rubby/char/rubby_char_special_alt1.png",
+      "res://art/characters/heroes/rubby/char/rubby_char_special_alt2.png",
+      "res://art/characters/heroes/rubby/char/rubby_char_special_alt3.png"
+     ]
     }
    },
    "sprites": [
@@ -866,7 +895,9 @@
     "res://art/characters/heroes/rubby/sprite/rubby_sprite_stage3.png",
     "res://art/characters/heroes/rubby/sprite/rubby_sprite_stage4.png",
     "res://art/characters/heroes/rubby/sprite/rubby_sprite_evo1.png"
-   ]
+   ],
+   "special_sprite": "res://art/characters/heroes/rubby/sprite/rubby_sprite_special.png",
+   "special_sprite_evo": "res://art/characters/heroes/rubby/sprite/rubby_sprite_special_2.png"
   },
   "schylua": {
    "id": "schylua",
@@ -1121,13 +1152,29 @@
     "lobby": {
      "base": "res://art/characters/heroes/angela/char/angela_char_lobby.png",
      "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/angela/char/angela_char_special.png",
+     "interactions": [
+      "res://art/characters/heroes/angela/char/angela_char_special_alt1.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt2.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt3.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt4.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt5.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt6.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt7.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt8.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt9.png"
+     ]
     }
    },
    "sprites": [
     "res://art/characters/heroes/angela/sprite/angela_sprite_1.png",
     "res://art/characters/heroes/angela/sprite/angela_sprite_2.png",
     "res://art/characters/heroes/angela/sprite/angela_sprite_3.png"
-   ]
+   ],
+   "special_sprite": "res://art/characters/heroes/angela/sprite/angela_sprite_special.png",
+   "special_sprite_evo": "res://art/characters/heroes/angela/sprite/angela_sprite_special_2.png"
   },
   "kara": {
    "id": "kara",
@@ -1192,6 +1239,18 @@
     "evo2": {
      "base": "res://art/characters/heroes/mei/char/mei_char_evo2.png",
      "interactions": []
+    },
+    "special": {
+     "base": "res://art/characters/heroes/mei/char/mei_char_special.png",
+     "interactions": [
+      "res://art/characters/heroes/mei/char/mei_char_special_alt1.png",
+      "res://art/characters/heroes/mei/char/mei_char_special_alt2.png",
+      "res://art/characters/heroes/mei/char/mei_char_special_alt3.png",
+      "res://art/characters/heroes/mei/char/mei_char_special_alt4.png",
+      "res://art/characters/heroes/mei/char/mei_char_special_alt5.png",
+      "res://art/characters/heroes/mei/char/mei_char_special_alt6.png",
+      "res://art/characters/heroes/mei/char/mei_char_special_alt7.png"
+     ]
     }
    },
    "sprites": [
@@ -1200,7 +1259,8 @@
     "res://art/characters/heroes/mei/sprite/mei_sprite_3.png",
     "res://art/characters/heroes/mei/sprite/mei_sprite_4.png",
     "res://art/characters/heroes/mei/sprite/mei_sprite_5.png"
-   ]
+   ],
+   "special_sprite": "res://art/characters/heroes/mei/sprite/mei_sprite_special.png"
   },
   "ninger": {
    "id": "ninger",
@@ -1524,6 +1584,341 @@
     "res://art/characters/heroes/tamo/sprite/tamo_sprite_1.png",
     "res://art/characters/heroes/tamo/sprite/tamo_sprite_2.png",
     "res://art/characters/heroes/tamo/sprite/tamo_sprite_3.png"
+   ]
+  },
+  "aura": {
+   "id": "aura",
+   "display_name": "Aura",
+   "title": "ARCANE RING ARCHER",
+   "element": "ICE",
+   "class": "RANGER",
+   "type": "BURST",
+   "theme_color": "#9d8cff",
+   "portrait": "res://art/characters/heroes/aura/char/aura_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/aura/char/aura_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/aura/char/aura_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/aura/char/aura_char_stage3.png",
+     "interactions": [
+      "res://art/characters/heroes/aura/char/aura_char_stage3_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/aura/char/aura_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/aura/char/aura_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/aura/char/aura_char_evo2_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/aura/sprite/aura_sprite_stage1.png",
+    "res://art/characters/heroes/aura/sprite/aura_sprite_stage2.png",
+    "res://art/characters/heroes/aura/sprite/aura_sprite_evo1.png"
+   ]
+  },
+  "fuji": {
+   "id": "fuji",
+   "display_name": "Fuji",
+   "title": "SCARLET SYRINGE NURSE",
+   "element": "LIGHT",
+   "class": "HEALER",
+   "type": "SUPPORT",
+   "theme_color": "#d1343e",
+   "portrait": "res://art/characters/heroes/fuji/char/fuji_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/fuji/char/fuji_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/fuji/char/fuji_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/fuji/char/fuji_char_stage2_alt1.png",
+      "res://art/characters/heroes/fuji/char/fuji_char_stage2_alt2.png"
+     ]
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/fuji/char/fuji_char_stage3.png",
+     "interactions": [
+      "res://art/characters/heroes/fuji/char/fuji_char_stage3_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/fuji/sprite/fuji_sprite_stage1.png",
+    "res://art/characters/heroes/fuji/sprite/fuji_sprite_stage2.png",
+    "res://art/characters/heroes/fuji/sprite/fuji_sprite_stage3.png"
+   ]
+  },
+  "kyra": {
+   "id": "kyra",
+   "display_name": "Kyra",
+   "title": "JADEFLAME ONI",
+   "element": "DARK",
+   "class": "WARLOCK",
+   "type": "DEBUFF",
+   "theme_color": "#2fd67a",
+   "portrait": "res://art/characters/heroes/kyra/char/kyra_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/kyra/char/kyra_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/kyra/char/kyra_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/kyra/char/kyra_char_stage3.png",
+     "interactions": [
+      "res://art/characters/heroes/kyra/char/kyra_char_stage3_alt1.png",
+      "res://art/characters/heroes/kyra/char/kyra_char_stage3_alt2.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/kyra/char/kyra_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/kyra/char/kyra_char_evo2.png",
+     "interactions": []
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/kyra/char/kyra_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/kyra/sprite/kyra_sprite_stage1.png",
+    "res://art/characters/heroes/kyra/sprite/kyra_sprite_evo1.png",
+    "res://art/characters/heroes/kyra/sprite/kyra_sprite_evo2.png"
+   ]
+  },
+  "sharas": {
+   "id": "sharas",
+   "display_name": "Sharas",
+   "title": "CHAINSAW DRAGONESS",
+   "element": "FIRE",
+   "class": "WARRIOR",
+   "type": "AOE",
+   "theme_color": "#e3a23a",
+   "portrait": "res://art/characters/heroes/sharas/char/sharas_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/sharas/char/sharas_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/sharas/char/sharas_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/sharas/char/sharas_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/sharas/char/sharas_char_evo1_alt1.png",
+      "res://art/characters/heroes/sharas/char/sharas_char_evo1_alt2.png"
+     ]
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/sharas/char/sharas_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/sharas/char/sharas_char_evo2_alt1.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/sharas/char/sharas_char_evo3.png",
+     "interactions": [
+      "res://art/characters/heroes/sharas/char/sharas_char_evo3_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/sharas/sprite/sharas_sprite_stage1.png",
+    "res://art/characters/heroes/sharas/sprite/sharas_sprite_stage2.png",
+    "res://art/characters/heroes/sharas/sprite/sharas_sprite_evo1.png",
+    "res://art/characters/heroes/sharas/sprite/sharas_sprite_evo2.png"
+   ]
+  },
+  "toka": {
+   "id": "toka",
+   "display_name": "Toka",
+   "title": "BLAZING FIST BOXER",
+   "element": "FIRE",
+   "class": "WARRIOR",
+   "type": "BURST",
+   "theme_color": "#ff3b3b",
+   "portrait": "res://art/characters/heroes/toka/char/toka_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/toka/char/toka_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/toka/char/toka_char_stage2.png",
+     "interactions": []
+    },
+    "stage3": {
+     "base": "res://art/characters/heroes/toka/char/toka_char_stage3.png",
+     "interactions": [
+      "res://art/characters/heroes/toka/char/toka_char_stage3_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/toka/char/toka_char_evo1.png",
+     "interactions": [
+      "res://art/characters/heroes/toka/char/toka_char_evo1_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/toka/sprite/toka_sprite_stage1.png",
+    "res://art/characters/heroes/toka/sprite/toka_sprite_evo1.png"
+   ]
+  },
+  "tora": {
+   "id": "tora",
+   "display_name": "Tora",
+   "title": "JADE DRAGON SWORD DANCER",
+   "element": "WIND",
+   "class": "ASSASSIN",
+   "type": "BURST",
+   "theme_color": "#8fe37a",
+   "portrait": "res://art/characters/heroes/tora/char/tora_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/tora/char/tora_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/tora/char/tora_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/tora/char/tora_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/tora/char/tora_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/tora/char/tora_char_evo2_alt1.png"
+     ]
+    },
+    "evo3": {
+     "base": "res://art/characters/heroes/tora/char/tora_char_evo3.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/tora/sprite/tora_sprite_stage1.png",
+    "res://art/characters/heroes/tora/sprite/tora_sprite_stage2.png",
+    "res://art/characters/heroes/tora/sprite/tora_sprite_evo1.png",
+    "res://art/characters/heroes/tora/sprite/tora_sprite_evo2.png",
+    "res://art/characters/heroes/tora/sprite/tora_sprite_evo3.png"
+   ]
+  },
+  "tsundae": {
+   "id": "tsundae",
+   "display_name": "Tsundae",
+   "title": "AZURE FLAME HEIRESS",
+   "element": "FIRE",
+   "class": "MAGE",
+   "type": "AOE",
+   "theme_color": "#7fb2ff",
+   "portrait": "res://art/characters/heroes/tsundae/char/tsundae_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/tsundae/char/tsundae_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/tsundae/char/tsundae_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/tsundae/char/tsundae_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/tsundae/sprite/tsundae_sprite_stage1.png",
+    "res://art/characters/heroes/tsundae/sprite/tsundae_sprite_evo1.png"
+   ]
+  },
+  "vila": {
+   "id": "vila",
+   "display_name": "Vila",
+   "title": "CRIMSON WING IDOL",
+   "element": "DARK",
+   "class": "ASSASSIN",
+   "type": "BURST",
+   "theme_color": "#c4202f",
+   "portrait": "res://art/characters/heroes/vila/char/vila_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/vila/char/vila_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/vila/char/vila_char_stage2.png",
+     "interactions": [
+      "res://art/characters/heroes/vila/char/vila_char_stage2_alt1.png"
+     ]
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/vila/char/vila_char_evo1.png",
+     "interactions": []
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/vila/sprite/vila_sprite_stage1.png",
+    "res://art/characters/heroes/vila/sprite/vila_sprite_stage2.png",
+    "res://art/characters/heroes/vila/sprite/vila_sprite_evo1.png"
+   ]
+  },
+  "yumi": {
+   "id": "yumi",
+   "display_name": "Yumi",
+   "title": "BUNNY HAMMER WARDEN",
+   "element": "EARTH",
+   "class": "TANK",
+   "type": "DEFENSE",
+   "theme_color": "#f0e1b5",
+   "portrait": "res://art/characters/heroes/yumi/char/yumi_char_stage1.png",
+   "char_states": {
+    "stage1": {
+     "base": "res://art/characters/heroes/yumi/char/yumi_char_stage1.png",
+     "interactions": []
+    },
+    "stage2": {
+     "base": "res://art/characters/heroes/yumi/char/yumi_char_stage2.png",
+     "interactions": []
+    },
+    "evo1": {
+     "base": "res://art/characters/heroes/yumi/char/yumi_char_evo1.png",
+     "interactions": []
+    },
+    "evo2": {
+     "base": "res://art/characters/heroes/yumi/char/yumi_char_evo2.png",
+     "interactions": [
+      "res://art/characters/heroes/yumi/char/yumi_char_evo2_alt1.png"
+     ]
+    }
+   },
+   "sprites": [
+    "res://art/characters/heroes/yumi/sprite/yumi_sprite_stage1.png",
+    "res://art/characters/heroes/yumi/sprite/yumi_sprite_stage2.png",
+    "res://art/characters/heroes/yumi/sprite/yumi_sprite_evo1.png"
    ]
   }
  },

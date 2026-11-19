@@ -2347,5 +2347,482 @@
     ]
    ]
   }
+ ],
+ "aura": [
+  {
+   "title": "The Rings",
+   "lines": [
+    [
+     "aura",
+     "These rings float around me all the time. People think they're a shield."
+    ],
+    [
+     "commander",
+     "Aren't they?"
+    ],
+    [
+     "aura",
+     "...They're more like a fence. I put them up so nobody gets close. You walked right through."
+    ]
+   ]
+  },
+  {
+   "title": "Missed Shot",
+   "lines": [
+    [
+     "aura",
+     "I missed a target today. First time in years."
+    ],
+    [
+     "commander",
+     "What distracted you?"
+    ],
+    [
+     "aura",
+     "You waved at me. From across the field. ...Don't do that during practice. Do it after."
+    ]
+   ]
+  },
+  {
+   "title": "Open Ring",
+   "lines": [
+    [
+     "aura",
+     "Look. One ring stays open now, all the time."
+    ],
+    [
+     "commander",
+     "Why that one?"
+    ],
+    [
+     "aura",
+     "It's the one facing you. So you can always come in."
+    ]
+   ]
+  }
+ ],
+ "fuji": [
+  {
+   "title": "Clinic Hours",
+   "lines": [
+    [
+     "fuji",
+     "You're the only patient who visits when he's not sick."
+    ],
+    [
+     "commander",
+     "I like the company."
+    ],
+    [
+     "fuji",
+     "...Then I'll extend clinic hours. Just for you. Don't tell the others."
+    ]
+   ]
+  },
+  {
+   "title": "The Big Syringe",
+   "lines": [
+    [
+     "fuji",
+     "Everyone's scared of my syringe. It's just medicine, you know."
+    ],
+    [
+     "commander",
+     "It's taller than you."
+    ],
+    [
+     "fuji",
+     "Bigger dose, bigger smile. ...You're smiling. See? It works."
+    ]
+   ]
+  },
+  {
+   "title": "Night Shift",
+   "lines": [
+    [
+     "fuji",
+     "I stayed up all night watching over the wounded."
+    ],
+    [
+     "commander",
+     "Then rest. I'll watch over you."
+    ],
+    [
+     "fuji",
+     "...A nurse being cared for. How strange. How nice. Just ten minutes, then."
+    ]
+   ]
+  }
+ ],
+ "kyra": [
+  {
+   "title": "Horns",
+   "lines": [
+    [
+     "kyra",
+     "Children used to run when they saw my horns."
+    ],
+    [
+     "commander",
+     "I think they look cool."
+    ],
+    [
+     "kyra",
+     "...Cool. Nobody has ever said that. Say it again. Quietly."
+    ]
+   ]
+  },
+  {
+   "title": "Jade Fire",
+   "lines": [
+    [
+     "kyra",
+     "The jade fire on my leg flares when I'm upset."
+    ],
+    [
+     "commander",
+     "It's calm right now."
+    ],
+    [
+     "kyra",
+     "Because you're here. Annoying. You make it hard to stay angry."
+    ]
+   ]
+  },
+  {
+   "title": "Crouching",
+   "lines": [
+    [
+     "kyra",
+     "I always crouch low. An oni waits, ready to spring."
+    ],
+    [
+     "commander",
+     "What are you waiting for?"
+    ],
+    [
+     "kyra",
+     "...For you to sit next to me. Took you long enough."
+    ]
+   ]
+  }
+ ],
+ "sharas": [
+  {
+   "title": "Two Chainsaws",
+   "lines": [
+    [
+     "sharas",
+     "Why two chainsaws? Because one felt lonely!"
+    ],
+    [
+     "commander",
+     "That's... a reason."
+    ],
+    [
+     "sharas",
+     "Everyone needs a partner. Even chainsaws. Even dragons. ...Even me."
+    ]
+   ]
+  },
+  {
+   "title": "Dragon Tail",
+   "lines": [
+    [
+     "sharas",
+     "My tail wags when I'm happy. It's very embarrassing."
+    ],
+    [
+     "commander",
+     "It's wagging now."
+    ],
+    [
+     "sharas",
+     "I KNOW. Stop looking at it! ...Okay, you can look a little."
+    ]
+   ]
+  },
+  {
+   "title": "The Hoard",
+   "lines": [
+    [
+     "sharas",
+     "Dragons hoard treasure. I hoard snacks. And memories with you."
+    ],
+    [
+     "commander",
+     "That's a good hoard."
+    ],
+    [
+     "sharas",
+     "The best one in the world. And nobody is allowed to touch it."
+    ]
+   ]
+  }
+ ],
+ "toka": [
+  {
+   "title": "Gloves",
+   "lines": [
+    [
+     "toka",
+     "These gloves were my dad's. He was a champion."
+    ],
+    [
+     "commander",
+     "You're a champion too."
+    ],
+    [
+     "toka",
+     "Not yet! But with you in my corner... I think I'll get there."
+    ]
+   ]
+  },
+  {
+   "title": "Rematch",
+   "lines": [
+    [
+     "toka",
+     "You dodged my punch! How?!"
+    ],
+    [
+     "commander",
+     "I've watched you train a lot."
+    ],
+    [
+     "toka",
+     "You were watching me?! ...That's cheating. A cute kind of cheating."
+    ]
+   ]
+  },
+  {
+   "title": "Corner Man",
+   "lines": [
+    [
+     "toka",
+     "Every boxer needs someone in her corner."
+    ],
+    [
+     "commander",
+     "I'll always be in yours."
+    ],
+    [
+     "toka",
+     "Then I'll never stay down. Not once. Promise!"
+    ]
+   ]
+  }
+ ],
+ "tora": [
+  {
+   "title": "The Split",
+   "lines": [
+    [
+     "tora",
+     "This pose? It's my warm-up. Don't look so surprised."
+    ],
+    [
+     "commander",
+     "It looks painful."
+    ],
+    [
+     "tora",
+     "Only the first thousand times. ...After that, it's just beautiful."
+    ]
+   ]
+  },
+  {
+   "title": "Jade Dragon",
+   "lines": [
+    [
+     "tora",
+     "The little jade dragons follow me everywhere."
+    ],
+    [
+     "commander",
+     "They're following me now."
+    ],
+    [
+     "tora",
+     "They know who I like. Traitors. Adorable traitors."
+    ]
+   ]
+  },
+  {
+   "title": "Last Dance",
+   "lines": [
+    [
+     "tora",
+     "A sword dancer's final dance is for one person only."
+    ],
+    [
+     "commander",
+     "Who will you dance it for?"
+    ],
+    [
+     "tora",
+     "Don't ask questions you already know the answer to, Commander."
+    ]
+   ]
+  }
+ ],
+ "tsundae": [
+  {
+   "title": "Sweets",
+   "lines": [
+    [
+     "tsundae",
+     "I didn't buy these for you. They were on sale."
+    ],
+    [
+     "commander",
+     "They're my favourite."
+    ],
+    [
+     "tsundae",
+     "...I know. I mean\u2014I didn't know! Coincidence! Eat them!"
+    ]
+   ]
+  },
+  {
+   "title": "Blue Flame",
+   "lines": [
+    [
+     "tsundae",
+     "My fire turns blue when I'm calm. It's been blue a lot lately."
+    ],
+    [
+     "commander",
+     "Why lately?"
+    ],
+    [
+     "tsundae",
+     "...Because someone keeps being nice to me. It's YOUR fault, idiot."
+    ]
+   ]
+  },
+  {
+   "title": "Honest Words",
+   "lines": [
+    [
+     "tsundae",
+     "I'll say it once. Only once. Are you listening?"
+    ],
+    [
+     "commander",
+     "I'm listening."
+    ],
+    [
+     "tsundae",
+     "I'm glad I met you. ...There. Now forget it. No, don't forget it."
+    ]
+   ]
+  }
+ ],
+ "vila": [
+  {
+   "title": "Live Stream",
+   "lines": [
+    [
+     "vila",
+     "Chat asked who you are. I said you're my manager."
+    ],
+    [
+     "commander",
+     "Am I?"
+    ],
+    [
+     "vila",
+     "You manage my heart rate, so yes~"
+    ]
+   ]
+  },
+  {
+   "title": "Wings Off-Camera",
+   "lines": [
+    [
+     "vila",
+     "My wings look great on camera. Off camera they're heavy."
+    ],
+    [
+     "commander",
+     "Let me help carry them."
+    ],
+    [
+     "vila",
+     "...Nobody ever asked if they were heavy. Thank you. Really."
+    ]
+   ]
+  },
+  {
+   "title": "Camera Off",
+   "lines": [
+    [
+     "vila",
+     "I turned the camera off. No filters tonight."
+    ],
+    [
+     "commander",
+     "You look the same. Beautiful."
+    ],
+    [
+     "vila",
+     "...That's the first comment I ever wanted to pin forever."
+    ]
+   ]
+  }
+ ],
+ "yumi": [
+  {
+   "title": "The Hammer",
+   "lines": [
+    [
+     "yumi",
+     "Yumi's hammer is bigger than Yumi."
+    ],
+    [
+     "commander",
+     "Isn't it heavy?"
+    ],
+    [
+     "yumi",
+     "Very. But protecting everyone is heavier. The hammer helps."
+    ]
+   ]
+  },
+  {
+   "title": "Bunny Patrol",
+   "lines": [
+    [
+     "yumi",
+     "The bunnies report: Commander is safe. Commander ate lunch. Commander smiled twice."
+    ],
+    [
+     "commander",
+     "They're spying on me?"
+    ],
+    [
+     "yumi",
+     "Guarding. Yumi asked them. ...Yumi wanted to know you were okay."
+    ]
+   ]
+  },
+  {
+   "title": "Ears",
+   "lines": [
+    [
+     "yumi",
+     "Nobody touches Yumi's ears. Rule number one."
+    ],
+    [
+     "commander",
+     "Then I won't."
+    ],
+    [
+     "yumi",
+     "...Rule number one has an exception now. Only you. Gently."
+    ]
+   ]
+  }
  ]
 }

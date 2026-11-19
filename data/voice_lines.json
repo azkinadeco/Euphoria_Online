@@ -1580,5 +1580,347 @@
     "My foxes... I'm sorry..."
    ]
   }
+ },
+ "aura": {
+  "pitch": 1.16,
+  "rate": 180,
+  "lines": {
+   "greet": [
+    "\u79c1\u306e\u8f2a\u304c\u3001\u77e2\u3088\u308a\u5148\u306b\u3042\u306a\u305f\u3092\u898b\u3064\u3051\u305f\u306e\u3002",
+    "My rings found you before my arrows did. ...Lucky you."
+   ],
+   "tap": [
+    "\u3072\u3083\u3063\u2026\uff01\u8f2a\u306b\u89e6\u3089\u306a\u3044\u3067\u3001\u304f\u3059\u3050\u3063\u305f\u3044\u306e\u3002",
+    "Hya...! Don't touch the rings, it tickles."
+   ],
+   "bond": [
+    "\u3053\u306e\u5fc3\u306f\u3001\u3082\u3046\u5c04\u629c\u304b\u308c\u3061\u3083\u3063\u305f\u307f\u305f\u3044\u3002",
+    "Looks like my heart is the one that got shot."
+   ],
+   "skill": [
+    "\u661f\u5f13\u30fb\u30ea\u30f3\u30b0\u30dc\u30ec\u30fc\uff01",
+    "Starbow Ring Volley!"
+   ],
+   "win": [
+    "\u5168\u90e8\u547d\u4e2d\u3002\u2026\u5f53\u7136\u3088\u3002",
+    "Every arrow hit. ...Of course."
+   ],
+   "summon": [
+    "\u5965\u7fa9\u306e\u5c04\u624b\u3001\u30a2\u30a6\u30e9\u3002\u3042\u306a\u305f\u306e\u7684\u306b\u306a\u3063\u3066\u3042\u3052\u308b\u3002",
+    "Aura, the arcane archer. I'll let you be my target."
+   ],
+   "hurt": [
+    "\u304d\u3083\u3063\uff01",
+    "Kya!"
+   ],
+   "ko": [
+    "\u8f2a\u304c\u2026\u6d88\u3048\u3061\u3083\u3046\u2026",
+    "My rings... are fading..."
+   ]
+  }
+ },
+ "fuji": {
+  "pitch": 1.04,
+  "rate": 165,
+  "lines": {
+   "greet": [
+    "\u53f8\u4ee4\u5b98\u3001\u691c\u8a3a\u306e\u6642\u9593\u3067\u3059\u3088\u3002\u3058\u3063\u3068\u3057\u3066\u3066\u3002",
+    "Time for your check-up, Commander. Sit still~"
+   ],
+   "tap": [
+    "\u3053\u3089\u3001\u6ce8\u5c04\u306f\u307e\u3060\u3067\u3059\u3088\uff1f",
+    "Hey now, it's not time for the injection yet."
+   ],
+   "bond": [
+    "\u3042\u306a\u305f\u306e\u5fc3\u97f3\u3001\u79c1\u304c\u4e00\u756a\u77e5\u3063\u3066\u308b\u306e\u3002",
+    "I know your heartbeat better than anyone."
+   ],
+   "skill": [
+    "\u30b9\u30ab\u30fc\u30ec\u30c3\u30c8\u30fb\u30a4\u30f3\u30b8\u30a7\u30af\u30b7\u30e7\u30f3\uff01",
+    "Scarlet Injection!"
+   ],
+   "win": [
+    "\u307f\u3093\u306a\u5065\u5eb7\u3001\u554f\u984c\u306a\u3057\u3067\u3059\u3002",
+    "Everyone's healthy. No problems."
+   ],
+   "summon": [
+    "\u7dcb\u8272\u306e\u770b\u8b77\u5e2b\u3001\u30d5\u30b8\u3067\u3059\u3002\u304a\u5927\u4e8b\u306b\u306d\u3002",
+    "I'm Fuji, the scarlet nurse. Take care of yourself."
+   ],
+   "hurt": [
+    "\u75db\u3063\u2026",
+    "Ow..."
+   ],
+   "ko": [
+    "\u3054\u3081\u3093\u306d\u2026\u3082\u3046\u3001\u8a3a\u3066\u3042\u3052\u3089\u308c\u306a\u3044\u2026",
+    "Sorry... I can't treat you anymore..."
+   ]
+  }
+ },
+ "kyra": {
+  "pitch": 1.0,
+  "rate": 160,
+  "lines": {
+   "greet": [
+    "\u3058\u308d\u3058\u308d\u898b\u306a\u3044\u3067\u3002\u2026\u5c11\u3057\u306a\u3089\u3044\u3044\u3051\u3069\u3002",
+    "Don't stare. ...Fine. Stare a little."
+   ],
+   "tap": [
+    "\u89d2\u306b\u89e6\u308b\u306a\uff01\u2026\u71b1\u304f\u306a\u3044\u304b\u3089\u3002",
+    "Don't touch the horns! ...They're not hot."
+   ],
+   "bond": [
+    "\u3053\u306e\u7fe1\u7fe0\u306e\u708e\u3001\u3042\u306a\u305f\u306e\u305f\u3081\u3060\u3051\u306b\u71c3\u3048\u3066\u308b\u306e\u3002",
+    "This jade flame only burns for you."
+   ],
+   "skill": [
+    "\u7fe1\u7fe0\u708e\u30fb\u91cd\u529b\u5d29\u3057\uff01",
+    "Jadeflame Gravity!"
+   ],
+   "win": [
+    "\u8dea\u3051\u3002\u2026\u3042\u3001\u3042\u306a\u305f\u306f\u7acb\u3063\u3066\u3066\u3044\u3044\u3002",
+    "Kneel. ...Ah, you can stay standing."
+   ],
+   "summon": [
+    "\u7fe1\u7fe0\u708e\u306e\u9b3c\u3001\u30ad\u30e9\u3002\u2026\u3088\u308d\u3057\u304f\u3002",
+    "Kyra, the jadeflame oni. ...Nice to meet you."
+   ],
+   "hurt": [
+    "\u3050\u3063\u2026\uff01",
+    "Ngh...!"
+   ],
+   "ko": [
+    "\u708e\u304c\u2026\u6d88\u3048\u308b\u2026",
+    "My flame... is dying..."
+   ]
+  }
+ },
+ "sharas": {
+  "pitch": 1.14,
+  "rate": 205,
+  "lines": {
+   "greet": [
+    "\u30d6\u30f3\u30d6\u30f3\uff01\u30c1\u30a7\u30fc\u30f3\u30bd\u30fc\u3082\u79c1\u3082\u6e29\u307e\u3063\u3066\u308b\u3088\uff01",
+    "Rev, rev! The chainsaws are warm and so am I."
+   ],
+   "tap": [
+    "\u5371\u306a\u3044\u3063\u3066\u3070\uff01\u5203\u304c\u56de\u3063\u3066\u308b\u306e\uff01",
+    "It's dangerous! The blades are spinning!"
+   ],
+   "bond": [
+    "\u7adc\u306f\u5b9d\u3092\u5b88\u308b\u306e\u3002\u79c1\u306e\u5b9d\u306f\u3042\u306a\u305f\u3002",
+    "Dragons guard their treasure. Mine is you."
+   ],
+   "skill": [
+    "\u30c4\u30a4\u30f3\u30c1\u30a7\u30fc\u30f3\u30bd\u30fc\u30fb\u30a4\u30f3\u30d5\u30a7\u30eb\u30ce\uff01",
+    "Twin Chainsaw Inferno!"
+   ],
+   "win": [
+    "\u5207\u308a\u523b\u3093\u3058\u3083\u3063\u305f\uff01\u697d\u3057\u304b\u3063\u305f\uff01",
+    "Chopped them all up! That was fun!"
+   ],
+   "summon": [
+    "\u30c1\u30a7\u30fc\u30f3\u30bd\u30fc\u306e\u7adc\u5a18\u3001\u30b7\u30e3\u30e9\u30b9\uff01\u71c3\u3048\u3066\u3044\u3053\u3046\uff01",
+    "Sharas, the chainsaw dragoness! Let's burn it up!"
+   ],
+   "hurt": [
+    "\u3044\u3063\u305f\u3041\uff01",
+    "Owww!"
+   ],
+   "ko": [
+    "\u30a8\u30f3\u30b8\u30f3\u304c\u2026\u6b62\u307e\u3063\u3061\u3083\u3046\u2026",
+    "My engine... is stalling..."
+   ]
+  }
+ },
+ "toka": {
+  "pitch": 1.22,
+  "rate": 215,
+  "lines": {
+   "greet": [
+    "\u30b9\u30d1\u30fc\u30ea\u30f3\u30b0\u3059\u308b\uff1f\u624b\u52a0\u6e1b\u3057\u3066\u3042\u3052\u308b\uff01\u2026\u305f\u3076\u3093\uff01",
+    "Ready for a sparring match? I'll go easy on you! ...Maybe!"
+   ],
+   "tap": [
+    "\u308f\u3063\uff01\u30ac\u30fc\u30c9\u3001\u30ac\u30fc\u30c9\uff01",
+    "Whoa! Guard, guard!"
+   ],
+   "bond": [
+    "\u3042\u306a\u305f\u306e\u7b11\u9854\u306b\u306f\u3001\u3044\u3064\u3082\u30ac\u30fc\u30c9\u304c\u4e0b\u304c\u3063\u3061\u3083\u3046\u3002",
+    "My guard always drops when you smile."
+   ],
+   "skill": [
+    "\u30d6\u30ec\u30a4\u30b8\u30f3\u30b0\u30fb\u30a2\u30c3\u30d1\u30fc\uff01",
+    "Blazing Uppercut!"
+   ],
+   "win": [
+    "KO\u52dd\u3061\uff01\u3044\u3047\u30fc\u3044\uff01",
+    "Win by KO! Yay!"
+   ],
+   "summon": [
+    "\u71c3\u3048\u308b\u62f3\u306e\u30dc\u30af\u30b5\u30fc\u3001\u30c8\u30ab\uff01\u4e00\u7dd2\u306b\u6226\u304a\u3046\uff01",
+    "Toka, the blazing fist boxer! Let's fight together!"
+   ],
+   "hurt": [
+    "\u3050\u306f\u3063\uff01",
+    "Guhh!"
+   ],
+   "ko": [
+    "\u30c0\u30a6\u30f3\u2026\u30c6\u30f3\u30ab\u30a6\u30f3\u30c8\u2026",
+    "Down... ten count..."
+   ]
+  }
+ },
+ "tora": {
+  "pitch": 1.06,
+  "rate": 170,
+  "lines": {
+   "greet": [
+    "\u67d4\u3089\u304b\u3055\u3082\u6b66\u5668\u3002\u7fe1\u7fe0\u306e\u7adc\u3082\u306d\u3002",
+    "Flexibility is a weapon. So is a jade dragon."
+   ],
+   "tap": [
+    "\u3075\u3075\u3001\u8db3\u3001\u3069\u3053\u307e\u3067\u4e0a\u304c\u308b\u304b\u898b\u305f\u3044\uff1f",
+    "Fufu, want to see how high my leg goes?"
+   ],
+   "bond": [
+    "\u7fe1\u7fe0\u306e\u7adc\u3082\u3001\u79c1\u3082\u3001\u3042\u306a\u305f\u306b\u982d\u3092\u4e0b\u3052\u308b\u308f\u3002",
+    "The jade dragon and I both bow to you."
+   ],
+   "skill": [
+    "\u7fe1\u7fe0\u7adc\u30fb\u5263\u821e\uff01",
+    "Jade Dragon Split!"
+   ],
+   "win": [
+    "\u821e\u306f\u7d42\u308f\u308a\u3002\u62cd\u624b\u306f\uff1f",
+    "The dance is over. Where's my applause?"
+   ],
+   "summon": [
+    "\u7fe1\u7fe0\u7adc\u306e\u5263\u821e\u59eb\u3001\u30c8\u30e9\u3002\u3042\u306a\u305f\u306e\u305f\u3081\u306b\u821e\u3046\u308f\u3002",
+    "Tora, the jade dragon sword dancer. I'll dance for you."
+   ],
+   "hurt": [
+    "\u3063\u2026\uff01",
+    "Tch...!"
+   ],
+   "ko": [
+    "\u821e\u304c\u2026\u6b62\u307e\u308b\u2026",
+    "My dance... is ending..."
+   ]
+  }
+ },
+ "tsundae": {
+  "pitch": 1.2,
+  "rate": 195,
+  "lines": {
+   "greet": [
+    "\u3079\u3001\u5225\u306b\u3042\u306a\u305f\u306b\u4f1a\u3044\u306b\u6765\u305f\u308f\u3051\u3058\u3083\u306a\u3044\u3093\u3060\u304b\u3089\uff01",
+    "I-it's not like I came here to see you! I was just passing by!"
+   ],
+   "tap": [
+    "\u3055\u3001\u89e6\u3089\u306a\u3044\u3067\u3088\uff01\u2026\u71c3\u3084\u3059\u308f\u3088\uff01",
+    "D-don't touch me! ...I'll burn you!"
+   ],
+   "bond": [
+    "\u2026\u597d\u304d\u3002\u4eca\u306e\u3001\u805e\u304b\u306a\u304b\u3063\u305f\u3053\u3068\u306b\u3057\u3066\uff01",
+    "...I like you. Forget you heard that!"
+   ],
+   "skill": [
+    "\u30a2\u30ba\u30fc\u30eb\u30fb\u30d5\u30ec\u30a4\u30e0\uff01",
+    "Azure Flame Burst!"
+   ],
+   "win": [
+    "\u5f53\u7136\u3067\u3057\u3087\u3002\u2026\u8912\u3081\u3066\u3082\u3044\u3044\u306e\u3088\uff1f",
+    "Obviously. ...You can praise me, you know?"
+   ],
+   "summon": [
+    "\u84bc\u708e\u306e\u4ee4\u5b22\u3001\u30c4\u30f3\u30c7\u3002\u3042\u3001\u3042\u306a\u305f\u306e\u305f\u3081\u3058\u3083\u306a\u3044\u304b\u3089\uff01",
+    "Tsundae, the azure flame heiress. I-it's not for your sake!"
+   ],
+   "hurt": [
+    "\u3072\u3083\u3063\uff01",
+    "Hyah!"
+   ],
+   "ko": [
+    "\u3070\u304b\u2026\u6700\u5f8c\u307e\u3067\u2026\u305d\u3070\u306b\u2026",
+    "Idiot... stay with me... till the end..."
+   ]
+  }
+ },
+ "vila": {
+  "pitch": 1.12,
+  "rate": 190,
+  "lines": {
+   "greet": [
+    "\u30ab\u30e1\u30e9\u306b\u7b11\u3063\u3066\u3001\u53f8\u4ee4\u5b98\u301c\u3002\u4eca\u30e9\u30a4\u30d6\u4e2d\u3088\uff01",
+    "Smile for the camera, Commander~ We're live!"
+   ],
+   "tap": [
+    "\u304d\u3083\u3063\u3001\u4eca\u306e\u914d\u4fe1\u306b\u6620\u3063\u3061\u3083\u3063\u305f\u301c",
+    "Kya, that just went out on stream~"
+   ],
+   "bond": [
+    "\u30ab\u30e1\u30e9\u3092\u6b62\u3081\u3066\u3082\u3001\u3042\u306a\u305f\u306b\u306f\u898b\u3066\u3066\u307b\u3057\u3044\u306e\u3002",
+    "Even when the camera's off, I want you watching me."
+   ],
+   "skill": [
+    "\u30af\u30ea\u30e0\u30be\u30f3\u30fb\u30a6\u30a3\u30f3\u30b0\u30fb\u30a2\u30f3\u30b3\u30fc\u30eb\uff01",
+    "Crimson Wing Encore!"
+   ],
+   "win": [
+    "\u8996\u8074\u8005\u6570\u3001\u307e\u305f\u6700\u9ad8\u8a18\u9332\u301c\uff01",
+    "Viewer count hit a new record~!"
+   ],
+   "summon": [
+    "\u6df1\u7d05\u306e\u7ffc\u306e\u30a2\u30a4\u30c9\u30eb\u3001\u30f4\u30a3\u30e9\u3088\u3002\u30d5\u30a9\u30ed\u30fc\u3057\u3066\u306d\u301c",
+    "I'm Vila, the crimson wing idol. Follow me~"
+   ],
+   "hurt": [
+    "\u3044\u3084\u3093\u3063\uff01",
+    "Ahn!"
+   ],
+   "ko": [
+    "\u914d\u4fe1\u2026\u7d42\u4e86\u2026",
+    "Stream... ending..."
+   ]
+  }
+ },
+ "yumi": {
+  "pitch": 1.26,
+  "rate": 175,
+  "lines": {
+   "greet": [
+    "\u30e6\u30df\u3068\u3046\u3055\u304e\u305f\u3061\u304c\u898b\u5f35\u308a\u4e2d\u3002\u3074\u3087\u3093\u3074\u3087\u3093\u3002",
+    "Yumi and the bunnies are on guard duty. Hop hop."
+   ],
+   "tap": [
+    "\u8033\u3001\u5f15\u3063\u5f35\u3063\u3061\u3083\u3060\u3081\u3002\u2026\u3084\u3055\u3057\u304f\u306a\u3089\u3001\u3044\u3044\u3002",
+    "Don't pull the ears. ...Gently is okay."
+   ],
+   "bond": [
+    "\u30e6\u30df\u306e\u30cf\u30f3\u30de\u30fc\u306f\u3001\u3042\u306a\u305f\u3092\u5b88\u308b\u305f\u3081\u306b\u3042\u308b\u306e\u3002",
+    "Yumi's hammer is here to protect you."
+   ],
+   "skill": [
+    "\u30d0\u30cb\u30fc\u30cf\u30f3\u30de\u30fc\u30fb\u30af\u30a8\u30a4\u30af\uff01",
+    "Bunny Hammer Quake!"
+   ],
+   "win": [
+    "\u307a\u3057\u3083\u3093\u3053\u3002\u3046\u3055\u304e\u305f\u3061\u3082\u559c\u3093\u3067\u308b\u3002",
+    "Squashed flat. The bunnies are happy too."
+   ],
+   "summon": [
+    "\u30cf\u30f3\u30de\u30fc\u306e\u756a\u514e\u3001\u30e6\u30df\u3002\u3074\u3087\u3093\u3002",
+    "Yumi, the bunny hammer warden. Hop."
+   ],
+   "hurt": [
+    "\u3074\u3083\u3063\uff01",
+    "Pya!"
+   ],
+   "ko": [
+    "\u3046\u3055\u304e\u305f\u3061\u2026\u306b\u3052\u3066\u2026",
+    "Bunnies... run..."
+   ]
+  }
  }
 }

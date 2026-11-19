@@ -342,6 +342,34 @@ const HEROES := {
 	"tamo": {"rarity": "LR", "role": "WARRIOR", "hp": 2700, "atk": 270, "def": 105,
 		"skill": {"name": "Nine-Tail Greatsword", "aim": "front", "shape": "line", "mult": 1.25, "burn": 0.15, "def_down": 0.2,
 		"desc": "A foxfire greatsword sweep hits the front line for 125% ATK, burns (15% ATK) and lowers DEF by 20%."}},
+	# ---- 19 November 2026 heroes
+	"aura": {"rarity": "UR", "role": "RANGER", "hp": 1700, "atk": 275, "def": 60,
+		"skill": {"name": "Starbow Ring Volley", "aim": "back", "shape": "column", "mult": 1.05, "crit_bonus": 0.2, "stun": 0.15,
+		"desc": "Arcane rings guide her arrows down the furthest column for 105% ATK (15% Freeze). +20% Crit chance."}},
+	"fuji": {"rarity": "SSR", "role": "HEALER", "hp": 1850, "atk": 165, "def": 80,
+		"skill": {"name": "Scarlet Injection", "aim": "ally_all", "shape": "all", "heal": 0.8, "cleanse": true,
+		"desc": "A giant syringe of medicine heals every ally for 80% ATK and cleanses their debuffs."}},
+	"kyra": {"rarity": "LR", "role": "WARLOCK", "hp": 2000, "atk": 290, "def": 75,
+		"skill": {"name": "Jadeflame Gravity", "aim": "front", "shape": "all", "mult": 0.7, "def_down": 0.25, "silence": 0.3,
+		"desc": "Oni jadefire crushes ALL enemies for 70% ATK, lowering DEF by 25% for 2 rounds. 30% chance to Silence."}},
+	"sharas": {"rarity": "UR", "role": "WARRIOR", "hp": 2400, "atk": 280, "def": 90,
+		"skill": {"name": "Twin Chainsaw Inferno", "aim": "front", "shape": "line", "mult": 1.2, "burn": 0.2, "heal_block": 1,
+		"desc": "Two blazing chainsaws rip through the front line for 120% ATK, Burn (20% ATK) and block healing for 2 rounds."}},
+	"toka": {"rarity": "SSR", "role": "WARRIOR", "hp": 2100, "atk": 240, "def": 80,
+		"skill": {"name": "Blazing Uppercut", "aim": "front", "shape": "pierce", "mult": 1.5, "stun": 0.25, "burn": 0.15,
+		"desc": "A flaming one-two through the front enemy and the one behind for 150% ATK. 25% chance to Stun, Burns for 2 rounds."}},
+	"tora": {"rarity": "LR", "role": "ASSASSIN", "hp": 1950, "atk": 325, "def": 70,
+		"skill": {"name": "Jade Dragon Split", "aim": "back", "shape": "cross", "mult": 1.45, "crit_bonus": 0.25,
+		"desc": "A high-kick sword dance hits the furthest enemy in a cross for 145% ATK. +25% Crit chance."}},
+	"tsundae": {"rarity": "SR", "role": "MAGE", "hp": 1550, "atk": 210, "def": 55,
+		"skill": {"name": "Azure Flame Burst", "aim": "front", "shape": "square", "mult": 1.0, "burn": 0.25,
+		"desc": "Blue-and-gold fire bursts over a 2x2 area for 100% ATK and Burns for 2 rounds. ...Not that she did it for you."}},
+	"vila": {"rarity": "SSR", "role": "ASSASSIN", "hp": 1750, "atk": 290, "def": 60,
+		"skill": {"name": "Crimson Wing Encore", "aim": "back", "shape": "single", "mult": 2.0, "drain": 0.3,
+		"desc": "Her blazing wings sweep down on the furthest enemy for 200% ATK and drain 30% of the damage as HP."}},
+	"yumi": {"rarity": "UR", "role": "TANK", "hp": 3000, "atk": 170, "def": 140,
+		"skill": {"name": "Bunny Hammer Quake", "aim": "front", "shape": "column", "mult": 1.0, "stun": 0.3, "shield_self": 0.2, "taunt": 2,
+		"desc": "A giant hammer smash down the front column for 100% ATK (30% Stun), gains a 20% Max HP shield and taunts enemies."}},
 }
 
 const ENEMIES := {
@@ -480,6 +508,15 @@ const HERO_LINES := {
 	"morana": "Confess, Commander. ...No, not your sins. Your feelings.",
 	"seraph": "A thousand eyes on my wings, and every one of them is watching you.",
 	"tamo": "The Nine-Tailed Queen greets you. ...You may pet ONE tail. For now.",
+	"aura": "My rings found you before my arrows did. ...Lucky you.",
+	"fuji": "Time for your check-up, Commander. Sit still~",
+	"kyra": "Don't stare. ...Fine. Stare a little.",
+	"sharas": "Rev, rev! The chainsaws are warm and so am I.",
+	"toka": "Ready for a sparring match? I'll go easy on you! ...Maybe!",
+	"tora": "Flexibility is a weapon. So is a jade dragon.",
+	"tsundae": "I-it's not like I came here to see you! I was just passing by!",
+	"vila": "Smile for the camera, Commander~ We're live!",
+	"yumi": "Yumi and the bunnies are on guard duty. Hop hop.",
 }
 
 const CHAPTERS := [
@@ -2198,6 +2235,7 @@ const SPECIAL_PRICE := 1280
 const SPECIAL_SKINS := {
 	"ninger": "Golden Jackpot", "spimei": "Scarlet Overdrive", "luby": "Plush Panther Purr",
 	"morana": "Moonlit Vigil Veil", "tamo": "White Fox Bride", "hyeonxa": "Scarlet Mistletoe",
+	"angela": "Flamingo Feather Summer", "mei": "Surf Bunny Splash", "eropatra": "Pumpkin Pharaoh Night", "rubby": "Rubber Duck Holiday",
 }
 ## Heroes whose special skin was taken out of the game. Saves that bought one get a Skin Ticket back.
 const WITHDRAWN_SKINS := ["lucidria", "kali", "abadonia"]
@@ -2933,6 +2971,12 @@ static func hunt_stage(id: String, diff: int) -> Dictionary:
 # ------------------------------------------------------------------ Story Links
 ## Heroes bound by the story fight better together. Active when every member is deployed.
 const LINKS := [
+	# ---- 19 November 2026 heroes
+	{"id": "jade", "name": "Jade Twin Flames", "heroes": ["kyra", "tora"], "bonus": {"atk": 0.08}, "line": "One crouches, one kicks. Both glow green."},
+	{"id": "sparring", "name": "Sparring Partners", "heroes": ["toka", "sharas"], "bonus": {"atk": 0.06, "hp": 0.06}, "line": "Gloves and chainsaws. The gym will never recover."},
+	{"id": "clinic", "name": "Field Clinic", "heroes": ["fuji", "yumi"], "bonus": {"def": 0.08, "hp": 0.06}, "line": "One bandages, one guards the door with a hammer."},
+	{"id": "spotlight", "name": "Spotlight Rivals", "heroes": ["vila", "tsundae"], "bonus": {"atk": 0.08}, "line": "It's NOT a rivalry. ...It's a rivalry."},
+	{"id": "starbow", "name": "Starbow & Seraph", "heroes": ["aura", "seraph"], "bonus": {"atk": 0.06, "def": 0.06}, "line": "Rings of light and a thousand watching eyes."},
 	{"id": "halo", "name": "Halo & Veil", "heroes": ["seraph", "morana"], "bonus": {"hp": 0.06, "atk": 0.06}, "line": "One prays to heaven, one argues with it."},
 	{"id": "foxflame", "name": "Foxfire & Lava", "heroes": ["tamo", "gala"], "bonus": {"atk": 0.08}, "line": "Two queens, one bonfire, zero patience."},
 	{"id": "cats", "name": "Mischief & Machines", "heroes": ["luby", "micca"], "bonus": {"atk": 0.08}, "line": "One steals snacks, one steals boxes."},
@@ -3663,6 +3707,85 @@ const HERO_RIGS := {
 		"chest_w": 0.09,
 		"eyes": [[0.415, 0.15, 0.4485, 0.152, 0.1475, 0.155], [0.5, 0.1485, 0.5415, 0.1465, 0.145, 0.1525]],
 		"bones": [[0.35, 0.08, 0.32, 0.22, 0.05, 0.02, 1.1, 0], [0.6, 0.08, 0.62, 0.22, 0.05, 0.02, 1.1, 1]]},
+	# ---- 19 November 2026 heroes
+	"res://art/characters/heroes/aura/char/aura_char_stage1.png": {
+		"head": Vector3(0.415, 0.14, 0.062),
+		"neck": Vector2(0.44, 0.215),
+		"hips": Vector2(0.47, 0.5),
+		"chest": Vector2(0.4, 0.31),
+		"chest_w": 0.07,
+		"eyes": [[0.355, 0.168, 0.396, 0.16, 0.153, 0.177], [0.428, 0.142, 0.475, 0.134, 0.127, 0.152]],
+		"glows": [[0.62, 0.065, 0.03], [0.55, 0.68, 0.04], [0.62, 0.37, 0.04]],
+		"glow_color": Color(0.4, 0.85, 1.0),
+		"bones": [[0.3, 0.15, 0.12, 0.55, 0.06, 0.02, 0.9, 0], [0.56, 0.15, 0.8, 0.55, 0.05, 0.02, 0.9, 1], [0.3, 0.55, 0.12, 0.88, 0.08, 0.015, 0.8, 2], [0.6, 0.58, 0.85, 0.9, 0.08, 0.015, 0.8, 3], [0.85, 0.35, 0.95, 0.05, 0.05, 0.008, 0.7, 4]]},
+	"res://art/characters/heroes/fuji/char/fuji_char_stage1.png": {
+		"head": Vector3(0.53, 0.18, 0.06),
+		"neck": Vector2(0.55, 0.26),
+		"hips": Vector2(0.55, 0.6),
+		"chest": Vector2(0.52, 0.4),
+		"chest_w": 0.07,
+		"eyes": [[0.468, 0.172, 0.508, 0.168, 0.162, 0.179], []],
+		"bones": [[0.46, 0.12, 0.4, 0.35, 0.05, 0.015, 0.9, 0], [0.62, 0.12, 0.75, 0.38, 0.06, 0.015, 0.9, 1], [0.88, 0.75, 0.92, 0.05, 0.04, 0.005, 0.6, 2]]},
+	"res://art/characters/heroes/kyra/char/kyra_char_stage1.png": {
+		"head": Vector3(0.5, 0.24, 0.075),
+		"neck": Vector2(0.5, 0.33),
+		"hips": Vector2(0.5, 0.68),
+		"chest": Vector2(0.5, 0.48),
+		"chest_w": 0.09,
+		"eyes": [[0.38, 0.222, 0.458, 0.235, 0.213, 0.243], [0.535, 0.233, 0.612, 0.218, 0.208, 0.24]],
+		"glows": [[0.23, 0.69, 0.05], [0.7, 0.81, 0.03], [0.86, 0.58, 0.04]],
+		"glow_color": Color(0.3, 1.0, 0.5),
+		"bones": [[0.38, 0.15, 0.1, 0.7, 0.08, 0.02, 0.8, 0], [0.62, 0.15, 0.9, 0.7, 0.08, 0.02, 0.8, 1]]},
+	"res://art/characters/heroes/sharas/char/sharas_char_stage1.png": {
+		"head": Vector3(0.44, 0.18, 0.05),
+		"neck": Vector2(0.45, 0.24),
+		"hips": Vector2(0.48, 0.47),
+		"chest": Vector2(0.5, 0.33),
+		"chest_w": 0.07,
+		"eyes": [],
+		"bones": [[0.5, 0.25, 0.95, 0.45, 0.07, 0.02, 0.9, 0], [0.52, 0.3, 0.85, 0.55, 0.06, 0.02, 0.8, 1], [0.2, 0.1, 0.08, 0.7, 0.05, 0.004, 0.5, 2], [0.65, 0.6, 0.85, 0.75, 0.05, 0.005, 0.5, 3]]},
+	"res://art/characters/heroes/toka/char/toka_char_stage1.png": {
+		"head": Vector3(0.47, 0.24, 0.085),
+		"neck": Vector2(0.47, 0.33),
+		"hips": Vector2(0.56, 0.63),
+		"chest": Vector2(0.5, 0.48),
+		"chest_w": 0.09,
+		"eyes": [[0.398, 0.215, 0.468, 0.222, 0.198, 0.238], [0.512, 0.228, 0.568, 0.24, 0.215, 0.255]],
+		"bones": [[0.36, 0.2, 0.18, 0.4, 0.08, 0.02, 1.0, 0], [0.62, 0.2, 0.7, 0.38, 0.06, 0.02, 1.0, 1], [0.68, 0.3, 0.7, 0.08, 0.05, 0.01, 0.8, 2], [0.65, 0.62, 0.92, 0.42, 0.06, 0.01, 0.8, 3]]},
+	"res://art/characters/heroes/tora/char/tora_char_stage1.png": {
+		"head": Vector3(0.585, 0.2, 0.05),
+		"neck": Vector2(0.58, 0.26),
+		"hips": Vector2(0.52, 0.48),
+		"chest": Vector2(0.55, 0.33),
+		"chest_w": 0.07,
+		"eyes": [[0.552, 0.181, 0.585, 0.178, 0.172, 0.187], []],
+		"bones": [[0.6, 0.2, 0.8, 0.55, 0.06, 0.02, 0.9, 0], [0.3, 0.45, 0.2, 0.75, 0.08, 0.015, 0.7, 1], [0.85, 0.7, 0.68, 0.95, 0.04, 0.005, 0.6, 2]]},
+	"res://art/characters/heroes/tsundae/char/tsundae_char_stage1.png": {
+		"head": Vector3(0.555, 0.13, 0.055),
+		"neck": Vector2(0.565, 0.19),
+		"hips": Vector2(0.55, 0.45),
+		"chest": Vector2(0.55, 0.26),
+		"chest_w": 0.07,
+		"eyes": [[0.5, 0.12, 0.555, 0.122, 0.112, 0.128], [0.585, 0.132, 0.62, 0.137, 0.128, 0.142]],
+		"glows": [[0.22, 0.25, 0.07]],
+		"glow_color": Color(0.4, 0.6, 1.0),
+		"bones": [[0.45, 0.1, 0.2, 0.7, 0.08, 0.02, 0.8, 0], [0.62, 0.12, 0.9, 0.65, 0.07, 0.02, 0.8, 1], [0.5, 0.05, 0.4, 0.02, 0.04, 0.02, 1.0, 2]]},
+	"res://art/characters/heroes/vila/char/vila_char_stage1.png": {
+		"head": Vector3(0.43, 0.1, 0.05),
+		"neck": Vector2(0.44, 0.16),
+		"hips": Vector2(0.5, 0.46),
+		"chest": Vector2(0.47, 0.27),
+		"chest_w": 0.07,
+		"eyes": [],
+		"bones": [[0.15, 0.15, 0.02, 0.3, 0.08, 0.02, 0.7, 0], [0.8, 0.15, 0.95, 0.25, 0.08, 0.02, 0.7, 1], [0.6, 0.12, 0.72, 0.4, 0.05, 0.015, 0.9, 2], [0.8, 0.55, 0.98, 0.7, 0.04, 0.02, 1.0, 3]]},
+	"res://art/characters/heroes/yumi/char/yumi_char_stage1.png": {
+		"head": Vector3(0.43, 0.2, 0.06),
+		"neck": Vector2(0.45, 0.27),
+		"hips": Vector2(0.45, 0.52),
+		"chest": Vector2(0.44, 0.36),
+		"chest_w": 0.07,
+		"eyes": [[0.373, 0.224, 0.412, 0.22, 0.212, 0.235], [0.44, 0.192, 0.49, 0.19, 0.182, 0.207]],
+		"bones": [[0.35, 0.2, 0.25, 0.6, 0.06, 0.015, 0.8, 0], [0.55, 0.2, 0.85, 0.9, 0.08, 0.015, 0.7, 1], [0.36, 0.1, 0.3, 0.01, 0.04, 0.03, 1.2, 2], [0.42, 0.1, 0.42, 0.01, 0.04, 0.03, 1.2, 3], [0.7, 0.2, 0.78, 0.1, 0.1, 0.005, 0.6, 4]]},
 }
 
 ## Pivot rig (hero or enemy) for the art shown, or {}.
@@ -4035,6 +4158,9 @@ static func warm_battle_art(id: String, ally: bool, boss: bool, skin: int = 0) -
 static func sprite(id: String, star: int = 1, skin: int = -1) -> Texture2D:
 	if skin >= 0 and skin == special_index(id):
 		var sp := str(_entry(id).get("special_sprite", ""))
+		var spe := str(_entry(id).get("special_sprite_evo", ""))
+		if star >= 5 and spe != "" and ResourceLoader.exists(spe):
+			sp = spe
 		if sp != "" and ResourceLoader.exists(sp):
 			return tex(sp)
 	var sprites: Array = _entry(id).get("sprites", [])
@@ -4483,6 +4609,15 @@ const MSG_PERSONAL := {
 	"morana": [["I heard confessions all morning.", "None of them were yours. I'm... disappointed."], ["I'll come by tonight.", "I have nothing to confess."], ["Tonight, then. I'll light the candles. Only for you.", "Everyone has something. I'll wait. Priestesses are patient."], 0],
 	"seraph": [["One of my wing-eyes winked at you today.", "I didn't tell it to. It just... did."], ["Wink back for me.", "Can you control them?"], ["...All thousand of them just blushed. Thank you. I think.", "Mostly. Except when you're around. Then they do whatever they want."], 0],
 	"tamo": [["A queen does not ask for head pats.", "...But if a Commander OFFERED, a queen would not refuse."], ["I'm offering.", "Ask me nicely."], ["Hmph. Good. All nine tails accept.", "...Please. There. Are you happy? My tails are wagging, don't look!"], 0],
+	"aura": [["I practised archery all morning.", "Every arrow hit the target. Then I imagined it was your heart and missed them all."], ["Maybe aim a bit lower?", "Try again with me watching."], ["...Commander! That's not what I meant!", "With you watching? I'll miss on purpose."], 1],
+	"fuji": [["Your health report came back.", "Heart rate: elevated whenever I'm in the room. Very interesting."], ["Is that serious, nurse?", "That's your fault."], ["Extremely. Daily check-ups are required.", "Then I'll take full responsibility."], 0],
+	"kyra": [["The jade flames got bigger today.", "They do that when I'm... thinking about someone. Don't ask who."], ["Who?", "They're pretty."], ["I said don't ask! ...It's you. Obviously.", "...Pretty. Hmph. Fine. They're yours to look at."], 0],
+	"sharas": [["I sharpened both chainsaws for you!", "As a present. They're very romantic chainsaws."], ["That's... thoughtful?", "Maybe flowers next time?"], ["Right?! Nobody else gets chainsaws from me.", "Flowers?! ...Fine. Flaming flowers."], 0],
+	"toka": [["Spar with me after training!", "Winner gets a hug. Loser ALSO gets a hug. Everybody wins!"], ["You're on.", "Can I skip the punching part?"], ["Yes! Gloves on, Commander!", "...Okay. Hug first. Punching later."], 0],
+	"tora": [["I can kick higher than my own head.", "Want to see? ...Close your eyes first. Okay, open. Did you see?"], ["You were too fast.", "Show me again."], ["A dancer never reveals her tricks.", "...Again? You just like watching me."], 1],
+	"tsundae": [["I bought too many sweets by accident.", "Here. Take them. NOT because I bought them for you."], ["Thank you, Tsundae.", "These are my favourites..."], ["D-don't thank me! It was an accident!", "...I know. I asked. I mean, I didn't ask! Whatever!"], 1],
+	"vila": [["My stream hit a million views!", "Everyone in chat asked who the handsome Commander in the background was."], ["What did you tell them?", "Delete that clip!"], ["'Mine.' ...Chat went wild~", "Too late, it's already trending~"], 0],
+	"yumi": [["The bunnies made you a flower crown.", "...I helped. A little. Mostly I held the hammer so nobody stole it."], ["I'll wear it proudly.", "Thank the bunnies for me."], ["Hop! The bunnies are happy. Yumi is... also happy.", "They say you're welcome. Yumi says it too."], 0],
 	"luby": [["Nya~ My mecha cat got an upgrade!", "It can give head pats now. ...Please test it. On me. For science."], ["For science, then.", "Why not ask the cat?"], ["Nyaa~ ...The experiment is a success. Repeat daily.", "It's not the same! Only your hands are calibrated right!"], 0],
 }
 const MSG_BOND2 := 6           # second personal chat unlocks at this Bond level
@@ -4523,6 +4658,15 @@ const MSG_PERSONAL2 := {
 	"morana": [["I've been praying differently lately.", "I used to pray for forgiveness. Now I pray you'll come back safe."], ["I always come back.", "Who answers those prayers?"], ["Then my prayers are already answered. Every evening.", "You do. Every time you walk through that door."], 0],
 	"seraph": [["Heaven sent me down to watch over you.", "I was supposed to go back after the war. I asked to stay. They said no. I stayed anyway."], ["I'm glad you stayed.", "You disobeyed heaven?"], ["...Then it was worth falling a little. For you.", "For you? I'd disobey it twice."], 0],
 	"tamo": [["My crown is heavy today.", "A queen can't show weakness. ...But you're not my subject. You're... you."], ["Then rest here with me.", "Let me carry it for a while."], ["...Only for a moment. ...Maybe two. Stay right there.", "Silly. It's a crown. ...But thank you. Truly."], 0],
+	"aura": [["The rings around me used to keep everyone away.", "Now they only open for you. I didn't tell them to."], ["Then I'll stay inside the ring.", "Can I touch one?"], ["...Good. Don't ever step out.", "Gently. They're... a bit like my heart."], 0],
+	"fuji": [["Nurses aren't supposed to have favourite patients.", "I broke that rule the first day you came to my clinic."], ["I'm glad you did.", "Am I a good patient?"], ["Then let's keep it a secret between doctor and patient.", "The worst. You never rest. ...Please rest. For me."], 0],
+	"kyra": [["Everyone runs when they see the horns.", "You didn't. You asked if they were warm."], ["Are they?", "They suit you."], ["...Touch them and find out. Just once.", "...Idiot. Now my flames are pink."], 0],
+	"sharas": [["Dragons hoard treasure.", "I don't have gold. So I decided my treasure is you. You're in my hoard now."], ["I'll stay in your hoard.", "Do I get a chainsaw too?"], ["Good! No escaping. Dragon rules.", "Only if you promise to hug me with both arms instead."], 0],
+	"toka": [["I've never lost a match.", "But when you smile at me, my guard drops every time. Is that a loss?"], ["Call it a draw.", "That's a win for me."], ["A draw... I like that. Rematch forever, then!", "No fair! ...Okay. Just this once."], 0],
+	"tora": [["The jade dragon only bows to the strong.", "It bowed to you yesterday. I've never seen it do that."], ["Maybe it knows how I feel about you.", "I'm not that strong."], ["...Then it's smarter than me. Because I only just realised it too.", "Strength isn't only muscles, Commander. It chose right."], 0],
+	"tsundae": [["Listen. I'm only saying this once.", "I... like it when you're around. There. Happy?! Don't make that face!"], ["Very happy.", "Say it again?"], ["Hmph! ...Me too. A little. A lot. Shut up.", "N-no! ...Okay. I like it. Once more and that's it!"], 0],
+	"vila": [["I turned the camera off tonight.", "Some moments aren't for the stream. Just for us."], ["I like this version of you.", "What happened to 'we're live'?"], ["...The real me? Then you're the only one who gets to see her.", "You happened, Commander. You're better than any audience."], 0],
+	"yumi": [["Yumi guards everyone. That's her job.", "But who guards Yumi? ...The bunnies said you would."], ["I will. Always.", "The bunnies are right."], ["Then Yumi can put the hammer down. Just for a little.", "Bunnies are always right. Yumi trusts them. And you."], 0],
 	"luby": [["Nya... my mecha cat has a new feature.", "It plays a song when you're nearby. I didn't program that. It just... started."], ["Maybe it knows something.", "That's a bug."], ["It knows I'm happy around you. Nya~ Machines don't lie.", "It's NOT a bug! It's a feature! ...A very embarrassing feature."], 0],
 }
 ## Chats triggered by what the Commander does. Variant picked by day.

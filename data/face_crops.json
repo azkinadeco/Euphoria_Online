@@ -1840,5 +1840,467 @@
 0.2475,
 0.2341,
 0.21
+],
+"res://art/characters/heroes/aura/char/aura_char_stage1.png": [
+0.2652,
+0.047,
+0.2995,
+0.1736
+],
+"res://art/characters/heroes/aura/char/aura_char_stage2.png": [
+0.2657,
+0.049,
+0.2986,
+0.1736
+],
+"res://art/characters/heroes/aura/char/aura_char_evo1.png": [
+0.3423,
+0.047,
+0.2255,
+0.1736
+],
+"res://art/characters/heroes/fuji/char/fuji_char_stage1.png": [
+0.3976,
+0.09,
+0.2647,
+0.168
+],
+"res://art/characters/heroes/fuji/char/fuji_char_stage2.png": [
+0.3953,
+0.1,
+0.2493,
+0.168
+],
+"res://art/characters/heroes/fuji/char/fuji_char_stage3.png": [
+0.3869,
+0.0925,
+0.2262,
+0.182
+],
+"res://art/characters/heroes/kyra/char/kyra_char_stage1.png": [
+0.3742,
+0.1275,
+0.2517,
+0.21
+],
+"res://art/characters/heroes/kyra/char/kyra_char_evo3.png": [
+0.3749,
+0.1275,
+0.2503,
+0.21
+],
+"res://art/characters/heroes/sharas/char/sharas_char_stage1.png": [
+0.3483,
+0.105,
+0.1834,
+0.14
+],
+"res://art/characters/heroes/sharas/char/sharas_char_evo1.png": [
+0.3478,
+0.1,
+0.1744,
+0.14
+],
+"res://art/characters/heroes/toka/char/toka_char_stage1.png": [
+0.3454,
+0.1125,
+0.2493,
+0.238
+],
+"res://art/characters/heroes/toka/char/toka_char_stage2.png": [
+0.313,
+0.1125,
+0.254,
+0.238
+],
+"res://art/characters/heroes/toka/char/toka_char_evo1.png": [
+0.359,
+0.1325,
+0.2419,
+0.238
+],
+"res://art/characters/heroes/tora/char/tora_char_stage1.png": [
+0.4731,
+0.125,
+0.2239,
+0.14
+],
+"res://art/characters/heroes/tsundae/char/tsundae_char_stage1.png": [
+0.4269,
+0.0475,
+0.2562,
+0.154
+],
+"res://art/characters/heroes/tsundae/char/tsundae_char_stage2.png": [
+0.4273,
+0.0475,
+0.2554,
+0.154
+],
+"res://art/characters/heroes/vila/char/vila_char_stage1.png": [
+0.2844,
+0.025,
+0.2913,
+0.14
+],
+"res://art/characters/heroes/vila/char/vila_char_stage2.png": [
+0.419,
+0.06,
+0.162,
+0.14
+],
+"res://art/characters/heroes/vila/char/vila_char_evo1.png": [
+0.4067,
+0.08,
+0.1667,
+0.14
+],
+"res://art/characters/heroes/yumi/char/yumi_char_stage1.png": [
+0.2947,
+0.11,
+0.2707,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special.png": [
+0.3925,
+0.02,
+0.1749,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt3.png": [
+0.3378,
+0.03,
+0.1844,
+0.168
+],
+"res://art/characters/heroes/mei/char/mei_char_special.png": [
+0.4836,
+0.0275,
+0.2027,
+0.126
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special.png": [
+0.467,
+0.1725,
+0.1059,
+0.126
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt1.png": [
+0.4063,
+0.1325,
+0.1474,
+0.126
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt12.png": [
+0.4009,
+0.1025,
+0.1482,
+0.126
+],
+"res://art/characters/heroes/rubby/char/rubby_char_special.png": [
+0.3824,
+0.0525,
+0.2352,
+0.126
+],
+"res://art/characters/heroes/aura/char/aura_char_stage3.png": [
+0.2575,
+0.0489,
+0.3019,
+0.1736
+],
+"res://art/characters/heroes/aura/char/aura_char_evo2.png": [
+0.3424,
+0.0467,
+0.2255,
+0.1739
+],
+"res://art/characters/heroes/kyra/char/kyra_char_stage2.png": [
+0.3741,
+0.128,
+0.2518,
+0.2106
+],
+"res://art/characters/heroes/kyra/char/kyra_char_stage3.png": [
+0.3755,
+0.1287,
+0.2532,
+0.2122
+],
+"res://art/characters/heroes/kyra/char/kyra_char_evo1.png": [
+0.373,
+0.1334,
+0.2491,
+0.2083
+],
+"res://art/characters/heroes/kyra/char/kyra_char_evo2.png": [
+0.3728,
+0.1333,
+0.2494,
+0.2086
+],
+"res://art/characters/heroes/sharas/char/sharas_char_stage2.png": [
+0.3584,
+0.1062,
+0.1803,
+0.1408
+],
+"res://art/characters/heroes/sharas/char/sharas_char_evo2.png": [
+0.3446,
+0.1,
+0.1754,
+0.14
+],
+"res://art/characters/heroes/sharas/char/sharas_char_evo3.png": [
+0.35,
+0.1001,
+0.174,
+0.14
+],
+"res://art/characters/heroes/sharas/char/sharas_char_evo1_alt2.png": [
+0.3439,
+0.1028,
+0.1754,
+0.1439
+],
+"res://art/characters/heroes/toka/char/toka_char_stage3.png": [
+0.325,
+0.1225,
+0.2498,
+0.2352
+],
+"res://art/characters/heroes/toka/char/toka_char_stage3_alt1.png": [
+0.3197,
+0.1246,
+0.2368,
+0.2341
+],
+"res://art/characters/heroes/tora/char/tora_char_stage2.png": [
+0.4746,
+0.1304,
+0.2232,
+0.1392
+],
+"res://art/characters/heroes/tora/char/tora_char_evo1.png": [
+0.4746,
+0.1308,
+0.2229,
+0.1392
+],
+"res://art/characters/heroes/tora/char/tora_char_evo2.png": [
+0.4725,
+0.1287,
+0.222,
+0.1394
+],
+"res://art/characters/heroes/tora/char/tora_char_evo3.png": [
+0.475,
+0.1274,
+0.223,
+0.1394
+],
+"res://art/characters/heroes/tsundae/char/tsundae_char_evo1.png": [
+0.4513,
+0.0844,
+0.2347,
+0.1478
+],
+"res://art/characters/heroes/yumi/char/yumi_char_stage2.png": [
+0.2946,
+0.1102,
+0.2719,
+0.168
+],
+"res://art/characters/heroes/yumi/char/yumi_char_evo1.png": [
+0.2936,
+0.1101,
+0.2711,
+0.168
+],
+"res://art/characters/heroes/yumi/char/yumi_char_evo2.png": [
+0.2951,
+0.1076,
+0.2707,
+0.1683
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt1.png": [
+0.3924,
+0.0202,
+0.1751,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt2.png": [
+0.3924,
+0.0202,
+0.1751,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt4.png": [
+0.3927,
+0.02,
+0.1748,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt5.png": [
+0.3925,
+0.0199,
+0.1748,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt6.png": [
+0.3926,
+0.0199,
+0.1749,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt7.png": [
+0.3925,
+0.02,
+0.1749,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt8.png": [
+0.3926,
+0.0198,
+0.1749,
+0.168
+],
+"res://art/characters/heroes/angela/char/angela_char_special_alt9.png": [
+0.3925,
+0.0199,
+0.1749,
+0.168
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt2.png": [
+0.4063,
+0.1325,
+0.1474,
+0.126
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt3.png": [
+0.407,
+0.1325,
+0.1475,
+0.126
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt4.png": [
+0.4069,
+0.1325,
+0.1475,
+0.126
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt5.png": [
+0.4063,
+0.1325,
+0.1474,
+0.126
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt6.png": [
+0.3984,
+0.078,
+0.1473,
+0.1282
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt7.png": [
+0.4034,
+0.0781,
+0.1457,
+0.1282
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt8.png": [
+0.4048,
+0.0775,
+0.1474,
+0.1291
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt9.png": [
+0.4023,
+0.0621,
+0.1498,
+0.1324
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt10.png": [
+0.4006,
+0.0513,
+0.1495,
+0.1333
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt11.png": [
+0.4025,
+0.1041,
+0.1473,
+0.1322
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt13.png": [
+0.4009,
+0.1025,
+0.1482,
+0.126
+],
+"res://art/characters/heroes/eropatra/char/eropatra_char_special_alt14.png": [
+0.4024,
+0.1039,
+0.1486,
+0.1333
+],
+"res://art/characters/heroes/mei/char/mei_char_special_alt1.png": [
+0.4842,
+0.0275,
+0.203,
+0.126
+],
+"res://art/characters/heroes/mei/char/mei_char_special_alt2.png": [
+0.4836,
+0.0274,
+0.2027,
+0.126
+],
+"res://art/characters/heroes/mei/char/mei_char_special_alt3.png": [
+0.4837,
+0.0274,
+0.2027,
+0.126
+],
+"res://art/characters/heroes/mei/char/mei_char_special_alt4.png": [
+0.4829,
+0.026,
+0.2038,
+0.1263
+],
+"res://art/characters/heroes/mei/char/mei_char_special_alt5.png": [
+0.4825,
+0.0262,
+0.2038,
+0.1263
+],
+"res://art/characters/heroes/mei/char/mei_char_special_alt6.png": [
+0.4839,
+0.0266,
+0.2041,
+0.1263
+],
+"res://art/characters/heroes/mei/char/mei_char_special_alt7.png": [
+0.4842,
+0.0265,
+0.2041,
+0.1263
+],
+"res://art/characters/heroes/rubby/char/rubby_char_special_alt1.png": [
+0.3879,
+0.0524,
+0.2328,
+0.126
+],
+"res://art/characters/heroes/rubby/char/rubby_char_special_alt2.png": [
+0.3878,
+0.0525,
+0.2328,
+0.126
+],
+"res://art/characters/heroes/rubby/char/rubby_char_special_alt3.png": [
+0.3873,
+0.0526,
+0.2332,
+0.126
 ]
 }
