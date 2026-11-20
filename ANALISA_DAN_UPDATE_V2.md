@@ -1262,6 +1262,9 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 3c. Batch 261 (20 Nov 2026): tanpa kedip untuk Sharas, Yumi, skin Angela/Mei/Eropatra/Rubby
+- Owner menilai semua metode kedip (kelopak geser, kelopak lukis, gambar mata tertutup, tracing per mata) pada 6 karakter ini jelek; tracing per mata (bukaan mata + bulu mata dari piksel) dicoba dan hasilnya lebih buruk (garis bergerigi, isian kotak-kotak). Sesuai izin owner ("kalau tidak memungkinkan gausah kedip"): `eyes = []` dan tanpa lid untuk semua form Sharas & Yumi dan semua pose 4 skin (51 art). File `art/lids/` yang tidak terpakai dihapus (40 tersisa). Gerak napas/rambut/tilt 2.5D tetap.
+
 ## 3b. Batch 260 (20 Nov 2026): kedipan "swap" (gambar mata tertutup) untuk Sharas, Yumi, skin Angela/Mei/Eropatra/Rubby
 - User masih menilai kedipan 6 karakter ini jelek. Ganti metode: `tools/make_lids.py` (`draw_closed`) melukis gambar mata tertutup jadi per art (isian kulit + garis bulu mata anti-alias yang melengkung, tebal di tengah dan meruncing di sudut, warna bulu mata asli, bayangan tipis). Rig `lid_swap: 1` → `char_rig.gdshader` hanya cross-fade ke gambar itu (`smoothstep(0.12, 0.72, blink)`), tanpa animasi kelopak setengah. 51 art (semua form Sharas & Yumi, semua pose 4 skin) dicek di contact sheet sebelum dipasang, lalu di Godot (`tools/blink_frames.gd`).
 - HERO_RIGS sekarang ikut menyimpan `lid_swap` / `lid_slide`.
