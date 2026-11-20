@@ -1270,6 +1270,7 @@ tools/
 - **2.5D**: ayunan tulang lentur (rambut/sayap/ekor, swing ≥ 0,012) ×1,45 maks 0,034, setara Shina; tulang rambut Tsundae digeser supaya tidak menarik gaun saat disentuh. Alat baru `tools/rig_motion.gd`.
 - **Cut-in ultimate**: art memudar 46–58% lebar layar (`game/ui/cutin_fade.gdshader`), tidak terpotong garis lurus.
 - Tes: flow_test PASS, `tools/nov19_test.gd` PASS, smoke PASS.
+- **Batch 256**: semua form hasil transfer dicek dengan overlay elips. Kyra stage2/3 (mata menyala) dan Toka stage3 alt tanpa kedip; mata kanan Tsundae evo1 digeser. Skin Angela, Mei, Rubby (pose dasar) kini berkedip (`lid_reach` 0,45–0,6); pose alternatif skin tanpa kedip; Eropatra skin tanpa kedip (mata menyala). Glytta stage1 dicek ulang setelah ganti art. flow_test: 45 rig dasar & 151 outfit bermata terukur.
 
 ## 2ww. Update 19 Nov 2026: 9 hero baru + 4 skin kostum
 - **Hero baru** (`Karakter Euphoria Online/hero/New Hero 19 Nov 2026`, diimpor `tools/import_nov19.py`): Kyra (LR, DARK WARLOCK), Tora (LR, WIND ASSASSIN), Aura (UR, ICE RANGER), Sharas (UR, FIRE WARRIOR), Yumi (UR, EARTH TANK), Fuji (SSR, LIGHT HEALER), Toka (SSR, FIRE WARRIOR), Vila (SSR, DARK ASSASSIN), Tsundae (SR, FIRE MAGE). Total 46 hero. Nama file: `<n>` = stage, `evo<n>` = evolusi (`evo` tanpa angka = evo1), huruf di belakang (2a, evo1b) = ekspresi alternatif; `3a` tanpa `3` jadi base; `banner` dilewati; sprite alternatif (`1a`) tidak dipakai. Dua gambar berlatar putih (Toka 3a, Tsundae evo) dipotong ulang.
