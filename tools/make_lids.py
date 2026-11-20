@@ -31,6 +31,8 @@ def eye_geom(e, W, H):
 
 
 def make(path, rig):
+    if rig.get('lid_keep') and rig.get('lid') and os.path.exists(rig['lid'][0].replace('res://', '')):
+        return rig['lid'][0]      # hand-approved lid: not regenerated
     eyes = [e for e in rig.get('eyes', []) if len(e) == 6]
     if not eyes:
         rig.pop('lid', None)
@@ -72,43 +74,83 @@ def make(path, rig):
         qx, qy = lx / hw, ly / max(hh, 1.0)
         ring = (np.abs(qx) < 1.0) & (qy > 1.6) & (qy < 3.2)          # cheek just below the eye
         skin_l = float(np.median(lum[ring])) if ring.any() else float(np.median(lum))
-        near = (np.abs(qx) < 1.3) & (qy > -arc_of(qx) - 0.45 - 0.5 * reach) & (qy < arc_of(qx) + 0.7)   # lash band only: hair strands above stay
+        near = (np.abs(qx) < 1.15) & (qy > -arc_of(qx) - 0.45 - 0.5 * reach) & (qy < arc_of(qx) + 0.7)   # lash band only: hair strands above stay
         mask |= (near & ((lum < skin_l * 0.78) | (sat > 140))).astype(np.uint8)
+        # eye white / catch-lights just outside the measured opening would leak into the fill as a pale streak
+        white = (lum > skin_l * 1.06) & (sat < 60) & (np.abs(qx) < 1.25) & (qy > -arc_of(qx) - 0.4) & (qy < arc_of(qx) + 0.5)
+        mask |= white.astype(np.uint8)
+    # hair is dark like a lash but continues far outside the eye: dark blobs that are mostly outside the
+    # lash zone are hair, and stay (only the eye opening itself is always removed)
+    opening = np.zeros(mask.shape, bool)
+    zone = np.zeros(mask.shape, bool)
+    for cx, cy, ang, hw, hh in geo:
+        dx, dy = xx + x0 - cx, yy + y0 - cy
+        lx = math.cos(ang) * dx + math.sin(ang) * dy
+        ly = -math.sin(ang) * dx + math.cos(ang) * dy
+        qx, qy = lx / hw, ly / max(hh, 1.0)
+        opening |= (np.abs(qx) < 1.0) & (np.abs(qy) < arc_of(qx) + 0.15)
+        zone |= (np.abs(qx) < 1.3) & (qy > -arc_of(qx) - 1.3) & (qy < arc_of(qx) + 1.0)
+    dark = (lum < skin_l * 0.78).astype(np.uint8)
+    nlab, lab = cv2.connectedComponents(dark, connectivity=8)
+    for i in range(1, nlab):
+        comp = lab == i
+        n = comp.sum()
+        if n > 30 and (comp & ~zone).sum() > 0.35 * n:
+            mask[comp & ~opening] = 0
     mask = cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=2)
-    bgr = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
-    rad = max(3, int(min(g[4] for g in geo) * 0.8))
-    out = cv2.inpaint(bgr, mask * 255, rad, cv2.INPAINT_TELEA)
-    # Telea leaves streaks across a wide hole: soften the filled part, keep the untouched pixels exact
-    soft = cv2.GaussianBlur(out, (0, 0), max(1.2, min(g[4] for g in geo) * 0.35))
-    fm = cv2.GaussianBlur(mask.astype(np.float32), (0, 0), 1.5)[..., None]
-    out = (soft * fm + out * (1 - fm)).astype(np.uint8)
-    out = cv2.cvtColor(out, cv2.COLOR_BGR2RGB)
-    # the fill borrows from the lash line around the hole and turns muddy / dark: inside the hole, colours
-    # darker than the cheek go back to the cheek tone (a little shading kept), so the lid reads as skin
+    # Fill = diffusion of the surrounding SKIN only (rigs with 'lid_paint' keep OpenCV Telea instead: bold
+    # anime lids whose shading should follow the painted crease): every hole pixel takes a smooth, distance-weighted
+    # average of nearby skin pixels (lashes, brows, hair and eye white are left out), at several scales so
+    # wide holes still find skin. The result continues the face's own shading and has no hard outline.
+    hh_min = min(g[4] for g in geo)
     cheek = np.zeros(rgb.shape[:2], bool)
     for cx, cy, ang, hw, hh in geo:
         dx, dy = xx + x0 - cx, yy + y0 - cy
         lx = math.cos(ang) * dx + math.sin(ang) * dy
         ly = -math.sin(ang) * dx + math.cos(ang) * dy
         qx, qy = lx / hw, ly / max(hh, 1.0)
-        cheek |= (np.abs(qx) < 0.9) & (qy > 1.5) & (qy < 3.0) & (mask == 0)
-    if rig.get('lid_tone') and cheek.sum() > 20:   # opt-in per rig: painterly faces whose fill turns muddy
-        ck = rgb[cheek].astype(np.float32)
-        cl = ck @ np.array([0.3, 0.55, 0.15], np.float32)
-        ck = ck[cl >= np.percentile(cl, 40)]          # skip shadows / hair in the cheek sample
-        tone = np.median(ck, 0)
-        tl = float(tone @ np.array([0.3, 0.55, 0.15]))
-        o = out.astype(np.float32)
-        ol = o @ np.array([0.3, 0.55, 0.15], np.float32)
-        shade = np.clip(ol / max(tl, 1.0), 0.86, 1.04)[..., None]
-        dist = np.linalg.norm(o - tone, axis=2)
-        k = np.clip((dist - 18.0) / 50.0, 0, 1) * (ol < tl * 1.02)
-        k = (cv2.GaussianBlur((k * (mask > 0)).astype(np.float32), (0, 0), 1.5) * fm[..., 0])[..., None]
-        out = np.clip(o * (1 - k) + tone * shade * k, 0, 255).astype(np.uint8)
+        # skin sample: a ring all around the eye (upper lid, corners and cheek) just outside the hole
+        rr = np.sqrt(qx ** 2 + (qy * 0.5) ** 2)
+        cheek |= (rr > 1.25) & (rr < 2.0) & (mask == 0)
+    src_px = rgb[cheek] if cheek.sum() > 20 else rgb[mask == 0]
+    sl = src_px.astype(np.float32) @ np.array([0.3, 0.55, 0.15], np.float32)
+    tone = np.median(src_px[(sl >= np.percentile(sl, 30)) & (sl <= np.percentile(sl, 90))].astype(np.float32), 0)
+    f = rgb.astype(np.float32)
+    dist = np.linalg.norm(f - tone, axis=2)
+    alpha_px = crop[..., 3].astype(np.float32) / 255.0
+    valid = ((mask == 0) & (dist < 62.0) & (alpha_px > 0.9)).astype(np.float32)
+    fill = np.zeros_like(f)
+    have = np.zeros(f.shape[:2], np.float32)
+    for sig in (hh_min * 0.8, hh_min * 1.6, hh_min * 3.2, hh_min * 6.0):
+        sig = max(1.5, sig)
+        num = cv2.GaussianBlur(f * valid[..., None], (0, 0), sig)
+        den = cv2.GaussianBlur(valid, (0, 0), sig)
+        est = num / np.maximum(den, 1e-4)[..., None]
+        take = (den > 0.04) & (have < 0.5)
+        fill[take] = est[take]
+        have[take] = 1.0
+    fill[have < 0.5] = tone
+    # match the fill's brightness to the skin right around the hole (diffusion favours the lighter cheek)
+    ring_b = (cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=3) > 0) & (mask == 0) & (valid > 0)
+    if ring_b.sum() > 10:
+        lw_ = np.array([0.3, 0.55, 0.15], np.float32)
+        ratio = float(np.median(f[ring_b] @ lw_)) / max(float(np.median(fill[mask > 0] @ lw_)), 1.0)
+        fill = np.where((mask > 0)[..., None], fill * np.clip(ratio, 0.8, 1.0), fill)
+    # whole hole = fill (dilated first so no original lash / eye-white pixel shows through inside it)
+    if rig.get('lid_paint'):
+        bgr = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+        tel = cv2.cvtColor(cv2.inpaint(bgr, mask * 255, max(3, int(hh_min * 0.8)), cv2.INPAINT_TELEA), cv2.COLOR_BGR2RGB).astype(np.float32)
+        tel = cv2.GaussianBlur(tel, (0, 0), max(1.2, hh_min * 0.35))
+        fill = np.where((mask > 0)[..., None], tel, fill)
+    fm = cv2.GaussianBlur(cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=2).astype(np.float32), (0, 0), max(1.0, hh_min * 0.15))[..., None]
+    fm = np.clip(fm * 1.3, 0, 1)
+    out = np.clip(fill * fm + f * (1 - fm), 0, 255).astype(np.uint8)
     os.makedirs(OUT, exist_ok=True)
     name = os.path.splitext(os.path.basename(src))[0] + '_lid.png'
     # alpha = where the eye was removed (soft): the shader only corrects colours there
-    alpha = np.clip(cv2.GaussianBlur(mask.astype(np.float32), (0, 0), 1.2) * 255, 0, 255).astype(np.uint8)
+    # soft, wide feather: the painted-out area melts into the untouched art (no patch outline)
+    grow = cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=max(1, int(hh_min * 0.25)))
+    alpha = np.clip(cv2.GaussianBlur(grow.astype(np.float32), (0, 0), max(1.5, hh_min * 0.45)) * 1.15 * 255, 0, 255).astype(np.uint8)
     Image.fromarray(np.dstack([out, alpha]), 'RGBA').save(os.path.join(OUT, name), optimize=True)
     rig['lid'] = ['res://%s/%s' % (OUT, name), round(x0 / W, 5), round(y0 / H, 5), round((x1 - x0) / W, 5), round((y1 - y0) / H, 5)]
     return name

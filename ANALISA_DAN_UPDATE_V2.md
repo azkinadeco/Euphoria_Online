@@ -1262,6 +1262,11 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 3a. Batch 259 (20 Nov 2026): kedipan "kelopak geser" untuk Sharas, Yumi, Vila, skin Angela/Mei/Rubby
+- `char_rig.gdshader`: dengan painted lid (dan `lid_slide` = 1, default) kedipan memakai alur baru: garis bulu mata gelap (`lashc_dark`, sampel bulu mata asli, maks 32% kecerahan kelopak) turun mengikuti busur mata; di atasnya tampil tekstur kelopak (alpha = area mata yang dihapus), jadi bulu mata asli hilang tepat di tempat garis baru lewat, tanpa bulu mata ganda. Bayangan lipatan tipis di atas garis, kelopak bawah naik di akhir. Batas area per mata diperlebar (lid tidak terpotong).
+- `tools/make_lids.py`: isian = difusi multi-skala dari kulit di sekitar mata saja (cincin kulit, tanpa rambut/bulu mata/putih mata), kecerahan disamakan dengan tepi lubang; komponen gelap yang sebagian besar di luar zona bulu mata (rambut) tidak dihapus; putih mata di luar bukaan ikut dihapus; alpha di-feather lebar. Opsi rig `lid_paint` (Telea), `lid_keep` (lid tidak dibuat ulang), `lid_slide: 0` (cara lama; dipakai Toka karena hasil lama lebih baik).
+- Yumi stage1: mata kiri diukur ulang. Alat: `tools/blink_frames.gd` (5 tahap kedip per art, `ZOOM`).
+
 ## 2zz. Batch 258 (20 Nov 2026): ekspresi alternatif berkedip, kelopak tanpa kubah
 - 14 ekspresi alternatif hero baru (Aura, Fuji, Kyra, Sharas, Toka, Tora, Vila, Yumi) punya rig sendiri hasil transfer dari form dasarnya, jadi ikut berkedip (sebelumnya alt tanpa kedip).
 - Skin Eropatra pose alt6–11 diukur manual dan berkedip; semua 15 pose skin Eropatra berkedip.

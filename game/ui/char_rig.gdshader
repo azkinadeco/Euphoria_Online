@@ -40,6 +40,7 @@ uniform float lid_close = 0.42;   // where the closed lash line rests (0 = eye c
 // closed lid keeps the face's own shading, blush and hair instead of one flat skin colour
 uniform sampler2D lid_tex : filter_linear, repeat_disable;
 uniform vec4 lid_rect = vec4(0.0);   // UV rect of lid_tex on the art (x, y, w, h); w = 0: none
+uniform float lid_slide = 1.0;   // 1 = painted lid revealed above a sliding lash line; 0 = older painted-lid blend
 uniform float lid_reach = 1.0;    // how far above the measured top the lid skin reaches (lower for big eyes with hair close above)
 // animated values
 uniform float t = 0.0;
@@ -89,6 +90,19 @@ vec2 seg(vec2 p, vec2 a, vec2 b) {
 // Skin around an eye, as a smooth field: 10 samples on a ring just outside the eye; the ones that
 // look like skin (close to the most skin-like sample) are blended by distance to the pixel, so the
 // closed lid matches the face around it on every side and no patch outline shows.
+// darkest lash colour of an eye: a few samples along the painted upper lash, never lighter than 32% of the lid
+vec3 lashc_dark(sampler2D tex, vec2 c, vec2 ex, vec2 ey, vec2 to_uv, vec3 lid) {
+	vec3 m = vec3(1.0);
+	for (int i = 0; i < 7; i++) {
+		float x = -0.6 + float(i) * 0.2;
+		for (int j = 0; j < 3; j++) {
+			vec3 s = texture(tex, c + (ex * x + ey * (-1.5 + float(j) * 0.35)) * to_uv).rgb;
+			if (dot(s, vec3(0.3, 0.55, 0.15)) < dot(m, vec3(0.3, 0.55, 0.15))) { m = s; }
+		}
+	}
+	return min(m, lid * 0.32);
+}
+
 vec3 ring_skin(sampler2D tex, vec2 c, vec2 ex, vec2 ey, vec2 to_uv, vec2 q, vec4 measured) {
 	vec4 smp[10];
 	vec2 pos[10];
@@ -220,7 +234,7 @@ void fragment() {
 		vec2 q = l / e.zw;
 		float ax = abs(q.x);
 		bool has_lid = lid_rect.z > 0.0;
-		if (ax > (has_lid ? 1.5 : 1.3) || q.y < -1.8 || q.y > (has_lid ? 2.2 : 1.8)) { continue; }
+		if (ax > (has_lid ? 2.6 : 1.3) || q.y < (has_lid ? -3.4 : -1.8) || q.y > (has_lid ? 2.6 : 1.8)) { continue; }
 		float ac = min(ax, 1.0);
 		float arc = sqrt(max(0.0, 1.0 - ac * ac));
 		float top = -arc;
@@ -228,7 +242,7 @@ void fragment() {
 		float rest = arc * lid_close;                          // closed line: lowest in the middle
 		float edge = mix(top + lt, rest, bk);                  // bottom of the moving lash band
 		float low = mix(edge, arc + 0.5, smoothstep(0.5, 0.95, bk));   // lower lid rises at the end
-		if (q.y < top - 1.15 || q.y > max(edge, low) + (has_lid ? 0.75 : 0.4)) { continue; }
+		if ((!has_lid && q.y < top - 1.15) || q.y > max(edge, low) + (has_lid ? 0.75 : 0.4)) { continue; }
 		vec2 to_uv = vec2(1.0) / vec2(aspect, 1.0);
 		vec2 ex = vec2(ca, sa) * e.z;
 		vec2 ey = vec2(-sa, ca) * e.w;
@@ -236,17 +250,47 @@ void fragment() {
 		// skin of the lid at this pixel: the painted lid when there is one, else the measured flat tone
 		vec3 lidc = skin;
 		float lidw = 0.0;
+		float lida = 0.0;
 		if (lid_rect.z > 0.0) {
 			vec2 lu = (uv - lid_rect.xy) / lid_rect.zw;
 			if (lu.x > 0.0 && lu.x < 1.0 && lu.y > 0.0 && lu.y < 1.0) {
 				vec4 lt4 = texture(lid_tex, lu);
 				lidc = lt4.rgb;
+				lida = lt4.a;
 				// soft shading and blush stay; a fill that drifted to hair / lash colour goes back to skin
 				// (the hue goes back to skin, the fill's own light / shadow is kept: an eye under hair stays shaded)
 				lidc = mix(lidc, skin * clamp(dot(lidc, vec3(0.3, 0.55, 0.15)) / max(dot(skin, vec3(0.3, 0.55, 0.15)), 0.01), 0.88, 1.05),
 						0.0 * lt4.a);
 				lidw = 1.0;
 			}
+		}
+		if (lidw > 0.5 && lid_slide > 0.5) {
+			// Painted lid: the removed-eye picture (lid_tex, its alpha = where the eye and the upper lash were
+			// painted out) is revealed above a lash line that slides down along the eye. The art's own lashes
+			// disappear exactly where the new line takes over, so lashes never double up.
+			float lw = lt * 1.1;                                   // closing lash thickness
+			float sw = 1.0 - smoothstep(1.2, 1.45, ax);       // the closing line fades past the corners
+			vec3 lc = lashc_dark(TEXTURE, e.xy, ex, ey, to_uv, lidc);
+			vec3 outp = c.rgb;
+			float on = smoothstep(0.0, 0.1, bk);
+			if (q.y < edge - lw) {
+				outp = mix(c.rgb, lidc, lida * on);
+				// a faint shadow on the lid just above the closing line
+				float sh_k = smoothstep(edge - lw - 0.9, edge - lw, q.y);
+				outp *= 1.0 - 0.2 * on * sw * sh_k * sh_k;
+			} else if (q.y <= edge) {
+				float f = (q.y - (edge - lw)) / max(lw, 0.001);    // 0 top .. 1 bottom of the line
+				float prof = smoothstep(0.0, 0.18, f) * (1.0 - smoothstep(0.82, 1.0, f));
+				float thin = 0.55 + 0.45 * arc;                    // thinner toward the corners
+				vec3 under = mix(c.rgb, lidc, lida * on) * (1.0 - 0.2 * on * sw);   // same shadow, no light gap
+				outp = mix(under, lc, prof * thin * sw * on);
+			} else {
+				float cover = 1.0 - smoothstep(low + 0.05, low + 0.6, q.y);   // reaches the lower lash / rim too
+				outp = mix(c.rgb, lidc, lida * cover * smoothstep(0.5, 0.92, bk));
+				outp *= 1.0 - 0.14 * bk * sw * (1.0 - smoothstep(edge, edge + 0.28, q.y));
+			}
+			c.rgb = outp;
+			continue;
 		}
 		vec3 lashc = min(texture(TEXTURE, e.xy + ey * (-1.0 + lt * 0.5) * to_uv).rgb,
 				texture(TEXTURE, e.xy + (ex * 0.35 + ey * (-0.9 + lt * 0.5)) * to_uv).rgb);

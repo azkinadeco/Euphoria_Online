@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-20g",
+  "date": "2026-11-20",
+  "tag": "UPDATE",
+  "title": "Smoother Blinks for Sharas, Yumi, Vila and the Skins",
+  "body": "Blinks now work like a real eyelid: the lash line slides down and the lid behind it is the face's own skin and shading, with no flat patch or double lashes. Sharas, Yumi and Vila and the Wardrobe skins of Angela, Mei and Rubby were redone and checked frame by frame."
+ },
+ {
   "id": "n2026-11-20f",
   "date": "2026-11-20",
   "tag": "UPDATE",
