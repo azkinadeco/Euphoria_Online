@@ -40,6 +40,7 @@ uniform float lid_close = 0.42;   // where the closed lash line rests (0 = eye c
 // closed lid keeps the face's own shading, blush and hair instead of one flat skin colour
 uniform sampler2D lid_tex : filter_linear, repeat_disable;
 uniform vec4 lid_rect = vec4(0.0);   // UV rect of lid_tex on the art (x, y, w, h); w = 0: none
+uniform float lid_swap = 0.0;    // 1 = lid_tex is a finished closed-eye picture: the blink cross-fades to it
 uniform float lid_slide = 1.0;   // 1 = painted lid revealed above a sliding lash line; 0 = older painted-lid blend
 uniform float lid_reach = 1.0;    // how far above the measured top the lid skin reaches (lower for big eyes with hair close above)
 // animated values
@@ -222,8 +223,16 @@ void fragment() {
 	// 6) blink, Live2D-style: the painted upper lash slides down along the eye and rests as a curved
 	//    closed line; the lid above it and (near the end) the lower lid below it become skin taken from
 	//    the face all around the eye, so a closed eye has no visible patch, white or lower lashes.
+	if (lid_swap > 0.5 && lid_rect.z > 0.0) {
+		vec2 lu = (uv - lid_rect.xy) / lid_rect.zw;
+		if (lu.x > 0.0 && lu.x < 1.0 && lu.y > 0.0 && lu.y < 1.0) {
+			vec4 lt = texture(lid_tex, lu);
+			c.rgb = mix(c.rgb, lt.rgb, lt.a * smoothstep(0.12, 0.72, max(blinks[0], blinks[1])));
+		}
+	}
 	for (int i = 0; i < 8; i++) {
 		if (i >= eye_count) { break; }
+		if (lid_swap > 0.5 && i < 2) { continue; }   // the face pair is done by the closed-eye picture
 		vec4 e = eyes[i];
 		float bk = blinks[i];
 		if (e.z <= 0.0 || bk < 0.001) { continue; }

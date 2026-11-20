@@ -145,6 +145,8 @@ def make(path, rig):
     fm = cv2.GaussianBlur(cv2.dilate(mask, np.ones((3, 3), np.uint8), iterations=2).astype(np.float32), (0, 0), max(1.0, hh_min * 0.15))[..., None]
     fm = np.clip(fm * 1.3, 0, 1)
     out = np.clip(fill * fm + f * (1 - fm), 0, 255).astype(np.uint8)
+    if rig.get('lid_swap'):
+        out = draw_closed(out, crop, geo, x0, y0, xx, yy, mask, rig)
     os.makedirs(OUT, exist_ok=True)
     name = os.path.splitext(os.path.basename(src))[0] + '_lid.png'
     # alpha = where the eye was removed (soft): the shader only corrects colours there
@@ -154,6 +156,36 @@ def make(path, rig):
     Image.fromarray(np.dstack([out, alpha]), 'RGBA').save(os.path.join(OUT, name), optimize=True)
     rig['lid'] = ['res://%s/%s' % (OUT, name), round(x0 / W, 5), round(y0 / H, 5), round((x1 - x0) / W, 5), round((y1 - y0) / H, 5)]
     return name
+
+
+def draw_closed(out, crop, geo, x0, y0, xx, yy, mask, rig):
+    """Paints a clean closed eye onto the skin fill: an anti-aliased lash curve that sags a little in the
+    middle, thick in the centre and tapering at both corners, in the art's own lash colour, with a soft
+    shadow under it. Used for 'lid_swap' rigs: the blink cross-fades to this picture (no half-lid frames)."""
+    rgb = crop[..., :3].astype(np.float32)
+    lum = rgb @ np.array([0.3, 0.55, 0.15], np.float32)
+    o = out.astype(np.float32)
+    for cx, cy, ang, hw, hh in geo:
+        dx, dy = xx + x0 - cx, yy + y0 - cy
+        lx = math.cos(ang) * dx + math.sin(ang) * dy
+        ly = -math.sin(ang) * dx + math.cos(ang) * dy
+        qx = lx / hw
+        eye = (np.abs(qx) < 1.0) & (np.abs(ly) < hh * 1.6)
+        dk = rgb[eye & (lum < np.percentile(lum[eye], 12))] if eye.any() else rgb.reshape(-1, 3)
+        lash = np.median(dk, 0) * 0.85
+        arc = arc_of(qx)
+        sag = float(rig.get('lid_sag', 0.32))
+        yc = hh * (0.18 + sag * arc)                       # closing line, lowest in the middle (px, local)
+        thick = max(1.6, hh * float(rig.get('lid_thick', 0.30))) * (0.35 + 0.65 * arc ** 0.6)
+        d = np.abs(ly - yc)
+        a_line = np.clip(thick * 0.5 - d + 0.6, 0, 1) * np.clip((1.06 - np.abs(qx)) * 8, 0, 1)
+        # soft shadow just under the line and a faint crease above
+        sh = np.clip(1 - (ly - yc - thick * 0.5) / (hh * 0.55), 0, 1) * (ly > yc) * np.clip((1.0 - np.abs(qx)) * 3, 0, 1)
+        cr = np.exp(-((ly - (yc - hh * 0.9)) / (hh * 0.25)) ** 2) * np.clip((0.8 - np.abs(qx)) * 3, 0, 1)
+        o *= (1 - 0.13 * sh)[..., None]
+        o *= (1 - 0.06 * cr)[..., None]
+        o = o * (1 - a_line[..., None]) + lash * a_line[..., None]
+    return np.clip(o, 0, 255).astype(np.uint8)
 
 
 def main():
