@@ -17,7 +17,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Angela",
         "title": "SERAPHIC VALKYRIE",
         "element": "LIGHT",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_angela.jpg",
         "tone": "Radiant Celestial Gold, Sunburst Amber & Luminous White",
         "concept": "Heavenly floating sanctuary high above endless golden clouds, glowing gold marble pillars, sunburst rays of holy light, and drifting white feathers."
@@ -26,7 +26,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Aqua",
         "title": "CHALICE OF THE TIDES",
         "element": "WATER",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_aqua.jpg",
         "tone": "Pure Aquamarine, Crystal Cyan & Soft Turquoise Water",
         "concept": "Sacred tidal water sanctuary, stepped crystal pools overflowing with pristine aquamarine healing waters, white lotus, and cyan mist."
@@ -35,7 +35,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Atalanta",
         "title": "THUNDERSTEP HUNTRESS",
         "element": "LIGHTNING",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_atalanta.jpg",
         "tone": "Electric Sky Blue, Cyan Lightning & Tempest Indigo",
         "concept": "Rugged stormy mountain ridge at twilight with dramatic electric sky-blue lightning bolts leaping across dark tempest clouds."
@@ -44,7 +44,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Cthollia",
         "title": "ABYSS TENTACLE SOVEREIGN",
         "element": "WATER",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_cthollia.jpg",
         "tone": "Bioluminescent Deep Rose Pink, Neon Magenta & Abyssal Violet",
         "concept": "Sunken abyssal temple with glowing bioluminescent deep pink/magenta corals and colossal glowing pink tentacles in deep ocean waters."
@@ -71,7 +71,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Fidelia",
         "title": "VALKYRIE TIDAL SHIELD",
         "element": "WATER",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_fidelia.jpg",
         "tone": "Radiant Azure Blue, Pure White Marble & Silver Dawn",
         "concept": "Majestic valkyrie coastal fortress terrace, grand white marble spires and silver arches overlooking vivid azure waves crashing on sea cliffs."
@@ -89,7 +89,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Gala",
         "title": "NEBULA FLAME TEMPTRESS",
         "element": "FIRE",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_gala.jpg",
         "tone": "Swirling Cosmic Orange Flame, Fiery Amber & Violet Cosmos",
         "concept": "Cosmic flame festival terrace overlooking swirling deep orange nebula cosmos, glowing fire lanterns and fiery braziers over water."
@@ -98,7 +98,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Gemora",
         "title": "COSMIC VOID ENVOY",
         "element": "LIGHTNING",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_gemora.jpg",
         "tone": "Deep Violet Purple, Electric Magenta & Cosmic Obsidian",
         "concept": "Alien space station command bridge with panoramic observation windows overlooking a swirling deep violet and neon magenta cosmic nebula."
@@ -134,7 +134,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Kali",
         "title": "HUNDRED BLADE SAINT",
         "element": "WIND",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_kali.jpg",
         "tone": "Monochrome Steel Grey, Charcoal Mist & Crimson Autumn Accents",
         "concept": "Ancient Japanese sword cemetery in misty bamboo forest, hundreds of masterwork steel katanas planted in stone mounds with fluttering crimson leaves."
@@ -170,7 +170,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Lumeira",
         "title": "ASTRAL BUTTERFLY SAGE",
         "element": "WIND",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_lumeira.jpg",
         "tone": "Radiant Emerald Teal, Jade Green & Luminous Mint",
         "concept": "Enchanted astral butterfly grove, glowing giant emerald-teal mushrooms, weeping willows with bioluminescent jade vines, and dancing spirit butterflies."
@@ -188,7 +188,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Micca Pandora",
         "title": "CHAOS BOX SOVEREIGN",
         "element": "CHAOS",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_micca.jpg",
         "tone": "Vivid Hot Pink, Magenta & Pastel Wonderland",
         "concept": "Whimsical surreal chaos toybox dreamland, glowing Pandora jack-in-the-boxes, floating pink stardust, ribbons, playing cards, and neon dice."
@@ -206,7 +206,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Morana",
         "title": "THE BLACK PRIESTESS",
         "element": "DARK",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_morana.jpg",
         "tone": "Midnight Obsidian, Gothic Violet-Charcoal & Eerie Candlelight",
         "concept": "Black Chapel interior, soaring gothic obsidian ribbed vaults, tall black candelabras with flickering violet-amber candles, incense mist, and stained glass."
@@ -296,7 +296,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Sven",
         "title": "GREATSWORD WANDERER",
         "element": "EARTH",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_sven.jpg",
         "tone": "Earthy Cedar Brown, Campfire Amber & Mountain Dusk",
         "concept": "Lone rugged warrior campsite in pine wilderness at dusk, crackling amber campfire with warm embers, timber lean-to, and misty mountain silhouettes."
@@ -323,7 +323,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Valeria",
         "title": "FROSTVALE EMPRESS",
         "element": "ICE",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_valeria.jpg",
         "tone": "Roman Imperial Bronze, Burnished Gold & Crimson Velvet",
         "concept": "Majestic Roman imperial gladiator fortress terrace and grand arena pavilion, classical marble arches, crimson banners, bronze braziers, and golden hour sunset."
@@ -341,7 +341,7 @@ HERO_BACKGROUND_CATALOG = {
         "name": "Xylia",
         "title": "ARCH-DEMON ARCHITECT",
         "element": "DARK",
-        "status": "QUEUED_FOR_REGEN",
+        "status": "COMPLETED (COLOR MATCHED)",
         "file": "bg_xylia.jpg",
         "tone": "Deep Amethyst Violet, Nether Purple & Obsidian Sanctum",
         "concept": "Arch-demon grand gothic sanctum and arcane workshop, soaring obsidian vaulted cathedral arches, glowing purple runic blueprints, and dark maroon banners."
