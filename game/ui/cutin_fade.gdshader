@@ -5,6 +5,6 @@ uniform float fade_from = 0.46;   // screen x (0..1) where the fade starts
 uniform float fade_to = 0.58;     // screen x where the art is fully gone
 
 void fragment() {
-	COLOR = texture(TEXTURE, UV) * COLOR;
+	// COLOR already holds the texture colour times modulate (Godot 4): only the alpha is faded
 	COLOR.a *= 1.0 - smoothstep(fade_from, fade_to, SCREEN_UV.x);
 }

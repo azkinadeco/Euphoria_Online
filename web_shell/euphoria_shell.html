@@ -122,26 +122,6 @@ body {
 		linear-gradient(180deg, rgba(7, 4, 14, 0.6) 0%, rgba(7, 4, 14, 0) 22%);
 }
 
-#ld-hero {
-	position: absolute;
-	right: calc(var(--lw) * 0.05);
-	bottom: 0;
-	height: calc(var(--lh) * 0.97);
-	width: calc(var(--lw) * 0.5);
-	object-fit: contain;
-	object-position: 50% 100%;
-	opacity: 0;
-	transform: translate3d(calc(var(--lw) * 0.04), 0, 0);
-	transition: opacity 0.7s ease, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
-	filter: drop-shadow(0 0 26px rgba(10, 4, 24, 0.75));
-	pointer-events: none;
-}
-
-#ld-hero.on {
-	opacity: 1;
-	transform: translate3d(0, 0, 0);
-}
-
 #ld-logo {
 	position: absolute;
 	top: calc(var(--lh) * 0.035);
@@ -464,7 +444,6 @@ window.addEventListener('orientationchange', function () { setTimeout(eoFit, 60)
 		<div id="status">
 			<div class="ld-bg" id="ld-bg-a"></div>
 			<div class="ld-bg" id="ld-bg-b"></div>
-			<img id="ld-hero" alt="">
 			<div class="ld-shade"></div>
 			<img id="ld-logo" src="loading/logo.webp" alt="Euphoria Online" onerror="this.style.display='none'">
 			<div id="status-container">
@@ -590,21 +569,11 @@ const engine = new Engine(GODOT_CONFIG);
 	const statusFill = document.getElementById('status-fill');
 	const statusContainer = document.getElementById('status-container');
 
-	// ---- slideshow: an in-game map with a hero in front of it, so the wait is not a blank bar ----
-	const SLIDES = [
-		{ id: 'shina', name: 'Shina', title: 'DRAGONIC FLAME MONARCH', elem: 'FIRE', quote: 'The dragon flame inside me burns for you alone, Commander.' },
-		{ id: 'angela', name: 'Angela', title: 'SERAPHIC VALKYRIE', elem: 'LIGHT', quote: 'The heavens sent me to guard you. ...I volunteered, actually.' },
-		{ id: 'valeria', name: 'Valeria', title: 'FROSTVALE EMPRESS', elem: 'ICE', quote: 'The frost never bothers me. Your absence does.' },
-		{ id: 'xylia', name: 'Xylia', title: 'ARCH-DEMON ARCHITECT', elem: 'DARK', quote: 'Every empire needs an architect. I chose to build mine around you.' },
-		{ id: 'lumeira', name: 'Lumeira', title: 'ASTRAL BUTTERFLY SAGE', elem: 'WIND', quote: 'The butterflies say today will be a lucky day!' },
-		{ id: 'morana', name: 'Morana', title: 'THE BLACK PRIESTESS', elem: 'DARK', quote: 'Confess, Commander. ...No, not your sins. Your feelings.' },
-		{ id: 'kali', name: 'Kali', title: 'HUNDRED BLADE SAINT', elem: 'WIND', quote: 'A hundred blades, one heart. Guess who it belongs to.' },
-		{ id: 'atalanta', name: 'Atalanta', title: 'THUNDERSTEP HUNTRESS', elem: 'LIGHTNING', quote: 'Try to keep up, Commander! Ah, too slow~' },
-	];
+	// ---- slideshow: in-game maps only (no heroes on the download screen) ----
+	const SLIDES = ['forest', 'aqua', 'dragonfire', 'asgard', 'frost', 'bigtree', 'necro', 'galaxy', 'dino', 'outland'];
 	const ELEM_COLOR = { FIRE: '#ff6b4a', WATER: '#4ab3ff', ICE: '#9fe3ff', WIND: '#5ee39a', LIGHTNING: '#b78cff', EARTH: '#d9a35b', LIGHT: '#ffe27a', DARK: '#b072ff', CHAOS: '#ff5fb4' };
 	const SLIDE_MS = 7000;
 	const bgs = [document.getElementById('ld-bg-a'), document.getElementById('ld-bg-b')];
-	const heroEl = document.getElementById('ld-hero');
 	const dotsEl = document.getElementById('ld-dots');
 	let slideIdx = Math.floor(Math.random() * SLIDES.length);
 	let bgTurn = 0;
@@ -628,15 +597,12 @@ const engine = new Engine(GODOT_CONFIG);
 			return;
 		}
 		slideBusy = true;
-		const sl = SLIDES[i];
-		const bgSrc = 'loading/bg_' + sl.id + '.jpg';
-		const heroSrc = 'loading/hero_' + sl.id + '.webp';
-		Promise.all([loadImage(bgSrc), loadImage(heroSrc)]).then(function (ok) {
+		const bgSrc = 'loading/map_' + SLIDES[i] + '.jpg';
+		loadImage(bgSrc).then(function (ok) {
 			if (slidesStopped) {
-				return;
+				return; // the game started meanwhile: the loading screen is gone
 			}
-			heroEl.classList.remove('on');
-			if (ok[0]) {
+			if (ok) {
 				const next = bgs[bgTurn % 2];
 				const prev = bgs[(bgTurn + 1) % 2];
 				next.style.backgroundImage = 'url("' + bgSrc + '")';
@@ -644,23 +610,12 @@ const engine = new Engine(GODOT_CONFIG);
 				prev.classList.remove('on');
 				bgTurn++;
 			}
-			setTimeout(function () {
-				if (slidesStopped) {
-					return; // the game started meanwhile: the loading screen is gone
-				}
-				if (ok[1]) {
-					heroEl.src = heroSrc;
-					heroEl.classList.add('on');
-				}
-				for (let d = 0; d < dotsEl.children.length; d++) {
-					dotsEl.children[d].className = d === i ? 'on' : '';
-				}
-				slideBusy = false;
-				// warm the cache for the next one
-				const nx = SLIDES[(i + 1) % SLIDES.length];
-				loadImage('loading/bg_' + nx.id + '.jpg');
-				loadImage('loading/hero_' + nx.id + '.webp');
-			}, 520);
+			for (let d = 0; d < dotsEl.children.length; d++) {
+				dotsEl.children[d].className = d === i ? 'on' : '';
+			}
+			slideBusy = false;
+			// warm the cache for the next one
+			loadImage('loading/map_' + SLIDES[(i + 1) % SLIDES.length] + '.jpg');
 		});
 	}
 

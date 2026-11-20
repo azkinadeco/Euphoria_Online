@@ -101,6 +101,13 @@ func _check() -> void:
 			_mat.set_shader_parameter(k, rig[k])
 	if not rig.has("lid_reach"):
 		_mat.set_shader_parameter("lid_reach", 1.0)
+	# painted lid texture of this art (tools/make_lids.py): ["res://art/lids/<art>_lid.png", x, y, w, h]
+	var lid: Array = rig.get("lid", [])
+	if lid.size() == 5 and ResourceLoader.exists(str(lid[0])):
+		_mat.set_shader_parameter("lid_tex", load(str(lid[0])))
+		_mat.set_shader_parameter("lid_rect", Vector4(lid[1], lid[2], lid[3], lid[4]))
+	else:
+		_mat.set_shader_parameter("lid_rect", Vector4.ZERO)
 	if not rig.has("skin_hint"):
 		_mat.set_shader_parameter("skin_hint", Color(0, 0, 0, 0))
 	if not rig.has("blush"):

@@ -206,6 +206,7 @@ func _render_well() -> void:
 	glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	glow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	glow.modulate = Color(col.r, col.g, col.b, 0.55)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE   # spins over the buttons around the well
 	var gm := CanvasItemMaterial.new()
 	gm.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	glow.material = gm

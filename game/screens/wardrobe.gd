@@ -73,6 +73,7 @@ func build() -> void:
 	glow.anchor_right = 0.7
 	glow.anchor_bottom = 1.0
 	glow.modulate = Color(1, 0.85, 0.6, 0.5)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE   # it spins: its corners sweep over the skin list and buttons
 	var gm := CanvasItemMaterial.new()
 	gm.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	glow.material = gm

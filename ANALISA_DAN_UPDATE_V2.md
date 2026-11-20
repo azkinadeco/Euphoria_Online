@@ -1262,6 +1262,14 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2yy. Batch 257 (20 Nov 2026): kelopak lukis, kedipan semua form, cut-in terang, Wardrobe bisa dipencet, loading = maps
+- **Wardrobe**: cahaya `rays.png` yang berputar memblokir klik tombol → `mouse_filter = IGNORE` (juga di Forge).
+- **Cut-in ultimate gelap**: `cutin_fade.gdshader` mengalikan warna tekstur dua kali (COLOR di Godot 4 sudah berisi tekstur×modulate). Sekarang hanya alpha yang di-fade; kecerahan kembali sama seperti sebelum batch 255 (diukur: 134.8 → 135.1).
+- **Loading download**: hanya peta (10 map, `tools/make_maps_loading.py` → `web_shell/loading/map_*.jpg`); hero dan file `hero_*.webp`/`bg_<hero>.jpg` dihapus dari shell.
+- **Kedipan "painted lid"**: `tools/make_lids.py` membuat crop sekitar mata dengan mata + bulu mata atas di-inpaint (OpenCV Telea + blur, alpha = area yang dihapus) → `art/lids/<art>_lid.png`, rig mendapat `lid: [path, x, y, w, h]`. `char_rig.gdshader` (`lid_tex`, `lid_rect`) mengambil warna kelopak dari situ, jadi bayangan, blush, dan rambut tipis tetap ada. Dengan lid, sudut mata dan tepi bawah ikut tertutup (`side_l`, `inside_l`). Opsi rig `lid_tone` (Sharas, Vila) mengembalikan isian keruh ke warna pipi.
+- **Semua form berkedip**: Kyra stage2/3, Tora stage2/evo1-3 (mata yang terlihat), Sharas semua form (mata kedua ditambah), Yumi semua form, Toka evo1, Vila evo1, Fuji stage2; skin Eropatra (base, alt1-5, alt12-14), Angela alt3, Mei (mata kiri diperbaiki), Rubby. Pose alternatif skin Eropatra alt6-11 (pose beda) tanpa kedip.
+- Alat: `tools/blink_sheet.gd` (8 art: buka/tutup; `ZOOM=0.3` = skala game), `tools/rig_motion.gd`.
+
 ## 2xx. Batch 255 (20 Nov 2026): rarity baru, skin jadi evo terakhir, Glytta bersih, kedipan & 2.5D hero baru
 - **Rarity** (dokumen "Rarerity Hero 16 nov 2026.docx" versi 20 Nov): Sven SSR→LR, Eropatra SSR→UR, Tamo LR→UR, Tora LR→SSR, Vila SSR→SR, Vexira SR→N. Rate: LR 0,01%, MR 0,001%, GR 0,0001%, OR 0,00001% (`DB.RARITY_RATE`); `gacha.rate_text` kini 6 desimal. Pity 80 tetap memberi LR. Dokumen menulis Tsundae di SR dan R; dipakai SR.
 - **Wardrobe**: skin spesial Ning Er, Spimei, Luby, Morana, Tamo dipindah ke state `evo<n>` terakhir (file `*_char_special.png` → `*_char_evo<n>.png`, rig/face crop/depth ikut). Index outfit tidak berubah, jadi save yang sudah membeli tetap terbuka lewat `skins_bought`. `DB.SPECIAL_SKINS` sisa 5 (Hyeonxa, Angela, Mei, Eropatra, Rubby); slide lobby WARDROBE memakai Eropatra.

@@ -110,7 +110,14 @@
 0.85,
 1.0
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/aura_char_stage1_lid.png",
+0.30596,
+0.10083,
+0.22383,
+0.09
+]
 },
 "res://art/characters/heroes/aura/char/aura_char_stage2.png": {
 "head": [
@@ -193,7 +200,14 @@
 0.85,
 1.0
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/aura_char_stage2_lid.png",
+0.31621,
+0.10083,
+0.22311,
+0.09
+]
 },
 "res://art/characters/heroes/aura/char/aura_char_evo1.png": {
 "head": [
@@ -296,7 +310,14 @@
 0.85,
 1.0
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/aura_char_evo1_lid.png",
+0.35879,
+0.1075,
+0.16242,
+0.08667
+]
 },
 "res://art/characters/heroes/fuji/char/fuji_char_stage1.png": {
 "head": [
@@ -360,7 +381,14 @@
 2
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/fuji_char_stage1_lid.png",
+0.43529,
+0.14167,
+0.08382,
+0.04667
+]
 },
 "res://art/characters/heroes/fuji/char/fuji_char_stage2.png": {
 "head": [
@@ -381,7 +409,24 @@
 0.62
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.455,
+0.178,
+0.488,
+0.177,
+0.171,
+0.185
+],
+[
+0.536,
+0.172,
+0.572,
+0.17,
+0.165,
+0.18
+]
+],
 "bones": [
 [
 0.6,
@@ -413,6 +458,13 @@
 0.6,
 2
 ]
+],
+"lid": [
+"res://art/lids/fuji_char_stage2_lid.png",
+0.41967,
+0.13917,
+0.18975,
+0.07
 ]
 },
 "res://art/characters/heroes/fuji/char/fuji_char_stage3.png": {
@@ -473,6 +525,13 @@
 0.9,
 1
 ]
+],
+"lid": [
+"res://art/lids/fuji_char_stage3_lid.png",
+0.42459,
+0.16,
+0.17285,
+0.06
 ]
 },
 "res://art/characters/heroes/kyra/char/kyra_char_stage1.png": {
@@ -556,7 +615,14 @@
 1.0,
 0.5
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/kyra_char_stage1_lid.png",
+0.38031,
+0.18667,
+0.24497,
+0.08833
+]
 },
 "res://art/characters/heroes/kyra/char/kyra_char_evo3.png": {
 "head": [
@@ -649,7 +715,14 @@
 1.0,
 0.5
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/kyra_char_evo3_lid.png",
+0.38154,
+0.18583,
+0.24917,
+0.085
+]
 },
 "res://art/characters/heroes/sharas/char/sharas_char_stage1.png": {
 "head": [
@@ -679,7 +752,14 @@
 0.174,
 0.184
 ],
-[]
+[
+0.49,
+0.192,
+0.514,
+0.19,
+0.187,
+0.198
+]
 ],
 "bones": [
 [
@@ -723,7 +803,15 @@
 3
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.35,
+"lid_tone": true,
+"lid": [
+"res://art/lids/sharas_char_stage1_lid.png",
+0.41565,
+0.15667,
+0.12225,
+0.06083
+]
 },
 "res://art/characters/heroes/sharas/char/sharas_char_evo1.png": {
 "head": [
@@ -744,7 +832,24 @@
 0.47
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.452,
+0.1815,
+0.478,
+0.1795,
+0.1765,
+0.1875
+],
+[
+0.515,
+0.195,
+0.537,
+0.193,
+0.19,
+0.1995
+]
+],
 "bones": [
 [
 0.45,
@@ -798,6 +903,15 @@
 1.0,
 0.8,
 0.3
+],
+"lid_reach": 0.35,
+"lid_tone": true,
+"lid": [
+"res://art/lids/sharas_char_evo1_lid.png",
+0.43023,
+0.1575,
+0.12558,
+0.05833
 ]
 },
 "res://art/characters/heroes/toka/char/toka_char_stage1.png": {
@@ -879,7 +993,14 @@
 3
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/toka_char_stage1_lid.png",
+0.32454,
+0.13083,
+0.28348,
+0.18583
+]
 },
 "res://art/characters/heroes/toka/char/toka_char_stage2.png": {
 "head": [
@@ -977,7 +1098,14 @@
 0.3,
 0.2
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/toka_char_stage2_lid.png",
+0.32371,
+0.13333,
+0.28785,
+0.18417
+]
 },
 "res://art/characters/heroes/toka/char/toka_char_evo1.png": {
 "head": [
@@ -998,7 +1126,24 @@
 0.65
 ],
 "chest_w": 0.09,
-"eyes": [],
+"eyes": [
+[
+0.404,
+0.226,
+0.452,
+0.226,
+0.209,
+0.243
+],
+[
+0.497,
+0.244,
+0.548,
+0.243,
+0.228,
+0.262
+]
+],
 "bones": [
 [
 0.35,
@@ -1047,6 +1192,14 @@
 1.0,
 0.3,
 0.2
+],
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/toka_char_evo1_lid.png",
+0.3425,
+0.15083,
+0.26565,
+0.16917
 ]
 },
 "res://art/characters/heroes/tora/char/tora_char_stage1.png": {
@@ -1077,7 +1230,14 @@
 0.1725,
 0.1835
 ],
-[]
+[
+0.613,
+0.173,
+0.64,
+0.168,
+0.1655,
+0.1765
+]
 ],
 "bones": [
 [
@@ -1111,7 +1271,14 @@
 2
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/tora_char_stage1_lid.png",
+0.52687,
+0.14667,
+0.14328,
+0.05583
+]
 },
 "res://art/characters/heroes/tsundae/char/tsundae_char_stage1.png": {
 "head": [
@@ -1193,6 +1360,13 @@
 0.4,
 0.6,
 1.0
+],
+"lid": [
+"res://art/lids/tsundae_char_stage1_lid.png",
+0.45342,
+0.09083,
+0.1941,
+0.07417
 ]
 },
 "res://art/characters/heroes/tsundae/char/tsundae_char_stage2.png": {
@@ -1263,6 +1437,13 @@
 1.0,
 2
 ]
+],
+"lid": [
+"res://art/lids/tsundae_char_stage2_lid.png",
+0.45201,
+0.09083,
+0.19195,
+0.07333
 ]
 },
 "res://art/characters/heroes/vila/char/vila_char_stage1.png": {
@@ -1337,7 +1518,15 @@
 3
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid_tone": true,
+"lid": [
+"res://art/lids/vila_char_stage1_lid.png",
+0.35728,
+0.06833,
+0.08738,
+0.03833
+]
 },
 "res://art/characters/heroes/vila/char/vila_char_stage2.png": {
 "head": [
@@ -1411,7 +1600,15 @@
 3
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid_tone": true,
+"lid": [
+"res://art/lids/vila_char_stage2_lid.png",
+0.43952,
+0.11333,
+0.05508,
+0.0425
+]
 },
 "res://art/characters/heroes/vila/char/vila_char_evo1.png": {
 "head": [
@@ -1432,7 +1629,17 @@
 0.48
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[],
+[
+0.452,
+0.174,
+0.478,
+0.172,
+0.17,
+0.177
+]
+],
 "bones": [
 [
 0.35,
@@ -1491,6 +1698,14 @@
 1.0,
 0.4,
 0.15
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/vila_char_evo1_lid.png",
+0.44111,
+0.15583,
+0.04778,
+0.03583
 ]
 },
 "res://art/characters/heroes/yumi/char/yumi_char_stage1.png": {
@@ -1512,7 +1727,24 @@
 0.52
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.384,
+0.209,
+0.412,
+0.218,
+0.205,
+0.226
+],
+[
+0.455,
+0.181,
+0.5,
+0.186,
+0.1775,
+0.1935
+]
+],
 "bones": [
 [
 0.35,
@@ -1565,7 +1797,14 @@
 4
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/yumi_char_stage1_lid.png",
+0.31429,
+0.15,
+0.22707,
+0.1125
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special.png": {
 "head": [
@@ -1666,7 +1905,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_lid.png",
+0.40719,
+0.0825,
+0.15355,
+0.07083
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt3.png": {
 "head": [
@@ -1687,7 +1933,24 @@
 0.62
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.396,
+0.1375,
+0.432,
+0.1397,
+0.1317,
+0.1434
+],
+[
+0.477,
+0.1434,
+0.513,
+0.1463,
+0.1368,
+0.15
+]
+],
 "bones": [
 [
 0.38,
@@ -1729,6 +1992,14 @@
 0.6,
 3
 ]
+],
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt3_lid.png",
+0.38115,
+0.11083,
+0.14959,
+0.06167
 ]
 },
 "res://art/characters/heroes/mei/char/mei_char_special.png": {
@@ -1752,12 +2023,12 @@
 "chest_w": 0.07,
 "eyes": [
 [
-0.563,
-0.0835,
-0.588,
-0.0825,
-0.0795,
-0.0875
+0.558,
+0.0815,
+0.589,
+0.08,
+0.0755,
+0.0865
 ],
 [
 0.624,
@@ -1790,7 +2061,14 @@
 1
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/mei_char_special_lid.png",
+0.52853,
+0.05667,
+0.15165,
+0.06
+]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special.png": {
 "head": [
@@ -1811,7 +2089,24 @@
 0.55
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.481,
+0.247,
+0.503,
+0.239,
+0.235,
+0.251
+],
+[
+0.532,
+0.228,
+0.56,
+0.219,
+0.215,
+0.233
+]
+],
 "bones": [
 [
 0.3,
@@ -1883,6 +2178,14 @@
 0.07,
 0.008
 ]
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_lid.png",
+0.45833,
+0.18407,
+0.125,
+0.09469
 ]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt1.png": {
@@ -1904,7 +2207,24 @@
 0.5
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.464,
+0.196,
+0.49,
+0.192,
+0.187,
+0.201
+],
+[
+0.522,
+0.177,
+0.547,
+0.173,
+0.169,
+0.182
+]
+],
 "bones": [
 [
 0.35,
@@ -1953,6 +2273,14 @@
 1.0,
 0.6,
 0.2
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_alt1_lid.png",
+0.43559,
+0.14667,
+0.13646,
+0.07833
 ]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt12.png": {
@@ -1974,7 +2302,24 @@
 0.45
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.453,
+0.17,
+0.481,
+0.166,
+0.16,
+0.175
+],
+[
+0.499,
+0.156,
+0.523,
+0.152,
+0.148,
+0.16
+]
+],
 "bones": [
 [
 0.35,
@@ -2013,6 +2358,14 @@
 1.0,
 0.6,
 0.2
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_alt12_lid.png",
+0.42261,
+0.1275,
+0.12404,
+0.07333
 ]
 },
 "res://art/characters/heroes/rubby/char/rubby_char_special.png": {
@@ -2084,7 +2437,14 @@
 2
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/rubby_char_special_lid.png",
+0.39721,
+0.12333,
+0.18293,
+0.055
+]
 },
 "res://art/characters/heroes/aura/char/aura_char_stage3.png": {
 "head": [
@@ -2167,7 +2527,14 @@
 0.85,
 1.0
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/aura_char_stage3_lid.png",
+0.30844,
+0.10083,
+0.22565,
+0.09
+]
 },
 "res://art/characters/heroes/aura/char/aura_char_evo2.png": {
 "head": [
@@ -2270,7 +2637,14 @@
 0.85,
 1.0
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/aura_char_evo2_lid.png",
+0.35956,
+0.10667,
+0.16223,
+0.0875
+]
 },
 "res://art/characters/heroes/kyra/char/kyra_char_stage2.png": {
 "head": [
@@ -2291,7 +2665,24 @@
 0.6823
 ],
 "chest_w": 0.09,
-"eyes": [],
+"eyes": [
+[
+0.411,
+0.2288,
+0.469,
+0.2308,
+0.2217,
+0.2418
+],
+[
+0.553,
+0.2348,
+0.604,
+0.2318,
+0.2267,
+0.2418
+]
+],
 "bones": [
 [
 0.3799,
@@ -2336,7 +2727,14 @@
 1.0,
 0.5
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/kyra_char_stage2_lid.png",
+0.38058,
+0.1875,
+0.24442,
+0.08917
+]
 },
 "res://art/characters/heroes/kyra/char/kyra_char_stage3.png": {
 "head": [
@@ -2357,7 +2755,24 @@
 0.6871
 ],
 "chest_w": 0.09,
-"eyes": [],
+"eyes": [
+[
+0.4127,
+0.2303,
+0.4709,
+0.2323,
+0.2232,
+0.2435
+],
+[
+0.5553,
+0.2364,
+0.6066,
+0.2334,
+0.2283,
+0.2435
+]
+],
 "bones": [
 [
 0.3815,
@@ -2402,7 +2817,14 @@
 1.0,
 0.5
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/kyra_char_stage3_lid.png",
+0.38196,
+0.18833,
+0.2461,
+0.09
+]
 },
 "res://art/characters/heroes/kyra/char/kyra_char_evo1.png": {
 "head": [
@@ -2495,7 +2917,14 @@
 1.0,
 0.5
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/kyra_char_evo1_lid.png",
+0.38058,
+0.19167,
+0.24777,
+0.08417
+]
 },
 "res://art/characters/heroes/kyra/char/kyra_char_evo2.png": {
 "head": [
@@ -2588,7 +3017,14 @@
 1.0,
 0.5
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/kyra_char_evo2_lid.png",
+0.38058,
+0.19167,
+0.24777,
+0.08417
+]
 },
 "res://art/characters/heroes/sharas/char/sharas_char_stage2.png": {
 "head": [
@@ -2609,7 +3045,24 @@
 0.4735
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4406,
+0.1817,
+0.4731,
+0.1797,
+0.1757,
+0.1857
+],
+[
+0.4977,
+0.1938,
+0.5213,
+0.1918,
+0.1888,
+0.1998
+]
+],
 "bones": [
 [
 0.5075,
@@ -2652,7 +3105,15 @@
 3
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.35,
+"lid_tone": true,
+"lid": [
+"res://art/lids/sharas_char_stage2_lid.png",
+0.42413,
+0.15833,
+0.12067,
+0.06083
+]
 },
 "res://art/characters/heroes/sharas/char/sharas_char_evo2.png": {
 "head": [
@@ -2673,7 +3134,24 @@
 0.4699
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4487,
+0.185,
+0.4762,
+0.183,
+0.18,
+0.191
+],
+[
+0.5127,
+0.195,
+0.5348,
+0.193,
+0.19,
+0.1995
+]
+],
 "bones": [
 [
 0.4473,
@@ -2727,6 +3205,15 @@
 1.0,
 0.8,
 0.3
+],
+"lid_reach": 0.35,
+"lid_tone": true,
+"lid": [
+"res://art/lids/sharas_char_evo2_lid.png",
+0.42807,
+0.16083,
+0.12515,
+0.055
 ]
 },
 "res://art/characters/heroes/sharas/char/sharas_char_evo3.png": {
@@ -2748,7 +3235,24 @@
 0.4699
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4532,
+0.1851,
+0.4806,
+0.1831,
+0.1801,
+0.1911
+],
+[
+0.5168,
+0.1951,
+0.5387,
+0.1931,
+0.1901,
+0.1996
+]
+],
 "bones": [
 [
 0.4518,
@@ -2802,6 +3306,15 @@
 1.0,
 0.8,
 0.3
+],
+"lid_reach": 0.35,
+"lid_tone": true,
+"lid": [
+"res://art/lids/sharas_char_evo3_lid.png",
+0.43271,
+0.16083,
+0.12529,
+0.055
 ]
 },
 "res://art/characters/heroes/sharas/char/sharas_char_evo1_alt2.png": {
@@ -2823,7 +3336,24 @@
 0.4832
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4487,
+0.1866,
+0.4749,
+0.1845,
+0.1814,
+0.1927
+],
+[
+0.5121,
+0.2004,
+0.5343,
+0.1984,
+0.1953,
+0.2051
+]
+],
 "bones": [
 [
 0.4468,
@@ -2877,6 +3407,15 @@
 1.0,
 0.8,
 0.3
+],
+"lid_reach": 0.35,
+"lid_tone": true,
+"lid": [
+"res://art/lids/sharas_char_evo1_alt2_lid.png",
+0.42776,
+0.16167,
+0.12514,
+0.06083
 ]
 },
 "res://art/characters/heroes/toka/char/toka_char_stage3.png": {
@@ -2975,7 +3514,14 @@
 0.3,
 0.2
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/toka_char_stage3_lid.png",
+0.33598,
+0.14333,
+0.28246,
+0.18167
+]
 },
 "res://art/characters/heroes/toka/char/toka_char_stage3_alt1.png": {
 "head": [
@@ -2996,7 +3542,24 @@
 0.624
 ],
 "chest_w": 0.09,
-"eyes": [],
+"eyes": [
+[
+0.3942,
+0.2235,
+0.4474,
+0.2304,
+0.2077,
+0.2441
+],
+[
+0.4829,
+0.2481,
+0.536,
+0.25,
+0.2304,
+0.2658
+]
+],
 "bones": [
 [
 0.3261,
@@ -3056,7 +3619,14 @@
 0.3,
 0.2
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/toka_char_stage3_alt1_lid.png",
+0.32956,
+0.145,
+0.26818,
+0.18167
+]
 },
 "res://art/characters/heroes/tora/char/tora_char_stage2.png": {
 "head": [
@@ -3077,7 +3647,17 @@
 0.4832
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.632,
+0.172,
+0.668,
+0.168,
+0.165,
+0.176
+],
+[]
+],
 "bones": [
 [
 0.6011,
@@ -3110,7 +3690,14 @@
 2
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/tora_char_stage2_lid.png",
+0.60629,
+0.14583,
+0.08832,
+0.04917
+]
 },
 "res://art/characters/heroes/tora/char/tora_char_evo1.png": {
 "head": [
@@ -3131,7 +3718,17 @@
 0.4837
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.635,
+0.172,
+0.672,
+0.168,
+0.166,
+0.175
+],
+[]
+],
 "bones": [
 [
 0.6009,
@@ -3181,6 +3778,13 @@
 0.6,
 1.0,
 0.4
+],
+"lid": [
+"res://art/lids/tora_char_evo1_lid.png",
+0.61734,
+0.15,
+0.07175,
+0.04083
 ]
 },
 "res://art/characters/heroes/tora/char/tora_char_evo2.png": {
@@ -3202,7 +3806,17 @@
 0.4823
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.636,
+0.172,
+0.676,
+0.168,
+0.166,
+0.174
+],
+[]
+],
 "bones": [
 [
 0.5984,
@@ -3252,6 +3866,13 @@
 0.6,
 1.0,
 0.4
+],
+"lid": [
+"res://art/lids/tora_char_evo2_lid.png",
+0.61813,
+0.14917,
+0.07429,
+0.04167
 ]
 },
 "res://art/characters/heroes/tora/char/tora_char_evo3.png": {
@@ -3273,7 +3894,17 @@
 0.4807
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.64,
+0.171,
+0.68,
+0.168,
+0.165,
+0.174
+],
+[]
+],
 "bones": [
 [
 0.6014,
@@ -3323,6 +3954,13 @@
 0.6,
 1.0,
 0.4
+],
+"lid": [
+"res://art/lids/tora_char_evo3_lid.png",
+0.62239,
+0.14917,
+0.07463,
+0.04083
 ]
 },
 "res://art/characters/heroes/tsundae/char/tsundae_char_evo1.png": {
@@ -3425,6 +4063,13 @@
 1.0,
 0.7,
 0.3
+],
+"lid": [
+"res://art/lids/tsundae_char_evo1_lid.png",
+0.47407,
+0.12667,
+0.1763,
+0.06917
 ]
 },
 "res://art/characters/heroes/yumi/char/yumi_char_stage2.png": {
@@ -3446,7 +4091,24 @@
 0.5202
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.3793,
+0.2132,
+0.4075,
+0.2222,
+0.2092,
+0.2302
+],
+[
+0.4558,
+0.1812,
+0.501,
+0.1862,
+0.1777,
+0.1937
+]
+],
 "bones": [
 [
 0.3501,
@@ -3499,7 +4161,14 @@
 4
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/yumi_char_stage2_lid.png",
+0.30816,
+0.15,
+0.23414,
+0.11667
+]
 },
 "res://art/characters/heroes/yumi/char/yumi_char_evo1.png": {
 "head": [
@@ -3520,7 +4189,24 @@
 0.5202
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.378,
+0.2131,
+0.4061,
+0.2221,
+0.2091,
+0.2301
+],
+[
+0.4542,
+0.1811,
+0.4993,
+0.1861,
+0.1776,
+0.1936
+]
+],
 "bones": [
 [
 0.3489,
@@ -3573,7 +4259,14 @@
 4
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/yumi_char_evo1_lid.png",
+0.30723,
+0.15,
+0.23343,
+0.11583
+]
 },
 "res://art/characters/heroes/yumi/char/yumi_char_evo2.png": {
 "head": [
@@ -3594,7 +4287,24 @@
 0.5186
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.3784,
+0.2108,
+0.4064,
+0.2199,
+0.2068,
+0.2279
+],
+[
+0.4555,
+0.1788,
+0.5005,
+0.1838,
+0.1753,
+0.1913
+]
+],
 "bones": [
 [
 0.3504,
@@ -3647,7 +4357,14 @@
 4
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/yumi_char_evo2_lid.png",
+0.30781,
+0.1475,
+0.23423,
+0.11667
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt1.png": {
 "head": [
@@ -3668,7 +4385,24 @@
 0.5999
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4258,
+0.1142,
+0.4618,
+0.1122,
+0.1067,
+0.1207
+],
+[
+0.5059,
+0.1222,
+0.5419,
+0.1212,
+0.1152,
+0.1292
+]
+],
 "bones": [
 [
 0.2997,
@@ -3731,7 +4465,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt1_lid.png",
+0.40759,
+0.0825,
+0.15272,
+0.07083
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt2.png": {
 "head": [
@@ -3752,7 +4493,24 @@
 0.5999
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4259,
+0.1142,
+0.4619,
+0.1122,
+0.1067,
+0.1207
+],
+[
+0.506,
+0.1222,
+0.542,
+0.1212,
+0.1152,
+0.1292
+]
+],
 "bones": [
 [
 0.2998,
@@ -3815,7 +4573,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt2_lid.png",
+0.40759,
+0.0825,
+0.15272,
+0.07083
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt4.png": {
 "head": [
@@ -3836,7 +4601,24 @@
 0.6
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4261,
+0.114,
+0.4621,
+0.112,
+0.1065,
+0.1205
+],
+[
+0.5061,
+0.122,
+0.5421,
+0.121,
+0.115,
+0.129
+]
+],
 "bones": [
 [
 0.3,
@@ -3899,7 +4681,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt4_lid.png",
+0.40777,
+0.0825,
+0.15243,
+0.07083
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt5.png": {
 "head": [
@@ -3920,7 +4709,24 @@
 0.5999
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4259,
+0.1139,
+0.4619,
+0.1119,
+0.1064,
+0.1204
+],
+[
+0.5059,
+0.1219,
+0.5419,
+0.1209,
+0.1149,
+0.1289
+]
+],
 "bones": [
 [
 0.2999,
@@ -3983,7 +4789,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt5_lid.png",
+0.40777,
+0.0825,
+0.15243,
+0.07083
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt6.png": {
 "head": [
@@ -4004,7 +4817,24 @@
 0.5999
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4261,
+0.1139,
+0.4621,
+0.1119,
+0.1064,
+0.1204
+],
+[
+0.506,
+0.1219,
+0.542,
+0.121,
+0.1149,
+0.1289
+]
+],
 "bones": [
 [
 0.3001,
@@ -4067,7 +4897,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt6_lid.png",
+0.40816,
+0.0825,
+0.15258,
+0.07083
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt7.png": {
 "head": [
@@ -4088,7 +4925,24 @@
 0.5999
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.426,
+0.114,
+0.462,
+0.112,
+0.1065,
+0.1205
+],
+[
+0.506,
+0.122,
+0.542,
+0.121,
+0.115,
+0.129
+]
+],
 "bones": [
 [
 0.3,
@@ -4151,7 +5005,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt7_lid.png",
+0.40719,
+0.0825,
+0.15355,
+0.07083
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt8.png": {
 "head": [
@@ -4172,7 +5033,24 @@
 0.5998
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4261,
+0.1138,
+0.4621,
+0.1118,
+0.1063,
+0.1203
+],
+[
+0.5061,
+0.1218,
+0.5421,
+0.1208,
+0.1148,
+0.1288
+]
+],
 "bones": [
 [
 0.3001,
@@ -4235,7 +5113,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt8_lid.png",
+0.40816,
+0.0825,
+0.15258,
+0.07083
+]
 },
 "res://art/characters/heroes/angela/char/angela_char_special_alt9.png": {
 "head": [
@@ -4256,7 +5141,24 @@
 0.5998
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.426,
+0.1139,
+0.462,
+0.1119,
+0.1064,
+0.1204
+],
+[
+0.506,
+0.1219,
+0.542,
+0.1209,
+0.1149,
+0.1289
+]
+],
 "bones": [
 [
 0.3001,
@@ -4319,7 +5221,14 @@
 5
 ]
 ],
-"lid_reach": 0.45
+"lid_reach": 0.45,
+"lid": [
+"res://art/lids/angela_char_special_alt9_lid.png",
+0.40719,
+0.0825,
+0.15355,
+0.07083
+]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt2.png": {
 "head": [
@@ -4340,7 +5249,24 @@
 0.5
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.464,
+0.196,
+0.49,
+0.192,
+0.187,
+0.201
+],
+[
+0.522,
+0.177,
+0.547,
+0.173,
+0.169,
+0.182
+]
+],
 "bones": [
 [
 0.35,
@@ -4389,6 +5315,14 @@
 1.0,
 0.6,
 0.2
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_alt2_lid.png",
+0.43559,
+0.14667,
+0.13646,
+0.07833
 ]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt3.png": {
@@ -4410,7 +5344,24 @@
 0.5
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4648,
+0.196,
+0.4908,
+0.192,
+0.187,
+0.201
+],
+[
+0.5229,
+0.177,
+0.5479,
+0.173,
+0.169,
+0.182
+]
+],
 "bones": [
 [
 0.3506,
@@ -4459,6 +5410,14 @@
 1.0,
 0.6,
 0.2
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_alt3_lid.png",
+0.43716,
+0.14667,
+0.13661,
+0.07833
 ]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt4.png": {
@@ -4480,7 +5439,24 @@
 0.5
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4647,
+0.196,
+0.4908,
+0.192,
+0.187,
+0.201
+],
+[
+0.5228,
+0.177,
+0.5478,
+0.173,
+0.169,
+0.182
+]
+],
 "bones": [
 [
 0.3505,
@@ -4529,6 +5505,14 @@
 1.0,
 0.6,
 0.2
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_alt4_lid.png",
+0.43716,
+0.14667,
+0.13661,
+0.07833
 ]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt5.png": {
@@ -4550,7 +5534,24 @@
 0.5
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.464,
+0.196,
+0.49,
+0.192,
+0.187,
+0.201
+],
+[
+0.522,
+0.177,
+0.547,
+0.173,
+0.169,
+0.182
+]
+],
 "bones": [
 [
 0.35,
@@ -4599,6 +5600,14 @@
 1.0,
 0.6,
 0.2
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_alt5_lid.png",
+0.43559,
+0.14667,
+0.13646,
+0.07833
 ]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt6.png": {
@@ -4659,7 +5668,8 @@
 1.0,
 0.6,
 0.2
-]
+],
+"lid_reach": 0.6
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt7.png": {
 "head": [
@@ -4719,7 +5729,8 @@
 1.0,
 0.6,
 0.2
-]
+],
+"lid_reach": 0.6
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt8.png": {
 "head": [
@@ -4779,7 +5790,8 @@
 1.0,
 0.6,
 0.2
-]
+],
+"lid_reach": 0.6
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt9.png": {
 "head": [
@@ -4839,7 +5851,8 @@
 1.0,
 0.6,
 0.2
-]
+],
+"lid_reach": 0.6
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt10.png": {
 "head": [
@@ -4899,7 +5912,8 @@
 1.0,
 0.6,
 0.2
-]
+],
+"lid_reach": 0.6
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt11.png": {
 "head": [
@@ -4959,7 +5973,8 @@
 1.0,
 0.6,
 0.2
-]
+],
+"lid_reach": 0.6
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt13.png": {
 "head": [
@@ -4980,7 +5995,24 @@
 0.45
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.453,
+0.17,
+0.481,
+0.166,
+0.16,
+0.175
+],
+[
+0.499,
+0.156,
+0.523,
+0.152,
+0.148,
+0.16
+]
+],
 "bones": [
 [
 0.35,
@@ -5019,6 +6051,14 @@
 1.0,
 0.6,
 0.2
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_alt13_lid.png",
+0.42261,
+0.1275,
+0.12404,
+0.07333
 ]
 },
 "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt14.png": {
@@ -5040,7 +6080,24 @@
 0.4712
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4547,
+0.1753,
+0.4827,
+0.171,
+0.1647,
+0.1806
+],
+[
+0.5007,
+0.1604,
+0.5247,
+0.1562,
+0.152,
+0.1647
+]
+],
 "bones": [
 [
 0.3516,
@@ -5079,6 +6136,14 @@
 1.0,
 0.6,
 0.2
+],
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/eropatra_char_special_alt14_lid.png",
+0.42456,
+0.13,
+0.12383,
+0.07833
 ]
 },
 "res://art/characters/heroes/mei/char/mei_char_special_alt1.png": {
@@ -5100,7 +6165,24 @@
 0.4399
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.5587,
+0.0815,
+0.5898,
+0.08,
+0.0755,
+0.0865
+],
+[
+0.6248,
+0.093,
+0.6559,
+0.097,
+0.0895,
+0.0995
+]
+],
 "bones": [
 [
 0.6208,
@@ -5123,7 +6205,14 @@
 1
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/mei_char_special_alt1_lid.png",
+0.52932,
+0.05667,
+0.15188,
+0.06
+]
 },
 "res://art/characters/heroes/mei/char/mei_char_special_alt2.png": {
 "head": [
@@ -5144,7 +6233,24 @@
 0.4399
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.5579,
+0.0814,
+0.589,
+0.0799,
+0.0754,
+0.0864
+],
+[
+0.624,
+0.0929,
+0.655,
+0.0969,
+0.0894,
+0.0994
+]
+],
 "bones": [
 [
 0.62,
@@ -5167,7 +6273,14 @@
 1
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/mei_char_special_alt2_lid.png",
+0.52853,
+0.05667,
+0.15165,
+0.06
+]
 },
 "res://art/characters/heroes/mei/char/mei_char_special_alt3.png": {
 "head": [
@@ -5188,7 +6301,24 @@
 0.44
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.5581,
+0.0814,
+0.5891,
+0.0799,
+0.0754,
+0.0864
+],
+[
+0.6241,
+0.0929,
+0.6551,
+0.0969,
+0.0894,
+0.0994
+]
+],
 "bones": [
 [
 0.6201,
@@ -5211,7 +6341,14 @@
 1
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/mei_char_special_alt3_lid.png",
+0.52853,
+0.05667,
+0.15165,
+0.06
+]
 },
 "res://art/characters/heroes/mei/char/mei_char_special_alt4.png": {
 "head": [
@@ -5232,7 +6369,24 @@
 0.4396
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.5576,
+0.0801,
+0.5888,
+0.0785,
+0.074,
+0.0851
+],
+[
+0.6241,
+0.0916,
+0.6553,
+0.0956,
+0.0881,
+0.0981
+]
+],
 "bones": [
 [
 0.62,
@@ -5255,7 +6409,14 @@
 1
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/mei_char_special_alt4_lid.png",
+0.52861,
+0.055,
+0.15211,
+0.06083
+]
 },
 "res://art/characters/heroes/mei/char/mei_char_special_alt5.png": {
 "head": [
@@ -5276,7 +6437,24 @@
 0.4397
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.5572,
+0.0804,
+0.5884,
+0.0789,
+0.0744,
+0.0854
+],
+[
+0.6236,
+0.0919,
+0.6548,
+0.0959,
+0.0884,
+0.0984
+]
+],
 "bones": [
 [
 0.6196,
@@ -5299,7 +6477,14 @@
 1
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/mei_char_special_alt5_lid.png",
+0.52861,
+0.055,
+0.1506,
+0.06083
+]
 },
 "res://art/characters/heroes/mei/char/mei_char_special_alt6.png": {
 "head": [
@@ -5320,7 +6505,24 @@
 0.4396
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.5587,
+0.0807,
+0.5899,
+0.0792,
+0.0746,
+0.0857
+],
+[
+0.6252,
+0.0922,
+0.6564,
+0.0962,
+0.0887,
+0.0987
+]
+],
 "bones": [
 [
 0.6211,
@@ -5343,7 +6545,14 @@
 1
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/mei_char_special_alt6_lid.png",
+0.52941,
+0.055,
+0.15234,
+0.06083
+]
 },
 "res://art/characters/heroes/mei/char/mei_char_special_alt7.png": {
 "head": [
@@ -5364,7 +6573,24 @@
 0.4397
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.559,
+0.0806,
+0.5902,
+0.0791,
+0.0746,
+0.0856
+],
+[
+0.6255,
+0.0921,
+0.6567,
+0.0962,
+0.0886,
+0.0986
+]
+],
 "bones": [
 [
 0.6214,
@@ -5387,7 +6613,14 @@
 1
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/mei_char_special_alt7_lid.png",
+0.52941,
+0.05583,
+0.15234,
+0.06
+]
 },
 "res://art/characters/heroes/rubby/char/rubby_char_special_alt1.png": {
 "head": [
@@ -5408,7 +6641,24 @@
 0.4399
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4371,
+0.1509,
+0.4757,
+0.1529,
+0.1464,
+0.1579
+],
+[
+0.5152,
+0.1469,
+0.5557,
+0.1449,
+0.1414,
+0.1519
+]
+],
 "bones": [
 [
 0.1288,
@@ -5441,7 +6691,14 @@
 2
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/rubby_char_special_alt1_lid.png",
+0.40345,
+0.12333,
+0.18103,
+0.05417
+]
 },
 "res://art/characters/heroes/rubby/char/rubby_char_special_alt2.png": {
 "head": [
@@ -5462,7 +6719,24 @@
 0.44
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.437,
+0.151,
+0.4756,
+0.153,
+0.1465,
+0.158
+],
+[
+0.5151,
+0.147,
+0.5556,
+0.145,
+0.1415,
+0.152
+]
+],
 "bones": [
 [
 0.1286,
@@ -5495,7 +6769,14 @@
 2
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/rubby_char_special_alt2_lid.png",
+0.40345,
+0.12333,
+0.18103,
+0.055
+]
 },
 "res://art/characters/heroes/rubby/char/rubby_char_special_alt3.png": {
 "head": [
@@ -5516,7 +6797,24 @@
 0.44
 ],
 "chest_w": 0.07,
-"eyes": [],
+"eyes": [
+[
+0.4366,
+0.1511,
+0.4752,
+0.1531,
+0.1466,
+0.1581
+],
+[
+0.5148,
+0.1471,
+0.5554,
+0.145,
+0.1416,
+0.1521
+]
+],
 "bones": [
 [
 0.1279,
@@ -5549,6 +6847,13 @@
 2
 ]
 ],
-"lid_reach": 0.6
+"lid_reach": 0.6,
+"lid": [
+"res://art/lids/rubby_char_special_alt3_lid.png",
+0.40242,
+0.12333,
+0.18135,
+0.055
+]
 }
 }
