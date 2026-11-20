@@ -1262,6 +1262,12 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 2zz. Batch 258 (20 Nov 2026): ekspresi alternatif berkedip, kelopak tanpa kubah
+- 14 ekspresi alternatif hero baru (Aura, Fuji, Kyra, Sharas, Toka, Tora, Vila, Yumi) punya rig sendiri hasil transfer dari form dasarnya, jadi ikut berkedip (sebelumnya alt tanpa kedip).
+- Skin Eropatra pose alt6–11 diukur manual dan berkedip; semua 15 pose skin Eropatra berkedip.
+- Tora: mata kedua semua form diukur (stage1 kanan digeser, stage2/evo1–3 kiri ditambah); `lid_tone` untuk form bercahaya hijau. Yumi: mata kiri semua form digeser ke posisi sebenarnya.
+- Shader: dengan painted lid, tepi atas kelopak memudar sangat lembut (`smoothstep(top - 1.1, top + 0.1)`) dan gradasi gelap ke bulu mata dikurangi (0,97) → tidak ada garis "kubah" (Vila, Sharas).
+
 ## 2yy. Batch 257 (20 Nov 2026): kelopak lukis, kedipan semua form, cut-in terang, Wardrobe bisa dipencet, loading = maps
 - **Wardrobe**: cahaya `rays.png` yang berputar memblokir klik tombol → `mouse_filter = IGNORE` (juga di Forge).
 - **Cut-in ultimate gelap**: `cutin_fade.gdshader` mengalikan warna tekstur dua kali (COLOR di Godot 4 sudah berisi tekstur×modulate). Sekarang hanya alpha yang di-fade; kecerahan kembali sama seperti sebelum batch 255 (diukur: 134.8 → 135.1).

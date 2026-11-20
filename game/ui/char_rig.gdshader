@@ -266,9 +266,12 @@ void fragment() {
 		if (q.y < edge - lt) {
 			// upper lid (skin), a little darker toward the lash
 			float k = clamp((q.y - top) / max(edge - lt - top, 0.001), 0.0, 1.0);
-			vec3 col = lidc * mix(1.0, 0.9, smoothstep(0.4, 1.0, k) * bk);
-			// reaches above the measured top so the painted upper lash is covered too (eases in with the blink)
-			float w = smoothstep(top - 0.85 * lid_reach, top - 0.45 * lid_reach, q.y) * mix(side, side_l, lidw) * smoothstep(0.0, 0.25, bk);
+			vec3 col = lidc * mix(1.0, mix(0.9, 0.97, lidw), smoothstep(0.4, 1.0, k) * bk);
+			// reaches above the measured top so the painted upper lash is covered too (eases in with the blink).
+			// A painted lid equals the art outside the removed eye, so its top edge can fade out very softly
+			// (no dome-shaped outline above the closed eye).
+			float w = mix(smoothstep(top - 0.85 * lid_reach, top - 0.45 * lid_reach, q.y),
+					smoothstep(top - 1.1, top + 0.1, q.y), lidw) * mix(side, side_l, lidw) * smoothstep(0.0, 0.25, bk);
 			outc.rgb = mix(c.rgb, col, w * mix(pick, max(pick, inside_l), lidw));
 		} else if (q.y <= edge) {
 			// the lash line, carried down from its painted band
