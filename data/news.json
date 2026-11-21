@@ -1,5 +1,19 @@
 [
  {
+  "id": "n2026-11-21c",
+  "date": "2026-11-21",
+  "tag": "UPDATE",
+  "title": "Quick Feedback and Written Feedback",
+  "body": "After you clear Chapter 1, 3 and 6, the game asks once for a quick 1-5 rating with optional tags. You can also write longer feedback any time in Settings > PLAYTEST DATA > WRITE FEEDBACK. Everything stays in your playtest log on this device until you send it. Please don't write personal information."
+ },
+ {
+  "id": "n2026-11-21b",
+  "date": "2026-11-21",
+  "tag": "UPDATE",
+  "title": "Playtest Build",
+  "body": "This is a test build (shown on the title screen). The playtest log now also notes the build version, loading time, frame rate per screen, battles left half-way, story scenes skipped and moments where you ran out of Energy, Gold or Gems, so we can find what slows you down. From your second day of play the game may remind you to send the log."
+ },
+ {
   "id": "n2026-11-21a",
   "date": "2026-11-21",
   "tag": "UPDATE",

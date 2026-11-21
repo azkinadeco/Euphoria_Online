@@ -4,6 +4,8 @@
 set -e
 setopt NULL_GLOB
 GODOT=${GODOT:-/Users/apple/Downloads/Godot.app/Contents/MacOS/Godot}
+# build stamp for the playtest log (game/core/telemetry.gd): last commit + export date
+echo "{\"build\": \"$(git rev-parse --short HEAD 2>/dev/null || echo nogit)-$(date +%Y%m%d%H%M)\"}" > data/build.json
 $GODOT --headless --path . --export-release "Web" builds/Euphoria_v2.html
 mkdir -p web
 rm -f web/Euphoria_v2.*

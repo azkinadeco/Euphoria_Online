@@ -160,7 +160,7 @@ func _ready() -> void:
 		_auto = true
 		_auto_btn.set_pressed_no_signal(true)
 	bar.add_child(UI.button("LOG", _show_log, "", Vector2(90, 42)))
-	bar.add_child(UI.button("SKIP ▶▶", _finish, "", Vector2(120, 42)))
+	bar.add_child(UI.button("SKIP ▶▶", func(): _skip_used = true; _finish(), "", Vector2(120, 42)))
 	if compact:
 		# tutorials: keep the screen's header visible, a single small SKIP near the text box
 		_auto_btn.visible = false
@@ -434,12 +434,18 @@ func _show_log() -> void:
 	sc.set_deferred("scroll_vertical", 100000)
 
 var _finished := false
+var _skip_used := false
+var _t0 := Time.get_ticks_msec()
 
 ## Ends the dialogue exactly once (taps during the fade-out must not fire `finished` again).
 func _finish() -> void:
 	if _finished:
 		return
 	_finished = true
+	# playtest log: is the story read or skipped? (k = first speaker + start of the first line, to tell scenes apart)
+	var first: Array = lines[0] if not lines.is_empty() else ["", ""]
+	Game.tele("vn", {"k": "%s:%s" % [str(first[0]), str(first[1]).substr(0, 24)], "n": lines.size(), "r": mini(_i + 1, lines.size()),
+		"sk": 1 if _skip_used else 0, "sec": (Time.get_ticks_msec() - _t0) / 1000, "tut": 1 if compact else 0, "auto": 1 if _auto else 0})
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_process(false)
 	var tw := create_tween()

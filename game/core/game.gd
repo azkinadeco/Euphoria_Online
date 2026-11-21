@@ -653,6 +653,7 @@ func give(rewards: Dictionary) -> void:
 
 func spend(key: String, n: int) -> bool:
 	if amount(key) < n:
+		_log_short(key, n)
 		return false
 	if s["cur"].has(key):
 		s["cur"][key] = int(s["cur"][key]) - n
@@ -2016,7 +2017,23 @@ func defeat_tip(enemies: Array) -> String:
 	return "Move tanks to the front column and line heroes up with the rows of key enemies."
 
 ## Pays the entry cost. Returns "" on success or an error message.
+## Playtest log: the player wanted to spend `key` but had too little (economy walls). Same key at most every 30 s.
+var _short_t := {}
+func _log_short(key: String, need: int) -> void:
+	var t := now()
+	if t - int(_short_t.get(key, 0)) < 30:
+		return
+	_short_t[key] = t
+	Tele.log_event("short", {"k": key, "need": need, "have": amount(key)})
+
+## Pays the entry cost of a battle; returns "" or the reason it can't start (logged as a "wall").
 func pay_battle(params: Dictionary) -> String:
+	var err := _pay_battle(params)
+	if err != "":
+		Tele.log_event("wall", {"m": str(params.get("mode", "")), "st": battle_where(params), "why": err.substr(0, 48)})
+	return err
+
+func _pay_battle(params: Dictionary) -> String:
 	match str(params.get("mode", "")):
 		"story":
 			var cost: int = DB.stage(int(params["stage"]))["energy"]

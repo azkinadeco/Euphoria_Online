@@ -24,3 +24,6 @@ export_credentials.cfg
 .DS_Store
 __pycache__/
 *.pyc
+
+# playtest logs from testers (see PLAYTEST_GUIDE.md) - never commit
+playtest_logs/

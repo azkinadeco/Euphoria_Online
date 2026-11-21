@@ -203,7 +203,7 @@ func build() -> void:
 	for c in card.get_children():
 		c.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var ver := UI.label("v2.1  •  Offline Mode", 13, UI.MUTED, 3)
+	var ver := UI.label("v2.1  •  PLAYTEST BUILD %s" % Game.Tele.build_id() if Game.Tele.available() else "v2.1  •  Offline Mode", 13, UI.MUTED, 3)
 	ver.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
 	ver.offset_left = 16
 	ver.offset_top = -30

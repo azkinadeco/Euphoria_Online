@@ -202,8 +202,9 @@ func _playtest(parent: Control) -> void:
 	_toggle(v, "Record playtest log", "No name, no save data, no IP.", "playtest_log", true)
 	var sm := Game.Tele.summary()
 	v.add_child(UI.label("ID %s  •  %d sessions  •  %d days  •  %d events" % [sm["id"], sm["sessions"], sm["days"], sm["events"]], 12, Color("#b8c8ff"), 0))
+	v.add_child(UI.button("WRITE FEEDBACK", main.show_feedback, "", Vector2(0, 42)))
 	var row := UI.hbox(8)
-	var dl := UI.button("SEND LOG", _send_playtest, "GoldButton", Vector2(0, 42))
+	var dl := UI.button("SEND LOG", main.show_send_log, "GoldButton", Vector2(0, 42))
 	dl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(dl)
 	var cl := UI.button("DELETE LOG", func():
@@ -214,39 +215,6 @@ func _playtest(parent: Control) -> void:
 	cl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(cl)
 	v.add_child(row)
-
-func _send_playtest() -> void:
-	Game.Tele.flush()
-	var text := Game.Tele.export_text()
-	var fname := Game.Tele.file_name()
-	var v: VBoxContainer = main.popup("SEND PLAYTEST LOG", 640)
-	v.add_child(UI.wrap_label("Download the file (or copy the text) and send it to the developer by chat or e-mail. Thank you!", 14, UI.MUTED))
-	var sm := Game.Tele.summary()
-	v.add_child(UI.label("%s  •  %d events  •  %.0f KB   (newest first, times in UTC)" % [fname, sm["events"], text.length() / 1024.0], 12, Color("#b8c8ff"), 0))
-	var te := TextEdit.new()
-	te.text = Game.Tele.preview()
-	te.editable = false
-	te.custom_minimum_size = Vector2(0, 260)
-	te.add_theme_font_size_override("font_size", 14)
-	v.add_child(te)
-	var row := UI.hbox(10)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	v.add_child(row)
-	row.add_child(UI.button("DOWNLOAD", func():
-		if OS.has_feature("web"):
-			JavaScriptBridge.download_buffer(text.to_utf8_buffer(), fname, "application/json")
-		else:
-			var path := "user://" + fname
-			var f := FileAccess.open(path, FileAccess.WRITE)
-			if f:
-				f.store_string(text)
-				f = null
-			OS.shell_show_in_file_manager(ProjectSettings.globalize_path(path))
-		main.toast("Playtest log saved: %s" % fname, UI.GREEN), "GoldButton", Vector2(170, 46)))
-	row.add_child(UI.button("COPY TEXT", func():
-		DisplayServer.clipboard_set(text)
-		main.toast("Playtest log copied!", UI.GREEN), "", Vector2(170, 46)))
-	row.add_child(UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(140, 46)))
 
 # ---------------------------------------------------------------- right column
 

@@ -1262,6 +1262,18 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 3e. Batch 263-272 (21 Nov 2026): persiapan playtest (tanpa fitur gameplay baru)
+- **263 versi build**: `tools/publish_web.sh` menulis `data/build.json` (`<commit>-<tanggal>`) sebelum export; `Game.Tele.build_id()` ikut di event `start` dan file ekspor. Dari source = "dev".
+- **264 performa HP asli**: `start` mencatat `cap` (max_fps); `scr` pertama ke title/lobby per peluncuran membawa `ms` (waktu boot); setiap pindah layar membawa `pf`/`plo`/`from` (fps rata-rata/terendah layar sebelumnya, sampel tiap detik); `beat` membawa fps layar aktif.
+- **265 tembok ekonomi**: `Game.spend` gagal → event `short` (k, need, have; per kunci maks tiap 30 dtk). `pay_battle` sekarang membungkus `_pay_battle` dan mencatat `wall` (mode, stage, alasan).
+- **266 battle**: `bend` (durasi detik, retreat, skip manual), `bquit` (layar battle ditinggal sebelum hasil), `lpick` (RETRY / UPGRADE setelah kalah).
+- **267 cerita**: `VNDialogue._finish` mencatat `vn` (kunci adegan, jumlah baris, baris terbaca, SKIP, detik, tutorial, auto).
+- **268 rating cepat**: clear Chapter 1/3/6 → `Game.Tele.queue_rating("chN")`; di lobby berikutnya `main.show_rating` (1-5 bintang + 10 tag, SEND / WRITE MORE / NOT NOW). Sekali per perangkat (`asked` di file log, tidak ikut reset save). GOTCHA: lambda GDScript menangkap variabel saat dibuat, jadi tombol SEND dibuat sebelum lambda bintang.
+- **269 feedback teks**: `main.show_feedback` (maks 1000 huruf, peringatan jangan tulis data pribadi) → `feedback[]` di file log + event `fb`. Tombol WRITE FEEDBACK di Settings.
+- **270 pengingat + badge**: mulai hari main ke-2, maks tiap 2 hari dan tidak bila log dikirim 2 hari terakhir → popup THANK YOU FOR TESTING (SEND LOG / WRITE FEEDBACK / LATER). `show_send_log` pindah dari settings.gd ke main.gd; DOWNLOAD/COPY menandai `sent_t`. Title: "v2.1 • PLAYTEST BUILD <build>" bila log aktif.
+- **271 report**: `tools/playtest_report.py` + `--build <prefix>`, `--csv out.csv`; bagian baru: waktu main sampai milestone, boot & fps per layar, battle ditinggal, pilihan setelah kalah, tembok ekonomi, rasio skip VN, rating + tag, feedback tertulis. Funnel + "cleared chapter 1" (stage s5).
+- **272 panduan**: `PLAYTEST_GUIDE.md` (rekrut 20-50 tester, template pesan ID/EN, jadwal 14 hari, cara baca report, pertanyaan wawancara, ambang keputusan usulan, janji privasi). `playtest_logs/` di .gitignore.
+
 ## 3d. Batch 262 (21 Nov 2026): playtest log (telemetry lokal, anonim)
 - Tujuan: sebelum menambah fitur lagi, ukur apakah pemain luar bertahan (D1/D7), di mana mereka berhenti, dan battle mana yang jadi tembok. Fitur dibekukan sampai ada data.
 - `game/core/telemetry.gd` (preload lewat `Game.Tele`, panggil `Game.tele(event, fields)`): event `start` (platform kasar, ukuran layar, level, stage, hari sejak install), `scr` (setiap `main.go`), `tut` (tutorial pertama), `bat` (mode, `Game.battle_where`, menang, bintang, power), `pull` (banner, jumlah, cara bayar, rarity terbaik), `lvl`, `beat` tiap 120 dtk, `away`/`quit`, `reset`. Sesi baru bila jeda > 30 menit. Maks 5000 event (event `start` tidak pernah dibuang). Disimpan di `user://playtest_log.json`, flush tiap 15 dtk + saat pause/keluar.

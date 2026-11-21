@@ -131,6 +131,157 @@ func _startup_popups() -> void:
 			if int(Game.s.get("promo_day", -1)) != Game.day_key():
 				show_skin_promo()))
 
+var _rating_waiting := false
+const RATING_TAGS := ["Love the characters", "Fun battles", "Want more story", "Too much text", "Confusing menus",
+	"Battles too hard", "Battles too easy", "Too much grinding", "Slow / laggy", "Hard to read on phone"]
+
+## Playtest quick rating (queued by Game.Tele.queue_rating at chapter 1/3/6 clear, shown back in the lobby).
+func show_rating() -> void:
+	_rating_waiting = false
+	var key := Game.Tele.rating_due()
+	if key == "":
+		return
+	var v: VBoxContainer = popup("QUICK FEEDBACK", 680, false)
+	v.add_child(UI.wrap_label("Thanks for playing this test build! How do you like Euphoria so far?", 15, Color.WHITE))
+	var stars := UI.hbox(8)
+	stars.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(stars)
+	var picked := [0]
+	var star_btns: Array = []
+	var tags: Array = []
+	# built before the stars: GDScript lambdas capture variables by value, so it must exist already
+	var send := UI.button("SEND", func():
+		Game.Tele.rating_done(key, int(picked[0]), tags)
+		close_popup(v)
+		toast("Thank you! Your feedback is in the playtest log.", UI.GREEN), "GoldButton", Vector2(170, 46))
+	send.disabled = true
+	for i in 5:
+		var b := UI.button("★", Callable(), "", Vector2(64, 56))
+		b.add_theme_font_size_override("font_size", 30)
+		b.pressed.connect(func():
+			picked[0] = i + 1
+			for k in star_btns.size():
+				(star_btns[k] as Button).add_theme_color_override("font_color", UI.GOLD if k <= i else UI.MUTED)
+			send.disabled = false
+			Game.sfx("ui_click"))
+		b.add_theme_color_override("font_color", UI.MUTED)
+		star_btns.append(b)
+		stars.add_child(b)
+	v.add_child(UI.label("Anything that stood out? (optional, tap all that apply)", 13, UI.MUTED, 0))
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 6)
+	v.add_child(grid)
+	for tg in RATING_TAGS:
+		var c := UI.button(tg, Callable(), "TabButton", Vector2(0, 38))
+		c.toggle_mode = true
+		c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		c.add_theme_font_size_override("font_size", 14)
+		c.toggled.connect(func(on):
+			if on:
+				tags.append(tg)
+			else:
+				tags.erase(tg))
+		grid.add_child(c)
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(send)
+	row.add_child(UI.button("WRITE MORE", func():
+		Game.Tele.rating_done(key, int(picked[0]), tags)
+		close_popup(v)
+		show_feedback(), "", Vector2(170, 46)))
+	row.add_child(UI.button("NOT NOW", func():
+		Game.Tele.rating_done(key, 0, [])
+		close_popup(v), "", Vector2(140, 46)))
+
+## Settings / reminder: download or copy the playtest log so the tester can send it to the developer.
+func show_send_log() -> void:
+	Game.Tele.flush()
+	var text := Game.Tele.export_text()
+	var fname := Game.Tele.file_name()
+	var v: VBoxContainer = popup("SEND PLAYTEST LOG", 640)
+	v.add_child(UI.wrap_label("Download the file (or copy the text) and send it to the developer by chat or e-mail. Thank you!", 14, UI.MUTED))
+	var sm := Game.Tele.summary()
+	v.add_child(UI.label("%s  •  %d events  •  %.0f KB   (newest first, times in UTC)" % [fname, sm["events"], text.length() / 1024.0], 12, Color("#b8c8ff"), 0))
+	var te := TextEdit.new()
+	te.text = Game.Tele.preview()
+	te.editable = false
+	te.custom_minimum_size = Vector2(0, 260)
+	te.add_theme_font_size_override("font_size", 14)
+	v.add_child(te)
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("DOWNLOAD", func():
+		if OS.has_feature("web"):
+			JavaScriptBridge.download_buffer(text.to_utf8_buffer(), fname, "application/json")
+		else:
+			var path := "user://" + fname
+			var f := FileAccess.open(path, FileAccess.WRITE)
+			if f:
+				f.store_string(text)
+				f = null
+			OS.shell_show_in_file_manager(ProjectSettings.globalize_path(path))
+		Game.Tele.mark_sent()
+		toast("Playtest log saved: %s" % fname, UI.GREEN), "GoldButton", Vector2(170, 46)))
+	row.add_child(UI.button("COPY TEXT", func():
+		DisplayServer.clipboard_set(text)
+		Game.Tele.mark_sent()
+		toast("Playtest log copied!", UI.GREEN), "", Vector2(170, 46)))
+	row.add_child(UI.button("CLOSE", func(): close_popup(v), "", Vector2(140, 46)))
+
+## Day 2+ of a playtest: ask once in a while for the log (Game.Tele.send_reminder_due).
+func show_send_reminder() -> void:
+	_rating_waiting = false
+	Game.Tele.mark_reminded()
+	var sm := Game.Tele.summary()
+	var v: VBoxContainer = popup("THANK YOU FOR TESTING!", 600)
+	v.add_child(UI.wrap_label("You have played on %d different days. Could you send us your playtest log? It takes 10 seconds and helps us fix what matters most." % int(sm["days"]), 15, Color.WHITE))
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("SEND LOG", func():
+		close_popup(v)
+		show_send_log(), "GoldButton", Vector2(170, 46)))
+	row.add_child(UI.button("WRITE FEEDBACK", func():
+		close_popup(v)
+		show_feedback(), "", Vector2(200, 46)))
+	row.add_child(UI.button("LATER", func(): close_popup(v), "", Vector2(130, 46)))
+
+## Free-text playtest feedback; saved into the playtest log (sent along with SEND LOG).
+func show_feedback() -> void:
+	var v: VBoxContainer = popup("WRITE FEEDBACK", 680)
+	v.add_child(UI.wrap_label("What did you like? What was confusing, boring or broken? Where did you want to stop playing? Please don't write personal information (name, phone, e-mail).", 14, UI.MUTED))
+	var te := TextEdit.new()
+	te.placeholder_text = "Type here..."
+	te.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	te.custom_minimum_size = Vector2(0, 220)
+	te.add_theme_font_size_override("font_size", 16)
+	v.add_child(te)
+	var cnt := UI.label("0 / 1000", 12, UI.MUTED, 0)
+	cnt.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	v.add_child(cnt)
+	te.text_changed.connect(func():
+		if te.text.length() > 1000:
+			te.text = te.text.substr(0, 1000)
+			te.set_caret_column(te.text.length())
+		cnt.text = "%d / 1000" % te.text.length())
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("SAVE", func():
+		var txt := te.text.strip_edges()
+		if txt == "":
+			toast("Write something first.", UI.MUTED)
+			return
+		Game.Tele.feedback(txt, current_name)
+		close_popup(v)
+		toast("Saved! It is sent with your playtest log (Settings > PLAYTEST DATA > SEND LOG).", UI.GREEN), "GoldButton", Vector2(170, 46)))
+	row.add_child(UI.button("CANCEL", func(): close_popup(v), "", Vector2(150, 46)))
+	te.grab_focus.call_deferred()
+
 ## Run `cb` once no dialogue or popup is on screen (polls every 0.4 s).
 func _when_clear(cb: Callable) -> void:
 	var busy := _vn_active()
@@ -565,6 +716,12 @@ func go(name: String, params: Dictionary = {}, push: bool = true) -> void:
 		return
 	Game.seen_unlock(name)
 	Game.tele("scr", {"n": name})
+	if name == "lobby" and not _rating_waiting and Game.Tele.rating_due() != "":
+		_rating_waiting = true
+		_when_clear(show_rating)
+	elif name == "lobby" and not _rating_waiting and Game.Tele.send_reminder_due():
+		_rating_waiting = true
+		_when_clear(show_send_reminder)
 	_close_all_popups()
 	if push and current_name != "":
 		history.append({"name": current_name, "params": current.params if is_instance_valid(current) else {}})

@@ -16,6 +16,8 @@ var _fx_layer: Control
 var _speed := 1.0
 var _skip := false
 var _done := false
+var _t0 := 0          # ticks when the battle screen opened (playtest log: battle length)
+var _skipped := false # the player pressed fast-forward / skip
 var _damage: Dictionary = {}      # uid -> damage dealt
 var _taken: Dictionary = {}       # uid -> damage taken
 var _healed: Dictionary = {}      # uid -> healing done
@@ -71,6 +73,7 @@ var _retreat := false
 var _chapter_clear := 0
 
 func build() -> void:
+	_t0 = Time.get_ticks_msec()
 	set_bg(Game.battle_bg(params), 0.25)
 	_living_bg.call_deferred()
 	var boss_fight := false
@@ -110,7 +113,7 @@ func build() -> void:
 	top.add_child(_speed_btn)
 	_pause_btn = UI.button("❚❚", _toggle_pause, "", Vector2(56, 46))
 	top.add_child(_pause_btn)
-	top.add_child(UI.button("SKIP ▶▶", func(): _skip = true; _set_paused(false), "", Vector2(110, 46)))
+	top.add_child(UI.button("SKIP ▶▶", func(): _skip = true; _skipped = true; _set_paused(false), "", Vector2(110, 46)))
 
 	_order_strip = UI.hbox(5)
 	_order_strip.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
@@ -1549,13 +1552,15 @@ func _set_paused(p: bool) -> void:
 		var rb := UI.button("RESUME", func(): _set_paused(false), "GoldButton", Vector2(0, 52))
 		rb.process_mode = Node.PROCESS_MODE_ALWAYS
 		v.add_child(rb)
-		var sb := UI.button("SKIP TO RESULT", func(): _skip = true; _set_paused(false), "", Vector2(0, 46))
+		var sb := UI.button("SKIP TO RESULT", func(): _skip = true; _skipped = true; _set_paused(false), "", Vector2(0, 46))
 		sb.process_mode = Node.PROCESS_MODE_ALWAYS
 		v.add_child(sb)
 	elif not p and is_instance_valid(_pause_layer):
 		_pause_layer.queue_free()
 
 func _exit_tree() -> void:
+	if not _done and _t0 > 0:
+		Game.tele("bquit", {"m": str(params.get("mode", "")), "st": Game.battle_where(params), "sec": (Time.get_ticks_msec() - _t0) / 1000})
 	Engine.time_scale = 1.0
 	if get_tree() and get_tree().paused:
 		get_tree().paused = false
@@ -1593,12 +1598,16 @@ func _finish(e: Dictionary) -> void:
 		Game.record_battle(str(params.get("mode", "")), won, stars, sim, Game.battle_where(params))
 	if _retreat:
 		e["reason"] = "retreat"
+	Game.tele("bend", {"m": str(params.get("mode", "")), "st": Game.battle_where(params), "w": 1 if won else 0,
+		"sec": (Time.get_ticks_msec() - _t0) / 1000, "r": 1 if _retreat else 0, "sk": 1 if _skipped else 0})
 	var rewards := {}
 	match str(params.get("mode", "")):
 		"story":
 			rewards = Game.apply_stage_result(int(params["stage"]), won, stars)
 			if rewards.has("chapter_clear"):
 				_chapter_clear = int(rewards["chapter_clear"])
+				if _chapter_clear in [1, 3, 6]:
+					Game.Tele.queue_rating("ch%d" % _chapter_clear)
 				rewards.erase("chapter_clear")
 		"arena":
 			rewards = Game.apply_arena_result(won)
@@ -2175,7 +2184,9 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 	if won and mode == "tower":
 		btns.add_child(UI.button("NEXT FLOOR ▶", func(): main.replace("formation", {"mode": "tower", "floor": int(Game.s["tower"]["floor"])}), "GoldButton", Vector2(200, 54)))
 	if not won:
-		btns.add_child(UI.button("RETRY", func(): main.replace("formation", params), "GoldButton", Vector2(140, 54)))
+		btns.add_child(UI.button("RETRY", func():
+			Game.tele("lpick", {"c": "retry", "m": mode})
+			main.replace("formation", params), "GoldButton", Vector2(140, 54)))
 		# straight to the weakest hero of this team, on her UPGRADE tab (that is where power is cheapest)
 		var weakest := ""
 		var wp := 1 << 30
@@ -2186,6 +2197,7 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 				weakest = fid
 		var team_ids: Array = Game.formation().map(func(fe2): return str(fe2[0]))
 		var ub := UI.button("UPGRADE", func():
+			Game.tele("lpick", {"c": "upgrade", "m": mode})
 			if weakest != "":
 				main.replace("hero_detail", {"id": weakest, "tab": "UPGRADE", "list": team_ids})
 			else:
