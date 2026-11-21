@@ -97,6 +97,7 @@ func tutorial(key: String) -> bool:
 		return false
 	seen.append(key)
 	Game.s["tips_seen"] = seen
+	Game.tele("tut", {"k": key})
 	Game.mark_dirty()
 	(func(): main.dialogue(DB.TUTORIALS[key], Callable(), "", true)).call_deferred()
 	return true

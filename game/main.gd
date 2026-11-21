@@ -564,6 +564,7 @@ func go(name: String, params: Dictionary = {}, push: bool = true) -> void:
 		toast("%s unlocks at Player Lv.%d. Clear more story stages to level up!" % [name.capitalize(), Game.feature_req(name)], UI.MUTED)
 		return
 	Game.seen_unlock(name)
+	Game.tele("scr", {"n": name})
 	_close_all_popups()
 	if push and current_name != "":
 		history.append({"name": current_name, "params": current.params if is_instance_valid(current) else {}})

@@ -13,9 +13,9 @@ POPUPS="lobby,close,cur:_open_menu,close,cur:_open_profile,close,cur:_open_fortu
 FAIL=0
 run() {  # name, godot args, first step
   local OUT=$(mktemp -d)
-  rm -f "$DATA/euphoria_v2_save.json"; rm -rf "$DATA/backups"
+  rm -f "$DATA/euphoria_v2_save.json"; rm -rf "$DATA/backups"; rm -f "$DATA/playtest_log.json"
   local LOG=$(AUDIT=1 "$GODOT" ${=2} --path . -s res://tools/shot_runner.gd -- "$OUT" "$3$PREP,$SCREENS,close,$POPUPS" 16 2>&1)
-  rm -rf "$OUT"; rm -f "$DATA/euphoria_v2_save.json"; rm -rf "$DATA/backups"
+  rm -rf "$OUT"; rm -f "$DATA/euphoria_v2_save.json"; rm -rf "$DATA/backups"; rm -f "$DATA/playtest_log.json"
   # steps before the first screen are still on the title screen while the scale changes: not layout bugs
   local BAD=$(echo "$LOG" | grep -E "^AUDIT (CLIP|CUT|OFF|FLAT)|SCRIPT ERROR" | grep -vE "\[(novn|notips|boost|clear:60|close|scale=[0-9.]+|gset:[^]]*)\]" | sort -u)
   local SOFT=$(echo "$LOG" | grep -E "^AUDIT (TRIM|OVER)" | sort -u | wc -l | tr -d ' ')

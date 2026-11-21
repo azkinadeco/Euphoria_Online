@@ -22,6 +22,7 @@ var _sfx_i := 0
 var _tick_accum := 0.0
 var _save_dirty := false
 var persist := true   # false in automated tests: never touch the real save file
+const Tele = preload("res://game/core/telemetry.gd")
 
 func _ready() -> void:
 	_install_symbol_font()
@@ -32,12 +33,21 @@ func _ready() -> void:
 	_check_day()
 	_regen_energy()
 	arena_defend_away(away_secs)
+	Tele.begin()
+
+func _exit_tree() -> void:
+	Tele.flush()
+
+## Playtest log (device-only, see core/telemetry.gd).
+func tele(event: String, fields: Dictionary = {}) -> void:
+	Tele.log_event(event, fields)
 
 func _process(delta: float) -> void:
 	_tick_accum += delta
 	if _tick_accum >= 1.0:
 		_tick_accum = 0.0
 		stat_add("play_sec")
+		Tele.tick(1.0)
 		var before := int(s["cur"]["energy"])
 		_regen_energy()
 		if int(s["cur"]["energy"]) != before:
@@ -48,7 +58,12 @@ func _process(delta: float) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_APPLICATION_PAUSED:
+		Tele.log_event("quit")
 		save_game()
+		Tele.flush()
+	elif what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		Tele.log_event("away")
+		Tele.flush()
 
 # =================================================================== save
 
@@ -355,6 +370,7 @@ func mark_dirty() -> void:
 	changed.emit()
 
 func reset_save() -> void:
+	Tele.log_event("reset", {"lvl": int(s["player"]["level"])})
 	make_backup("before_reset")
 	s = new_state()
 	_check_day()
@@ -778,6 +794,7 @@ func add_player_exp(n: int) -> void:
 	while int(p["exp"]) >= player_exp_needed():
 		p["exp"] = int(p["exp"]) - player_exp_needed()
 		p["level"] = int(p["level"]) + 1
+		Tele.log_event("lvl", {"l": int(p["level"])})
 		s["cur"]["energy"] = int(s["cur"]["energy"]) + 30
 		s["cur"]["gems"] = int(s["cur"]["gems"]) + 50
 		notify("PLAYER LEVEL UP! Lv.%d  (+30 Energy, +50 Gems)" % int(p["level"]), Color("#ffd479"))
@@ -1492,6 +1509,8 @@ func pull(banner_id: String, count: int, pay: String) -> Dictionary:
 	stat_add("ssr_pulled", results.filter(func(x): return DB.rarity_rank(x["rarity"]) >= DB.rarity_rank("SSR")).size())
 	for i in count:
 		quest_progress("summon")
+	Tele.log_event("pull", {"b": banner_id, "c": count, "pay": pay,
+		"best": results.reduce(func(a, x): return maxi(a, DB.rarity_rank(x["rarity"])), 0)})
 	mark_dirty()
 	save_game()
 	return {"results": results}
@@ -1925,7 +1944,7 @@ func quick_battle(params: Dictionary) -> Dictionary:
 	record_kills(killed_enemies(sim))
 	var won: bool = res["won"]
 	var stars: int = res["stars"]
-	record_battle(str(params.get("mode", "")), won, stars, sim)
+	record_battle(str(params.get("mode", "")), won, stars, sim, battle_where(params))
 	var r: Dictionary = {}
 	match str(params.get("mode", "")):
 		"story":
@@ -4851,7 +4870,15 @@ func stat_max(key: String, v: int) -> void:
 		s["stats"][key] = v
 
 ## Called once for every battle that was actually fought (played or quick), after the sim ended.
-func record_battle(mode: String, won: bool, stars: int, sim: BattleSim) -> void:
+## Short label of which stage/floor/boss a battle was, for the playtest log.
+func battle_where(params: Dictionary) -> String:
+	for k in ["stage", "floor", "hunt", "dungeon", "opp", "hero", "elem"]:
+		if params.has(k):
+			return "%s%s" % [k.substr(0, 1), str(params[k])]
+	return ""
+
+func record_battle(mode: String, won: bool, stars: int, sim: BattleSim, where: String = "") -> void:
+	Tele.log_event("bat", {"m": mode, "st": where, "w": 1 if won else 0, "x": stars, "p": team_power()})
 	stat_add("battles")
 	stat_add("m_" + mode)
 	if won:

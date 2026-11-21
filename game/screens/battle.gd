@@ -1590,7 +1590,7 @@ func _finish(e: Dictionary) -> void:
 	var won: bool = e["won"] and not _retreat
 	var stars: int = e["stars"] if won else 0
 	if str(params.get("mode", "")) != "training":
-		Game.record_battle(str(params.get("mode", "")), won, stars, sim)
+		Game.record_battle(str(params.get("mode", "")), won, stars, sim, Game.battle_where(params))
 	if _retreat:
 		e["reason"] = "retreat"
 	var rewards := {}

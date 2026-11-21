@@ -1,5 +1,12 @@
 [
  {
+  "id": "n2026-11-21a",
+  "date": "2026-11-21",
+  "tag": "UPDATE",
+  "title": "Help Us Improve: Playtest Data",
+  "body": "Settings now has a PLAYTEST DATA card. The game keeps an anonymous log of play events (screens opened, battles, summons, play time) on your device only. No name, no save data, no IP, and nothing is sent anywhere by itself. If you want to help, tap SEND LOG, download or copy it, and send it to us. You can turn recording off or delete the log at any time."
+ },
+ {
   "id": "n2026-11-20i",
   "date": "2026-11-20",
   "tag": "UPDATE",

@@ -1262,6 +1262,13 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 3d. Batch 262 (21 Nov 2026): playtest log (telemetry lokal, anonim)
+- Tujuan: sebelum menambah fitur lagi, ukur apakah pemain luar bertahan (D1/D7), di mana mereka berhenti, dan battle mana yang jadi tembok. Fitur dibekukan sampai ada data.
+- `game/core/telemetry.gd` (preload lewat `Game.Tele`, panggil `Game.tele(event, fields)`): event `start` (platform kasar, ukuran layar, level, stage, hari sejak install), `scr` (setiap `main.go`), `tut` (tutorial pertama), `bat` (mode, `Game.battle_where`, menang, bintang, power), `pull` (banner, jumlah, cara bayar, rarity terbaik), `lvl`, `beat` tiap 120 dtk, `away`/`quit`, `reset`. Sesi baru bila jeda > 30 menit. Maks 5000 event (event `start` tidak pernah dibuang). Disimpan di `user://playtest_log.json`, flush tiap 15 dtk + saat pause/keluar.
+- Privasi: id acak 12 hex (terpisah dari save, tetap walau reset save), tanpa nama/save/IP. TIDAK ADA yang dikirim otomatis: tester menekan Settings > PLAYTEST DATA > SEND LOG > DOWNLOAD (web: `JavaScriptBridge.download_buffer`) atau COPY TEXT, lalu mengirimnya sendiri. Popup menampilkan preview isi log. Toggle `settings.playtest_log` (default ON) + DELETE LOG.
+- Hanya merekam di build ekspor; binary editor (flow_test, smoke, audit, shot_runner) dilewati kecuali env `PLAYTEST=1`. smoke.sh/audit.sh ikut menghapus `playtest_log.json`.
+- Analisis: `python3 tools/playtest_report.py <file|folder>...` → retensi D1/D3/D7 (hanya tester yang cukup lama), durasi sesi pertama, funnel (lobby, battle, menang story, summon, upgrade hero, Lv.5/10) sesi pertama vs total, layar terakhir sebelum berhenti, layar yang dibuka, battle paling sering kalah, tutorial.
+
 ## 3c. Batch 261 (20 Nov 2026): tanpa kedip untuk Sharas, Yumi, skin Angela/Mei/Eropatra/Rubby
 - Owner menilai semua metode kedip (kelopak geser, kelopak lukis, gambar mata tertutup, tracing per mata) pada 6 karakter ini jelek; tracing per mata (bukaan mata + bulu mata dari piksel) dicoba dan hasilnya lebih buruk (garis bergerigi, isian kotak-kotak). Sesuai izin owner ("kalau tidak memungkinkan gausah kedip"): `eyes = []` dan tanpa lid untuk semua form Sharas & Yumi dan semua pose 4 skin (51 art). File `art/lids/` yang tidak terpakai dihapus (40 tersisa). Gerak napas/rambut/tilt 2.5D tetap.
 
