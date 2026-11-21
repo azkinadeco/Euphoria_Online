@@ -156,11 +156,13 @@ func build() -> void:
 	# speech bubble
 	_bubble = UI.styled_panel(Color(1, 1, 1, 0.94), DB.ELEMENT_COLOR.get(DB.element_of(_enemy), UI.GOLD) if _enemy != "" else DB.theme_color(hid), 18, 3, 14)
 	_bubble.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	_bubble.anchor_left = 0.34
+	# left of the banner column: at 0.34 / 300 px it covered the LIMITED BANNER title (right edge stays < the
+	# banner panel on the default and the narrow 1040 px canvas)
+	_bubble.anchor_left = 0.27
 	_bubble.anchor_top = 0.2
-	_bubble.anchor_right = 0.34
-	_bubble.offset_right = 300
-	_bubble.custom_minimum_size = Vector2(300, 0)
+	_bubble.anchor_right = 0.27
+	_bubble.offset_right = 260
+	_bubble.custom_minimum_size = Vector2(260, 0)
 	_bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bubble_label = UI.wrap_label("", 16, Color("#2a1a3a"))
 	_bubble.add_child(_bubble_label)

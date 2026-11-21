@@ -192,6 +192,13 @@ func _data(parent: Control) -> void:
 	var ver := UI.label("Euphoria Online  •  v2.1  •  %d heroes  •  %d chapters" % [DB.hero_ids().size(), DB.CHAPTERS.size()], 12, UI.MUTED, 0)
 	ver.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(ver)
+	# web build: evolution / later-stage art arrives in the background (core/art_pack.gd)
+	if is_instance_valid(Game.art_pack) and Game.art_pack.progress().y > 0:
+		var pr: Vector2i = Game.art_pack.progress()
+		var hd := UI.label("HD ART  %d / %d downloaded" % [pr.x, pr.y] if pr.x < pr.y else "HD ART  ready", 12, UI.GREEN if pr.x >= pr.y else Color("#ffcf5a"), 0)
+		hd.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		hd.tooltip_text = "Evolved and later-stage hero art downloads while you play. Until then those forms show the Lv.1 art."
+		v.add_child(hd)
 
 ## Playtest log card: what is recorded, and the buttons a tester uses to send it (core/telemetry.gd).
 func _playtest(parent: Control) -> void:

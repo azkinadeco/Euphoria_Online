@@ -23,6 +23,8 @@ var _tick_accum := 0.0
 var _save_dirty := false
 var persist := true   # false in automated tests: never touch the real save file
 const Tele = preload("res://game/core/telemetry.gd")
+const ArtPack = preload("res://game/core/art_pack.gd")
+var art_pack: Node   # deferred web art downloader (core/art_pack.gd)
 
 func _ready() -> void:
 	_install_symbol_font()
@@ -34,6 +36,9 @@ func _ready() -> void:
 	_regen_energy()
 	arena_defend_away(away_secs)
 	Tele.begin()
+	if persist:
+		art_pack = ArtPack.new()
+		add_child(art_pack)
 
 func _exit_tree() -> void:
 	Tele.flush()
@@ -185,6 +190,10 @@ func _withdraw_skins() -> void:
 
 func _sanitize() -> void:
 	_ensure_gear_subs()
+	# launch mailbox: a save that claimed any of the merged update letters already has the starter supplies
+	var mc: Array = s["mail_claimed"]
+	if not mc.has("starter_supplies") and DB.MAIL_MERGED.any(func(x): return mc.has(x)):
+		mc.append("starter_supplies")
 	# JSON turns ints into floats; normalise the numbers we do maths on.
 	for k in s["cur"].keys():
 		s["cur"][k] = int(s["cur"][k])

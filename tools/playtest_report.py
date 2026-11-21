@@ -101,6 +101,7 @@ def main():
     boot = {"title": [], "lobby": []}
     fps = {}
     walls, shorts, bquits, lpicks = Counter(), Counter(), Counter(), Counter()
+    art_secs, art_errs = [], Counter()   # deferred HD art packs (game/core/art_pack.gd)
     vn = {"story": [0, 0, 0], "tutorial": [0, 0, 0]}   # scenes, skipped, lines read share sum
     ratings = {}
     rtags = Counter()
@@ -159,6 +160,10 @@ def main():
                 shorts[e.get("k", "?")] += 1
             elif k == "bquit":
                 bquits[f'{e.get("m")} {e.get("st", "")}'.strip()] += 1
+            elif k == "artpack":
+                art_secs.append(e.get("sec", 0))
+            elif k == "artpack_err":
+                art_errs[str(e.get("why", "?"))] += 1
             elif k == "lpick":
                 lpicks[e.get("c", "?")] += 1
             elif k == "vn":
@@ -200,6 +205,10 @@ def main():
     for k, xs in boot.items():
         if xs:
             print(f"  boot to {k:<16} median {med(xs):5.1f} s   worst {max(xs):5.1f} s")
+    if art_secs:
+        print(f"  HD art packs all loaded  median {med(art_secs):5.0f} s   worst {max(art_secs):5.0f} s   ({len(art_secs)} sessions)")
+    if art_errs:
+        print("  HD art download errors: " + ", ".join(f"{k} x{v}" for k, v in art_errs.most_common(5)))
     print("  screen                   avg fps   low fps   samples   (sorted worst first)")
     for k, xs in sorted(fps.items(), key=lambda kv: med([a for a, _ in kv[1]]))[:15]:
         print(f"  {k:<24} {med([a for a, _ in xs]):7.0f}   {med([b for _, b in xs]):7.0f}   {len(xs):7}")

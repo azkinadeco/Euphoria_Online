@@ -426,7 +426,41 @@ static func face_rect(id: String, size: Vector2 = Vector2.ZERO, skin: int = -1) 
 
 ## Full art (DB.art), loaded lazily.
 static func art_rect(id: String, index: int = 0, size: Vector2 = Vector2.ZERO, cover: bool = false) -> TextureRect:
-	return tex_rect_lazy(DB.art_ready(id, index), func(): return DB.art(id, index), size, cover)
+	var t := tex_rect_lazy(DB.art_ready(id, index), func(): return DB.art(id, index), size, cover)
+	pending_art(t, DB.art_path(id, index))
+	return t
+
+## Web build: `path` is evolution / later-stage art that is still downloading (core/art_pack.gd), so `t`
+## shows the Lv1 stand-in. Adds a small "HD art downloading" note and swaps in the real art once it arrives.
+## Safe to call again on the same TextureRect (an older note is removed).
+static func pending_art(t: TextureRect, path: String) -> void:
+	for c in t.get_children():
+		if str(c.name).begins_with("PendingArt"):
+			c.queue_free()
+	if path == "" or not DB.waiting(path):
+		return
+	# short pill (UI.MIN_FONT is 14, the outfit cells are ~80 px wide)
+	var note := styled_panel(Color(0.05, 0.03, 0.1, 0.82), Color("#ffcf5a", 0.6), 8, 1, 4)
+	note.name = "PendingArtNote"
+	note.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	note.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	note.offset_top = 6
+	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	note.tooltip_text = "Evolved and later-stage art downloads while you play. This is the Lv.1 art until then."
+	var nl := label("Loading HD", 12, Color("#ffe3a0"), 0)
+	nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	note.add_child(nl)
+	t.add_child(note)
+	var tm := Timer.new()
+	tm.name = "PendingArtTimer"
+	tm.wait_time = 1.0
+	tm.autostart = true
+	t.add_child(tm)
+	tm.timeout.connect(func():
+		if not DB.waiting(path):
+			t.texture = DB.tex(path)
+			note.queue_free()
+			tm.queue_free())
 
 static func tex_rect(tex: Texture2D, size: Vector2 = Vector2.ZERO, cover: bool = false) -> TextureRect:
 	var t := TextureRect.new()

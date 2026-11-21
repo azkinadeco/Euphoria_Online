@@ -1770,18 +1770,21 @@ const ACH_CAT_OF := {
 static func ach_cat(a: Dictionary) -> String:
 	return str(ACH_CAT_OF.get(a["stat"], "COLLECTION"))
 
+## Mailbox of a new Commander (launch set). Ids of the old update letters are kept where the gift is the same,
+## so saves that already claimed them do not get it twice; "starter_supplies" replaces five old update letters
+## (MAIL_MERGED, see Game._sanitize).
 const MAIL := [
-	{"id": "arc13_jade", "title": "Arc 13: The Jade Masquerade", "body": "An invitation sealed in green wax has arrived: a masked ball at the Thousand-Coin Bazaar, where nobody ever leaves. Four new story chapters (49-52) are open after Arc 12. Break the jade masks of Ning Er, Mei and Angela, and find the maskmaker in the grotto below. Travel supplies are attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
-	{"id": "arc12_dream", "title": "Arc 12: The Dreaming Lantern", "body": "The morning bell did not ring, and half the cathedral will not wake up. Four new story chapters (45-48) are open after Arc 11: follow Rumi, Furu and Mora into Lumeira's dream and bring back Glytta, Kara and Gemora. Watch out for the new Dreambound bosses. Something to keep you awake is attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
-	{"id": "arc11_frost", "title": "Arc 11: The Frostbound Crown", "body": "Snow is falling inside the cathedral! Four new story chapters (41-44) are open after Arc 10, where Valeria, Schylua, Micca and Aqua face the Winter Crown of Frostvale. Watch out for the new Frostbound bosses. A warm cup of supplies is attached.", "give": {"gold": 30000, "exp_potion": 5, "energy_potion": 2}},
-	{"id": "xmas_hyeonxa", "title": "Starfall Christmas: Hyeonxa's Limited Skin!", "body": "The Starfall Christmas event is live until January 1st! Clear the snowbound event stages, collect Event Tokens and exchange 1,800 of them for Hyeonxa's limited skin SCARLET MISTLETOE — with its own battle sprite. Here are some tokens to get you started.", "give": {"festival_token": 200}},
-	{"id": "heroes_nov8", "title": "Four New Heroes & a Beast from the Abyss!", "body": "Gala, Morana, Seraph and Tamo have joined Euphoria — and Octra rides out of the Abyss in the new Arc 10. Tap the new ZOOM button on any hero or foe to view their art full screen. A small welcome gift is attached!", "give": {"gold": 50000, "exp_potion": 5}},
-	{"id": "skins_nov5", "title": "Special Skins Have Arrived!", "body": "Exclusive outfits are now in the WARDROBE: Ning Er, Spimei and Luby. Here is a Skin Ticket on us — pick your favourite!", "give": {"skin_ticket": 1, "gems": 200}},
-	{"id": "nov2026", "title": "10 New Heroes Have Arrived!", "body": "Abadonia, Atalanta, Kali, Zennyo Ryuo, Aqua, Rubby, Schylua, Vexira, Siv and Sven join Euphoria! Meet them at the new rate-up banners. Lulu now runs the Shop (and the Black Market at night).", "give": {"summon_ticket": 2, "gems": 300}},
-	{"id": "welcome", "title": "Welcome to Euphoria Online!", "body": "Commander, thank you for joining us. Please accept these gifts to begin your journey.", "give": {"gems": 900, "summon_ticket": 5, "gold": 50000}},
-	{"id": "patch_v2", "title": "Version 2.0 Update", "body": "The battle system, formation and summoning have been fully rebuilt. Enjoy this compensation!", "give": {"exp_potion": 10, "energy_potion": 3}},
-	{"id": "bond_event", "title": "Bond Festival", "body": "Gifts for your favourite heroes. Give them flowers in the Bond tab!", "give": {"bouquet": 10, "celestial_gem": 3}},
+	{"id": "welcome", "title": "Welcome to Euphoria Online!", "body": "Commander, the Eclipse is spreading and the Oath Knights need you. Please accept these gifts to begin your journey: summon your first heroes at the Aether Gate, then clear Stage 1-1 in the Story.", "give": {"gems": 900, "summon_ticket": 5, "gold": 50000}},
+	{"id": "nov2026", "title": "Opening Summon Gift", "body": "A little extra for your first summons. Your very first 10x summon on a Gem banner is guaranteed to bring a UR hero or better!", "give": {"summon_ticket": 2, "gems": 300}},
+	{"id": "starter_supplies", "title": "Commander's Starter Supplies", "body": "Gold to level up your heroes, EXP Potions to train them faster (hero UPGRADE tab or the Bag), and Energy Flasks to drink in the Story when your Energy runs low.", "give": {"gold": 140000, "exp_potion": 30, "energy_potion": 9}},
+	{"id": "skins_nov5", "title": "A Skin Ticket for You", "body": "Exclusive outfits are waiting in the WARDROBE. Here is a Skin Ticket on us: pick your favourite and dress up a hero you love.", "give": {"skin_ticket": 1, "gems": 200}},
+	{"id": "bond_event", "title": "Gifts for Your Heroes", "body": "Heroes open up to Commanders they trust. Give them flowers in the BOND tab to raise their bond and unlock their stories.", "give": {"bouquet": 10, "celestial_gem": 3}},
+	{"id": "xmas_hyeonxa", "title": "Event Tokens", "body": "Clear event stages, collect tokens and trade them for limited rewards, like Hyeonxa's limited skin SCARLET MISTLETOE. Here are some tokens to get you started.", "give": {"festival_token": 200}},
 ]
+
+## Old update letters merged into "starter_supplies".
+const MAIL_MERGED := ["arc13_jade", "arc12_dream", "arc11_frost", "heroes_nov8", "patch_v2"]
+
 
 const GACHA_PITY := 80
 ## Pity: GACHA_PITY pulls without a PITY_RARITY-or-better hero guarantee one. The first 10x guarantees
@@ -2246,7 +2249,7 @@ static func special_index(id: String) -> int:
 	var states: Dictionary = _entry(base_id(id)).get("char_states", {})
 	if not states.has("special"):
 		return -1
-	var keys: Array = states.keys().filter(func(k): return k != "lobby" and ResourceLoader.exists(str(states[k].get("base", ""))))
+	var keys: Array = states.keys().filter(func(k): return k != "lobby" and has_res(str(states[k].get("base", ""))))
 	keys.sort_custom(func(a, b): return _state_sort_key(a) < _state_sort_key(b))
 	return keys.find("special")
 
@@ -2370,6 +2373,7 @@ static func base_id(id: String) -> String:
 	return id
 
 static var _news_json: Array = []
+const NEWS_SINCE := "2026-11-21"
 
 ## Notices shown on the lobby board (edit data/news.json; newest first).
 static func news() -> Array:
@@ -2378,7 +2382,9 @@ static func news() -> Array:
 		if f:
 			var d = JSON.parse_string(f.get_as_text())
 			if d is Array:
-				_news_json = d
+				# the board shows player-facing notices only: everything before NEWS_SINCE is development history
+				# (kept in data/news.json as the changelog); "pin": true keeps an older notice visible
+				_news_json = (d as Array).filter(func(n): return str(n.get("date", "")) >= NEWS_SINCE or bool(n.get("pin", false)))
 	return _news_json
 
 static func profile(id: String) -> Dictionary:
@@ -3176,11 +3182,67 @@ static func tex(path: String) -> Texture2D:
 		return null
 	if _tex_cache.has(path):
 		return _tex_cache[path]
+	if waiting(path):
+		# deferred web art that has not been downloaded yet: show the Lv1 form (not cached under this path)
+		return tex(stand_in(path))
 	var t: Texture2D = null
 	if ResourceLoader.exists(path):
 		t = load(path) as Texture2D
 	_tex_cache[path] = t
 	return t
+
+# ----------------------------------------------------------------- deferred web art (game/core/art_pack.gd)
+# The web build leaves evolution art out of the first download (tools/make_art_packs.py). Those paths are
+# listed in data/deferred_art.json and count as existing; until their pack is loaded tex() shows a stand-in.
+
+static var _deferred: Dictionary = {}
+static var _deferred_read := false
+
+static func deferred_files() -> Dictionary:
+	if not _deferred_read:
+		_deferred_read = true
+		if FileAccess.file_exists("res://data/deferred_art.json"):
+			var m: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/deferred_art.json"))
+			if m is Dictionary:
+				for i in (m["packs"] as Array).size():
+					for f in m["packs"][i]["files"]:
+						_deferred[str(f)] = i
+	return _deferred
+
+## ResourceLoader.exists, but deferred art that is still downloading counts as present.
+static func has_res(path: String) -> bool:
+	return ResourceLoader.exists(path) or deferred_files().has(path)
+
+## True for deferred art whose pack has not arrived yet.
+static func waiting(path: String) -> bool:
+	if not deferred_files().has(path):
+		return false
+	# test switch: FAKE_DEFERRED=<seconds> pretends the packs are still downloading (shot_runner checks)
+	if _fake_ms < 0:   # counted from the first art request, like a real download that starts at boot
+		_fake_ms = Time.get_ticks_msec() + int(float(OS.get_environment("FAKE_DEFERRED")) * 1000.0) if OS.get_environment("FAKE_DEFERRED") != "" else 0
+	if _fake_ms > 0 and Time.get_ticks_msec() < _fake_ms:
+		return true
+	return not ResourceLoader.exists(path)
+static var _fake_ms := -1
+
+## The Lv1 form shown in place of art that is still downloading (same folder, <name>_char_stage1 / _sprite_stage1).
+static func stand_in(path: String) -> String:
+	var dir := path.get_base_dir()
+	var m := RegEx.create_from_string("^(.*_(char|sprite))_(evo\\d+|stage[2-9])").search(path.get_file())
+	if m:
+		var p := "%s/%s_stage1.png" % [dir, m.get_string(1)]
+		if ResourceLoader.exists(p):
+			return p
+	for f in DirAccess.get_files_at(dir):
+		var q := "%s/%s" % [dir, f.trim_suffix(".import")]
+		if q.contains("stage1") and ResourceLoader.exists(q):
+			return q
+	return ""
+
+## A pack arrived: forget the stand-ins so the real art is used from now on.
+static func deferred_loaded(files: Array) -> void:
+	for f in files:
+		_tex_cache.erase(str(f))
 
 static func icon(name: String) -> Texture2D:
 	return tex("res://art/icons/%s.png" % name)
@@ -3998,7 +4060,7 @@ static func _art_list_scan(id: String) -> Array:
 		if k == "lobby":
 			continue   # lobby pose is not an outfit
 		var p: String = str(states[k].get("base", ""))
-		if p != "" and ResourceLoader.exists(p):
+		if p != "" and has_res(p):
 			out.append(p)
 	if out.is_empty():
 		var portrait := str(_entry(id).get("portrait", ""))
@@ -4010,7 +4072,7 @@ static func _art_list_scan(id: String) -> Array:
 static func lobby_art(id: String) -> Texture2D:
 	var st: Dictionary = _entry(base_id(id)).get("char_states", {}).get("lobby", {})
 	var p := str(st.get("base", ""))
-	return tex(p) if p != "" and ResourceLoader.exists(p) else null
+	return tex(p) if p != "" and has_res(p) else null
 
 ## Alternate expression (the "a" variants) for an outfit, or null.
 static func alt_art(id: String, index: int = 0) -> Texture2D:
@@ -4021,7 +4083,7 @@ static func alt_art(id: String, index: int = 0) -> Texture2D:
 		return null
 	var inter: Array = states[keys[clampi(index, 0, keys.size() - 1)]].get("interactions", [])
 	for p in inter:
-		if ResourceLoader.exists(str(p)):
+		if has_res(str(p)):
 			return tex(str(p))
 	return null
 
@@ -4032,7 +4094,7 @@ static func alt_arts(id: String, index: int = 0) -> Array:
 	keys.sort_custom(func(a, b): return _state_sort_key(a) < _state_sort_key(b))
 	if keys.is_empty():
 		return []
-	return states[keys[clampi(index, 0, keys.size() - 1)]].get("interactions", []).filter(func(q): return ResourceLoader.exists(str(q)))
+	return states[keys[clampi(index, 0, keys.size() - 1)]].get("interactions", []).filter(func(q): return has_res(str(q)))
 
 static func art(id: String, index: int = 0) -> Texture2D:
 	id = base_id(id)
@@ -4174,16 +4236,16 @@ static func sprite(id: String, star: int = 1, skin: int = -1) -> Texture2D:
 	if skin >= 0 and skin == special_index(id):
 		var sp := str(_entry(id).get("special_sprite", ""))
 		var spe := str(_entry(id).get("special_sprite_evo", ""))
-		if star >= 5 and spe != "" and ResourceLoader.exists(spe):
+		if star >= 5 and spe != "" and has_res(spe):
 			sp = spe
-		if sp != "" and ResourceLoader.exists(sp):
+		if sp != "" and has_res(sp):
 			return tex(sp)
 	var sprites: Array = _entry(id).get("sprites", [])
 	var base_list: Array = []
 	var evo_list: Array = []
 	for s in sprites:
 		var p := str(s)
-		if not ResourceLoader.exists(p):
+		if not has_res(p):
 			continue
 		if p.contains("_evo") or p.contains("_special"):
 			evo_list.append(p)
@@ -4206,7 +4268,7 @@ static func sprite_forms(id: String) -> Array:
 	var evo_list: Array = []
 	for s in _entry(id).get("sprites", []):
 		var p := str(s)
-		if not ResourceLoader.exists(p) or p.contains("_special"):
+		if not has_res(p) or p.contains("_special"):
 			continue
 		if p.contains("_evo"):
 			evo_list.append(p)
@@ -4228,7 +4290,7 @@ static func sprite_form_star(id: String, form: int) -> int:
 static func boss_sprite(id: String) -> Texture2D:
 	var sprites: Array = _entry(id).get("sprites", [])
 	for s in sprites:
-		if str(s).contains("_evo") and ResourceLoader.exists(str(s)):
+		if str(s).contains("_evo") and has_res(str(s)):
 			return tex(str(s))
 	return sprite(id)
 

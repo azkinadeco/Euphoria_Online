@@ -2032,6 +2032,33 @@ func _run() -> void:
 	check(wf_none.size() <= 2, "almost every foe appears in a story chapter (missing: %s)" % str(wf_none))
 	check(DB.chapters_with("selene")[0] == 38, "Selene first appears in Ch.39")
 
+	print("[launch mailbox / notices / deferred web art]")
+	var lm_tot := {}
+	for lm in DB.MAIL:
+		for k in (lm["give"] as Dictionary).keys():
+			lm_tot[k] = int(lm_tot.get(k, 0)) + int(lm["give"][k])
+	check(int(lm_tot.get("gold", 0)) == 190000 and int(lm_tot.get("gems", 0)) == 1400 and int(lm_tot.get("summon_ticket", 0)) == 7 \
+		and int(lm_tot.get("exp_potion", 0)) == 30 and int(lm_tot.get("energy_potion", 0)) == 9, "launch mailbox keeps the day-one gift totals")
+	check(DB.MAIL.all(func(m): return not str(m["title"]).contains("Arc ") and not str(m["title"]).contains("Version")), "no update/patch letters in a new mailbox")
+	var lm_keep: Array = G.s["mail_claimed"].duplicate()
+	G.s["mail_claimed"] = ["arc12_dream"]
+	G._sanitize()
+	check(G.s["mail_claimed"].has("starter_supplies"), "old save that claimed an update letter has the starter supplies")
+	G.s["mail_claimed"] = lm_keep
+	check(DB.news().all(func(n): return str(n["date"]) >= DB.NEWS_SINCE or bool(n.get("pin", false))), "notice board shows player-facing notices only")
+	check(not DB.news().is_empty() and str(DB.news()[0]["id"]) == "n2026-11-22a", "welcome notice is on top")
+	var df: Dictionary = DB.deferred_files()
+	if not df.is_empty():
+		var df_bad: Array = []
+		for p2 in df.keys():
+			var sti := DB.stand_in(str(p2))
+			if str(p2).contains("/art/characters/") and (sti == "" or not ResourceLoader.exists(sti)):
+				df_bad.append(p2)
+		check(df_bad.is_empty(), "every deferred art has a Lv1 stand-in (%d missing: %s)" % [df_bad.size(), str(df_bad.slice(0, 3))])
+		check(not DB.waiting(str(df.keys()[0])), "from source nothing is waiting (all art present)")
+		check(DB.has_res(str(df.keys()[0])), "deferred art counts as present")
+	check(DB.stand_in("res://art/characters/heroes/shina/char/shina_char_evo2.png").ends_with("shina_char_stage1.png"), "evo stand-in = stage1 art")
+
 	print("[even frame pacing]")
 	var fpc: Array = [[60.0, 60, 60], [90.0, 60, 90], [120.0, 60, 60], [144.0, 60, 72], [60.0, 30, 30], [120.0, 30, 30]]
 	for fp in fpc:

@@ -1,5 +1,20 @@
 [
  {
+  "id": "n2026-11-22a",
+  "date": "2026-11-22",
+  "tag": "NOTICE",
+  "title": "Welcome to the Euphoria Online Test!",
+  "body": "Thank you for trying this test build, Commander!\n\n- Collect your gifts in the MAILBOX, then summon your first heroes. Your first 10x summon on a Gem banner guarantees a UR hero or better.\n- Clear the STORY to level up and unlock more features: Arena, Guild, Tower, Dungeons and more open as your Commander level rises.\n- Battles play automatically: your job is who you bring and where they stand. Match elements for +30% ATK.\n- This is an offline test: your progress is saved on this device. Keep a BACKUP CODE in Settings.\n- Evolved hero art downloads in the background while you play.\n\nPlease tell us what you think: Settings > PLAYTEST DATA > WRITE FEEDBACK.",
+  "pin": true
+ },
+ {
+  "id": "n2026-11-22b",
+  "date": "2026-11-22",
+  "tag": "UPDATE",
+  "title": "Faster First Download",
+  "body": "The game now starts after a much smaller download (about half the size). Evolved and later-stage hero art downloads in the background while you play: until it arrives those outfits show the hero's Lv.1 art with a small LOADING HD note, then switch by themselves. The art is saved on your device, so the next visit starts quickly. Your Mailbox also has new welcome gifts for new Commanders."
+ },
+ {
   "id": "n2026-11-21c",
   "date": "2026-11-21",
   "tag": "UPDATE",

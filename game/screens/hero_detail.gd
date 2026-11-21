@@ -1229,6 +1229,7 @@ func _render_outfits() -> void:
 		var t := UI.tex_rect(DB.tex(arts[i]), Vector2.ZERO, true)
 		t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		fr.add_child(t)
+		UI.pending_art(t, str(arts[i]))
 		var cap := UI.label("", 13, Color.WHITE, 4)
 		cap.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 		cap.offset_top = -24

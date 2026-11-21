@@ -12,13 +12,12 @@ var _tools: HBoxContainer
 
 ## Per-mail flavour: [tag, tag colour, sender, icon, date]
 const META := {
-	"xmas_hyeonxa": ["EVENT", "#ff5a6e", "Euphoria Team", "icon_live_ops", "Nov 8"],
-	"heroes_nov8": ["UPDATE", "#5fb8ff", "Euphoria Team", "icon_gacha", "Nov 8"],
-	"skins_nov5": ["EVENT", "#ff6fae", "Lulu • Wardrobe", "item_skin_ticket", "Nov 5"],
-	"nov2026": ["UPDATE", "#5fb8ff", "Euphoria Team", "icon_gacha", "Nov 1"],
 	"welcome": ["GIFT", "#ffcf5a", "Euphoria Team", "icon_gem", "Day 1"],
-	"patch_v2": ["UPDATE", "#5fb8ff", "Euphoria Team", "icon_live_ops", "Oct 20"],
-	"bond_event": ["EVENT", "#ff6fae", "Festival Committee", "icon_heart", "Oct 14"],
+	"nov2026": ["GIFT", "#ffcf5a", "Euphoria Team", "icon_gacha", "Day 1"],
+	"starter_supplies": ["GIFT", "#ffcf5a", "Euphoria Team", "item_energy_potion", "Day 1"],
+	"skins_nov5": ["GIFT", "#ff6fae", "Lulu • Wardrobe", "item_skin_ticket", "Day 1"],
+	"bond_event": ["GIFT", "#ff6fae", "Oath Knights", "icon_heart", "Day 1"],
+	"xmas_hyeonxa": ["EVENT", "#ff5a6e", "Euphoria Team", "icon_live_ops", "Day 1"],
 }
 
 func build() -> void:

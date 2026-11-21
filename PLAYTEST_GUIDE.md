@@ -7,7 +7,7 @@ Tujuan: tahu **apakah orang luar mau main lagi besok**, di mana mereka berhenti,
 ## 1. Siapa yang dicari
 
 - **20–50 orang** yang memang main gacha / RPG koleksi karakter (Brown Dust, Sakura-like, Nikke, Epic Seven, dst.). Bukan teman yang "main karena sungkan".
-- Campur HP Android, iPhone, dan PC. Paling penting: **HP kelas menengah** (web build ±150 MB, harus dicek di HP nyata).
+- Campur HP Android, iPhone, dan PC. Paling penting: **HP kelas menengah** (download awal ±72 MB + wasm; art evolusi ±85 MB menyusul di background; harus dicek di HP nyata).
 - Minimal **5 orang yang kamu tonton langsung** (video call share screen / duduk di sebelahnya). Jangan bantu, jangan jelaskan. Catat kapan mereka bingung, diam, atau bilang "terus ini ngapain?".
 
 **Bias yang harus diwaspadai**
@@ -70,7 +70,7 @@ Kalau tester mengirim **COPY TEXT**, simpan teksnya sebagai file `.json` di fold
 | PLAY TIME UNTIL | Berapa menit main sampai momen penting. Kalau summon pertama > 10 menit, onboarding terlalu panjang. |
 | LAST SCREEN BEFORE THEY STOPPED | Layar terakhir sebelum orang pergi = kandidat masalah. |
 | SCREENS OPENED | Fitur yang hampir tidak pernah dibuka = beban maintenance, kandidat dipangkas. |
-| PERFORMANCE | Lama boot dan FPS per layar di HP asli. Layar < 30 fps = prioritas perbaikan. |
+| PERFORMANCE | Lama boot dan FPS per layar di HP asli. Layar < 30 fps = prioritas perbaikan. Event `artpack` di log = berapa detik sampai semua art HD terunduh. |
 | MOST LOST BATTLES / after a defeat | Tembok kesulitan, dan apakah orang memilih RETRY, UPGRADE atau pergi. |
 | BATTLES LEFT HALF-WAY | Battle yang ditinggal = membosankan atau terlalu lama. |
 | ECONOMY WALLS | Energy/gold/gem habis di mana. Ini tanda grinding. |

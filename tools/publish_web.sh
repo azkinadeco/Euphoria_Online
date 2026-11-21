@@ -6,11 +6,17 @@ setopt NULL_GLOB
 GODOT=${GODOT:-/Users/apple/Downloads/Godot.app/Contents/MacOS/Godot}
 # build stamp for the playtest log (game/core/telemetry.gd): last commit + export date
 echo "{\"build\": \"$(git rev-parse --short HEAD 2>/dev/null || echo nogit)-$(date +%Y%m%d%H%M)\"}" > data/build.json
+# deferred evolution art: manifest (compiled in) + small packs fetched after boot (game/core/art_pack.gd)
+python3 tools/make_art_packs.py
+rm -rf builds/art_packs
+$GODOT --headless --path . -s res://tools/make_art_packs.gd
 $GODOT --headless --path . --export-release "Web" builds/Euphoria_v2.html
 mkdir -p web
 rm -f web/Euphoria_v2.*
 cp builds/Euphoria_v2.* web/
 cp web/Euphoria_v2.html web/index.html
+rm -f web/art_*.pck
+cp builds/art_packs/*.pck web/
 for f in favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png; do
   [ -f builds/$f ] && cp builds/$f web/
 done

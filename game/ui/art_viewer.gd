@@ -258,6 +258,7 @@ func _show() -> void:
 	var alts := DB.alt_arts(id, _index())
 	_expr = clampi(_expr, 0, alts.size())
 	_art.texture = DB.tex(str(alts[_expr - 1])) if _expr > 0 else DB.art(id, _index())
+	UI.pending_art(_art, str(alts[_expr - 1]) if _expr > 0 else DB.art_path(id, _index()))
 	_expr_b.visible = not alts.is_empty()
 	var arts := DB.art_list(id)
 	var nm := "Outfit %d / %d" % [_index() + 1, arts.size()] if is_hero else "Form %d / %d" % [_index() + 1, arts.size()]
