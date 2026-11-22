@@ -598,6 +598,56 @@ static func stars(n: int, size: int = 16, max_n: int = 0) -> Label:
 	var l := label(t, size, GOLD, 3)
 	return l
 
+const BlackFlame = preload("res://game/ui/black_flame.gd")
+
+## A hero's rank as stars: 1-6 gold stars, then 6 stars in the Evolution tier colour (Azure blue, Crimson red,
+## Violet purple) and Abyss = black stars with a black-flame aura. `compact` drops the empty ☆ slots.
+static func rank_stars(star: int, evo: int, evo_star: int, size: int = 16, compact: bool = false) -> Control:
+	var box := Control.new()
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var text := ""
+	var col := GOLD
+	var outline := 3
+	var outline_col := Color(0, 0, 0, 0.85)
+	if evo <= 0:
+		text = "★".repeat(star) + ("" if compact else "☆".repeat(maxi(0, DB.MAX_STAR - star)))
+	else:
+		col = DB.evo_color(evo)
+		text = "★".repeat(evo_star) + ("" if compact else "☆".repeat(maxi(0, DB.EVO_STARS - evo_star)))
+		if evo >= DB.MAX_EVO:
+			outline = 5
+			outline_col = Color("#b04bff")
+		else:
+			outline_col = col.darkened(0.65)
+	var l := label(text, size, col, outline)
+	l.add_theme_color_override("font_outline_color", outline_col)
+	l.name = "stars"
+	box.add_child(l)
+	if evo >= DB.MAX_EVO:
+		var fl: Control = BlackFlame.new()
+		fl.stars = maxi(1, text.length())
+		fl.show_behind_parent = true
+		fl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		fl.offset_top = -size * 1.15
+		fl.offset_bottom = -size * 0.2
+		l.add_child(fl)
+	# the box takes the label's size (Control parents do not size themselves)
+	box.custom_minimum_size = l.get_combined_minimum_size()
+	l.resized.connect(func(): box.custom_minimum_size = l.size)
+	return box
+
+## rank_stars for an owned hero id.
+static func hero_rank_stars(id: String, size: int = 16, compact: bool = false) -> Control:
+	var h := Game.hero(id)
+	var st: int = int(h.get("star", DB.RARITY_START_STAR[DB.rarity_of(id)]))
+	return rank_stars(st, int(h.get("evo", 0)), int(h.get("evo_star", 0)), size, compact)
+
+## "Azure 3★" / "4★" text of a hero's rank.
+static func rank_text(id: String) -> String:
+	var h := Game.hero(id)
+	var e := int(h.get("evo", 0))
+	return "%s %d★" % [DB.evo_name(e), int(h.get("evo_star", 0))] if e > 0 else "%d★" % int(h.get("star", 1))
+
 const RARITY_FRAME_MODE := {"LR": 1, "GR": 2, "OR": 3, "MR": 4}
 const RARITY_AURA := {"N": 0.0, "R": 0.15, "SR": 0.3, "SSR": 0.45, "UR": 0.55, "LR": 0.7, "MR": 0.75, "GR": 0.85, "OR": 0.9}
 static var _rarity_shader: Shader

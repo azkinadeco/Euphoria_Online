@@ -683,7 +683,7 @@ func _render_detail() -> void:
 	rr1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	r1.add_child(rr1)
 	if _hard:
-		rv.add_child(UI.label("Guaranteed %s shards every clear!" % DB.name_of(st["shard_id"]), 12, Color("#ff9ad5"), 2))
+		rv.add_child(UI.label("Guaranteed Evo Crystals every clear!", 12, Color("#ff9ad5"), 2))
 	if stars == 0:
 		var fr := {"gems": st["first_gems"]}
 		for k in st["first_items"].keys():

@@ -57,12 +57,15 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	# first-visit loading over several frames instead of freezing ~2 s before the screen appears)
 	var art_i: int = int(h.get("skin", 0)) if opts.get("skin", false) else 0
 	var lazy: bool = opts.get("lazy", false) and not DB.tex_loaded(DB.art_path(id, art_i))
-	var face := UI.tex_rect_lazy(not lazy, func(): return DB.art(id, art_i), Vector2.ZERO, false)
+	# opts.bust: half-body crop centred on the face (DB.bust_tex) so all picker cards share one proportion
+	var bust: bool = opts.get("bust", false)
+	var bust_aspect := (card_size.y - 4.0) / maxf(1.0, card_size.x - 4.0)
+	var face := UI.tex_rect_lazy(not lazy, (func(): return DB.bust_tex(DB.art(id, art_i), bust_aspect)) if bust else (func(): return DB.art(id, art_i)), Vector2.ZERO, bust)
 	face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	face.offset_left = 2
-	face.offset_top = 4
+	face.offset_top = 2 if bust else 4
 	face.offset_right = -2
-	face.offset_bottom = -int(card_size.y * 0.1)
+	face.offset_bottom = -2 if bust else -int(card_size.y * 0.1)
 	frame.add_child(face)
 
 	var shade := TextureRect.new()
@@ -152,10 +155,7 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.add_child(info)
 	var star_n: int = int(h.get("star", DB.RARITY_START_STAR[rarity]))
-	var st := UI.stars(star_n, 12)
-	if int(h.get("awaken", 0)) > 0:
-		st.text += "  A%d" % int(h["awaken"])
-	info.add_child(st)
+	info.add_child(UI.rank_stars(star_n, int(h.get("evo", 0)), int(h.get("evo_star", 0)), 12, true))
 	var nm := UI.label(DB.name_of(id).split(" ")[0], 14 if card_size.x >= 100 else 12, Color.WHITE, 4)
 	nm.clip_text = true
 	nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -169,27 +169,37 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 
 	if not owned:
 		face.modulate = Color(0.35, 0.35, 0.4)
-		var sh: int = int(Game.s["shards"].get(id, 0))
-		var need: int = Game.RECRUIT_SHARDS[rarity]
-		var lv2 := UI.vbox(3)
-		lv2.anchor_right = 1.0
-		lv2.offset_left = 12
-		lv2.offset_right = -12
-		lv2.offset_top = card_size.y * 0.36
-		lv2.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		frame.add_child(lv2)
-		var ready := sh >= need
-		var lock := UI.label(("NOT OWNED" if card_size.x >= 110 else "✕") if sh == 0 else ("✦ RECRUIT!" if ready else "SHARDS"), 11, UI.GOLD if ready else UI.MUTED, 3)
+		var lock := UI.label("NOT OWNED" if card_size.x >= 110 else "✕", 11, UI.MUTED, 3)
 		lock.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lv2.add_child(lock)
-		if sh > 0:
-			var pb := UI.bar(mini(sh, need), need, "", 6)
-			pb.add_theme_stylebox_override("fill", UI.style(UI.GOLD if ready else Color("#b48cff"), Color.TRANSPARENT, 3, 0, 0))
-			pb.add_theme_stylebox_override("background", UI.style(Color(0, 0, 0, 0.6), Color(1, 1, 1, 0.2), 3, 1, 0))
-			lv2.add_child(pb)
-			var nl := UI.label("%d / %d" % [sh, need], 10, Color.WHITE if ready else UI.TEXT, 3)
-			nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			lv2.add_child(nl)
+		lock.anchor_right = 1.0
+		lock.offset_top = card_size.y * 0.4
+		frame.add_child(lock)
+
+	# duplicate cards of this hero waiting in the inventory ("+3"), like a stack
+	var cp := Game.copies(id) if owned and not opts.get("copy", false) else 0
+	if cp > 0 and opts.get("show_copies", true):
+		var cpl := UI.label("+%d" % cp, 20 if card_size.x >= 100 else 16, Color("#d8b4ff"), 5)
+		cpl.add_theme_color_override("font_outline_color", Color("#2a0d4a"))
+		cpl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		cpl.anchor_left = 1.0
+		cpl.anchor_right = 1.0
+		cpl.offset_left = -60
+		cpl.offset_right = -6
+		cpl.offset_top = 22
+		frame.add_child(cpl)
+	if opts.get("copy", false):
+		# a duplicate card in the inventory: material for rank-ups / dismantling
+		var tag := UI.styled_panel(Color(0.18, 0.06, 0.3, 0.9), Color("#d8b4ff", 0.8), 6, 1, 3)
+		tag.anchor_left = 0.5
+		tag.anchor_right = 0.5
+		tag.offset_left = -34
+		tag.offset_right = 34
+		tag.offset_top = card_size.y * 0.42
+		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var tl := UI.label("COPY", 12, Color("#ecd8ff"), 3)
+		tl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		tag.add_child(tl)
+		frame.add_child(tag)
 
 	# ornate rarity frame overlay (art/ui/frame_*.png)
 	var fpath := "res://art/ui/frame_%s.png" % rarity.to_lower()

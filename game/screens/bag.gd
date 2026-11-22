@@ -1,5 +1,5 @@
 extends Screen
-## Inventory: items, hero shards. Usable items can be consumed here.
+## Inventory: items, gear, runes and duplicate hero cards ("shard:<id>" keys = Game.copies). Usable items can be consumed here.
 
 var _grid: GridContainer
 var _detail: VBoxContainer
@@ -29,7 +29,7 @@ func build() -> void:
 	lp.add_child(lv)
 	var tabs := UI.hbox(8)
 	lv.add_child(tabs)
-	for t in ["ITEMS", "GEAR", "RUNES", "SHARDS"]:
+	for t in ["ITEMS", "GEAR", "RUNES", "CARDS"]:
 		var key: String = t
 		var tb := UI.button(t, func(): _tab = key; _sel = ""; _filter = "ALL"; _render(), "TabButton", Vector2(140, 40))
 		tb.toggle_mode = true
@@ -81,7 +81,7 @@ func _entries() -> Array:
 			out.append("uid:%d" % int(g["uid"]))
 	else:
 		for id in DB.hero_ids():
-			if int(Game.s["shards"].get(id, 0)) > 0:
+			if Game.copies(id) > 0:
 				out.append("shard:" + id)
 	return out
 
@@ -115,7 +115,7 @@ func _count(k: String) -> int:
 	if k.begins_with("uid:") or k.begins_with("rid:"):
 		return 1
 	if k.begins_with("shard:"):
-		return int(Game.s["shards"].get(k.substr(6), 0))
+		return Game.copies(k.substr(6))
 	return Game.amount(k)
 
 func _render() -> void:
@@ -198,7 +198,7 @@ func _render() -> void:
 		v.add_child(nl)
 		if is_shard:
 			var hid := key.substr(6)
-			var need: int = int(Game.star_up_cost(hid)["shards"]) if Game.owns(hid) else int(Game.RECRUIT_SHARDS[DB.rarity_of(hid)])
+			var need: int = maxi(1, int(Game.rank_cost(hid).get("copies", 1))) if Game.owns(hid) and not Game.rank_maxed(hid) else 1
 			var sb := UI.bar(_count(key), need, "GoldBar", 5)
 			sb.custom_minimum_size.x = 80
 			sb.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -257,7 +257,7 @@ func _render() -> void:
 			"ITEMS": _summary.text = "%d item type%s%s" % [entries.size(), "" if entries.size() == 1 else "s", ("   •   %d ready to use / open (!)" % usable) if usable > 0 else ""]
 			"GEAR": _summary.text = "%d pieces   •   %d equipped (E)" % [entries.size(), entries.filter(func(q): return str(_gear(q)["owner"]) != "").size()]
 			"RUNES": _summary.text = "%d runes   •   %d equipped (E)" % [entries.size(), entries.filter(func(q): return str(_rune(q)["owner"]) != "").size()]
-			_: _summary.text = "%d heroes with shards   •   bar = progress to the next Star Up / recruit" % entries.size()
+			_: _summary.text = "%d heroes with duplicate cards   •   bar = cards for the next Star Up / Evolution   •   %d / %d inventory" % [entries.size(), Game.hero_cards(), Game.hero_slots()]
 	else:
 		_empty_state()
 	UI.stagger(_grid, 0.02)
@@ -278,7 +278,7 @@ func _count_tab(t: String) -> int:
 	match t:
 		"GEAR": return Game.s["gear"].size()
 		"RUNES": return Game.s["runes"].size()
-		"SHARDS": return DB.hero_ids().filter(func(id): return int(Game.s["shards"].get(id, 0)) > 0).size()
+		"CARDS": return DB.hero_ids().filter(func(id): return Game.copies(id) > 0).size()
 	var saved := [_tab, _filter]
 	_tab = "ITEMS"
 	_filter = "ALL"
@@ -292,7 +292,7 @@ func _empty_state() -> void:
 	var all := {
 		"GEAR": ["gear_weapon", "NO GEAR YET", "Weapons, armor and relics drop from Boss Hunts, the Dungeon and story bosses.", "BOSS HUNT", "hunt"],
 		"RUNES": ["icon_shards", "NO RUNES YET", "Runes socket into heroes for bonus stats. Hunt the Spore Queen or open Rune Chests.", "BOSS HUNT", "hunt"],
-		"SHARDS": ["icon_gacha", "NO HERO SHARDS", "Duplicate summons and Boss Hunts give shards. Use them to Star Up or recruit heroes.", "SUMMON", "gacha"],
+		"CARDS": ["icon_gacha", "NO DUPLICATE CARDS", "Summoning a hero you already have gives a duplicate card. Use cards with Evo Crystals to Star Up and Evolve, or dismantle them.", "SUMMON", "gacha"],
 	}
 	var info: Array = all.get(_tab, ["icon_bag", "NOTHING HERE", "Items of this type will show up here.", "SHOP", "shop"])
 	var ep := UI.styled_panel(Color(0.08, 0.05, 0.14, 0.7), Color(1, 1, 1, 0.12), 16, 1, 22)
@@ -381,7 +381,7 @@ func _detail_header(tex: Texture2D, title: String, col: Color, round_icon: bool)
 	var row := UI.hbox(10)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	var tag := UI.styled_panel(Color(col, 0.18), Color(col, 0.7), 10, 1, 0)
-	tag.add_child(UI.label("  %s  " % ("HERO SHARD" if _sel.begins_with("shard:") else _group(_sel)), 12, col.lightened(0.35), 2))
+	tag.add_child(UI.label("  %s  " % ("HERO CARD" if _sel.begins_with("shard:") else _group(_sel)), 12, col.lightened(0.35), 2))
 	row.add_child(tag)
 	row.add_child(UI.label("Owned  %s" % Game.fmt(_count(_sel)), 16, UI.GOLD, 3))
 	_detail.add_child(row)
@@ -467,13 +467,14 @@ func _render_detail() -> void:
 					_render(), "SALVAGE"), "", Vector2(0, 44)))
 		_detail.add_child(UI.button("OPEN FORGE", func(): main.go("forge", {"uid": uid}), "GoldButton", Vector2(0, 44)))
 		return
-	_detail_header(Game.reward_icon(_sel) if not _sel.begins_with("shard:") else DB.face(_sel.substr(6)), Game.reward_name(_sel), _frame_col(_sel, {}, {}), _sel.begins_with("shard:"))
+	_detail_header(Game.reward_icon(_sel) if not _sel.begins_with("shard:") else DB.face(_sel.substr(6)), Game.reward_name(_sel) if not _sel.begins_with("shard:") else "%s  (duplicate card)" % DB.name_of(_sel.substr(6)), _frame_col(_sel, {}, {}), _sel.begins_with("shard:"))
 	var desc := ""
 	if _sel.begins_with("shard:"):
 		var hid := _sel.substr(6)
-		desc = "Used to Star Up %s%s." % [DB.name_of(hid), "" if Game.owns(hid) else " or recruit her (%d needed)" % Game.RECRUIT_SHARDS[DB.rarity_of(hid)]]
+		desc = "%d duplicate card(s) of %s. Use them with Evo Crystals to Star Up and Evolve her, or dismantle them into %d Evo Crystals each." % [Game.copies(hid), DB.name_of(hid), DB.dismantle_crystals(DB.rarity_of(hid))]
 		_detail.add_child(UI.wrap_label(desc, 15, UI.TEXT))
-		_detail.add_child(UI.button("VIEW HERO", func(): main.go("hero_detail", {"id": hid}), "GoldButton", Vector2(0, 48)))
+		_detail.add_child(UI.button("STAR UP / EVOLVE", func(): main.go("hero_detail", {"id": hid, "tab": "UPGRADE"}), "GoldButton", Vector2(0, 48)))
+		_detail.add_child(UI.button("DISMANTLE", func(): main.go("dismantle", {"id": hid}), "", Vector2(0, 44)))
 		return
 	match _sel:
 		"gold": desc = "Used for leveling and Star Up."

@@ -86,6 +86,8 @@ func new_state() -> Dictionary:
 		"items": {"summon_ticket": 0, "bouquet": 3},
 		"heroes": {},
 		"shards": {},
+		"copies": {},          # duplicate hero cards (material for Star Up / Evolution), id -> count
+		"hero_slots_extra": 0,
 		"formation": [],
 		"lobby_hero": "shina",
 		"story": {"cleared": {}, "hard": {}},
@@ -139,7 +141,7 @@ func new_state() -> Dictionary:
 	return st
 
 func _new_hero(id: String) -> Dictionary:
-	return {"level": 1, "star": DB.RARITY_START_STAR[DB.rarity_of(id)], "bond": 1, "bond_exp": 0, "oath": false, "skin": 0, "taps": 0, "skill_lv": 1, "awaken": 0}
+	return {"level": 1, "star": DB.RARITY_START_STAR[DB.rarity_of(id)], "bond": 1, "bond_exp": 0, "oath": false, "skin": 0, "taps": 0, "skill_lv": 1, "awaken": 0, "evo": 0, "evo_star": 0}
 
 func load_game() -> void:
 	s = new_state()
@@ -190,6 +192,7 @@ func _withdraw_skins() -> void:
 
 func _sanitize() -> void:
 	_ensure_gear_subs()
+	_migrate_evolution()
 	# launch mailbox: a save that claimed any of the merged update letters already has the starter supplies
 	var mc: Array = s["mail_claimed"]
 	if not mc.has("starter_supplies") and DB.MAIL_MERGED.any(func(x): return mc.has(x)):
@@ -208,7 +211,7 @@ func _sanitize() -> void:
 		for k in base.keys():
 			if not h.has(k):
 				h[k] = base[k]
-		for k in ["level", "star", "bond", "bond_exp", "skin", "taps", "skill_lv", "awaken"]:
+		for k in ["level", "star", "bond", "bond_exp", "skin", "taps", "skill_lv", "awaken", "evo", "evo_star"]:
 			h[k] = int(h[k])
 	var clean: Array = []
 	for e in s["formation"]:
@@ -636,9 +639,17 @@ func give(rewards: Dictionary) -> void:
 			s["cur"][k] = int(s["cur"][k]) + n
 			if n > 0 and (k == "gold" or k == "gems"):
 				stat_add(k + "_earned", n)
+		elif k.begins_with("card:"):
+			# duplicate hero cards; with no inventory room they turn into the crystals they would dismantle into
+			var cid: String = k.substr(5)
+			for ci in n:
+				if owns(cid) and hero_room() > 0:
+					s["copies"][cid] = copies(cid) + 1
+				else:
+					s["items"]["star_stone"] = int(s["items"].get("star_stone", 0)) + DB.dismantle_crystals(DB.rarity_of(cid))
 		elif k.begins_with("shard:"):
-			var hid: String = k.substr(6)
-			s["shards"][hid] = int(s["shards"].get(hid, 0)) + n
+			# hero shards became Evo Crystals (universal) with the duplicate-card system
+			s["items"]["star_stone"] = int(s["items"].get("star_stone", 0)) + n
 		elif k.begins_with("skin:"):
 			# special skin (event reward); usable once the hero is recruited
 			var sid: String = k.substr(5)
@@ -692,7 +703,9 @@ func reward_name(k: String) -> String:
 		"guild_coin": return "Guild Coin"
 		"friend_point": return "Friend Point"
 	if k.begins_with("shard:"):
-		return "%s Shard" % DB.name_of(k.substr(6))
+		return "Evo Crystal"
+	if k.begins_with("card:"):
+		return "%s Card" % DB.name_of(k.substr(5))
 	if k.begins_with("gear:"):
 		var p := k.split(":")
 		if p.size() > 3:
@@ -714,7 +727,9 @@ func reward_icon(k: String) -> Texture2D:
 		"guild_coin": return DB.icon("icon_guild")
 		"friend_point": return DB.icon("icon_heart")
 	if k.begins_with("shard:"):
-		return DB.face(k.substr(6))
+		return DB.icon("item_star_stone")
+	if k.begins_with("card:"):
+		return DB.face(k.substr(5))
 	if k.begins_with("skin:"):
 		return DB.face(k.substr(5), DB.special_index(k.substr(5)))
 	if k.begins_with("gear:"):
@@ -846,7 +861,7 @@ func stat_bonus(id: String) -> Dictionary:
 	var pb := companion_bonus()
 	b["hp"] += pb
 	b["atk"] += pb
-	var cb := collection_bonus() + DB.AWAKEN_STAT * int(hero(id).get("awaken", 0))
+	var cb := collection_bonus() + DB.EVO_STEP_STAT * evo_steps(id)
 	for k in b.keys():
 		b[k] += cb
 	var sk := int(hero(id).get("skin", 0))
@@ -887,27 +902,174 @@ func team_power() -> int:
 		p += hero_power(e[0])
 	return p
 
+## A summoned hero: the first one joins the team, later ones are duplicate cards in the hero inventory.
 func add_hero(id: String) -> Dictionary:
 	if owns(id):
-		var n: int = DB.DUPE_SHARDS[DB.rarity_of(id)]
-		s["shards"][id] = int(s["shards"].get(id, 0)) + n
-		return {"new": false, "shards": n}
+		s["copies"][id] = copies(id) + 1
+		return {"new": false, "copy": true, "shards": 0}
 	s["heroes"][id] = _new_hero(id)
-	return {"new": true, "shards": 0}
+	return {"new": true, "copy": false, "shards": 0}
 
-const RECRUIT_SHARDS := {"N": 20, "R": 30, "SR": 50, "SSR": 80, "UR": 100, "LR": 120, "MR": 150, "GR": 200, "OR": 250}
+# =================================================================== hero inventory & duplicate cards
 
-func recruit_with_shards(id: String) -> String:
-	if owns(id):
-		return "Already recruited."
-	var need: int = RECRUIT_SHARDS[DB.rarity_of(id)]
-	var have := int(s["shards"].get(id, 0))
-	if have < need:
-		return "Need %d shards (have %d)." % [need, have]
-	s["shards"][id] = have - need
-	s["heroes"][id] = _new_hero(id)
+func copies(id: String) -> int:
+	return int(s["copies"].get(id, 0))
+
+func total_copies() -> int:
+	var n := 0
+	for k in s["copies"].keys():
+		n += int(s["copies"][k])
+	return n
+
+## Cards in the hero inventory: every recruited hero + every duplicate card.
+func hero_cards() -> int:
+	return s["heroes"].size() + total_copies()
+
+var unlimited_slots := false   # flow_test: thousands of test pulls must not hit the inventory limit
+func hero_slots() -> int:
+	if unlimited_slots:
+		return 1 << 30
+	return mini(DB.HERO_SLOTS_MAX, DB.HERO_SLOTS_BASE + int(s.get("hero_slots_extra", 0)))
+
+func hero_room() -> int:
+	return hero_slots() - hero_cards()
+
+func expand_hero_slots() -> String:
+	if hero_slots() >= DB.HERO_SLOTS_MAX:
+		return "The hero inventory is at its maximum size."
+	if not spend("gems", DB.HERO_SLOTS_PRICE):
+		return "Not enough Gems (%d needed)." % DB.HERO_SLOTS_PRICE
+	s["hero_slots_extra"] = int(s.get("hero_slots_extra", 0)) + DB.HERO_SLOTS_STEP
 	mark_dirty()
 	return ""
+
+## Dismantle `n` duplicate cards of `id` into Evo Crystals + Gold. Returns the rewards (empty on failure).
+func dismantle(id: String, n: int) -> Dictionary:
+	n = mini(n, copies(id))
+	if n <= 0:
+		return {}
+	s["copies"][id] = copies(id) - n
+	if copies(id) <= 0:
+		s["copies"].erase(id)
+	var r := {"star_stone": DB.dismantle_crystals(DB.rarity_of(id)) * n, "gold": 1000 * (DB.rarity_rank(DB.rarity_of(id)) + 1) * n}
+	give(r)
+	stat_add("dismantled", n)
+	mark_dirty()
+	return r
+
+## Every duplicate card of the given rarities (Dismantle screen quick buttons): id -> count.
+func dismantle_plan(rarities: Array) -> Dictionary:
+	var out := {}
+	for id in s["copies"].keys():
+		if rarities.has(DB.rarity_of(str(id))) and copies(str(id)) > 0:
+			out[str(id)] = copies(str(id))
+	return out
+
+func dismantle_many(plan: Dictionary) -> Dictionary:
+	var total := {}
+	for id in plan.keys():
+		var r := dismantle(str(id), int(plan[id]))
+		for k in r.keys():
+			total[k] = int(total.get(k, 0)) + int(r[k])
+	return total
+
+# =================================================================== stars & evolution
+# 1..6 gold stars, then Evolution: Azure (blue), Crimson (red), Violet (purple), Abyss (black flame),
+# 6 stars each. h["star"] stays 6 after evolving, so every "6★" rule keeps working; h["evo"] 1..4 and
+# h["evo_star"] 1..6 hold the coloured stars.
+
+## Evolution stars earned (0..24).
+func evo_steps(id: String) -> int:
+	var h := hero(id)
+	var e := int(h.get("evo", 0))
+	return 0 if e <= 0 else (e - 1) * DB.EVO_STARS + int(h.get("evo_star", 0))
+
+func rank_maxed(id: String) -> bool:
+	var h := hero(id)
+	return int(h.get("evo", 0)) >= DB.MAX_EVO and int(h.get("evo_star", 0)) >= DB.EVO_STARS
+
+## The next rank-up step: {"kind": "star"/"evolve"/"evo_star", "copies", "crystals", "gold", "label"}.
+func rank_cost(id: String) -> Dictionary:
+	var h := hero(id)
+	var star := int(h["star"])
+	var e := int(h.get("evo", 0))
+	var es := int(h.get("evo_star", 0))
+	if star < DB.MAX_STAR:
+		return {"kind": "star", "copies": int(DB.STAR_COPIES[star]), "crystals": DB.shards_for_star(star) / 2,
+			"gold": 5000 * star, "label": "%d★" % (star + 1)}
+	if e <= 0 or es >= DB.EVO_STARS:
+		var t := e + 1
+		return {"kind": "evolve", "copies": t + 1, "crystals": 100 * t, "gold": 50000 * t,
+			"label": "%s Evolution" % DB.evo_name(t), "tier": t}
+	return {"kind": "evo_star", "copies": e, "crystals": 40 * e, "gold": 20000 * e,
+		"label": "%s %d★" % [DB.evo_name(e), es + 1], "tier": e}
+
+## Cards / crystals actually used for the next step: own duplicates first, missing cards paid with crystals.
+func rank_pay(id: String) -> Dictionary:
+	var c := rank_cost(id)
+	var use_cards := mini(copies(id), int(c["copies"]))
+	var missing := int(c["copies"]) - use_cards
+	var crystals := int(c["crystals"]) + missing * DB.copy_crystals(DB.rarity_of(id))
+	return {"cards": use_cards, "missing": missing, "crystals": crystals, "gold": int(c["gold"])}
+
+func rank_up_block(id: String) -> String:
+	if not owns(id):
+		return "Recruit this hero first."
+	if rank_maxed(id):
+		return "Maximum rank reached!"
+	var p := rank_pay(id)
+	if amount("star_stone") < int(p["crystals"]):
+		return "Need %d Evo Crystals (have %d)." % [int(p["crystals"]), amount("star_stone")]
+	if amount("gold") < int(p["gold"]):
+		return "Not enough Gold."
+	return ""
+
+func rank_up_ready(id: String) -> bool:
+	return owns(id) and rank_up_block(id) == ""
+
+func rank_up(id: String) -> String:
+	var err := rank_up_block(id)
+	if err != "":
+		return err
+	var h := hero(id)
+	var c := rank_cost(id)
+	var p := rank_pay(id)
+	if int(p["cards"]) > 0:
+		s["copies"][id] = copies(id) - int(p["cards"])
+		if copies(id) <= 0:
+			s["copies"].erase(id)
+	s["items"]["star_stone"] = amount("star_stone") - int(p["crystals"])
+	s["cur"]["gold"] = int(s["cur"]["gold"]) - int(p["gold"])
+	match str(c["kind"]):
+		"star":
+			h["star"] = int(h["star"]) + 1
+			var arts := DB.art_list(id)
+			if unlocked_skins(id) <= arts.size():
+				h["skin"] = clampi(unlocked_skins(id) - 1, 0, arts.size() - 1)
+		"evolve":
+			h["evo"] = int(c["tier"])
+			h["evo_star"] = 1
+		"evo_star":
+			h["evo_star"] = int(h["evo_star"]) + 1
+	mark_dirty()
+	return ""
+
+## Old saves: hero shards and Awakening are gone. Shards -> Evo Crystals, Awakening A<n> -> Azure <n>★.
+func _migrate_evolution() -> void:
+	var sh: Dictionary = s.get("shards", {})
+	if not sh.is_empty():
+		var n := 0
+		for k in sh.keys():
+			n += int(sh[k])
+		s["items"]["star_stone"] = int(s["items"].get("star_stone", 0)) + n
+		s["shards"] = {}
+	for id in s["heroes"].keys():
+		var h: Dictionary = s["heroes"][id]
+		var aw := int(h.get("awaken", 0))
+		if aw > 0 and int(h.get("evo", 0)) == 0:
+			h["evo"] = 1
+			h["evo_star"] = clampi(aw, 1, DB.EVO_STARS)
+		h["awaken"] = 0
 
 func level_up(id: String, times: int = 1) -> int:
 	var h := hero(id)
@@ -1013,39 +1175,15 @@ func skill_up(id: String) -> String:
 	mark_dirty()
 	return ""
 
+## Star Up = the next rank-up step (gold star or Evolution); kept for older callers.
 func star_up_cost(id: String) -> Dictionary:
-	var h := hero(id)
-	return {"shards": DB.shards_for_star(h["star"]), "gold": 5000 * int(h["star"])}
+	return rank_cost(id)
 
-## True when Star Up can be done right now (enough shards + universal stones and gold). Read-only.
 func star_up_ready(id: String) -> bool:
-	var h := hero(id)
-	if h.is_empty() or int(h["star"]) >= DB.MAX_STAR:
-		return false
-	var c := star_up_cost(id)
-	return int(s["shards"].get(id, 0)) + amount("star_stone") >= int(c["shards"]) and amount("gold") >= int(c["gold"])
+	return rank_up_ready(id)
 
 func star_up(id: String) -> String:
-	var h := hero(id)
-	if h["star"] >= DB.MAX_STAR:
-		return "Already at max stars."
-	var c := star_up_cost(id)
-	var own := int(s["shards"].get(id, 0))
-	var uni := amount("star_stone")
-	if own + uni < c["shards"]:
-		return "Need %d shards (have %d + %d universal)." % [c["shards"], own, uni]
-	if amount("gold") < c["gold"]:
-		return "Not enough Gold."
-	var from_own := mini(own, c["shards"])
-	s["shards"][id] = own - from_own
-	s["items"]["star_stone"] = uni - (c["shards"] - from_own)
-	s["cur"]["gold"] -= c["gold"]
-	h["star"] += 1
-	var arts := DB.art_list(id)
-	if unlocked_skins(id) <= arts.size():
-		h["skin"] = clampi(unlocked_skins(id) - 1, 0, arts.size() - 1)
-	mark_dirty()
-	return ""
+	return rank_up(id)
 
 ## Outfit unlock milestones (Sakura Oath style): stars, bond levels, oath.
 func skin_milestones(id: String) -> Array:
@@ -1442,6 +1580,8 @@ func _roll_rarity(banner: Dictionary) -> String:
 	return last
 
 func pull(banner_id: String, count: int, pay: String) -> Dictionary:
+	if hero_room() < count:
+		return {"error": "Hero inventory is full (%d / %d). Dismantle duplicate cards or expand the inventory." % [hero_cards(), hero_slots()], "full": true}
 	var banner: Dictionary = banner_of(banner_id)
 	var normal: bool = banner.has("tiers")   # the Gold banner: no pity, no first-10x guarantee
 	if pay == "gold" or str(banner.get("cur", "")) == "gold":
@@ -1620,10 +1760,10 @@ func stat_value(stat: String) -> int:
 		"rift_best": return int(s["rift"]["best"])
 		"trials": return trials_done()
 		"commander_level": return int(s["player"]["level"])
-		"max_awaken":
+		"max_awaken":   # = most Evolution stars on one hero (Awakening became Evolution)
 			var ma := 0
-			for h in s["heroes"].values():
-				ma = maxi(ma, int(h.get("awaken", 0)))
+			for hid in s["heroes"].keys():
+				ma = maxi(ma, evo_steps(str(hid)))
 			return ma
 		"max_lb":
 			var ml := 0
@@ -1933,7 +2073,7 @@ func ally_team(params: Dictionary = {}) -> Array:
 				continue
 			for k in bl["bonus"].keys():
 				bonus[k] = float(bonus.get(k, 0.0)) + float(bl["bonus"][k])
-		allies.append({"id": e[0], "cell": Vector2i(e[1], e[2]), "level": h["level"], "star": h["star"], "bond": h["bond"], "oath": h["oath"], "bonus": bonus, "skill_lv": h["skill_lv"], "awaken": h["awaken"]})
+		allies.append({"id": e[0], "cell": Vector2i(e[1], e[2]), "level": h["level"], "star": h["star"], "bond": h["bond"], "oath": h["oath"], "bonus": bonus, "skill_lv": h["skill_lv"], "awaken": 0, "evo": int(h.get("evo", 0)), "evo_star": int(h.get("evo_star", 0))})
 	if params.has("support"):
 		var sp: Dictionary = params["support"]
 		allies.append({"id": sp["id"], "cell": sp["cell"], "level": sp["level"], "star": sp["star"]})
@@ -3566,36 +3706,7 @@ func arena_leaderboard() -> Array:
 
 # =================================================================== awakening
 
-func awaken_cost(id: String) -> Dictionary:
-	var a := int(hero(id).get("awaken", 0))
-	return {"shards": DB.AWAKEN_SHARDS[clampi(a, 0, 4)], "gold": 50000 * (a + 1)}
-
-func awaken_block(id: String) -> String:
-	var h := hero(id)
-	if int(h["star"]) < DB.MAX_STAR:
-		return "Awakening unlocks at %d★." % DB.MAX_STAR
-	if int(h["awaken"]) >= DB.MAX_AWAKEN:
-		return "Fully awakened!"
-	var c := awaken_cost(id)
-	if int(s["shards"].get(id, 0)) + amount("star_stone") < int(c["shards"]):
-		return "Need %d shards." % c["shards"]
-	if amount("gold") < int(c["gold"]):
-		return "Not enough Gold."
-	return ""
-
-func awaken(id: String) -> String:
-	var err := awaken_block(id)
-	if err != "":
-		return err
-	var c := awaken_cost(id)
-	var own := int(s["shards"].get(id, 0))
-	var from_own := mini(own, int(c["shards"]))
-	s["shards"][id] = own - from_own
-	s["items"]["star_stone"] = amount("star_stone") - (int(c["shards"]) - from_own)
-	spend("gold", int(c["gold"]))
-	hero(id)["awaken"] = int(hero(id)["awaken"]) + 1
-	mark_dirty()
-	return ""
+# Awakening was replaced by Evolution (rank_up); old saves are converted in _migrate_evolution.
 
 # =================================================================== black market
 
@@ -3603,10 +3714,11 @@ func _roll_market() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = day_key() * 131 + int(s["market"]["refresh"]) * 7 + hash(str(s["player"]["name"]))
 	var offers: Array = []
-	# one hero-shard offer, favouring heroes you own
-	var ids: Array = DB.HEROES.keys()
+	# one duplicate hero card of a hero you own (material for Star Up / Evolution)
+	var ids: Array = s["heroes"].keys() if not s["heroes"].is_empty() else DB.HEROES.keys()
+	ids.sort()
 	var hid: String = ids[rng.randi_range(0, ids.size() - 1)]
-	offers.append({"give": {"shard:" + hid: 10}, "price": DB.MARKET_SHARD_PRICE[DB.rarity_of(hid)], "cur": "gems", "sold": false, "off": 0})
+	offers.append({"give": {"card:" + hid: 1}, "price": DB.MARKET_SHARD_PRICE[DB.rarity_of(hid)], "cur": "gems", "sold": false, "off": 0})
 	var total := 0
 	for o in DB.MARKET_POOL:
 		total += int(o["w"])
@@ -3876,7 +3988,7 @@ func codex_reached(id: String, step: String) -> bool:
 		"own": return true
 		"star5": return int(h["star"]) >= 5
 		"bond10": return int(h["bond"]) >= DB.MAX_BOND
-		"awaken5": return int(h.get("awaken", 0)) >= DB.MAX_AWAKEN
+		"awaken5": return evo_steps(id) >= DB.EVO_STARS   # a full Azure Evolution
 	return false
 
 func codex_claimed(id: String, step: String) -> bool:
@@ -4391,8 +4503,8 @@ func limit_break_block(id: String) -> String:
 	var c := DB.lb_cost(lb)
 	if amount("hunt_core") < int(c["hunt_core"]):
 		return "Need %d Hunt Cores" % c["hunt_core"]
-	if int(s["shards"].get(id, 0)) + amount("star_stone") < int(c["shards"]):
-		return "Need %d shards" % c["shards"]
+	if amount("star_stone") < int(c["shards"]):
+		return "Need %d Evo Crystals" % c["shards"]
 	if amount("gold") < int(c["gold"]):
 		return "Not enough Gold"
 	return ""
@@ -4405,12 +4517,7 @@ func limit_break(id: String) -> String:
 	var c := DB.lb_cost(int(h.get("lb", 0)))
 	spend("hunt_core", int(c["hunt_core"]))
 	spend("gold", int(c["gold"]))
-	var need := int(c["shards"])
-	var own := int(s["shards"].get(id, 0))
-	var use_own := mini(own, need)
-	s["shards"][id] = own - use_own
-	if need > use_own:
-		spend("star_stone", need - use_own)
+	spend("star_stone", int(c["shards"]))
 	h["lb"] = int(h.get("lb", 0)) + 1
 	mark_dirty()
 	save_game()

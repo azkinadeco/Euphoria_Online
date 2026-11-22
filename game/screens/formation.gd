@@ -422,7 +422,7 @@ func _render_roster() -> void:
 		for i in Game.formation().size():
 			if Game.formation()[i][0] == hid:
 				order = i
-		var opts := {"skin": true}
+		var opts := {"skin": true, "bust": true, "lazy": true}
 		if order >= 0:
 			opts["badge"] = order + 1
 		var card := HeroCard.new(hid, Vector2(118, 150), opts)
@@ -671,7 +671,7 @@ func _pick_support() -> void:
 	for f in Game.friends():
 		var fr: Dictionary = f
 		var box := UI.vbox(2)
-		var card := HeroCard.new(fr["hero"], Vector2(130, 160), {"owned": true, "show_level": false})
+		var card := HeroCard.new(fr["hero"], Vector2(130, 160), {"owned": true, "show_level": false, "bust": true})
 		box.add_child(card)
 		var l := UI.label("%s  Lv.%d %s" % [fr["name"], fr["level"], "★".repeat(fr["star"])], 12, UI.MUTED if fr["used"] else Color.WHITE, 2)
 		box.add_child(l)

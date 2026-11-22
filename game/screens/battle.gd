@@ -373,13 +373,16 @@ func _place_units() -> void:
 				el.size = Vector2(v.size.x, 16)
 				el.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				v.add_child(el)
-			if int(u.get("awaken", 0)) > 0:
-				var al := UI.label("A%d" % u["awaken"], 14, Color("#ffcf4a"), 4)
-				al.position = Vector2(v.size.x - 30, v.size.y * 0.62)
+			var ue := int(u.get("evo", 0))
+			if ue > 0:
+				# evolution tier: small coloured star count under the unit (black = Abyss with its flame)
+				var al := UI.rank_stars(DB.MAX_STAR, ue, int(u.get("evo_star", 0)), 11, true)
+				al.position = Vector2(v.size.x * 0.5 - 40, v.size.y * 0.66)
 				v.add_child(al)
-			if int(u.get("awaken", 0)) >= 5:
+			if ue >= 3:
+				var gc := DB.evo_color(ue).lightened(0.35) if ue < 4 else Color(0.78, 0.6, 1.0)
 				var gl := v.sprite.create_tween().set_loops()
-				gl.tween_property(v.sprite, "self_modulate", Color(1.25, 1.15, 0.85), 0.9).set_trans(Tween.TRANS_SINE)
+				gl.tween_property(v.sprite, "self_modulate", Color(1.0 + gc.r * 0.2, 1.0 + gc.g * 0.2, 1.0 + gc.b * 0.2), 0.9).set_trans(Tween.TRANS_SINE)
 				gl.tween_property(v.sprite, "self_modulate", Color.WHITE, 0.9).set_trans(Tween.TRANS_SINE)
 		v.position = board.cell_foot(u["cell"]) - Vector2(sz.x * 0.5, sz.y)
 		_home[uid] = v.position
@@ -629,7 +632,7 @@ func _play_action(e: Dictionary, group: Array) -> void:
 			hl[c] = col
 		board.highlights = hl
 		var me := _unit_center(v)
-		_fx.aura(me + Vector2(0, v.size.y * 0.3), Color("#ffcf4a") if int(u.get("awaken", 0)) >= 5 else ec, v.size.x * (0.75 if int(u.get("awaken", 0)) >= 5 else 0.55))
+		_fx.aura(me + Vector2(0, v.size.y * 0.3), (DB.evo_color(int(u.get("evo", 0))) if int(u.get("evo", 0)) < 4 else Color("#6a2cff")) if int(u.get("evo", 0)) >= 2 else ec, v.size.x * (0.75 if int(u.get("evo", 0)) >= 2 else 0.55))
 		var ult: bool = u["side"] == 0 and not u["boss"] and DB.rarity_at_least(u["id"], "SSR") and not _ult_seen.has(u["id"])
 		if not bool(Game.s["settings"].get("skip_cutin", false)) and (ult or u["boss"] or shape in ["all", "square", "x"]):
 			var cd := _ultimate(u) if ult else (0.7 if _cut_in(u) else 0.0)

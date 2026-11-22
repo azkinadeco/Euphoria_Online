@@ -203,9 +203,11 @@ func _render() -> void:
 	_name_box.add_child(UI.label(DB.title_of(id), 16, DB.theme_color(id).lightened(0.4), 4))
 	var star_n: int = int(h.get("star", DB.RARITY_START_STAR[DB.rarity_of(id)]))
 	var srow := UI.hbox(8)
-	srow.add_child(UI.stars(star_n, 24, DB.MAX_STAR))
-	if int(h.get("awaken", 0)) > 0:
-		srow.add_child(UI.label("A%d" % int(h["awaken"]), 22, Color("#ffcf4a"), 5))
+	srow.add_child(UI.rank_stars(star_n, int(h.get("evo", 0)), int(h.get("evo_star", 0)), 24))
+	if int(h.get("evo", 0)) > 0:
+		var evl := UI.label(DB.evo_name(int(h["evo"])).to_upper(), 16, DB.evo_color(int(h["evo"])) if int(h["evo"]) < DB.MAX_EVO else Color("#c99bff"), 4)
+		evl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		srow.add_child(evl)
 	_name_box.add_child(srow)
 	# quick facts under the stars: who she beats, who beats her, and her skill's reach
 	var el: String = DB.ELEMENT_GROUP.get(DB.element_of(id), DB.element_of(id))
@@ -427,7 +429,7 @@ func _render_info() -> void:
 		var tv := UI.vbox(6)
 		tp.add_child(tv)
 		tv.add_child(UI.label("HERO TRIAL  •  Face your own Mirror", 16, Color("#d48cff"), 3))
-		tv.add_child(UI.wrap_label("%s must be deployed and survive. Foes of her weak element join the fight. First clears give her shards." % DB.name_of(id).split(" ")[0], 12, UI.MUTED))
+		tv.add_child(UI.wrap_label("%s must be deployed and survive. Foes of her weak element join the fight. First clears give Evo Crystals." % DB.name_of(id).split(" ")[0], 12, UI.MUTED))
 		var trow := UI.hbox(6)
 		tv.add_child(trow)
 		for ti in DB.TRIAL_TIERS.size():
@@ -481,20 +483,7 @@ func _render_info() -> void:
 		fb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(fb)
 	else:
-		var need: int = Game.RECRUIT_SHARDS[DB.rarity_of(id)]
-		var have: int = int(Game.s["shards"].get(id, 0))
-		_panel_box.add_child(UI.label("Shards %d / %d" % [have, need], 16, UI.GOLD))
-		_panel_box.add_child(UI.bar(have, need, "GoldBar", 10))
-		var rb := UI.button("RECRUIT WITH SHARDS", func():
-			var err := Game.recruit_with_shards(id)
-			if err != "":
-				main.toast(err, UI.RED)
-			else:
-				Game.sfx("awakening")
-				main.toast("%s joined your team!" % DB.name_of(id))
-				main.replace("hero_detail", params), "GoldButton", Vector2(0, 52))
-		rb.disabled = have < need
-		_panel_box.add_child(rb)
+		_panel_box.add_child(UI.wrap_label("Not recruited yet. Summon this hero at the Aether Gate; summoning her again gives duplicate cards for Star Up and Evolution.", 14, UI.MUTED))
 		_panel_box.add_child(UI.button("Go to Summon", func(): main.go("gacha"), "", Vector2(0, 46)))
 
 var _touch_busy := false
@@ -749,61 +738,51 @@ func _render_upgrade() -> void:
 	else:
 		kv.add_child(UI.label("Skill mastered! (+48% power)", 14, UI.GREEN))
 
-	# --- Star
+	# --- Rank: gold stars, then Evolution (Azure / Crimson / Violet / Abyss), paid with duplicate cards + Evo Crystals
 	var sp := UI.panel("CardPanel")
 	_panel_box.add_child(sp)
 	var sv := UI.vbox(6)
 	sp.add_child(sv)
 	var sh := UI.hbox(10)
-	sh.add_child(UI.label("STAR UP", 20, UI.GOLD, 3))
-	sh.add_child(UI.stars(h["star"], 20, DB.MAX_STAR))
+	var e := int(h.get("evo", 0))
+	if int(h["star"]) >= DB.MAX_STAR:
+		tutorial("evolution")
+	sh.add_child(UI.label("STAR UP" if int(h["star"]) < DB.MAX_STAR else "EVOLUTION", 20, UI.GOLD if e <= 0 else DB.evo_color(e).lightened(0.2 if e < DB.MAX_EVO else 0.6), 3))
+	sh.add_child(UI.hero_rank_stars(id, 20))
 	sv.add_child(sh)
-	if h["star"] >= DB.MAX_STAR:
-		sv.add_child(UI.label("Maximum stars reached!", 16, UI.GREEN))
+	if Game.rank_maxed(id):
+		sv.add_child(UI.label("Abyss 6★ — the highest rank!", 16, UI.GREEN))
 	else:
-		var c := Game.star_up_cost(id)
-		var own := int(Game.s["shards"].get(id, 0))
-		var uni := Game.amount("star_stone")
-		sv.add_child(UI.label("Shards %d (+%d universal) / %d   •   Gold %s" % [own, uni, c["shards"], Game.fmt(c["gold"])], 15))
-		sv.add_child(UI.bar(own + uni, c["shards"], "", 10))
-		sv.add_child(UI.wrap_label("+14%% all stats, level cap → %d, unlocks a new outfit. 5★ upgrades the battle sprite to its evolved form." % DB.level_cap(h["star"] + 1), 13, UI.MUTED))
-		var b2 := UI.button("STAR UP ★", _do_star, "GoldButton", Vector2(0, 50))
-		b2.disabled = own + uni < c["shards"]
+		var c := Game.rank_cost(id)
+		var pay := Game.rank_pay(id)
+		var have_c := Game.copies(id)
+		var crow := HFlowContainer.new()   # wraps on the narrow canvas
+		crow.add_theme_constant_override("h_separation", 14)
+		crow.add_theme_constant_override("v_separation", 2)
+		sv.add_child(crow)
+		crow.add_child(UI.label("Next: %s" % str(c["label"]), 15, Color.WHITE, 2))
+		var cards_l := UI.label("Cards %d / %d" % [mini(have_c, int(c["copies"])), int(c["copies"])], 15, UI.GREEN if have_c >= int(c["copies"]) else Color("#d8b4ff"), 2)
+		crow.add_child(cards_l)
+		var cl := UI.label("Evo Crystal %d / %d" % [Game.amount("star_stone"), int(pay["crystals"])], 15, UI.GREEN if Game.amount("star_stone") >= int(pay["crystals"]) else UI.RED, 2)
+		crow.add_child(cl)
+		crow.add_child(UI.label("Gold %s" % Game.fmt(int(pay["gold"])), 15, UI.TEXT, 2))
+		if int(pay["missing"]) > 0:
+			sv.add_child(UI.wrap_label("Missing %d duplicate card(s): each one is replaced by %d Evo Crystals (already counted above)." % [int(pay["missing"]), DB.copy_crystals(DB.rarity_of(id))], 12, UI.MUTED))
+		var what := ""
+		match str(c["kind"]):
+			"star": what = "+14%% all stats, level cap → %d, unlocks a new outfit. 5★ upgrades the battle sprite to its evolved form." % DB.level_cap(int(h["star"]) + 1)
+			"evolve": what = "Evolve to %s: the stars turn %s and you climb 6 new stars. Every Evolution star gives +%s%% HP/ATK/DEF.%s" % [DB.evo_name(int(c["tier"])), ["", "blue", "red", "purple", "black with a black-flame aura"][int(c["tier"])], str(DB.EVO_STEP_STAT * 100), "  Crimson and above: skill power +1 level." if int(c["tier"]) == 2 else ""]
+			"evo_star": what = "+%s%% HP/ATK/DEF." % str(DB.EVO_STEP_STAT * 100)
+		sv.add_child(UI.wrap_label(what, 13, UI.MUTED))
+		var block := Game.rank_up_block(id)
+		var b2 := UI.button(("STAR UP ★" if str(c["kind"]) == "star" else ("EVOLVE ✦" if str(c["kind"]) == "evolve" else "EVOLUTION STAR ★")) if block == "" else block, _do_star, "GoldButton", Vector2(0, 50))
+		b2.disabled = block != ""
 		sv.add_child(b2)
-		if own + uni < c["shards"]:
-			# where shards come from, as buttons instead of a sentence
-			_source_row(sv, "GET SHARDS:", "", [["SUMMON", "gacha", {}], ["BLACK MARKET", "shop", {"tab": "market"}], ["BOSS HUNT", "hunt", {}]])
+		if block != "":
+			_source_row(sv, "GET CARDS / CRYSTALS:", "", [["SUMMON", "gacha", {}], ["DISMANTLE", "dismantle", {}], ["BOSS HUNT", "hunt", {}]])
 		else:
-			sv.add_child(UI.wrap_label("Shards come from duplicate summons, the Black Market and Boss Hunts.", 12, UI.MUTED))
+			sv.add_child(UI.wrap_label("Duplicate cards come from summoning a hero again. Evo Crystals come from dismantling duplicates, shops and Boss Hunts.", 12, UI.MUTED))
 
-	# --- Awakening (after max stars)
-	var ap := UI.panel("CardPanel")
-	_panel_box.add_child(ap)
-	var av := UI.vbox(6)
-	ap.add_child(av)
-	var aw := int(h.get("awaken", 0))
-	var ah := UI.hbox(8)
-	ah.add_child(UI.tex_rect(DB.icon("icon_awakening"), Vector2(30, 30)))
-	ah.add_child(UI.label("AWAKENING  A%d / %d" % [aw, DB.MAX_AWAKEN], 18, Color("#ffcf4a"), 3))
-	av.add_child(ah)
-	av.add_child(UI.bar(aw, DB.MAX_AWAKEN, "GoldBar", 8))
-	av.add_child(UI.wrap_label("Each level: +6% HP/ATK/DEF.  A3: skill power +1 level.  A5: golden aura in battle.", 12, UI.MUTED))
-	if aw < DB.MAX_AWAKEN:
-		var ac := Game.awaken_cost(id)
-		av.add_child(UI.label("Cost: %d shards (have %d + %d universal) • %s Gold" % [ac["shards"], int(Game.s["shards"].get(id, 0)), Game.amount("star_stone"), Game.fmt(ac["gold"])], 13, UI.TEXT))
-		var block := Game.awaken_block(id)
-		var abtn := UI.button("AWAKEN ✦" if block == "" else block, func():
-			var err := Game.awaken(id)
-			if err != "":
-				main.toast(err, UI.RED)
-				return
-			Game.sfx("awakening")
-			Game.voice(id, "bond")
-			_upgrade_fx("AWAKENED!", Color("#ffcf4a"), "FIRE")
-			_celebrate("✦ AWAKENING A%d ✦" % Game.hero(id)["awaken"], "%s's power surges! (+6%% all stats)" % DB.name_of(id))
-			_render(), "GoldButton", Vector2(0, 48))
-		abtn.disabled = block != ""
-		av.add_child(abtn)
 	# --- Limit Break (6★ at level cap → cap +5, up to Lv.100)
 	if int(h["star"]) >= DB.MAX_STAR:
 		tutorial("limit_break")
@@ -820,7 +799,7 @@ func _render_upgrade() -> void:
 		lbv.add_child(UI.wrap_label("Raise the level cap by +%d (max Lv.%d). Hunt Cores come from Boss Hunt." % [DB.LB_STEP, DB.level_cap(DB.MAX_STAR, DB.MAX_LB)], 12, UI.MUTED))
 		if lb < DB.MAX_LB:
 			var lc := DB.lb_cost(lb)
-			lbv.add_child(UI.label("Cost: %d Hunt Cores (have %d) • %d shards • %s Gold" % [lc["hunt_core"], Game.amount("hunt_core"), lc["shards"], Game.fmt(lc["gold"])], 13, UI.TEXT))
+			lbv.add_child(UI.label("Cost: %d Hunt Cores (have %d) • %d Evo Crystals • %s Gold" % [lc["hunt_core"], Game.amount("hunt_core"), lc["shards"], Game.fmt(lc["gold"])], 13, UI.TEXT))
 			var lblock := Game.limit_break_block(id)
 			var lbb := UI.button("LIMIT BREAK  →  Lv.%d" % (Game.hero_cap(id) + DB.LB_STEP) if lblock == "" else lblock, func():
 				var err := Game.limit_break(id)
@@ -854,9 +833,18 @@ func _do_star() -> void:
 		main.toast(err, UI.RED)
 		return
 	Game.sfx("awakening")
-	_upgrade_fx("★ STAR UP ★", UI.GOLD, "LIGHT")
-	_stat_gain(before)
-	_celebrate("★ STAR UP ★", "%s is now %d★!" % [DB.name_of(id), Game.hero(id)["star"]])
+	var hh := Game.hero(id)
+	var ev := int(hh.get("evo", 0))
+	if ev <= 0:
+		_upgrade_fx("★ STAR UP ★", UI.GOLD, "LIGHT")
+		_stat_gain(before)
+		_celebrate("★ STAR UP ★", "%s is now %d★!" % [DB.name_of(id), hh["star"]])
+	else:
+		var col := DB.evo_color(ev) if ev < DB.MAX_EVO else Color("#b04bff")
+		var first := int(hh.get("evo_star", 0)) == 1
+		_upgrade_fx(("✦ %s EVOLUTION ✦" % DB.evo_name(ev).to_upper()) if first else "★ EVOLUTION STAR ★", col, ["", "WATER", "FIRE", "DARK", "DARK"][ev])
+		_stat_gain(before)
+		_celebrate(("✦ %s EVOLUTION ✦" % DB.evo_name(ev).to_upper()) if first else "★ %s %d★ ★" % [DB.evo_name(ev).to_upper(), int(hh["evo_star"])], "%s reached %s!" % [DB.name_of(id), UI.rank_text(id)])
 	_render()
 
 ## What the upgrade actually gave: "+HP 120  +ATK 14  +DEF 6" rises under the big text, so the player

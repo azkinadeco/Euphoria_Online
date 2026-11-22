@@ -36,6 +36,7 @@ const SCREENS := {
 	"wardrobe": preload("res://game/screens/wardrobe.gd"),
 	"photo": preload("res://game/screens/photo.gd"),
 	"forge": preload("res://game/screens/forge.gd"),
+	"dismantle": preload("res://game/screens/dismantle.gd"),
 	"messenger": preload("res://game/screens/messenger.gd"),
 	"kitchen": preload("res://game/screens/kitchen.gd"),
 	"training": preload("res://game/screens/training.gd"),

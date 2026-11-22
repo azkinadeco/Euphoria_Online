@@ -86,6 +86,34 @@ static func gacha_rates(tiers: Array = []) -> Dictionary:
 	out[use[0]] = float(out[use[0]]) + (1.0 - total)
 	return out
 const MAX_STAR := 6
+
+# ---- Evolution (after 6 gold stars): 4 tiers x 6 stars, star colour per tier (UI.rank_stars)
+const MAX_EVO := 4
+const EVO_STARS := 6
+const EVO_NAMES := ["", "Azure", "Crimson", "Violet", "Abyss"]
+const EVO_COLORS := ["#ffcf4a", "#5fb8ff", "#ff4d5e", "#b96bff", "#0e0a14"]
+const EVO_STEP_STAT := 0.025          # +2.5% HP/ATK/DEF per evolution star (max +60% at Abyss 6)
+## Duplicate hero cards (Game.copies) needed for the next gold star, by current star.
+const STAR_COPIES := [0, 1, 1, 1, 2, 2, 0]
+## Hero inventory (heroes + duplicate cards): base slots, +10 per expansion, price in gems.
+const HERO_SLOTS_BASE := 120
+const HERO_SLOTS_STEP := 10
+const HERO_SLOTS_PRICE := 100
+const HERO_SLOTS_MAX := 300
+
+## Evo Crystals (item "star_stone") from dismantling one duplicate card, by rarity. A missing card in a
+## rank-up can be paid with twice that many crystals (Game.rank_cost).
+static func dismantle_crystals(rarity: String) -> int:
+	return int(DUPE_SHARDS.get(rarity, 10))
+
+static func copy_crystals(rarity: String) -> int:
+	return 2 * dismantle_crystals(rarity)
+
+static func evo_name(evo: int) -> String:
+	return str(EVO_NAMES[clampi(evo, 0, MAX_EVO)])
+
+static func evo_color(evo: int) -> Color:
+	return Color(str(EVO_COLORS[clampi(evo, 0, MAX_EVO)]))
 const MAX_BOND := 10
 const MAX_DEPLOY := 5
 const MAX_ROUNDS := 5
@@ -103,13 +131,13 @@ const MENU_FEATURES := [
 	["event", "icon_live_ops", "Event"], ["festival", "icon_festival", "Festival"], ["bestiary", "icon_boss", "Bestiary"],
 	["expedition", "icon_afk", "Expedition"], ["garden", "icon_garden", "Garden"], ["room", "icon_room", "Private Room"], ["date", "icon_date", "Date"],
 	["wardrobe", "item_skin_ticket", "Wardrobe"], ["guild", "icon_guild", "Guild"], ["friends", "icon_friends", "Friends"], ["gallery", "icon_codex", "Gallery"], ["settings", "icon_settings", "Settings"],
-	["photo", "icon_zoom", "Photo Studio"], ["forge", "icon_equipment", "Forge"], ["messenger", "icon_messenger", "Messenger"], ["kitchen", "icon_kitchen", "Kitchen"],
+	["photo", "icon_zoom", "Photo Studio"], ["forge", "icon_equipment", "Forge"], ["dismantle", "icon_shards", "Dismantle"], ["messenger", "icon_messenger", "Messenger"], ["kitchen", "icon_kitchen", "Kitchen"],
 ]
 ## MENU sections (route lists, in display order). A route may be a hub key from MENU_HUBS.
 const MENU_SECTIONS := [
 	["BATTLE", ["challenges", "arena", "worldboss", "hunt", "rift"]],
 	["EVENTS & BOND", ["events", "bond", "collection"]],
-	["SHOP & SOCIAL", ["shop", "forge", "bag", "guild", "friends", "settings"]],
+	["SHOP & SOCIAL", ["shop", "items", "dismantle", "guild", "friends", "settings"]],
 ]
 ## MENU hubs: one tile that opens a small menu of related features. key -> [icon, label, routes].
 const MENU_HUBS := {
@@ -117,6 +145,7 @@ const MENU_HUBS := {
 	"events": ["icon_live_ops", "Events", ["event", "festival", "pass"]],
 	"bond": ["icon_heart", "Bond", ["messenger", "date", "room", "kitchen", "garden", "expedition"]],
 	"collection": ["icon_ticket", "Collection", ["gallery", "bestiary", "photo", "wardrobe"]],
+	"items": ["icon_bag", "Bag & Forge", ["bag", "forge"]],
 }
 const MAX_AWAKEN := 5
 const AWAKEN_STAT := 0.06          # +6% HP/ATK/DEF per awaken level
@@ -1484,7 +1513,7 @@ const ITEMS := {
 	"perfume": {"name": "Moonlight Perfume", "icon": "item_perfume", "desc": "Gift: +80 Bond EXP.", "kind": "gift", "bond": 80},
 	"celestial_gem": {"name": "Celestial Gem", "icon": "item_celestial_gem", "desc": "Precious gift: +120 Bond EXP.", "kind": "gift", "bond": 120},
 	"oath_ring": {"name": "Oath Ring", "icon": "item_oath_ring", "desc": "Swear an Oath with a Bond Lv.10 hero (+10% all stats).", "kind": "oath"},
-	"star_stone": {"name": "Universal Shard", "icon": "item_star_stone", "desc": "Works as 1 shard for any hero's Star Up.", "kind": "shard"},
+	"star_stone": {"name": "Evo Crystal", "icon": "item_star_stone", "desc": "Raises stars and Evolution of any hero, together with duplicate hero cards. Get it by dismantling duplicates (MENU > DISMANTLE), in shops and from rewards.", "kind": "crystal"},
 	"skill_book": {"name": "Skill Book", "icon": "icon_skills", "desc": "Used to raise a hero's skill level (+12% skill power per level).", "kind": "material"},
 	"rune_pouch": {"name": "Rune Pouch", "icon": "item_rune_pouch", "desc": "Open for 2 random runes (Tier 1-2).", "kind": "runes", "count": 2, "max_tier": 2},
 	"rune_chest": {"name": "Grand Rune Chest", "icon": "item_rune_chest", "desc": "Open for 3 random runes (Tier 1-3).", "kind": "runes", "count": 3, "max_tier": 3},
@@ -1516,7 +1545,7 @@ const SHOP := [
 	{"id": "perfume", "name": "Moonlight Perfume x2", "price": 90, "cur": "gems", "give": {"perfume": 2}, "limit": 5},
 	{"id": "bouquet", "name": "Flower Bouquet x3", "price": 8000, "cur": "gold", "give": {"bouquet": 3}, "limit": 10},
 	{"id": "gem_gift", "name": "Celestial Gem", "price": 120, "cur": "gems", "give": {"celestial_gem": 1}, "limit": 5},
-	{"id": "shard", "name": "Universal Shard x5", "price": 300, "cur": "arena_coin", "give": {"star_stone": 5}, "limit": 5},
+	{"id": "shard", "name": "Evo Crystal x5", "price": 300, "cur": "arena_coin", "give": {"star_stone": 5}, "limit": 5},
 	{"id": "ring", "name": "Oath Ring", "price": 1200, "cur": "arena_coin", "give": {"oath_ring": 1}, "limit": 1},
 	{"id": "ticket_ac", "name": "Summon Ticket x2", "price": 200, "cur": "arena_coin", "give": {"summon_ticket": 2}, "limit": 3},
 	{"id": "rune_ac", "name": "Rune Pouch x2", "price": 150, "cur": "arena_coin", "give": {"rune_pouch": 2}, "limit": 5},
@@ -1531,7 +1560,7 @@ const SHOP := [
 	{"id": "f_chest", "name": "Gear Chest", "price": 250, "cur": "friend_point", "give": {"gear_chest": 1}, "limit": 2},
 	{"id": "g_ticket", "name": "Summon Ticket", "price": 120, "cur": "guild_coin", "give": {"summon_ticket": 1}, "limit": 3},
 	{"id": "g_chest", "name": "Royal Gear Chest", "price": 400, "cur": "guild_coin", "give": {"gear_chest_ssr": 1}, "limit": 1},
-	{"id": "g_shard", "name": "Universal Shard x3", "price": 150, "cur": "guild_coin", "give": {"star_stone": 3}, "limit": 3},
+	{"id": "g_shard", "name": "Evo Crystal x3", "price": 150, "cur": "guild_coin", "give": {"star_stone": 3}, "limit": 3},
 	{"id": "g_gem", "name": "Celestial Gem x2", "price": 100, "cur": "guild_coin", "give": {"celestial_gem": 2}, "limit": 3},
 ]
 
@@ -1563,7 +1592,7 @@ const CODEX_STEPS := [
 	{"id": "own", "name": "Recruited", "give": {"gems": 50}},
 	{"id": "star5", "name": "Reached 5★", "give": {"gems": 150, "star_stone": 3}},
 	{"id": "bond10", "name": "Bond Lv.10", "give": {"celestial_gem": 2, "gems": 100}},
-	{"id": "awaken5", "name": "Awakening A5", "give": {"summon_ticket": 3}},
+	{"id": "awaken5", "name": "Azure Evolution 6★", "give": {"summon_ticket": 3}},
 ]
 
 ## Where a mission's GO button leads (by quest id / weekly "src" / achievement "stat").
@@ -1731,7 +1760,7 @@ const ACHIEVEMENTS := [
 	{"id": "cmd30", "name": "Reach Commander Lv.30", "stat": "commander_level", "target": 30, "give": {"gems": 500}},
 	{"id": "cmd60", "name": "Reach Commander Lv.60", "stat": "commander_level", "target": 60, "give": {"gems": 1000, "summon_ticket": 5}},
 	{"id": "cmd100", "name": "Reach Commander Lv.100", "stat": "commander_level", "target": 100, "give": {"gems": 3000, "celestial_gem": 5}},
-	{"id": "awaken5", "name": "Fully awaken a hero (A5)", "stat": "max_awaken", "target": 5, "give": {"gems": 1000, "star_stone": 20}},
+	{"id": "awaken5", "name": "Evolve a hero to Azure 5★", "stat": "max_awaken", "target": 5, "give": {"gems": 1000, "star_stone": 20}},
 	{"id": "lb4", "name": "Limit Break a hero to the max", "stat": "max_lb", "target": 4, "give": {"gems": 1500}},
 	{"id": "gearssr5", "name": "Own 5 SSR equipment", "stat": "gear_ssr", "target": 5, "give": {"gems": 500, "forge_ember": 20}},
 	{"id": "gearmax3", "name": "Enhance 3 equipment to +10", "stat": "gear_max", "target": 3, "give": {"gems": 500}},
@@ -1971,7 +2000,7 @@ const SHOP_LUMEIRA := [
 		{"id": "ev_chest", "name": "Royal Gear Chest", "price": 500, "cur": "festival_token", "give": {"gear_chest_ssr": 1}, "limit": 2},
 		{"id": "ev_ring", "name": "Oath Ring", "price": 1500, "cur": "festival_token", "give": {"oath_ring": 1}, "limit": 1},
 		{"id": "ev_gems", "name": "300 Gems", "price": 250, "cur": "festival_token", "give": {"gems": 300}, "limit": 5},
-		{"id": "ev_stone", "name": "Universal Shard x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
+		{"id": "ev_stone", "name": "Evo Crystal x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
 	]
 const SHOP_ATALANTA := [
 		{"id": "ev_shard", "name": "Atalanta Shard x10", "price": 300, "cur": "festival_token", "give": {"shard:atalanta": 10}, "limit": 8},
@@ -1979,7 +2008,7 @@ const SHOP_ATALANTA := [
 		{"id": "ev_chest", "name": "Royal Gear Chest", "price": 500, "cur": "festival_token", "give": {"gear_chest_ssr": 1}, "limit": 2},
 		{"id": "ev_ring", "name": "Oath Ring", "price": 1500, "cur": "festival_token", "give": {"oath_ring": 1}, "limit": 1},
 		{"id": "ev_gems", "name": "300 Gems", "price": 250, "cur": "festival_token", "give": {"gems": 300}, "limit": 5},
-		{"id": "ev_stone", "name": "Universal Shard x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
+		{"id": "ev_stone", "name": "Evo Crystal x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
 	]
 const SHOP_VEXIRA := [
 		{"id": "ev_shard", "name": "Vexira Shard x10", "price": 300, "cur": "festival_token", "give": {"shard:vexira": 10}, "limit": 8},
@@ -1987,7 +2016,7 @@ const SHOP_VEXIRA := [
 		{"id": "ev_chest", "name": "Royal Gear Chest", "price": 500, "cur": "festival_token", "give": {"gear_chest_ssr": 1}, "limit": 2},
 		{"id": "ev_ring", "name": "Oath Ring", "price": 1500, "cur": "festival_token", "give": {"oath_ring": 1}, "limit": 1},
 		{"id": "ev_gems", "name": "300 Gems", "price": 250, "cur": "festival_token", "give": {"gems": 300}, "limit": 5},
-		{"id": "ev_stone", "name": "Universal Shard x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
+		{"id": "ev_stone", "name": "Evo Crystal x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
 	]
 const SHOP_GEMORA := [
 		{"id": "ev_shard", "name": "Gemora Shard x10", "price": 300, "cur": "festival_token", "give": {"shard:gemora": 10}, "limit": 8},
@@ -1995,7 +2024,7 @@ const SHOP_GEMORA := [
 		{"id": "ev_chest", "name": "Royal Gear Chest", "price": 500, "cur": "festival_token", "give": {"gear_chest_ssr": 1}, "limit": 2},
 		{"id": "ev_ring", "name": "Oath Ring", "price": 1500, "cur": "festival_token", "give": {"oath_ring": 1}, "limit": 1},
 		{"id": "ev_gems", "name": "300 Gems", "price": 250, "cur": "festival_token", "give": {"gems": 300}, "limit": 5},
-		{"id": "ev_stone", "name": "Universal Shard x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
+		{"id": "ev_stone", "name": "Evo Crystal x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
 	]
 const SHOP_ZENNYO := [
 		{"id": "ev_shard", "name": "Zennyo Shard x10", "price": 300, "cur": "festival_token", "give": {"shard:zennyo": 10}, "limit": 8},
@@ -2003,7 +2032,7 @@ const SHOP_ZENNYO := [
 		{"id": "ev_chest", "name": "Royal Gear Chest", "price": 500, "cur": "festival_token", "give": {"gear_chest_ssr": 1}, "limit": 2},
 		{"id": "ev_ring", "name": "Oath Ring", "price": 1500, "cur": "festival_token", "give": {"oath_ring": 1}, "limit": 1},
 		{"id": "ev_gems", "name": "300 Gems", "price": 250, "cur": "festival_token", "give": {"gems": 300}, "limit": 5},
-		{"id": "ev_stone", "name": "Universal Shard x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
+		{"id": "ev_stone", "name": "Evo Crystal x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
 	]
 const SHOP_HYEONXA := [
 		{"id": "ev_skin", "name": "Skin: Scarlet Mistletoe", "price": 1800, "cur": "festival_token", "give": {"skin:hyeonxa": 1}, "limit": 1},
@@ -2012,7 +2041,7 @@ const SHOP_HYEONXA := [
 		{"id": "ev_chest", "name": "Royal Gear Chest", "price": 500, "cur": "festival_token", "give": {"gear_chest_ssr": 1}, "limit": 2},
 		{"id": "ev_cake", "name": "Sweet Cake x3", "price": 90, "cur": "festival_token", "give": {"sweet_cake": 3}, "limit": 5},
 		{"id": "ev_gems", "name": "300 Gems", "price": 250, "cur": "festival_token", "give": {"gems": 300}, "limit": 5},
-		{"id": "ev_stone", "name": "Universal Shard x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
+		{"id": "ev_stone", "name": "Evo Crystal x5", "price": 200, "cur": "festival_token", "give": {"star_stone": 5}, "limit": 5},
 	]
 ## Event-only special skins: hero -> the event that awards them (not sold in the Wardrobe).
 const EVENT_SKINS := {"hyeonxa": "Starfall Christmas"}
@@ -2153,6 +2182,12 @@ static func tutorial_icon(key: String) -> String:
 
 # ---------------------------------------------------------------- first-visit tutorials
 const TUTORIALS := {
+	"guild_base": [["valeria", "Welcome to our Guild Base, Commander! Every guildmate who is online walks around in here with their main hero."],
+		["valeria", "Tap the floor to walk, tap the glowing signs: Raid portal, Notice board for check-in, Shop, Tech shelf and Members."]],
+	"dismantle": [["furu", "Too many duplicate cards? Tap a card to pick copies, then DISMANTLE them into Evo Crystals and Gold."],
+		["furu", "Keep some copies though: Star Up and Evolution need duplicate cards. Missing cards cost extra Evo Crystals!"]],
+	"evolution": [["shina", "Six gold stars is only the beginning, Commander. EVOLVE me and the stars turn blue: Azure!"],
+		["shina", "Then Crimson red, Violet purple... and Abyss, black stars wrapped in black fire. Every step needs duplicate cards and Evo Crystals."]],
 	"training": [["fidelia", "The Training Ground. These partners can't be defeated, so strike with everything you have."],
 		["fidelia", "TRAIN measures your damage. SPAR lets her hit back. Use it to test a formation before a real fight."]],
 	"messenger": [["lumeira", "We can text you now! Every day a few of us will send you a message."],
@@ -2928,7 +2963,7 @@ const HUNTS := [
 	{"id": "wraith", "name": "Singularity Wraith", "boss": "eroghost", "bg": "blackhole", "minions": ["evy_blood_sage", "eroghost"], "focus": "shard", "hp_k": 1.0,
 		"desc": "Woven from swallowed starlight. Drops hero shards for Star Up & Awakening."},
 	{"id": "cinder", "name": "Cinder Witch of Dragonbone", "boss": "evy_blood_sage", "bg": "dragonfire", "minions": ["gumi_wolf", "eroghost"], "focus": "stone", "hp_k": 1.9, "atk_k": 1.4,
-		"desc": "She brews fire inside a dead dragon's ribs. Drops Star Stones (universal shards for Star Up, Awakening and Limit Break)."},
+		"desc": "She brews fire inside a dead dragon's ribs. Drops Evo Crystals (for Star Up, Evolution and Limit Break)."},
 	{"id": "leviathan", "name": "Outland Leviathan", "boss": "slime", "bg": "outland", "minions": ["ex_nymph", "slarkoi"], "focus": "core", "hp_k": 1.1, "atk_k": 1.2,
 		"desc": "Drifts between the floating isles, swallowing crystals. Drops extra Hunt Cores."},
 	{"id": "canopy", "name": "Canopy Nine-Tail", "boss": "gumi_wolf", "bg": "bigtree", "minions": ["ex_nymph", "slarkoi"], "focus": "gold", "hp_k": 1.5, "atk_k": 1.3,
@@ -4172,6 +4207,33 @@ static func face_focus(tex: Texture2D) -> Vector3:
 	if fc.size() == 4:
 		return Vector3(float(fc[0]) + float(fc[2]) * 0.5, float(fc[1]) + float(fc[3]) * 0.5, float(fc[2]))
 	return Vector3(0.5, 0.2, 0.3)
+
+## Half-body crop of a full art for picker cards (Formation / Battle Prep): the face sits in the upper third,
+## its crop box about 60% of the card width (head + shoulders + chest), so every card has the same proportions whatever the pose. `aspect` = h / w
+## of the picture area. Cached per texture + aspect.
+static var _bust_cache: Dictionary = {}
+static func bust_tex(t: Texture2D, aspect: float = 1.2) -> Texture2D:
+	if t == null:
+		return null
+	var key := "%s|%.2f" % [t.resource_path, aspect]
+	if _bust_cache.has(key):
+		return _bust_cache[key]
+	var ts := t.get_size()
+	var ff := face_focus(t)
+	var face_w := clampf(ff.z, 0.08, 0.6) * ts.x
+	var w := minf(ts.x, face_w / 0.60)
+	var h := minf(ts.y, w * aspect)
+	w = minf(w, h / aspect)
+	var cx := ff.x * ts.x
+	var cy := ff.y * ts.y
+	var x := clampf(cx - w * 0.5, 0.0, ts.x - w)
+	var y := clampf(cy - h * 0.30, 0.0, ts.y - h)
+	var at := AtlasTexture.new()
+	at.atlas = t
+	at.region = Rect2(x, y, w, h)
+	at.filter_clip = true
+	_bust_cache[key] = at
+	return at
 
 static var _face_crop_json: Dictionary = {}
 static var _face_crop_loaded := false

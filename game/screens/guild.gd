@@ -5,14 +5,177 @@ extends Screen
 var _tab := "MEMBERS"
 var _right: VBoxContainer
 
+const GuildBaseView = preload("res://game/ui/guild_base_view.gd")
+var _view: Control
+
 func build() -> void:
-	set_bg("boss" if Game.in_guild() else "asgard", 0.6)
-	header("GUILD", ["gold", "guild_coin"])
+	var hall: bool = params.get("hall", false)
+	set_bg(("boss" if hall else "blackmarket") if Game.in_guild() else "asgard", 0.6 if hall or not Game.in_guild() else 0.8)
+	header("GUILD HALL" if hall else ("GUILD BASE" if Game.in_guild() else "GUILD"), ["gold", "guild_coin"])
 	if Game.in_guild():
-		_build_hall()
+		if hall:
+			_build_hall()
+		else:
+			_build_base()
+			tutorial("guild_base")
 	else:
 		_build_lobby()
 	tutorial("guild")
+
+# ---------------------------------------------------------------- guild base (isometric hall with members' chibis)
+
+func _guild_color() -> Color:
+	for g in DB.GUILDS:
+		if g["name"] == Game.s["guild"]["joined"]:
+			return Color(str(g.get("color", "#ffd479")))
+	return UI.GOLD
+
+func _guild_activity() -> float:
+	for g in DB.GUILDS:
+		if g["name"] == Game.s["guild"]["joined"]:
+			return float(g.get("activity", 0.7))
+	return 0.7
+
+## Members online right now (simulated until online mode: a stable pick per hour, guild activity decides how many).
+func _online_members() -> Array:
+	var hour := int(Game.now() / 3600)
+	var act := _guild_activity()
+	var out: Array = []
+	for m in Game.guild_members():
+		if str(m["name"]).ends_with("(You)"):
+			continue
+		if absi(hash(str(m["name"]) + str(hour))) % 100 < int(act * 100.0):
+			out.append(m)
+	return out.slice(0, 10)
+
+func _build_base() -> void:
+	var gd: Dictionary = Game.s["guild"]
+	var b := body(76, 8)
+	_view = GuildBaseView.new()
+	_view.guild_color = _guild_color()
+	_view.guild_initial = str(gd["joined"]).substr(0, 1)
+	_view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	b.add_child(_view)
+	var online := _online_members()
+	_view.set_members.call_deferred(online, str(Game.s["lobby_hero"]), str(Game.s["player"]["name"]))
+	_view.station.connect(_on_station)
+	_view.member.connect(_member_popup)
+	_view.badge.call_deferred("board", int(gd["checkin_day"]) != Game.day_key())
+	_view.badge.call_deferred("raid", int(gd["raid_tries"]) > 0)
+	# HUD: guild card (top left)
+	var info := UI.styled_panel(Color(0.06, 0.03, 0.1, 0.86), Color(_guild_color(), 0.7), 12, 1, 10)
+	# bottom left: the empty corner under the floor (top left covers the notice board)
+	info.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	info.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	info.offset_left = 14
+	info.offset_bottom = -10
+	info.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(info)
+	var iv := UI.vbox(4)
+	info.add_child(iv)
+	var top := UI.hbox(8)
+	top.add_child(_emblem(_guild_color(), str(gd["joined"]).substr(0, 1)))
+	var tv := UI.vbox(0)
+	tv.add_child(UI.label(str(gd["joined"]), 17, UI.GOLD, 3))
+	tv.add_child(UI.label("Lv.%d   •   buff +%d%% ATK & HP" % [int(gd["level"]), int(Game.guild_bonus() * 100)], 13, UI.GREEN, 2))
+	top.add_child(tv)
+	iv.add_child(top)
+	iv.add_child(UI.label("● ONLINE  %d / %d   (AI members until online mode)" % [online.size() + 1, Game.guild_members().size()], 12, Color("#9fe3ff"), 2))
+	iv.add_child(UI.label("Tap the floor to walk  •  tap a sign to use it", 12, UI.MUTED, 2))
+	# HUD: buttons (bottom right)
+	var row := UI.hbox(8)
+	row.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	row.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	row.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	row.offset_right = -14
+	row.offset_bottom = -10
+	b.add_child(row)
+	row.add_child(UI.button("MEMBERS", func(): main.go("guild", {"hall": true, "tab": "MEMBERS"}), "", Vector2(140, 46)))
+	row.add_child(UI.button("GUILD HALL", func(): main.go("guild", {"hall": true}), "GoldButton", Vector2(170, 46)))
+
+func _on_station(key: String) -> void:
+	match key:
+		"raid": _raid_popup()
+		"board": _board_popup()
+		"shop": main.go("guild", {"hall": true, "tab": "SHOP"})
+		"tech": main.go("guild", {"hall": true, "tab": "TECH"})
+		"members": main.go("guild", {"hall": true, "tab": "MEMBERS"})
+
+func _raid_popup() -> void:
+	var gd: Dictionary = Game.s["guild"]
+	var v: VBoxContainer = main.popup("GUILD RAID", 560)
+	var row := UI.hbox(14)
+	v.add_child(row)
+	var boss := UI.tex_rect(DB.art("ygg_naar", mini(int(gd["raid_lv"]) - 1, 3)), Vector2(150, 170))
+	row.add_child(boss)
+	var tv := UI.vbox(6)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(tv)
+	tv.add_child(UI.label("Ygg-Naar  Lv.%d" % int(gd["raid_lv"]), 22, Color.WHITE, 4))
+	var mx := DB.raid_max_hp(int(gd["raid_lv"]))
+	tv.add_child(UI.bar(maxi(0, int(gd["raid_hp"])), mx, "EnemyHpBar", 14))
+	tv.add_child(UI.label("HP %s / %s" % [Game.fmt(maxi(0, int(gd["raid_hp"]))), Game.fmt(mx)], 14, Color.WHITE, 2))
+	tv.add_child(UI.label("Your best: %s   •   Attempts %d/3" % [Game.fmt(int(gd["raid_best"])), int(gd["raid_tries"])], 14, UI.GOLD, 2))
+	tv.add_child(UI.wrap_label("Every guildmate's damage counts. Defeat it to raise its level and the rewards.", 13, UI.MUTED))
+	var br := UI.hbox(10)
+	br.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(br)
+	var ab := UI.button("⚔ ATTACK", func():
+		main.close_popup(v)
+		main.go("formation", {"mode": "raid"}), "GoldButton", Vector2(200, 48))
+	ab.disabled = int(gd["raid_tries"]) <= 0
+	br.add_child(ab)
+	br.add_child(UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(130, 48)))
+
+func _board_popup() -> void:
+	var gd: Dictionary = Game.s["guild"]
+	var v: VBoxContainer = main.popup("NOTICE BOARD", 560)
+	v.add_child(UI.wrap_label("Daily guild tasks. Check-in and donations raise the guild level (+1% ATK & HP for everyone per level).", 13, UI.MUTED))
+	var checked: bool = int(gd["checkin_day"]) == Game.day_key()
+	v.add_child(_task("Check-in", "+50 coins, +40 EXP", checked, "", func():
+		var r := Game.guild_checkin()
+		main.close_popup(v)
+		if not r.is_empty():
+			main.show_rewards("CHECK-IN", r, func(): main.replace("guild")), "CLAIM"))
+	var dn: int = int(gd["donates"]) if int(gd["donate_day"]) == Game.day_key() else 0
+	v.add_child(_task("Donate  %d/3" % dn, "10k Gold: +30 coins each", dn >= 3, "", func():
+		var err := Game.guild_donate()
+		if err != "":
+			main.toast(err, UI.RED)
+		else:
+			Game.sfx("star_up")
+			main.toast("+30 Guild Coins, +60 Guild EXP", UI.GREEN)
+		main.close_popup(v)
+		_board_popup(), "GIVE"))
+	var c := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(140, 44))
+	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(c)
+
+func _member_popup(m: Dictionary) -> void:
+	var you := bool(m.get("you", false))
+	var v: VBoxContainer = main.popup("COMMANDER", 520)
+	var row := UI.hbox(14)
+	v.add_child(row)
+	row.add_child(UI.avatar(str(m["hero"]), 92, _guild_color(), 2))
+	var tv := UI.vbox(4)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(tv)
+	tv.add_child(UI.label(str(m["name"]).replace(" (You)", "") + ("  (You)" if you else "  [AI]"), 20, UI.GOLD if you else Color.WHITE, 3))
+	if you:
+		tv.add_child(UI.label("Lv.%d   •   partner %s" % [int(Game.s["player"]["level"]), DB.name_of(str(m["hero"]))], 14, UI.TEXT, 2))
+		tv.add_child(UI.wrap_label("Your main hero is the Lobby partner. Change it in Hero Detail > LOBBY PARTNER.", 13, UI.MUTED))
+	else:
+		tv.add_child(UI.label("Lv.%d   •   %s   •   main hero %s" % [int(m["level"]), str(m["role"]), DB.name_of(str(m["hero"]))], 14, UI.TEXT, 2))
+		tv.add_child(UI.label("Raid damage %s" % Game.fmt(int(m["dmg"])), 14, Color("#ff8a9a"), 2))
+	var br := UI.hbox(10)
+	br.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(br)
+	if not you:
+		br.add_child(UI.button("WAVE", func():
+			main.close_popup(v)
+			Game.sfx("ui_click")
+			main.toast("You waved at %s!" % str(m["name"]), Color("#ff8fb8")), "GoldButton", Vector2(150, 46)))
+	br.add_child(UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(130, 46)))
 
 func refresh() -> void:
 	super.refresh()

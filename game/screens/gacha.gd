@@ -289,7 +289,7 @@ func _show_wishlist() -> void:
 	var v: VBoxContainer = main.popup("WISHLIST", 760)
 	var head := UI.label("", 14, UI.GOLD, 2)
 	v.add_child(head)
-	v.add_child(UI.wrap_label("Pick up to %d heroes of SSR rarity or higher. On the Standard Summon, %d%% of your pulls of a picked hero's rarity become one of your picks of that rarity. Heroes you already own still count: duplicates become shards." % [DB.WISH_MAX, int(DB.WISH_RATE * 100)], 13, UI.MUTED))
+	v.add_child(UI.wrap_label("Pick up to %d heroes of SSR rarity or higher. On the Standard Summon, %d%% of your pulls of a picked hero's rarity become one of your picks of that rarity. Heroes you already own still count: duplicates become duplicate cards for Star Up / Evolution." % [DB.WISH_MAX, int(DB.WISH_RATE * 100)], 13, UI.MUTED))
 	var f := HFlowContainer.new()
 	f.add_theme_constant_override("h_separation", 8)
 	f.add_theme_constant_override("v_separation", 8)
@@ -376,7 +376,7 @@ func _show_rates() -> void:
 	var bnr: Dictionary = DB.BANNERS[_banner_i]
 	var rt_map := DB.gacha_rates(bnr.get("tiers", []))
 	# the rules first, in short lines
-	var rules: Array = ["10x summon: at least one SR or better.", "Duplicates turn into hero shards."]
+	var rules: Array = ["10x summon: at least one SR or better.", "Duplicates become cards in your hero inventory: use them to Star Up / Evolve, or dismantle them."]
 	if bnr.has("tiers"):
 		rules.append("Paid with Gold. No pity or Summon Points on this banner.")
 	else:
@@ -427,6 +427,9 @@ func _pull(count: int, pay: String) -> void:
 		return
 	var b: Dictionary = DB.BANNERS[_banner_i]
 	var res := Game.pull(b["id"], count, pay)
+	if res.has("full"):
+		_inventory_full()
+		return
 	if res.has("error"):
 		main.toast(res["error"], UI.RED)
 		if pay != "ticket":
@@ -616,7 +619,7 @@ func _play_reveal(results: Array) -> void:
 			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and is_instance_valid(_reveal) and _reveal.has_meta("done"):
 				Game.sfx("ui_click")
 				ArtViewer.open(main, rid, 0, [0]))
-		var tag := UI.label("NEW!" if r["new"] else "+%d Shards" % r["shards"], 15, UI.GREEN if r["new"] else UI.GOLD, 5)
+		var tag := UI.label("NEW!" if r["new"] else "+1 CARD", 15, UI.GREEN if r["new"] else UI.GOLD, 5)
 		tag.position = Vector2(0, card_size.y + 2)
 		tag.size = Vector2(card_size.x, 20)
 		tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -823,3 +826,22 @@ func _ssr_splash(r: Dictionary) -> void:
 		await get_tree().create_timer(0.1).timeout
 	if is_instance_valid(layer):
 		layer.queue_free()
+
+## Summon refused because the hero inventory has no room: dismantle or expand, right here.
+func _inventory_full() -> void:
+	var v: VBoxContainer = main.popup("HERO INVENTORY FULL", 600)
+	v.add_child(UI.wrap_label("Your hero inventory holds %d / %d cards (heroes + duplicate cards). Make room before summoning: dismantle duplicates into Evo Crystals, or add %d slots for %d Gems." % [Game.hero_cards(), Game.hero_slots(), DB.HERO_SLOTS_STEP, DB.HERO_SLOTS_PRICE], 15, Color.WHITE))
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("DISMANTLE", func():
+		main.close_popup(v)
+		main.go("dismantle"), "GoldButton", Vector2(170, 46)))
+	var ex := UI.button("+%d SLOTS (%d Gems)" % [DB.HERO_SLOTS_STEP, DB.HERO_SLOTS_PRICE], func():
+		var err := Game.expand_hero_slots()
+		main.toast(err if err != "" else "Hero inventory: %d slots" % Game.hero_slots(), UI.RED if err != "" else UI.GREEN)
+		main.close_popup(v), "", Vector2(220, 46))
+	ex.disabled = Game.hero_slots() >= DB.HERO_SLOTS_MAX
+	row.add_child(ex)
+	row.add_child(UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(120, 46)))
+

@@ -297,7 +297,7 @@ func _build_right_cards() -> void:
 			sl["img"] = b["img"]
 		_slides.append(sl)
 	if Game.feature_unlocked("event"):
-		_slides.append({"tag": "LIMITED EVENT", "tag_col": Color("#9fe3ff"), "title": DB.EVENT["name"].to_upper(), "sub": "Earn Event Tokens • %s shards" % DB.name_of(DB.EVENT["featured"]),
+		_slides.append({"tag": "LIMITED EVENT", "tag_col": Color("#9fe3ff"), "title": DB.EVENT["name"].to_upper(), "sub": "Earn Event Tokens • Evo Crystals",
 		"bg": DB.EVENT["bg"], "art": DB.EVENT["featured"], "btn": "JOIN", "route": "event", "params": {}})
 	var fest := Game.festival()
 	if not fest.is_empty() and Game.feature_unlocked("festival"):

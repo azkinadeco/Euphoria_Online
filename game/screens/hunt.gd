@@ -274,9 +274,9 @@ func _focus_text(f: String) -> String:
 	match f:
 		"gear": return "Equipment (SSR chance)"
 		"rune": return "Runes (Tier 2-3)"
-		"shard": return "Hero Shards"
+		"shard": return "Evo Crystals"
 		"gold": return "Gold, Hero EXP, Potions"
-		"stone": return "Star Stones (universal shards)"
+		"stone": return "Evo Crystals"
 		"core": return "Extra Hunt Cores"
 	return ""
 

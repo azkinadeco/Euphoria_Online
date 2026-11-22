@@ -23,6 +23,7 @@ func _process(_d: float) -> bool:
 		return true
 	G = gs.new()
 	G.persist = false
+	G.unlimited_slots = true
 	root.add_child(G)
 	G.name = "Game"
 	G.s = G.new_state()
@@ -329,11 +330,13 @@ func _run() -> void:
 	check(n == 5 and G.hero("rumi")["level"] == lvl + 5, "level up x5")
 	G.s["heroes"]["rumi"]["level"] = DB.level_cap(1)
 	check(G.level_up("rumi", 1) == 0, "level cap blocks leveling")
-	G.s["shards"]["rumi"] = 0
+	G.s["copies"].erase("rumi")
 	G.s["items"]["star_stone"] = 0
-	check(G.star_up("rumi") != "", "star up blocked without shards")
-	G.give({"shard:rumi": 10, "gold": 100000})
-	check(G.star_up("rumi") == "", "star up with shards")
+	check(G.star_up("rumi") != "", "star up blocked without cards / Evo Crystals")
+	var dup0: Dictionary = G.add_hero("rumi")
+	check(not dup0["new"] and G.copies("rumi") == 1, "a duplicate summon becomes a card in the hero inventory")
+	G.give({"star_stone": int(G.rank_pay("rumi")["crystals"]), "gold": 100000})
+	check(G.star_up("rumi") == "" and G.copies("rumi") == 0, "star up uses the duplicate card + Evo Crystals")
 	check(G.hero("rumi")["star"] == 2, "rumi is 2★")
 	check(G.skin_unlocked("rumi", 1), "star up unlocks outfit #2")
 
@@ -443,9 +446,9 @@ func _run() -> void:
 	check(int(er.get("festival_token", 0)) > 0 and er.has("gems"), "event tokens + first clear")
 	G.give({"festival_token": 1000})
 	var evf: String = DB.EVENT["featured"]
-	var evs0: int = int(G.s["shards"].get(evf, 0))
+	var evs0: int = G.amount("star_stone")
 	var shard_item: Dictionary = (DB.EVENT["shop"] as Array).filter(func(it): return (it["give"] as Dictionary).has("shard:" + evf))[0]
-	check(G.buy_event(shard_item) == "" and int(G.s["shards"].get(evf, 0)) >= evs0 + 10, "event exchange for featured shards")
+	check(G.buy_event(shard_item) == "" and G.amount("star_stone") >= evs0 + 10, "event exchange: old hero shards arrive as Evo Crystals")
 	check(G.sweep_event(1, 1).has("error"), "cannot sweep an uncleared event stage")
 	G.s["cur"]["energy"] = 40
 	var evtk0: int = G.amount("festival_token")
@@ -698,21 +701,52 @@ func _run() -> void:
 	check(G.claim_arena_season().has("gems") and G.claim_arena_season().is_empty(), "season reward once")
 	check(G.arena_leaderboard().size() == 30, "leaderboard has 30 entries")
 
-	print("[awakening / black market]")
-	check(G.awaken_block("shina") != "", "awakening locked below 6 stars")
+	print("[evolution / black market]")
+	G.s["heroes"]["shina"]["star"] = DB.MAX_STAR - 1
+	check(str(G.rank_cost("shina")["kind"]) == "star", "below 6★ the next step is a gold star")
 	G.s["heroes"]["shina"]["star"] = DB.MAX_STAR
-	G.give({"shard:shina": 400, "gold": 2000000})
+	G.s["heroes"]["shina"]["evo"] = 0
+	G.s["heroes"]["shina"]["evo_star"] = 0
+	check(str(G.rank_cost("shina")["kind"]) == "evolve" and int(G.rank_cost("shina")["tier"]) == 1, "6★ -> next step is Azure Evolution")
+	G.give({"star_stone": 200000, "gold": 50000000})
 	var pw0: int = G.hero_power("shina")
-	check(G.awaken("shina") == "" and int(G.hero("shina")["awaken"]) == 1, "awaken A1")
-	check(G.hero_power("shina") > pw0, "awakening raises power")
-	for i in 4:
-		G.awaken("shina")
-	check(int(G.hero("shina")["awaken"]) == 5 and G.awaken("shina") != "", "max awaken A5")
+	check(G.rank_up("shina") == "" and int(G.hero("shina")["evo"]) == 1 and int(G.hero("shina")["evo_star"]) == 1, "evolve to Azure 1★")
+	check(G.hero_power("shina") > pw0, "evolution raises power")
+	check(int(G.hero("shina")["star"]) == DB.MAX_STAR, "gold stars stay 6 after evolving (6★ rules keep working)")
+	for i in 40:
+		G.rank_up("shina")
+	check(int(G.hero("shina")["evo"]) == DB.MAX_EVO and int(G.hero("shina")["evo_star"]) == DB.EVO_STARS and G.rank_maxed("shina"), "Abyss 6★ is the top rank")
+	check(G.rank_up("shina") != "" and G.evo_steps("shina") == 24, "no step past Abyss 6★ (24 evolution stars)")
 	var bsa := BattleSim.new()
-	bsa.setup([{"id": "shina", "cell": Vector2i(0, 1), "level": 10, "star": 6, "skill_lv": 1, "awaken": 3}], [], 1)
-	check(float(bsa.units[0]["skill"]["mult"]) > float(DB.skill_of("shina")["mult"]), "A3 boosts skill power")
+	bsa.setup([{"id": "shina", "cell": Vector2i(0, 1), "level": 10, "star": 6, "skill_lv": 1, "evo": 2}], [], 1)
+	check(float(bsa.units[0]["skill"]["mult"]) > float(DB.skill_of("shina")["mult"]), "Crimson Evolution boosts skill power")
+	# old save: shards and Awakening convert
+	var mig_keep: Dictionary = G.hero("rumi").duplicate()
+	G.s["shards"] = {"rumi": 30}
+	G.s["heroes"]["rumi"]["awaken"] = 3
+	G.s["heroes"]["rumi"]["evo"] = 0
+	var st_before: int = G.amount("star_stone")
+	G._migrate_evolution()
+	check(G.amount("star_stone") == st_before + 30 and (G.s["shards"] as Dictionary).is_empty(), "old hero shards become Evo Crystals")
+	check(int(G.hero("rumi")["evo"]) == 1 and int(G.hero("rumi")["evo_star"]) == 3 and int(G.hero("rumi")["awaken"]) == 0, "Awakening A3 becomes Azure 3★")
+	G.s["heroes"]["rumi"] = mig_keep
+	# inventory capacity + dismantle
+	G.unlimited_slots = false
+	var cp_keep: Dictionary = G.s["copies"].duplicate()
+	G.s["copies"] = {"rumi": G.hero_slots()}
+	check(G.hero_room() < 0 and G.pull("standard", 1, "gems").has("full"), "a full hero inventory blocks summoning")
+	var dmr: Dictionary = G.dismantle("rumi", 5)
+	check(int(dmr.get("star_stone", 0)) == 5 * DB.dismantle_crystals(DB.rarity_of("rumi")) and G.copies("rumi") == G.hero_slots() - 5, "dismantle: cards -> Evo Crystals")
+	var slots0: int = G.hero_slots()
+	check(G.expand_hero_slots() == "" and G.hero_slots() == slots0 + DB.HERO_SLOTS_STEP, "expand the hero inventory for gems")
+	G.s["copies"] = cp_keep
+	G.unlimited_slots = true
 	var offers: Array = G.market_offers()
-	check(offers.size() == DB.MARKET_SIZE and str(offers[0]["give"].keys()[0]).begins_with("shard:"), "market has 6 offers incl. hero shards")
+	check(offers.size() == DB.MARKET_SIZE and str(offers[0]["give"].keys()[0]).begins_with("card:"), "market has 6 offers incl. a duplicate hero card")
+	var mc_id: String = str(offers[0]["give"].keys()[0]).substr(5)
+	var mc0: int = G.copies(mc_id)
+	G.give({"card:" + mc_id: 1})
+	check(G.copies(mc_id) == mc0 + 1 or not G.owns(mc_id), "a card reward adds a duplicate card")
 	G.give({"gems": 5000, "gold": 500000})
 	check(G.market_buy(0) == "" and G.market_buy(0) != "", "market item buys once")
 	check(G.market_refresh() == "" and not G.market_offers()[0]["sold"], "market refresh rerolls stock")
@@ -735,9 +769,9 @@ func _run() -> void:
 	G.s["story"]["cleared"][DB.stage_id(DB.STAGES_PER_CHAPTER - 1)] = 3
 	check(G.hard_unlocked(0) and not G.hard_unlocked(1), "hard 1-1 opens after normal chapter boss")
 	var sid: String = hs0["shard_id"]
-	var sh0: int = int(G.s["shards"].get(sid, 0))
+	var sh0: int = G.amount("star_stone")
 	var hr: Dictionary = G.apply_hard_result(0, true, 3)
-	check(hr.has("gems") and int(G.s["shards"].get(sid, 0)) == sh0 + int(hs0["shards"]), "hard clear gives shards + first-clear gems")
+	check(hr.has("gems") and G.amount("star_stone") == sh0 + int(hs0["shards"]), "hard clear gives Evo Crystals + first-clear gems")
 	check(G.hard_unlocked(1) and G.hard_progress() == 1, "next hard stage unlocks")
 	G.s["cur"]["energy"] = 300
 	check(not G.sweep_stage(0, 2, true).has("error"), "hard sweep works")
@@ -1967,17 +2001,20 @@ func _run() -> void:
 
 	print("[star up ready mark]")
 	var sr_id: String = G.s["heroes"].keys()[0]
-	var sr_keep: Dictionary = {"gold": G.amount("gold"), "stone": G.amount("star_stone"), "sh": int(G.s["shards"].get(sr_id, 0)), "star": int(G.s["heroes"][sr_id]["star"])}
+	var sr_keep: Dictionary = {"gold": G.amount("gold"), "stone": G.amount("star_stone"), "cp": G.copies(sr_id), "star": int(G.s["heroes"][sr_id]["star"]), "evo": int(G.s["heroes"][sr_id].get("evo", 0))}
 	G.s["heroes"][sr_id]["star"] = 1
-	G.s["shards"][sr_id] = 0
+	G.s["heroes"][sr_id]["evo"] = 0
+	G.s["copies"][sr_id] = 0
 	G.s["items"]["star_stone"] = 0
-	check(not G.star_up_ready(sr_id), "no Star Up mark without shards")
-	G.s["shards"][sr_id] = int(G.star_up_cost(sr_id)["shards"])
-	G.s["cur"]["gold"] = int(G.star_up_cost(sr_id)["gold"])
-	check(G.star_up_ready(sr_id), "Star Up mark when shards and gold are enough")
-	check(G.s["heroes"][sr_id]["star"] == 1 and G.amount("gold") == int(G.star_up_cost(sr_id)["gold"]), "the check spends nothing")
+	check(not G.star_up_ready(sr_id), "no Star Up mark without cards / crystals")
+	G.s["copies"][sr_id] = int(G.rank_cost(sr_id)["copies"])
+	G.s["items"]["star_stone"] = int(G.rank_pay(sr_id)["crystals"])
+	G.s["cur"]["gold"] = int(G.rank_cost(sr_id)["gold"])
+	check(G.star_up_ready(sr_id), "Star Up mark when cards, crystals and gold are enough")
+	check(G.s["heroes"][sr_id]["star"] == 1 and G.amount("gold") == int(G.rank_cost(sr_id)["gold"]), "the check spends nothing")
 	G.s["heroes"][sr_id]["star"] = sr_keep["star"]
-	G.s["shards"][sr_id] = sr_keep["sh"]
+	G.s["heroes"][sr_id]["evo"] = sr_keep["evo"]
+	G.s["copies"][sr_id] = sr_keep["cp"]
 	G.s["items"]["star_stone"] = sr_keep["stone"]
 	G.s["cur"]["gold"] = sr_keep["gold"]
 

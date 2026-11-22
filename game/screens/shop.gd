@@ -191,7 +191,7 @@ func _render_market() -> void:
 				halo.draw_circle(c, 46.0 - q * 6.0, Color(1.0, 0.45, 0.75, 0.04 + q * 0.025)))
 		v.add_child(halo)
 		var ic: Control
-		if k.begins_with("shard:"):
+		if k.begins_with("card:"):
 			var hid := k.split(":")[1]
 			var fr := Panel.new()
 			fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW

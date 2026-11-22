@@ -8,6 +8,20 @@
   "pin": true
  },
  {
+  "id": "n2026-11-22d",
+  "date": "2026-11-22",
+  "tag": "NEW",
+  "title": "Your Guild Base Is Open!",
+  "body": "Joining a guild now takes you straight to the GUILD BASE: a guild hall where every online guildmate walks around with their main hero as a chibi, and so does yours (tap the floor to walk). Tap the glowing signs to use the Raid portal, the Notice Board (check-in and donations), the Guild Shop, the Tech shelf and the Members list. The full Guild Hall is one tap away. Guildmates are AI Commanders until online mode arrives."
+ },
+ {
+  "id": "n2026-11-22c",
+  "date": "2026-11-22",
+  "tag": "UPDATE",
+  "title": "Duplicate Cards and Evolution",
+  "body": "Summoning a hero you already have now gives a DUPLICATE CARD in your hero inventory (+N on her card). Star Up uses duplicate cards plus Evo Crystals (the old Universal Shards; old hero shards were converted into Evo Crystals). After 6 gold stars your hero can EVOLVE: Azure (blue stars), Crimson (red), Violet (purple) and finally Abyss, black stars wrapped in black fire, 6 stars each. Old Awakening levels became Azure stars. A missing card can be paid with Evo Crystals. Spare cards can be turned into Evo Crystals in MENU > DISMANTLE. The hero inventory holds 120 cards and can be expanded. Formation and Battle Prep cards now show a half-body portrait."
+ },
+ {
   "id": "n2026-11-22b",
   "date": "2026-11-22",
   "tag": "UPDATE",

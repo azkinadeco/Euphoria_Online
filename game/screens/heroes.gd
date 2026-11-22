@@ -231,7 +231,7 @@ func _codex_prog(id: String, step: String) -> Array:
 	match step:
 		"star5": return [int(h["star"]), 5, "%d / 5★" % int(h["star"])]
 		"bond10": return [int(h["bond"]), DB.MAX_BOND, "Bond %d / %d" % [int(h["bond"]), DB.MAX_BOND]]
-		"awaken5": return [int(h.get("awaken", 0)), DB.MAX_AWAKEN, "A%d / A%d" % [int(h.get("awaken", 0)), DB.MAX_AWAKEN]]
+		"awaken5": return [mini(Game.evo_steps(id), DB.EVO_STARS), DB.EVO_STARS, "Azure %d / %d" % [mini(Game.evo_steps(id), DB.EVO_STARS), DB.EVO_STARS]]
 	return [1, 1, "Recruited"]
 
 func _codex_row(id: String) -> Control:
@@ -341,15 +341,56 @@ func _rebuild() -> void:
 			"level":
 				return int(Game.hero(a).get("level", 0)) > int(Game.hero(b).get("level", 0))
 		return Game.hero_power(a) > Game.hero_power(b))
+	var copies_done := false
 	for id in ids:
 		var hid: String = id
+		# duplicate cards sit right after the recruited heroes (they fill the hero inventory)
+		if not copies_done and not Game.owns(hid):
+			copies_done = true
+			_add_copy_cards(ids)
 		var card := HeroCard.new(hid, Vector2(_card_w, _card_w * 1.3), {"skin": true, "lazy": true, "star_ready": Game.star_up_ready(hid)})
 		card.pressed.connect(func():
 			Game.sfx("ui_click")
 			main.go("hero_detail", {"id": hid, "list": ids}))
 		_grid.add_child(card)
-	_count.text = "Owned %d / %d" % [Game.s["heroes"].size(), DB.HEROES.size()]
+	if not copies_done:
+		_add_copy_cards(ids)
+	_count.text = "Owned %d / %d\nCards %d / %d" % [Game.s["heroes"].size(), DB.HEROES.size(), Game.hero_cards(), Game.hero_slots()]
 	if ids.is_empty():
 		_grid.add_child(UI.label("No heroes match these filters.", 15, UI.MUTED, 2))
 
 	UI.stagger(_grid, 0.025)
+
+## One card per duplicate copy of every listed hero (material for Star Up / Evolution, or Dismantle).
+func _add_copy_cards(ids: Array) -> void:
+	for id in ids:
+		var hid: String = id
+		if not Game.owns(hid):
+			continue
+		for k in Game.copies(hid):
+			var cc := HeroCard.new(hid, Vector2(_card_w, _card_w * 1.3), {"copy": true, "lazy": true, "show_level": false})
+			cc.pressed.connect(func(): _copy_popup(hid))
+			_grid.add_child(cc)
+
+func _copy_popup(hid: String) -> void:
+	Game.sfx("ui_click")
+	var v: VBoxContainer = main.popup("DUPLICATE CARD", 560)
+	var row := UI.hbox(14)
+	v.add_child(row)
+	row.add_child(UI.face_rect(hid, Vector2(96, 96)))
+	var tv := UI.vbox(4)
+	tv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(tv)
+	tv.add_child(UI.label("%s  x%d" % [DB.name_of(hid), Game.copies(hid)], 20, Color.WHITE, 3))
+	tv.add_child(UI.wrap_label("Duplicate cards raise %s's stars and Evolution together with Evo Crystals. Dismantled, one card gives %d Evo Crystals." % [DB.name_of(hid).split(" ")[0], DB.dismantle_crystals(DB.rarity_of(hid))], 14, UI.MUTED))
+	var br := UI.hbox(10)
+	br.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(br)
+	br.add_child(UI.button("STAR UP / EVOLVE", func():
+		main.close_popup(v)
+		main.go("hero_detail", {"id": hid, "tab": "UPGRADE"}), "GoldButton", Vector2(210, 46)))
+	br.add_child(UI.button("DISMANTLE", func():
+		main.close_popup(v)
+		main.go("dismantle", {"id": hid}), "", Vector2(160, 46)))
+	br.add_child(UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(120, 46)))
+

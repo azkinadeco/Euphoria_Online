@@ -79,11 +79,11 @@ func _make_unit(d: Dictionary, side: int, order: int) -> Dictionary:
 	return {
 		"uid": units.size(), "side": side, "id": id, "cell": d["cell"], "order": order,
 		"hp": st["hp"], "max_hp": st["hp"], "atk": st["atk"], "def": st["def"],
-		"elem": DB.element_of(id), "skill": DB.skill_at(DB.skill_of(id), int(d.get("skill_lv", 1)) + (1 if int(d.get("awaken", 0)) >= 3 else 0)), "skill_lv": int(d.get("skill_lv", 1)), "boss": boss, "star": star,
+		"elem": DB.element_of(id), "skill": DB.skill_at(DB.skill_of(id), int(d.get("skill_lv", 1)) + (1 if int(d.get("evo", 0)) >= 2 or int(d.get("awaken", 0)) >= 3 else 0)), "skill_lv": int(d.get("skill_lv", 1)), "boss": boss, "star": star,
 		"level": int(d.get("level", 1)), "alive": true, "stun": 0, "shield": 0,
 		"burns": [], "atk_up": 0.0, "atk_up_r": 0, "def_down": 0.0, "def_down_r": 0,
 		"taunt": 0, "silence": 0, "heal_block": 0, "revive_used": false, "elite": bool(d.get("elite", false)), "mirror": bool(d.get("mirror", false)), "variant": str(d.get("variant", "")),
-		"passive": DB.passive_of(id), "rage": 0.0, "enraged": false, "crit_bonus": float(b.get("crit", 0.0)), "awaken": int(d.get("awaken", 0)),
+		"passive": DB.passive_of(id), "rage": 0.0, "enraged": false, "crit_bonus": float(b.get("crit", 0.0)), "awaken": int(d.get("awaken", 0)), "evo": int(d.get("evo", 0)), "evo_star": int(d.get("evo_star", 0)),
 		"sets": (b.get("sets", []) as Array).duplicate(),
 	}
 

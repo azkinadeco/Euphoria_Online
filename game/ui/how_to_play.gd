@@ -22,7 +22,7 @@ const PAGES := [
 		"text": "Fire beats Wind, Wind beats Earth, Earth beats Water, Water beats Fire. Light and Dark beat each other.\n\nAdvantage = +30% damage, disadvantage = -15%. Two or more heroes of one element give a team Synergy bonus.",
 		"draw": "elements"},
 	{"title": "GROW YOUR TEAM", "hero": "shina",
-		"text": "LEVEL UP with Hero EXP · STAR UP with shards · equip GEAR sets · raise BOND with gifts, talks and dates.\n\nIf a stage is too hard, the defeat screen tells you why and what to upgrade.",
+		"text": "LEVEL UP with Hero EXP · STAR UP & EVOLVE with duplicate cards + Evo Crystals · equip GEAR sets · raise BOND with gifts, talks and dates.\n\nIf a stage is too hard, the defeat screen tells you why and what to upgrade.",
 		"draw": "growth"},
 	{"title": "YOUR DAILY ROUTINE", "hero": "fidelia",
 		"text": "Claim the Login Bonus and AFK rewards, finish Daily Missions, run Dungeons for gold and EXP, fight in the Arena, and check your Mailbox.\n\nThe STEP guide in the lobby always shows the next thing to do. Good luck!",
