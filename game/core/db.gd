@@ -3287,6 +3287,7 @@ static func stand_in(path: String) -> String:
 static func deferred_loaded(files: Array) -> void:
 	for f in files:
 		_tex_cache.erase(str(f))
+		bust_forget(str(f))
 
 static func icon(name: String) -> Texture2D:
 	return tex("res://art/icons/%s.png" % name)
@@ -4217,9 +4218,13 @@ static func face_focus(tex: Texture2D) -> Vector3:
 		return Vector3(float(fc[0]) + float(fc[2]) * 0.5, float(fc[1]) + float(fc[3]) * 0.5, float(fc[2]))
 	return Vector3(0.5, 0.2, 0.3)
 
-## Half-body crop of a full art for picker cards (Formation / Battle Prep): the face sits in the upper third,
-## its crop box about 60% of the card width (head + shoulders + chest), so every card has the same proportions whatever the pose. `aspect` = h / w
-## of the picture area. Cached per texture + aspect.
+## Half-body crop of a full art for picker cards (Formation / Battle Prep), normalised on the HEAD so every
+## card shows the head at the same size and place whatever the pose: crop width = BUST_K x head radius
+## (pivot rig "head" [x, y, r], r in art-height units), head centre at BUST_HEAD_Y of the crop height,
+## horizontally on the eyes (rig "eyes") or the head. Arts without a rig fall back to the face crop.
+## Calibrated on Morana / Sven / Abadonia (tools/bust_calib.gd). `aspect` = h / w. Cached per texture + aspect.
+const BUST_K := 5.5
+const BUST_HEAD_Y := 0.24
 static var _bust_cache: Dictionary = {}
 static func bust_tex(t: Texture2D, aspect: float = 1.2) -> Texture2D:
 	if t == null:
@@ -4228,21 +4233,50 @@ static func bust_tex(t: Texture2D, aspect: float = 1.2) -> Texture2D:
 	if _bust_cache.has(key):
 		return _bust_cache[key]
 	var ts := t.get_size()
-	var ff := face_focus(t)
-	var face_w := clampf(ff.z, 0.08, 0.6) * ts.x
-	var w := minf(ts.x, face_w / 0.60)
-	var h := minf(ts.y, w * aspect)
-	w = minf(w, h / aspect)
-	var cx := ff.x * ts.x
-	var cy := ff.y * ts.y
+	var r := char_rig(t)
+	var hv: Variant = r.get("head", null)
+	var hr := 0.0
+	var cx := 0.0
+	var cy := 0.0
+	if hv is Vector3 or (hv is Array and (hv as Array).size() >= 3):
+		var hx := float(hv.x) if hv is Vector3 else float(hv[0])
+		var hy := float(hv.y) if hv is Vector3 else float(hv[1])
+		var hz := float(hv.z) if hv is Vector3 else float(hv[2])
+		hr = hz * ts.y
+		cx = hx * ts.x
+		cy = hy * ts.y
+		var exs: Array = []
+		for e in r.get("eyes", []):
+			var ea: Array = Array(e)
+			if ea.size() >= 4:
+				exs.append(float(ea[0]))
+				exs.append(float(ea[2]))
+		if not exs.is_empty():
+			cx = (float(exs.max()) + float(exs.min())) * 0.5 * ts.x
+	else:
+		var ff := face_focus(t)
+		hr = 0.24 * clampf(ff.z, 0.08, 0.6) * ts.x
+		cx = ff.x * ts.x
+		cy = ff.y * ts.y
+	var w := minf(ts.x, hr * BUST_K)
+	var h := w * aspect
+	if h > ts.y:
+		h = ts.y
+		w = h / aspect
 	var x := clampf(cx - w * 0.5, 0.0, ts.x - w)
-	var y := clampf(cy - h * 0.30, 0.0, ts.y - h)
+	var y := clampf(cy - h * BUST_HEAD_Y, 0.0, ts.y - h)
 	var at := AtlasTexture.new()
 	at.atlas = t
 	at.region = Rect2(x, y, w, h)
 	at.filter_clip = true
 	_bust_cache[key] = at
 	return at
+
+## Forget cached crops of a texture path (deferred art arrived: the stand-in crop must not stay).
+static func bust_forget(path: String) -> void:
+	for k in _bust_cache.keys():
+		if str(k).begins_with(path + "|"):
+			_bust_cache.erase(k)
 
 static var _face_crop_json: Dictionary = {}
 static var _face_crop_loaded := false

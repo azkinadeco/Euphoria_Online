@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 3i. Batch 294 (22 Nov 2026): HD art macet di HP, kartu formasi proporsional dari kepala
+- Bug HP: ganti costume → art evo/stage2 "Loading HD" selamanya. Penyebab: `art_pack.gd` memakai `HTTPRequest.use_threads = true`, sedangkan preset Web `thread_support=false` → request tidak pernah selesai. Sekarang thread mati di web + watchdog (`STALL_SECS` 40: tidak ada byte baru → cancel, hapus .part, retry).
+- Kartu Formation / Battle Prep: `DB.bust_tex` dinormalkan pada KEPALA: lebar crop = `BUST_K` 5,5 × radius kepala rig (`head[2]` × tinggi art), pusat kepala di `BUST_HEAD_Y` 0,24 tinggi crop, horizontal di tengah mata (rig eyes). Tanpa rig → face crop. Dikalibrasi dengan Morana/Sven/Abadonia; `tools/bust_calib.gd` menulis /tmp/bust_cal.txt (pratinjau PIL harus memakai UV × ukuran PNG, karena import size_limit 1200 mengecilkan tekstur). `bust_forget` saat pack HD masuk.
+
 ## 3h. Batch 293 (22 Nov 2026): balans ekonomi kartu & Evolusi (lebih berat)
 - Ukur dulu: setelah shard jadi kristal universal, pemain aktif dapat ±150-200 Kristal Evo/hari → SSR 6★ dalam ±3 hari tanpa kartu. Terlalu mudah.
 - Hadiah `shard:<id>` n → `DB.shard_crystals(n)` = setengah (bulat ke atas). Bintang emas: kartu `STAR_COPIES` 1,1,2,2,3; kristal `shards_for_star` penuh (10-100); gold 10.000×bintang. Masuk tier t: 2t+1 kartu, 150t kristal, 80.000t gold; bintang dalam tier: t kartu, 60t kristal, 30.000t gold. Total sampai Abyss 6★ = 74 kartu + 4.500 kristal.

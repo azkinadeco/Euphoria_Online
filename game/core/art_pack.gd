@@ -21,6 +21,9 @@ var _tries := 0
 var _base_url := ""
 var mounted := 0
 var started_ms := 0
+var _stall_t := 0.0
+var _last_bytes := -1
+const STALL_SECS := 40.0     # no new bytes for this long = the download hung: cancel and retry
 
 func _ready() -> void:
 	if not FileAccess.file_exists(MANIFEST):
@@ -51,11 +54,28 @@ func _ready() -> void:
 		_queue.append(i)
 	if not _queue.is_empty() and _base_url != "":
 		_http = HTTPRequest.new()
-		_http.use_threads = true
+		# the Web export has thread_support=false: a threaded HTTPRequest never finishes there ("Loading HD" forever)
+		_http.use_threads = not OS.has_feature("web")
 		_http.timeout = 120.0
 		add_child(_http)
 		_http.request_completed.connect(_on_done)
 		_next.call_deferred()
+
+func _process(delta: float) -> void:
+	if _http == null or _cur < 0 or _http.get_http_client_status() == HTTPClient.STATUS_DISCONNECTED:
+		return
+	var b := _http.get_downloaded_bytes()
+	if b != _last_bytes:
+		_last_bytes = b
+		_stall_t = 0.0
+		return
+	_stall_t += delta
+	if _stall_t >= STALL_SECS:
+		_stall_t = 0.0
+		_last_bytes = -1
+		_http.cancel_request()
+		DirAccess.remove_absolute(_cache_path(_cur) + ".part")
+		_retry("stalled")
 
 func _find_base_url() -> String:
 	var env := OS.get_environment("ART_PACK_URL")
@@ -92,6 +112,8 @@ func _next() -> void:
 		Game.tele("artpack", {"done": mounted, "of": _packs.size(), "sec": (Time.get_ticks_msec() - started_ms) / 1000})
 		return
 	_cur = int(_queue[0])
+	_stall_t = 0.0
+	_last_bytes = -1
 	_http.download_file = _cache_path(_cur) + ".part"
 	var err := _http.request(_base_url + str(_packs[_cur]["file"]))
 	if err != OK:

@@ -8,6 +8,13 @@
   "pin": true
  },
  {
+  "id": "n2026-11-22e",
+  "date": "2026-11-22",
+  "tag": "FIX",
+  "title": "Outfit Art and Formation Cards Fixed",
+  "body": "Evolved and later-stage outfits could stay on LOADING HD forever on phones: the background download now works in the browser and restarts by itself if it hangs. Formation and Battle Prep cards now frame every hero the same way: the head at the same size and place on every card."
+ },
+ {
   "id": "n2026-11-22d",
   "date": "2026-11-22",
   "tag": "NEW",
