@@ -161,6 +161,8 @@ func refresh() -> void:
 func _render() -> void:
 	var h := Game.hero(id)
 	var new_tex := DB.art(id, int(h.get("skin", 0)))
+	# outfit still downloading (web): show the Lv1 stand-in + "Loading HD", rebuild when the real art arrives
+	UI.pending_art(_art, DB.art_path(id, int(h.get("skin", 0))), func(): main.replace("hero_detail", params))
 	if _art.texture != new_tex:
 		_art.texture = new_tex
 		_art.modulate.a = 0.0
@@ -659,7 +661,10 @@ func _touch_art(ry: float) -> void:
 		tw.tween_property(_art, "position:y", y0 - 30, 0.14).set_trans(Tween.TRANS_QUAD)
 		tw.tween_property(_art, "position:y", y0, 0.3).set_trans(Tween.TRANS_BOUNCE)
 	tw.tween_callback(func(): _touch_busy = false)
-	main.toast("%s: \"%s\"" % [DB.name_of(id), line], Color("#ff8fb8"))
+	# below her name / title / element chips (top left), left half of the screen
+	var g := get_global_rect()
+	var top := maxf(g.position.y + g.size.y * 0.14, _name_box.get_global_rect().end.y + 10.0)
+	UI.float_speech(self, _art, id, line, Rect2(Vector2(g.position.x + 8, top), Vector2(g.size.x * 0.44, g.end.y - top - 20)))
 
 func _render_upgrade() -> void:
 	var h := Game.hero(id)

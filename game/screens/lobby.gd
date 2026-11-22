@@ -58,6 +58,8 @@ func build() -> void:
 	var lpose := DB.lobby_art(hid) if lskin == 0 else null
 	var etex: Texture2D = DB.art(_enemy, Game.lobby_enemy_form()) if _enemy != "" else null
 	_hero_art = UI.tex_rect(etex if etex else (lpose if lpose else DB.art(hid, lskin)))
+	if not etex and not lpose:
+		UI.pending_art.call_deferred(_hero_art, DB.art_path(hid, lskin), func(): main.replace("lobby"))
 	_hero_art.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_hero_art.anchor_left = 0.08
 	_hero_art.anchor_right = 0.56
@@ -1467,10 +1469,12 @@ func _next_outfit() -> void:
 				main.toast("Unlock more outfits via Star Up, Bond, Oath or the Outfits tab.", UI.MUTED)
 				return
 			Game.set_skin(hid, k)
+			if DB.waiting(DB.art_path(hid, k)):
+				main.toast("Outfit changed. Its HD art is still downloading — it appears in a moment.", UI.GOLD)
+			# rebuild so the 2.5D rig, blink and touch zones follow the new outfit
 			var tw := _hero_art.create_tween()
 			tw.tween_property(_hero_art, "modulate:a", 0.0, 0.15)
-			tw.tween_callback(func(): _hero_art.texture = DB.art(hid, k))
-			tw.tween_property(_hero_art, "modulate:a", 1.0, 0.25)
+			tw.tween_callback(func(): main.replace("lobby"))
 			_fx.aura(_hero_center(), UI.GOLD, 180.0)
 			Game.sfx("star_up")
 			return
@@ -1530,17 +1534,10 @@ func _on_hero_tap() -> void:
 func _say(text: String, who: String = "") -> void:
 	if who == "":
 		who = _enemy if _enemy != "" else str(Game.s["lobby_hero"])
-	_bubble_label.text = "%s\n%s" % [DB.name_of(who), text]
-	_bubble.visible = true
-	UI.pop(_bubble, 0.25)
-	if _bubble.has_meta("tw"):
-		var old: Tween = _bubble.get_meta("tw")
-		if old and old.is_valid():
-			old.kill()
-	var tw := _bubble.create_tween()
-	tw.tween_interval(3.5)
-	tw.tween_callback(func(): _bubble.visible = false)
-	_bubble.set_meta("tw", tw)
+	# small floating text beside her head (no box), kept between the left icon column and the banner panel
+	var g := get_global_rect()
+	var bounds := Rect2(g.position + Vector2(g.size.x * 0.09, g.size.y * 0.14), Vector2(g.size.x * 0.47, g.size.y * 0.62))
+	UI.float_speech(self, _hero_art, who, text, bounds)
 
 func _heart_burst() -> void:
 	for i in 5:

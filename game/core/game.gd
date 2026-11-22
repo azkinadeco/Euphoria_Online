@@ -1246,6 +1246,55 @@ func unlocked_skins(id: String) -> int:
 			n = i + 1
 	return n
 
+# =================================================================== costume forms (special skin stages / evolutions)
+
+## Rank needed for costume form `k`: stage 1 always, stage 2 / 3 at 4 / 5 stars, evolution 1 at 6 gold stars,
+## evolution 2..5 at Azure / Crimson / Violet / Abyss. {"star", "evo", "label"}
+func costume_form_req(id: String, k: int) -> Dictionary:
+	var f := DB.special_forms(id)
+	if k < 0 or k >= f.size():
+		return {"star": 99, "evo": 99, "label": "?"}
+	var fm: Dictionary = f[k]
+	var n := int(fm["n"])
+	if str(fm["kind"]) == "stage":
+		var st: int = [0, 1, 4, 5, 6][clampi(n, 1, 4)]
+		return {"star": st, "evo": 0, "label": "Always" if st <= 1 else "%d★" % st}
+	if n <= 1:
+		return {"star": DB.MAX_STAR, "evo": 0, "label": "%d★" % DB.MAX_STAR}
+	var e := clampi(n - 1, 1, DB.MAX_EVO)
+	return {"star": DB.MAX_STAR, "evo": e, "label": DB.evo_name(e)}
+
+func costume_form_unlocked(id: String, k: int) -> bool:
+	if not owns(id) or not skin_unlocked(id, DB.special_index(id)):
+		return false
+	var r := costume_form_req(id, k)
+	var h := hero(id)
+	return int(h.get("star", 1)) >= int(r["star"]) and int(h.get("evo", 0)) >= int(r["evo"])
+
+## Chosen costume form; -1 / locked = the highest unlocked one.
+func costume_form(id: String) -> int:
+	var f := DB.special_forms(id)
+	if f.is_empty() or not owns(id):
+		return 0
+	var want := int(hero(id).get("costume_form", -1))
+	if want >= 0 and want < f.size() and costume_form_unlocked(id, want):
+		return want
+	var best := 0
+	for k in f.size():
+		if costume_form_unlocked(id, k):
+			best = k
+	return best
+
+func set_costume_form(id: String, k: int) -> String:
+	if not costume_form_unlocked(id, k):
+		return "Unlocks at %s." % str(costume_form_req(id, k)["label"])
+	hero(id)["costume_form"] = k
+	var si := DB.special_index(id)
+	if si > 0 and skin_unlocked(id, si):
+		hero(id)["skin"] = si   # choosing a costume form also wears the costume
+	mark_dirty()
+	return ""
+
 func set_skin(id: String, idx: int) -> void:
 	if skin_unlocked(id, idx):
 		hero(id)["skin"] = idx

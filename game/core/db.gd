@@ -4071,6 +4071,9 @@ static func art_list(id: String) -> Array:
 ## Path of an outfit's art (same pick as art()), without loading it.
 static func art_path(id: String, index: int = 0) -> String:
 	id = base_id(id)
+	var cf := costume_form_def(id, index)
+	if not cf.is_empty():
+		return str(cf["base"])
 	var l := art_list(id)
 	if l.is_empty():
 		return ""
@@ -4113,6 +4116,29 @@ static func _art_list_scan(id: String) -> Array:
 			out.append(portrait)
 	return out
 
+## Costume (special skin) forms: [{"base", "interactions", "kind": "stage"|"evo", "n"}] (tools/costume_forms.py).
+## Which one shows is the hero's chosen costume form (Game.costume_form), unlocked by her rank.
+static func special_forms(id: String) -> Array:
+	return _entry(base_id(id)).get("special_forms", [])
+
+## The costume form to show when outfit `index` is the special skin, else {}.
+static func costume_form_def(id: String, index: int) -> Dictionary:
+	if index < 0 or index != special_index(id):
+		return {}
+	var f := special_forms(id)
+	if f.is_empty():
+		return {}
+	return f[clampi(_costume_form(id), 0, f.size() - 1)]
+
+## Game.costume_form(id) without naming the autoload (db.gd also compiles where "Game" is not a global).
+static func _costume_form(id: String) -> int:
+	var ml := Engine.get_main_loop() as SceneTree
+	var g: Node = ml.root.get_node_or_null("Game") if ml else null
+	return int(g.call("costume_form", id)) if g and g.has_method("costume_form") else 0
+
+static func costume_form_label(fm: Dictionary) -> String:
+	return ("Evolution %d" if str(fm["kind"]) == "evo" else "Stage %d") % int(fm["n"])
+
 ## Dedicated lobby pose (e.g. *_char_loby.png), or null.
 static func lobby_art(id: String) -> Texture2D:
 	var st: Dictionary = _entry(base_id(id)).get("char_states", {}).get("lobby", {})
@@ -4121,6 +4147,12 @@ static func lobby_art(id: String) -> Texture2D:
 
 ## Alternate expression (the "a" variants) for an outfit, or null.
 static func alt_art(id: String, index: int = 0) -> Texture2D:
+	var cf := costume_form_def(id, index)
+	if not cf.is_empty():
+		for p in cf.get("interactions", []):
+			if has_res(str(p)):
+				return tex(str(p))
+		return null
 	var states: Dictionary = _entry(base_id(id)).get("char_states", {})
 	var keys: Array = states.keys().filter(func(k): return k != "lobby")
 	keys.sort_custom(func(a, b): return _state_sort_key(a) < _state_sort_key(b))
@@ -4134,6 +4166,9 @@ static func alt_art(id: String, index: int = 0) -> Texture2D:
 
 ## Every alternate expression of an outfit (paths), in order.
 static func alt_arts(id: String, index: int = 0) -> Array:
+	var cf := costume_form_def(id, index)
+	if not cf.is_empty():
+		return (cf.get("interactions", []) as Array).filter(func(q): return has_res(str(q)))
 	var states: Dictionary = _entry(base_id(id)).get("char_states", {})
 	var keys: Array = states.keys().filter(func(k): return k != "lobby")
 	keys.sort_custom(func(a, b): return _state_sort_key(a) < _state_sort_key(b))
@@ -4143,6 +4178,9 @@ static func alt_arts(id: String, index: int = 0) -> Array:
 
 static func art(id: String, index: int = 0) -> Texture2D:
 	id = base_id(id)
+	var cf := costume_form_def(id, index)
+	if not cf.is_empty():
+		return tex(str(cf["base"]))
 	var l := art_list(id)
 	if l.is_empty():
 		return null
@@ -4341,7 +4379,17 @@ static func sprite(id: String, star: int = 1, skin: int = -1) -> Texture2D:
 	if skin >= 0 and skin == special_index(id):
 		var sp := str(_entry(id).get("special_sprite", ""))
 		var spe := str(_entry(id).get("special_sprite_evo", ""))
-		if star >= 5 and spe != "" and has_res(spe):
+		var cfs := special_forms(id)
+		if not cfs.is_empty():
+			# costume with forms: evolution forms use the evolved sprite, stage n the n-th sprite when there is one
+			var cf: Dictionary = cfs[clampi(_costume_form(id), 0, cfs.size() - 1)]
+			if str(cf["kind"]) == "evo" and spe != "" and has_res(spe):
+				sp = spe
+			elif int(cf["n"]) >= 2:
+				var spn := sp.replace("_special.png", "_special_%d.png" % int(cf["n"]))
+				if has_res(spn) and spn != spe:
+					sp = spn
+		elif star >= 5 and spe != "" and has_res(spe):
 			sp = spe
 		if sp != "" and has_res(sp):
 			return tex(sp)

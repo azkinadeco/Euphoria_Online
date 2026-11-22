@@ -155,6 +155,16 @@ func _mounted(i: int, how: String) -> void:
 	if how == "net":
 		Game.changed.emit()   # open screens rebuild with the real art
 
+## The player is looking at `path` (an outfit that is still downloading): fetch its pack next.
+func want(path: String) -> void:
+	for qi in _queue.size():
+		var i := int(_queue[qi])
+		if (_packs[i]["files"] as Array).has(path):
+			if qi > 1 or (qi == 1 and i != _cur):
+				_queue.remove_at(qi)
+				_queue.insert(1 if not _queue.is_empty() and int(_queue[0]) == _cur else 0, i)
+			return
+
 ## For Settings: "HD art 7 / 12".
 func progress() -> Vector2i:
 	return Vector2i(mounted, _packs.size())

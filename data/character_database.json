@@ -102,7 +102,70 @@
     "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_evo1.png"
    ],
    "special_sprite": "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_special.png",
-   "special_sprite_evo": "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_special_3.png"
+   "special_sprite_evo": "res://art/characters/heroes/eropatra/sprite/eropatra_sprite_special_3.png",
+   "special_forms": [
+    {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special.png",
+     "interactions": [
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt1.png"
+     ],
+     "kind": "stage",
+     "n": 1
+    },
+    {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt2.png",
+     "interactions": [],
+     "kind": "stage",
+     "n": 2
+    },
+    {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt3.png",
+     "interactions": [
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt4.png",
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt5.png"
+     ],
+     "kind": "stage",
+     "n": 3
+    },
+    {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt6.png",
+     "interactions": [
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt7.png"
+     ],
+     "kind": "evo",
+     "n": 1
+    },
+    {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt8.png",
+     "interactions": [],
+     "kind": "evo",
+     "n": 2
+    },
+    {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt9.png",
+     "interactions": [
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt10.png"
+     ],
+     "kind": "evo",
+     "n": 3
+    },
+    {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt11.png",
+     "interactions": [
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt12.png"
+     ],
+     "kind": "evo",
+     "n": 4
+    },
+    {
+     "base": "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt13.png",
+     "interactions": [
+      "res://art/characters/heroes/eropatra/char/eropatra_char_special_alt14.png"
+     ],
+     "kind": "evo",
+     "n": 5
+    }
+   ]
   },
   "eurnipha": {
    "id": "eurnipha",
@@ -897,7 +960,24 @@
     "res://art/characters/heroes/rubby/sprite/rubby_sprite_evo1.png"
    ],
    "special_sprite": "res://art/characters/heroes/rubby/sprite/rubby_sprite_special.png",
-   "special_sprite_evo": "res://art/characters/heroes/rubby/sprite/rubby_sprite_special_2.png"
+   "special_sprite_evo": "res://art/characters/heroes/rubby/sprite/rubby_sprite_special_2.png",
+   "special_forms": [
+    {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_special.png",
+     "interactions": [],
+     "kind": "stage",
+     "n": 1
+    },
+    {
+     "base": "res://art/characters/heroes/rubby/char/rubby_char_special_alt1.png",
+     "interactions": [
+      "res://art/characters/heroes/rubby/char/rubby_char_special_alt2.png",
+      "res://art/characters/heroes/rubby/char/rubby_char_special_alt3.png"
+     ],
+     "kind": "stage",
+     "n": 2
+    }
+   ]
   },
   "schylua": {
    "id": "schylua",
@@ -1174,7 +1254,42 @@
     "res://art/characters/heroes/angela/sprite/angela_sprite_3.png"
    ],
    "special_sprite": "res://art/characters/heroes/angela/sprite/angela_sprite_special.png",
-   "special_sprite_evo": "res://art/characters/heroes/angela/sprite/angela_sprite_special_2.png"
+   "special_sprite_evo": "res://art/characters/heroes/angela/sprite/angela_sprite_special_2.png",
+   "special_forms": [
+    {
+     "base": "res://art/characters/heroes/angela/char/angela_char_special.png",
+     "interactions": [
+      "res://art/characters/heroes/angela/char/angela_char_special_alt1.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt2.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt3.png"
+     ],
+     "kind": "stage",
+     "n": 1
+    },
+    {
+     "base": "res://art/characters/heroes/angela/char/angela_char_special_alt4.png",
+     "interactions": [
+      "res://art/characters/heroes/angela/char/angela_char_special_alt5.png",
+      "res://art/characters/heroes/angela/char/angela_char_special_alt6.png"
+     ],
+     "kind": "evo",
+     "n": 1
+    },
+    {
+     "base": "res://art/characters/heroes/angela/char/angela_char_special_alt7.png",
+     "interactions": [
+      "res://art/characters/heroes/angela/char/angela_char_special_alt8.png"
+     ],
+     "kind": "evo",
+     "n": 2
+    },
+    {
+     "base": "res://art/characters/heroes/angela/char/angela_char_special_alt9.png",
+     "interactions": [],
+     "kind": "evo",
+     "n": 3
+    }
+   ]
   },
   "kara": {
    "id": "kara",
@@ -1260,7 +1375,39 @@
     "res://art/characters/heroes/mei/sprite/mei_sprite_4.png",
     "res://art/characters/heroes/mei/sprite/mei_sprite_5.png"
    ],
-   "special_sprite": "res://art/characters/heroes/mei/sprite/mei_sprite_special.png"
+   "special_sprite": "res://art/characters/heroes/mei/sprite/mei_sprite_special.png",
+   "special_forms": [
+    {
+     "base": "res://art/characters/heroes/mei/char/mei_char_special.png",
+     "interactions": [],
+     "kind": "stage",
+     "n": 1
+    },
+    {
+     "base": "res://art/characters/heroes/mei/char/mei_char_special_alt1.png",
+     "interactions": [],
+     "kind": "stage",
+     "n": 2
+    },
+    {
+     "base": "res://art/characters/heroes/mei/char/mei_char_special_alt2.png",
+     "interactions": [
+      "res://art/characters/heroes/mei/char/mei_char_special_alt3.png"
+     ],
+     "kind": "evo",
+     "n": 1
+    },
+    {
+     "base": "res://art/characters/heroes/mei/char/mei_char_special_alt4.png",
+     "interactions": [
+      "res://art/characters/heroes/mei/char/mei_char_special_alt5.png",
+      "res://art/characters/heroes/mei/char/mei_char_special_alt6.png",
+      "res://art/characters/heroes/mei/char/mei_char_special_alt7.png"
+     ],
+     "kind": "evo",
+     "n": 2
+    }
+   ]
   },
   "ninger": {
    "id": "ninger",

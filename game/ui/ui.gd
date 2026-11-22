@@ -433,12 +433,14 @@ static func art_rect(id: String, index: int = 0, size: Vector2 = Vector2.ZERO, c
 ## Web build: `path` is evolution / later-stage art that is still downloading (core/art_pack.gd), so `t`
 ## shows the Lv1 stand-in. Adds a small "HD art downloading" note and swaps in the real art once it arrives.
 ## Safe to call again on the same TextureRect (an older note is removed).
-static func pending_art(t: TextureRect, path: String) -> void:
+static func pending_art(t: TextureRect, path: String, on_ready: Callable = Callable()) -> void:
 	for c in t.get_children():
 		if str(c.name).begins_with("PendingArt"):
 			c.queue_free()
 	if path == "" or not DB.waiting(path):
 		return
+	if is_instance_valid(Game.art_pack):
+		Game.art_pack.want(path)
 	# short pill (UI.MIN_FONT is 14, the outfit cells are ~80 px wide)
 	var note := styled_panel(Color(0.05, 0.03, 0.1, 0.82), Color("#ffcf5a", 0.6), 8, 1, 4)
 	note.name = "PendingArtNote"
@@ -458,9 +460,12 @@ static func pending_art(t: TextureRect, path: String) -> void:
 	t.add_child(tm)
 	tm.timeout.connect(func():
 		if not DB.waiting(path):
-			t.texture = DB.tex(path)
 			note.queue_free()
-			tm.queue_free())
+			tm.queue_free()
+			if on_ready.is_valid():
+				on_ready.call()   # e.g. rebuild the screen so the 2.5D rig matches the real art
+			else:
+				t.texture = DB.tex(path))
 
 static func tex_rect(tex: Texture2D, size: Vector2 = Vector2.ZERO, cover: bool = false) -> TextureRect:
 	var t := TextureRect.new()
@@ -599,6 +604,83 @@ static func stars(n: int, size: int = 16, max_n: int = 0) -> Label:
 	return l
 
 const BlackFlame = preload("res://game/ui/black_flame.gd")
+
+## Where the head of `art` (a TextureRect showing a full-body art, keep-aspect) is on screen: centre + radius
+## in global px, from the pivot rig head (or the face crop when there is no rig).
+static func head_on_screen(art: TextureRect) -> Array:
+	var t := art.texture
+	if t == null or art.size.x <= 0.0:
+		return [art.get_global_rect().get_center(), 40.0]
+	var ts := t.get_size()
+	var s := minf(art.size.x / ts.x, art.size.y / ts.y)
+	var draw := ts * s
+	var off := (art.size - draw) * 0.5
+	var r := DB.char_rig(t)
+	var hv: Variant = r.get("head", null)
+	var uv := Vector2(0.5, 0.15)
+	var rad := 0.05
+	if hv is Vector3:
+		uv = Vector2(hv.x, hv.y)
+		rad = hv.z
+	elif hv is Array and (hv as Array).size() >= 3:
+		uv = Vector2(float(hv[0]), float(hv[1]))
+		rad = float(hv[2])
+	else:
+		var ff := DB.face_focus(t)
+		uv = Vector2(ff.x, ff.y)
+	var xf := art.get_global_transform()
+	var p := xf * (off + uv * draw)
+	return [p, rad * draw.y * xf.get_scale().y]
+
+## A hero's reaction as small floating text next to her head: no box (outline only), on the side of the head
+## with more free room inside `bounds` (global rect; empty = the host), so it never covers her face.
+## Replaces the previous one on the same host; fades out after a few seconds.
+static func float_speech(host: Control, art: TextureRect, who: String, text: String, bounds: Rect2 = Rect2()) -> void:
+	var old := host.get_node_or_null("FloatSpeech")
+	if old:
+		old.name = "FloatSpeechOld"
+		old.queue_free()
+	if bounds.size == Vector2.ZERO:
+		bounds = host.get_global_rect()
+	var hd := head_on_screen(art)
+	var hp: Vector2 = hd[0]
+	var hr: float = maxf(24.0, float(hd[1]))
+	var w := 230.0
+	var room_l := hp.x - hr * 1.3 - bounds.position.x
+	var room_r := bounds.end.x - (hp.x + hr * 1.3)
+	var right := room_r >= room_l
+	var x := hp.x + hr * 1.3 if right else hp.x - hr * 1.3 - w
+	x = clampf(x, bounds.position.x + 4.0, bounds.end.x - w - 4.0)
+	var box := VBoxContainer.new()
+	box.name = "FloatSpeech"
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_theme_constant_override("separation", 0)
+	box.custom_minimum_size = Vector2(w, 0)
+	var nm := label(DB.name_of(who).split(" ")[0], 12, DB.theme_color(who).lightened(0.45), 4)
+	nm.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	var tl := label(text, 13, Color.WHITE, 5)
+	tl.add_theme_color_override("font_outline_color", Color(0.05, 0.02, 0.08, 0.95))
+	tl.add_theme_constant_override("shadow_offset_x", 1)
+	tl.add_theme_constant_override("shadow_offset_y", 2)
+	tl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
+	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	tl.custom_minimum_size = Vector2(w, 0)
+	for l in [nm, tl]:
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT if right else HORIZONTAL_ALIGNMENT_RIGHT
+		box.add_child(l)
+	host.add_child(box)
+	var inv := host.get_global_transform().affine_inverse()
+	var y := clampf(hp.y - hr * 0.6, bounds.position.y + 4.0, bounds.end.y - 80.0)
+	box.position = inv * Vector2(x, y)
+	if OS.get_environment("SPEECH_DEBUG") != "":
+		print("SPEECH host=%s text='%s' head=%s bounds=%s pos=%s" % [host.name, text, str(hp), str(bounds), str(box.position)])
+	box.modulate.a = 0.0
+	var tw := box.create_tween()
+	tw.tween_property(box, "modulate:a", 1.0, 0.18)
+	tw.parallel().tween_property(box, "position:y", box.position.y - 8.0, 0.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_interval(clampf(1.6 + text.length() * 0.045, 2.4, 5.0))
+	tw.tween_property(box, "modulate:a", 0.0, 0.35)
+	tw.tween_callback(box.queue_free)
 
 ## A hero's rank as stars: 1-6 gold stars, then 6 stars in the Evolution tier colour (Azure blue, Crimson red,
 ## Violet purple) and Abyss = black stars with a black-flame aura. `compact` drops the empty ☆ slots.

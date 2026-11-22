@@ -2104,6 +2104,31 @@ func _run() -> void:
 		check(DB.has_res(str(df.keys()[0])), "deferred art counts as present")
 	check(DB.stand_in("res://art/characters/heroes/shina/char/shina_char_evo2.png").ends_with("shina_char_stage1.png"), "evo stand-in = stage1 art")
 
+	print("[costume forms]")
+	var cfm: Array = DB.special_forms("eropatra")
+	check(cfm.size() == 8 and str(cfm[0]["kind"]) == "stage" and str(cfm[7]["kind"]) == "evo", "Eropatra costume: 3 stages + 5 evolutions")
+	var cf_keep = G.s["heroes"].get("eropatra", {}).duplicate() if G.owns("eropatra") else null
+	if not G.owns("eropatra"):
+		G.add_hero("eropatra")
+	G.give({"skin:eropatra": 1})
+	var csi := DB.special_index("eropatra")
+	G.s["heroes"]["eropatra"]["star"] = 3
+	G.s["heroes"]["eropatra"]["evo"] = 0
+	check(G.costume_form_unlocked("eropatra", 0) and not G.costume_form_unlocked("eropatra", 1), "costume stage 2 locked below 4 stars")
+	G.s["heroes"]["eropatra"]["star"] = DB.MAX_STAR
+	G.s["heroes"]["eropatra"]["evo"] = 2
+	check(G.costume_form_unlocked("eropatra", 5) and not G.costume_form_unlocked("eropatra", 6), "Crimson opens costume evolution 3, not 4")
+	check(G.set_costume_form("eropatra", 4) == "" and int(G.hero("eropatra")["skin"]) == csi, "choosing a costume form wears the costume")
+	# (DB reads the autoload Game; in this test the state lives on G, so check the choice on G)
+	check(G.costume_form("eropatra") == 4 and DB.costume_form_def("eropatra", -1).is_empty(), "the chosen costume form is kept")
+	check(G.set_costume_form("eropatra", 7) != "", "a locked costume form cannot be chosen")
+	G.s["heroes"]["eropatra"]["evo"] = 0
+	check(G.costume_form("eropatra") <= 3, "after losing the rank the costume falls back to an unlocked form")
+	if cf_keep == null:
+		G.s["heroes"].erase("eropatra")
+	else:
+		G.s["heroes"]["eropatra"] = cf_keep
+
 	print("[even frame pacing]")
 	var fpc: Array = [[60.0, 60, 60], [90.0, 60, 90], [120.0, 60, 60], [144.0, 60, 72], [60.0, 30, 30], [120.0, 30, 30]]
 	for fp in fpc:

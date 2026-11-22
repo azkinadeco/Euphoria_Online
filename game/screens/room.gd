@@ -35,7 +35,8 @@ func build() -> void:
 		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
 			var line := Game.tap_hero(hid)
 			if line != "":
-				main.toast("%s: \"%s\"" % [DB.name_of(hid).split(" ")[0], line], Color("#ff8fb8"))
+				var g := get_global_rect()
+				UI.float_speech(self, _art, hid, line, Rect2(g.position + Vector2(g.size.x * 0.19, g.size.y * 0.12), Vector2(g.size.x * 0.44, g.size.y * 0.8)))
 			var tw := _art.create_tween()
 			tw.tween_property(_art, "scale", Vector2(1.03, 0.97), 0.08)
 			tw.tween_property(_art, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK))
@@ -119,6 +120,10 @@ func build() -> void:
 	v.add_child(gf)
 	for gid in DB.GIFTS + DB.DISH_GIFTS:
 		gf.add_child(_gift_tile(hid, gid))
+	var cb := UI.button("✦ COSTUME & OUTFITS", func(): _costume_popup(hid), "GoldButton", Vector2(0, 44))
+	if not DB.special_forms(hid).is_empty() and Game.skin_unlocked(hid, DB.special_index(hid)):
+		cb.tooltip_text = "Costume form: %s" % DB.costume_form_label(DB.special_forms(hid)[Game.costume_form(hid)])
+	v.add_child(cb)
 	var row := UI.hbox(8)
 	v.add_child(row)
 	var ch := UI.button("CHANGE HERO", _pick_hero, "", Vector2(0, 42))
@@ -297,3 +302,109 @@ func _gift_tile(hid: String, g: String) -> Control:
 		main.replace("room", {"loc": _loc}))
 	UI.hover_fx(bt, 1.04)
 	return bt
+
+# ---------------------------------------------------------------- costume & outfits (change what she wears here)
+
+## Outfits (Star Up / Bond / Oath unlocks) and, for a hero with a costume set, the costume's stages and
+## evolutions: each unlocks with her rank (Game.costume_form_req) and can be worn from here.
+func _costume_popup(hid: String) -> void:
+	var v: VBoxContainer = main.popup("COSTUME & OUTFITS  —  %s" % DB.name_of(hid).to_upper(), 820)
+	var sc := DragScroll.new()
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.custom_minimum_size = Vector2(0, 430)
+	v.add_child(sc)
+	var body := UI.vbox(10)
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.add_child(body)
+	var cur := int(Game.hero(hid).get("skin", 0))
+	var si := DB.special_index(hid)
+	# --- costume forms
+	var forms := DB.special_forms(hid)
+	if not forms.is_empty():
+		var owned_c := Game.skin_unlocked(hid, si)
+		var cname := str(DB.SPECIAL_SKINS.get(hid, "Costume"))
+		body.add_child(UI.label("COSTUME  •  %s" % cname.to_upper(), 15, Color("#ffb8d6"), 3))
+		body.add_child(UI.wrap_label("Her costume changes as she grows: stages open at 4★ and 5★, evolutions at 6★ and with Azure, Crimson, Violet and Abyss Evolution. Pick the look she wears." if owned_c else "Get this costume in the WARDROBE first; its stages and evolutions then open with her rank.", 13, UI.MUTED))
+		var fg := HFlowContainer.new()
+		fg.add_theme_constant_override("h_separation", 8)
+		fg.add_theme_constant_override("v_separation", 8)
+		body.add_child(fg)
+		var cf := Game.costume_form(hid)
+		for k in forms.size():
+			var kk: int = k
+			var fm: Dictionary = forms[k]
+			var open2 := Game.costume_form_unlocked(hid, kk)
+			var wearing := cur == si and kk == cf
+			var label := ("WEARING" if wearing else DB.costume_form_label(fm)) if open2 else "Needs %s" % str(Game.costume_form_req(hid, kk)["label"])
+			fg.add_child(_costume_tile(str(fm["base"]), label, open2, wearing, func():
+				var err := Game.set_costume_form(hid, kk)
+				if err != "":
+					main.toast(err, UI.MUTED)
+					return
+				Game.sfx("awakening")
+				main.close_popup(v)
+				main.replace("room", {"loc": _loc}), str(fm["kind"]) == "evo"))
+		if not owned_c:
+			var wb := UI.button("OPEN WARDROBE", func():
+				main.close_popup(v)
+				main.go("wardrobe"), "", Vector2(200, 42))
+			wb.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+			body.add_child(wb)
+	# --- outfits
+	body.add_child(UI.label("OUTFITS", 15, UI.GOLD, 3))
+	var g := HFlowContainer.new()
+	g.add_theme_constant_override("h_separation", 8)
+	g.add_theme_constant_override("v_separation", 8)
+	body.add_child(g)
+	for i in DB.art_list(hid).size():
+		var idx: int = i
+		var open := Game.skin_unlocked(hid, idx)
+		var cap := ("WEARING" if idx == cur else ("✦ Costume" if idx == si else "Outfit %d" % (idx + 1))) if open else Game.skin_lock_label(hid, idx)
+		g.add_child(_costume_tile(DB.art_path(hid, idx), cap, open, idx == cur, func():
+			Game.set_skin(hid, idx)
+			Game.sfx("star_up")
+			main.close_popup(v)
+			main.replace("room", {"loc": _loc})))
+	var c := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
+	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(c)
+
+func _costume_tile(path: String, caption: String, open: bool, wearing: bool, cb: Callable, evo: bool = false) -> Control:
+	var b := Button.new()
+	b.theme_type_variation = "FlatButton"
+	b.focus_mode = Control.FOCUS_NONE
+	b.custom_minimum_size = Vector2(116, 168)
+	var col := UI.GOLD if wearing else (Color("#b96bff") if evo else Color("#4a3a6e"))
+	var fr := Panel.new()
+	fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fr.add_theme_stylebox_override("panel", UI.style(Color(0.05, 0.03, 0.09, 1.0), col, 10, 3 if wearing else 1, 0))
+	fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(fr)
+	var t := UI.tex_rect(DB.bust_tex(DB.tex(path), 1.35), Vector2.ZERO, true)
+	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	t.offset_bottom = -26
+	if not open:
+		t.modulate = Color(0.35, 0.35, 0.42)
+	fr.add_child(t)
+	UI.pending_art(t, path)
+	var cl := UI.label(caption, 12, UI.GOLD if wearing else (Color.WHITE if open else UI.MUTED), 3)
+	cl.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	cl.offset_top = -24
+	cl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cl.clip_text = true
+	cl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	fr.add_child(cl)
+	if not open:
+		var lk := UI.label("LOCKED", 12, UI.MUTED, 3)
+		lk.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		lk.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		fr.add_child(lk)
+	b.pressed.connect(func():
+		if open and not wearing:
+			cb.call()
+		elif not open:
+			Game.sfx("ui_click")
+			main.toast("Locked: %s" % caption, UI.MUTED))
+	return b
+
