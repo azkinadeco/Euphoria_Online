@@ -905,6 +905,12 @@ func team_power() -> int:
 ## A summoned hero: the first one joins the team, later ones are duplicate cards in the hero inventory.
 func add_hero(id: String) -> Dictionary:
 	if owns(id):
+		# Settings > auto-dismantle: N / R duplicates turn straight into Evo Crystals (they are common and cheap)
+		if bool(s["settings"].get("auto_dismantle", false)) and DB.rarity_of(id) in ["N", "R"]:
+			var n := DB.dismantle_crystals(DB.rarity_of(id))
+			s["items"]["star_stone"] = int(s["items"].get("star_stone", 0)) + n
+			stat_add("dismantled")
+			return {"new": false, "copy": false, "auto": n, "shards": 0}
 		s["copies"][id] = copies(id) + 1
 		return {"new": false, "copy": true, "shards": 0}
 	s["heroes"][id] = _new_hero(id)
@@ -954,6 +960,8 @@ func dismantle(id: String, n: int) -> Dictionary:
 	var r := {"star_stone": DB.dismantle_crystals(DB.rarity_of(id)) * n, "gold": 1000 * (DB.rarity_rank(DB.rarity_of(id)) + 1) * n}
 	give(r)
 	stat_add("dismantled", n)
+	quest_progress("dismantle", n)
+	Tele.log_event("dism", {"h": id, "n": n})
 	mark_dirty()
 	return r
 
@@ -963,6 +971,22 @@ func dismantle_plan(rarities: Array) -> Dictionary:
 	for id in s["copies"].keys():
 		if rarities.has(DB.rarity_of(str(id))) and copies(str(id)) > 0:
 			out[str(id)] = copies(str(id))
+	return out
+
+## Spare duplicates only: for every hero keep the cards her next rank-up needs (none once she is Abyss 6★);
+## UR and rarer are never picked automatically.
+func dismantle_smart_plan() -> Dictionary:
+	var out := {}
+	for k in s["copies"].keys():
+		var id := str(k)
+		if DB.rarity_rank(DB.rarity_of(id)) >= DB.rarity_rank("UR"):
+			continue
+		var keep := 0
+		if owns(id) and not rank_maxed(id):
+			keep = int(rank_cost(id)["copies"])
+		var spare := copies(id) - keep
+		if spare > 0:
+			out[id] = spare
 	return out
 
 func dismantle_many(plan: Dictionary) -> Dictionary:
@@ -1056,6 +1080,7 @@ func rank_up(id: String) -> String:
 			h["evo_star"] = 1
 		"evo_star":
 			h["evo_star"] = int(h["evo_star"]) + 1
+	quest_progress("rank")
 	mark_dirty()
 	return ""
 
@@ -1289,6 +1314,7 @@ func set_costume_form(id: String, k: int) -> String:
 	if not costume_form_unlocked(id, k):
 		return "Unlocks at %s." % str(costume_form_req(id, k)["label"])
 	hero(id)["costume_form"] = k
+	Tele.log_event("costume", {"h": id, "f": DB.costume_form_label(DB.special_forms(id)[k])})
 	var si := DB.special_index(id)
 	if si > 0 and skin_unlocked(id, si):
 		hero(id)["skin"] = si   # choosing a costume form also wears the costume
@@ -1846,6 +1872,7 @@ func stat_value(stat: String) -> int:
 					sk += 1
 			return sk
 		"guild_level": return int(s["guild"]["level"]) if in_guild() else 0
+		"dismantled": return stat("dismantled")
 	return 0
 
 func achievement_state(a: Dictionary) -> String:
@@ -2750,6 +2777,7 @@ func guild_checkin() -> Dictionary:
 	gd["checkin_day"] = day_key()
 	_add_guild_exp(40)
 	quest_progress("guild")
+	guild_quest_add(10)
 	var r := {"guild_coin": 50, "gold": 3000}
 	give(r)
 	return r
@@ -2766,6 +2794,7 @@ func guild_donate() -> String:
 	gd["donates"] = int(gd["donates"]) + 1
 	_add_guild_exp(60)
 	quest_progress("guild")
+	guild_quest_add(10)
 	give({"guild_coin": 30})
 	return ""
 
@@ -2798,10 +2827,60 @@ func _damage_raid(dmg: int) -> bool:
 		return true
 	return false
 
+# =================================================================== guild quest (daily shared goal)
+# Every guildmate fills one bar per day: simulated members add points through the day (guild activity),
+# you add points with check-in (+10), donations (+10 each) and raid attacks (+15). Chests at 50% and 100%.
+
+const GUILD_QUEST_TARGET := 100
+const GUILD_QUEST_CHESTS := [{"at": 50, "give": {"guild_coin": 60, "star_stone": 10}}, {"at": 100, "give": {"guild_coin": 120, "star_stone": 20, "gold": 30000}}]
+
+func _gq() -> Dictionary:
+	var gd: Dictionary = s["guild"]
+	var q: Dictionary = gd.get("gq", {})
+	if int(q.get("day", -1)) != day_key():
+		q = {"day": day_key(), "mine": 0, "claimed": []}
+		gd["gq"] = q
+	return q
+
+func guild_quest_add(n: int) -> void:
+	if not in_guild():
+		return
+	var q := _gq()
+	q["mine"] = int(q["mine"]) + n
+	mark_dirty()
+
+## {"total", "target", "mine", "members"}: members' share grows over the day with the guild's activity.
+func guild_quest() -> Dictionary:
+	var q := _gq()
+	var act := 0.7
+	for g in DB.GUILDS:
+		if g["name"] == s["guild"]["joined"]:
+			act = float(g.get("activity", 0.7))
+	var day_frac := clampf(float((now() + 7 * 3600) % 86400) / 86400.0, 0.0, 1.0)
+	var members := int(70.0 * act * clampf(0.15 + day_frac, 0.0, 1.0))
+	var total := mini(GUILD_QUEST_TARGET, members + int(q["mine"]))
+	return {"total": total, "target": GUILD_QUEST_TARGET, "mine": int(q["mine"]), "members": members, "claimed": q["claimed"]}
+
+func guild_quest_chest_state(i: int) -> String:
+	var gq := guild_quest()
+	if (gq["claimed"] as Array).has(i):
+		return "claimed"
+	return "ready" if int(gq["total"]) >= int(GUILD_QUEST_CHESTS[i]["at"]) else "locked"
+
+func claim_guild_quest(i: int) -> Dictionary:
+	if guild_quest_chest_state(i) != "ready":
+		return {}
+	(_gq()["claimed"] as Array).append(i)
+	var r: Dictionary = GUILD_QUEST_CHESTS[i]["give"]
+	give(r)
+	mark_dirty()
+	return r
+
 func apply_raid_result(dmg: int) -> Dictionary:
 	var gd: Dictionary = s["guild"]
 	gd["raid_best"] = maxi(int(gd["raid_best"]), dmg)
 	gd["raid_total"] = int(gd["raid_total"]) + dmg
+	guild_quest_add(15)
 	var lv := int(gd["raid_lv"])
 	var r := {"guild_coin": clampi(20 + dmg / 1500, 20, 250), "gold": clampi(dmg / 8, 1000, 60000)}
 	if _damage_raid(dmg):

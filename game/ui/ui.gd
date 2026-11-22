@@ -1272,3 +1272,82 @@ static func hero_aura(art: Control, col: Color, strength: float = 0.55) -> Textu
 		tw.tween_property(a, "modulate:a", strength, 2.6).set_trans(Tween.TRANS_SINE)
 		tw.tween_property(a, "modulate:a", strength * 0.55, 2.6).set_trans(Tween.TRANS_SINE)
 	return a
+
+# ---------------------------------------------------------------- costume forms picker (Room, Hero Detail)
+
+## "Costume" block: the hero's costume stages / evolutions as tiles (locked ones show the rank they need).
+## Picking one wears it (Game.set_costume_form) then calls `after`. null when the hero has no costume set.
+static func costume_section(hid: String, toast: Callable, after: Callable, open_wardrobe: Callable = Callable()) -> VBoxContainer:
+	var forms := DB.special_forms(hid)
+	if forms.is_empty():
+		return null
+	var si := DB.special_index(hid)
+	var cur := int(Game.hero(hid).get("skin", 0))
+	var owned_c := Game.skin_unlocked(hid, si)
+	var box := vbox(8)
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_child(label("COSTUME  •  %s" % str(DB.SPECIAL_SKINS.get(hid, "Costume")).to_upper(), 15, Color("#ffb8d6"), 3))
+	box.add_child(wrap_label("Her costume changes as she grows: stages open at 4★ and 5★, evolutions at 6★ and with Azure, Crimson, Violet and Abyss Evolution. Pick the look she wears." if owned_c else "Get this costume in the WARDROBE first; its stages and evolutions then open with her rank.", 13, MUTED))
+	var fg := HFlowContainer.new()
+	fg.add_theme_constant_override("h_separation", 8)
+	fg.add_theme_constant_override("v_separation", 8)
+	box.add_child(fg)
+	var cf := Game.costume_form(hid)
+	for k in forms.size():
+		var kk: int = k
+		var fm: Dictionary = forms[k]
+		var open := Game.costume_form_unlocked(hid, kk)
+		var wearing := cur == si and kk == cf
+		var cap := ("WEARING" if wearing else DB.costume_form_label(fm)) if open else "Needs %s" % str(Game.costume_form_req(hid, kk)["label"])
+		fg.add_child(costume_tile(str(fm["base"]), cap, open, wearing, func():
+			var err := Game.set_costume_form(hid, kk)
+			if err != "":
+				toast.call(err)
+				return
+			Game.sfx("awakening")
+			after.call(), str(fm["kind"]) == "evo", toast))
+	if not owned_c and open_wardrobe.is_valid():
+		var wb := button("OPEN WARDROBE", open_wardrobe, "", Vector2(200, 42))
+		wb.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		box.add_child(wb)
+	return box
+
+static func costume_tile(path: String, caption: String, open: bool, wearing: bool, cb: Callable, evo: bool, toast: Callable) -> Control:
+	var b := Button.new()
+	b.theme_type_variation = "FlatButton"
+	b.focus_mode = Control.FOCUS_NONE
+	b.custom_minimum_size = Vector2(116, 168)
+	var col := GOLD if wearing else (Color("#b96bff") if evo else Color("#4a3a6e"))
+	var fr := Panel.new()
+	fr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fr.add_theme_stylebox_override("panel", style(Color(0.05, 0.03, 0.09, 1.0), col, 10, 3 if wearing else 1, 0))
+	fr.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(fr)
+	var t := tex_rect(DB.bust_tex(DB.tex(path), 1.35), Vector2.ZERO, true)
+	t.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	t.offset_bottom = -26
+	if not open:
+		t.modulate = Color(0.35, 0.35, 0.42)
+	fr.add_child(t)
+	pending_art(t, path)
+	var cl := label(caption, 12, GOLD if wearing else (Color.WHITE if open else MUTED), 3)
+	cl.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	cl.offset_top = -24
+	cl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cl.clip_text = true
+	cl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	fr.add_child(cl)
+	if not open:
+		var lk := label("LOCKED", 12, MUTED, 3)
+		lk.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		lk.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		fr.add_child(lk)
+	b.pressed.connect(func():
+		if open and not wearing:
+			cb.call()
+		elif not open:
+			Game.sfx("ui_click")
+			toast.call("Locked: %s" % caption))
+	return b
+

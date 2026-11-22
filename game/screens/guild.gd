@@ -60,7 +60,37 @@ func _build_base() -> void:
 	_view.set_members.call_deferred(online, str(Game.s["lobby_hero"]), str(Game.s["player"]["name"]))
 	_view.station.connect(_on_station)
 	_view.member.connect(_member_popup)
-	_view.badge.call_deferred("board", int(gd["checkin_day"]) != Game.day_key())
+	# guild chat (top right): the last lines said in the base + emote stickers for your chibi
+	var chat := UI.styled_panel(Color(0.05, 0.03, 0.09, 0.78), Color(_guild_color(), 0.45), 10, 1, 8)
+	chat.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	chat.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	chat.offset_right = -12
+	chat.offset_top = 6
+	chat.custom_minimum_size = Vector2(290, 0)
+	b.add_child(chat)
+	var cv := UI.vbox(3)
+	chat.add_child(cv)
+	cv.add_child(UI.label("GUILD CHAT", 12, UI.GOLD, 2))
+	var lines := UI.vbox(1)
+	cv.add_child(lines)
+	var emo := UI.hbox(5)
+	cv.add_child(emo)
+	for e in ["Hi!", "GG", "♥", "Raid?"]:
+		var et: String = e
+		var eb := UI.button(et, func(): _view.you_say(et), "", Vector2(0, 30))
+		eb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		eb.add_theme_font_size_override("font_size", 13)
+		emo.add_child(eb)
+	_view.chatted.connect(func(nm: String, text: String):
+		var l := UI.label("%s: %s" % [nm, text], 12, UI.GOLD if nm == "You" else Color("#e8e0f4"), 2)
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.custom_minimum_size = Vector2(270, 0)
+		lines.add_child(l)
+		while lines.get_child_count() > 5:
+			var old := lines.get_child(0)
+			lines.remove_child(old)
+			old.queue_free())
+	_view.badge.call_deferred("board", int(gd["checkin_day"]) != Game.day_key() or Game.guild_quest_chest_state(0) == "ready" or Game.guild_quest_chest_state(1) == "ready")
 	_view.badge.call_deferred("raid", int(gd["raid_tries"]) > 0)
 	# HUD: guild card (top left)
 	var info := UI.styled_panel(Color(0.06, 0.03, 0.1, 0.86), Color(_guild_color(), 0.7), 12, 1, 10)
@@ -147,9 +177,37 @@ func _board_popup() -> void:
 			main.toast("+30 Guild Coins, +60 Guild EXP", UI.GREEN)
 		main.close_popup(v)
 		_board_popup(), "GIVE"))
+	# daily guild quest: one shared bar, two chests
+	var gq := Game.guild_quest()
+	var qp := UI.styled_panel(Color(0.1, 0.06, 0.16, 0.9), Color(_guild_color(), 0.5), 10, 1, 10)
+	v.add_child(qp)
+	var qv := UI.vbox(6)
+	qp.add_child(qv)
+	qv.add_child(UI.label("GUILD QUEST  •  %d / %d today" % [int(gq["total"]), int(gq["target"])], 15, UI.GOLD, 3))
+	qv.add_child(UI.bar(int(gq["total"]), int(gq["target"]), "GoldBar", 12))
+	qv.add_child(UI.label("Guildmates %d  •  you %d   (check-in +10, donate +10, raid attack +15)" % [int(gq["members"]), int(gq["mine"])], 12, UI.MUTED, 2))
+	var cr := UI.hbox(8)
+	qv.add_child(cr)
+	for i in Game.GUILD_QUEST_CHESTS.size():
+		var ci: int = i
+		var st := Game.guild_quest_chest_state(ci)
+		var at := int(Game.GUILD_QUEST_CHESTS[ci]["at"])
+		var cb := UI.button(("%d%% CHEST CLAIMED" % at) if st == "claimed" else ("OPEN %d%% CHEST" % at if st == "ready" else "%d%% chest" % at), func():
+			var r := Game.claim_guild_quest(ci)
+			if not r.is_empty():
+				main.close_popup(v)
+				main.show_rewards("GUILD QUEST", r, func(): main.replace("guild")), "GoldButton" if st == "ready" else "", Vector2(0, 40))
+		cb.disabled = st != "ready"
+		cb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cr.add_child(cb)
 	var c := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(140, 44))
 	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	v.add_child(c)
+
+func _wave(member_name: String) -> void:
+	Game.sfx("ui_click")
+	if is_instance_valid(_view):
+		_view.wave_to(member_name)
 
 func _member_popup(m: Dictionary) -> void:
 	var you := bool(m.get("you", false))
@@ -173,8 +231,7 @@ func _member_popup(m: Dictionary) -> void:
 	if not you:
 		br.add_child(UI.button("WAVE", func():
 			main.close_popup(v)
-			Game.sfx("ui_click")
-			main.toast("You waved at %s!" % str(m["name"]), Color("#ff8fb8")), "GoldButton", Vector2(150, 46)))
+			_wave(str(m["name"])), "GoldButton", Vector2(150, 46)))
 	br.add_child(UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(130, 46)))
 
 func refresh() -> void:

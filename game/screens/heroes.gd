@@ -9,6 +9,7 @@ static var _role := ""
 var _elem_bar: HBoxContainer
 static var _sort := "power"
 static var _scroll_y := 0
+static var _show_copies := true   # duplicate (COPY) cards in the grid; toggled by tapping the Cards counter
 var _tabs: Array = []
 var _count: Label
 
@@ -38,8 +39,15 @@ func build() -> void:
 	# owned count with the collection bonus under it (two short lines instead of one long one)
 	var cv := UI.vbox(0)
 	cv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	cv.tooltip_text = "Every hero you own gives +0.5% HP/ATK/DEF to all heroes."
-	cv.mouse_filter = Control.MOUSE_FILTER_PASS
+	cv.tooltip_text = "Every hero you own gives +0.5% HP/ATK/DEF to all heroes.\nTap to show / hide duplicate cards."
+	cv.mouse_filter = Control.MOUSE_FILTER_STOP
+	cv.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	cv.gui_input.connect(func(e):
+		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
+			_show_copies = not _show_copies
+			Game.sfx("ui_click")
+			main.toast("Duplicate cards %s" % ("shown" if _show_copies else "hidden"), UI.MUTED)
+			_rebuild())
 	bar.add_child(cv)
 	_count = UI.label("", 14, UI.TEXT, 3)
 	_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -355,7 +363,8 @@ func _rebuild() -> void:
 		_grid.add_child(card)
 	if not copies_done:
 		_add_copy_cards(ids)
-	_count.text = "Owned %d / %d\nCards %d / %d" % [Game.s["heroes"].size(), DB.HEROES.size(), Game.hero_cards(), Game.hero_slots()]
+	_count.text = "Owned %d / %d\nCards %d / %d %s" % [Game.s["heroes"].size(), DB.HEROES.size(), Game.hero_cards(), Game.hero_slots(), "●" if _show_copies else "○"]
+	_count.add_theme_color_override("font_color", UI.RED if Game.hero_room() <= 5 else UI.TEXT)
 	if ids.is_empty():
 		_grid.add_child(UI.label("No heroes match these filters.", 15, UI.MUTED, 2))
 
@@ -363,6 +372,8 @@ func _rebuild() -> void:
 
 ## One card per duplicate copy of every listed hero (material for Star Up / Evolution, or Dismantle).
 func _add_copy_cards(ids: Array) -> void:
+	if not _show_copies:
+		return
 	for id in ids:
 		var hid: String = id
 		if not Game.owns(hid):

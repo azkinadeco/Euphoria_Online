@@ -2129,6 +2129,34 @@ func _run() -> void:
 	else:
 		G.s["heroes"]["eropatra"] = cf_keep
 
+	print("[cards QoL / guild quest]")
+	var ad_keep: bool = bool(G.s["settings"].get("auto_dismantle", false))
+	var nr_id := ""
+	for hid0 in G.s["heroes"].keys():
+		if DB.rarity_of(str(hid0)) in ["N", "R"]:
+			nr_id = str(hid0)
+	if nr_id != "":
+		G.s["settings"]["auto_dismantle"] = true
+		var adc0: int = G.copies(nr_id)
+		var adst0: int = G.amount("star_stone")
+		var adr: Dictionary = G.add_hero(nr_id)
+		check(adr.has("auto") and G.copies(nr_id) == adc0 and G.amount("star_stone") == adst0 + DB.dismantle_crystals(DB.rarity_of(nr_id)), "auto-dismantle: N/R duplicates become crystals")
+	G.s["settings"]["auto_dismantle"] = ad_keep
+	var sp_keep: Dictionary = G.s["copies"].duplicate()
+	G.s["copies"] = {"rumi": 10}
+	var smp: Dictionary = G.dismantle_smart_plan()
+	check(int(smp.get("rumi", 0)) == 10 - (0 if G.rank_maxed("rumi") else int(G.rank_cost("rumi")["copies"])), "smart pick keeps the cards for her next Star Up")
+	G.s["copies"] = sp_keep
+	var wr0: int = int(G.s["weekly"]["progress"].get("w_rank", 0))
+	G.quest_progress("rank")
+	check(int(G.s["weekly"]["progress"].get("w_rank", 0)) == wr0 + 1, "rank-ups count for the weekly mission")
+	if G.in_guild():
+		var gq0: int = int(G.guild_quest()["mine"])
+		G.guild_quest_add(10)
+		check(int(G.guild_quest()["mine"]) == gq0 + 10, "guild quest counts your contribution")
+		G.s["guild"]["gq"]["mine"] = 200
+		check(G.guild_quest_chest_state(1) == "ready" and not G.claim_guild_quest(1).is_empty() and G.guild_quest_chest_state(1) == "claimed", "guild quest chest opens once")
+
 	print("[even frame pacing]")
 	var fpc: Array = [[60.0, 60, 60], [90.0, 60, 90], [120.0, 60, 60], [144.0, 60, 72], [60.0, 30, 30], [120.0, 30, 30]]
 	for fp in fpc:

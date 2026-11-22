@@ -82,8 +82,10 @@ func build() -> void:
 			st.tween_property(_hero_art, "modulate:a", 1.0, 0.25)).call_deferred()
 		params.erase("swipe")
 	if _enemy == "" and lskin > 0 and lskin == DB.special_index(hid):
-		# special skin showcase: golden sparkles around the secretary
-		var sp := FestivalFX.new("firefly", Color("#ffd479"), 24)
+		# special skin showcase: sparkles around the secretary in her Evolution tier colour (gold before evolving)
+		var lev := int(Game.hero(hid).get("evo", 0))
+		var spc := Color("#ffd479") if lev <= 0 else (DB.evo_color(lev).lightened(0.3) if lev < DB.MAX_EVO else Color("#a66bff"))
+		var sp := FestivalFX.new("firefly", spc, 24 + lev * 4)
 		sp.anchor_left = 0.08
 		sp.anchor_right = 0.56
 		sp.anchor_bottom = 1.0
@@ -1462,6 +1464,18 @@ func _next_outfit() -> void:
 	var hid: String = Game.s["lobby_hero"]
 	var n := DB.art_list(hid).size()
 	var cur := int(Game.hero(hid).get("skin", 0))
+	# wearing a costume with several unlocked stages: step through the stages before the next outfit
+	if cur == DB.special_index(hid) and DB.special_forms(hid).size() > 1:
+		var cf := Game.costume_form(hid)
+		for k in range(cf + 1, DB.special_forms(hid).size()):
+			if Game.costume_form_unlocked(hid, k):
+				Game.set_costume_form(hid, k)
+				Game.sfx("star_up")
+				main.toast("Costume: %s" % DB.costume_form_label(DB.special_forms(hid)[k]), UI.GOLD)
+				main.replace("lobby")
+				return
+		# past the last stage: start from the first stage next time this costume comes round
+		Game.hero(hid)["costume_form"] = 0
 	for i in range(1, n + 1):
 		var k := (cur + i) % n
 		if Game.skin_unlocked(hid, k):

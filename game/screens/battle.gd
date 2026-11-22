@@ -379,6 +379,8 @@ func _place_units() -> void:
 				var al := UI.rank_stars(DB.MAX_STAR, ue, int(u.get("evo_star", 0)), 11, true)
 				al.position = Vector2(v.size.x * 0.5 - 40, v.size.y * 0.66)
 				v.add_child(al)
+			if ue > 0 and not Game.reduce_fx():
+				_evo_aura(v, ue)
 			if ue >= 3:
 				var gc := DB.evo_color(ue).lightened(0.35) if ue < 4 else Color(0.78, 0.6, 1.0)
 				var gl := v.sprite.create_tween().set_loops()
@@ -2218,3 +2220,38 @@ func _show_result(won: bool, stars: int, rewards: Dictionary, reason: String) ->
 				var orig: Callable = cbs[0]["callable"] if not cbs.is_empty() else Callable()
 				b.pressed.connect(func(): _leave_with_outro(orig))
 	_fit_result.call_deferred(v)
+
+## Evolution aura on a unit: rising motes in the tier colour (Azure / Crimson / Violet), and for Abyss the
+## black-flame aura around her feet. Behind the sprite, no input.
+func _evo_aura(v: Control, ev: int) -> void:
+	if ev >= DB.MAX_EVO:
+		var fl: Control = UI.BlackFlame.new()
+		fl.stars = 3
+		fl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		fl.position = Vector2(v.size.x * 0.08, v.size.y * 0.45)
+		fl.size = Vector2(v.size.x * 0.84, v.size.y * 0.5)
+		fl.modulate.a = 0.85
+		v.add_child(fl)
+		v.move_child(fl, 0)
+	var p := CPUParticles2D.new()
+	p.amount = 8 + ev * 2
+	p.lifetime = 1.3
+	p.preprocess = 1.0
+	p.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	p.emission_rect_extents = Vector2(v.size.x * 0.3, 6)
+	p.position = Vector2(v.size.x * 0.5, v.size.y * 0.9)
+	p.direction = Vector2(0, -1)
+	p.spread = 15.0
+	p.gravity = Vector2(0, -30)
+	p.initial_velocity_min = 20.0
+	p.initial_velocity_max = 45.0
+	p.scale_amount_min = 1.5
+	p.scale_amount_max = 3.5
+	var c := DB.evo_color(ev) if ev < DB.MAX_EVO else Color("#a05bff")
+	var g := Gradient.new()
+	g.set_color(0, Color(c.lightened(0.4), 0.0))
+	g.add_point(0.2, Color(c.lightened(0.3), 0.9))
+	g.set_color(g.get_point_count() - 1, Color(c, 0.0))
+	p.color_ramp = g
+	v.add_child(p)
+

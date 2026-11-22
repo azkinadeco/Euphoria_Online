@@ -4,6 +4,7 @@ extends Screen
 ## cards; dismantling UR+ asks first. params: {"id": hero} preselects that hero's duplicates.
 
 var _pick := {}            # hero id -> copies picked
+static var _filt := "ALL"   # rarity filter of the grid (remembered for the session)
 var _grid: HFlowContainer
 var _side: VBoxContainer
 
@@ -65,6 +66,13 @@ func _render() -> void:
 		em.add_child(UI.wrap_label("Summoning a hero you already have puts a duplicate card in your hero inventory. Use cards to Star Up and Evolve heroes, or dismantle them here into Evo Crystals.", 14, UI.MUTED))
 		_grid.add_child(em)
 	for id in ids:
+		var r := DB.rarity_of(str(id))
+		if _filt == "N & R" and not r in ["N", "R"]:
+			continue
+		if _filt == "SR" and r != "SR":
+			continue
+		if _filt == "SSR+" and DB.rarity_rank(r) < DB.rarity_rank("SSR"):
+			continue
 		_grid.add_child(_card(str(id)))
 	_side_panel()
 
@@ -111,6 +119,35 @@ func _side_panel() -> void:
 		_render(), "", Vector2(0, 42))
 	ex.disabled = Game.hero_slots() >= DB.HERO_SLOTS_MAX
 	_side.add_child(ex)
+	var ad := CheckButton.new()
+	ad.text = "Auto-dismantle N & R duplicates"
+	ad.button_pressed = bool(Game.s["settings"].get("auto_dismantle", false))
+	ad.focus_mode = Control.FOCUS_NONE
+	ad.add_theme_font_size_override("font_size", 14)
+	ad.tooltip_text = "New N and R duplicates from summons become Evo Crystals at once and never fill the inventory."
+	ad.toggled.connect(func(on):
+		Game.s["settings"]["auto_dismantle"] = on
+		Game.mark_dirty()
+		Game.sfx("ui_click"))
+	_side.add_child(ad)
+	var fr := UI.hbox(5)
+	for f in ["ALL", "N & R", "SR", "SSR+"]:
+		var fk: String = f
+		var fb := UI.button(fk, func(): _filt = fk; _render(), "TabButton", Vector2(0, 34))
+		fb.toggle_mode = true
+		fb.button_pressed = _filt == fk
+		fb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fb.add_theme_font_size_override("font_size", 13)
+		fr.add_child(fb)
+	_side.add_child(fr)
+	var smart := UI.button("SMART PICK  (keep cards for each next Star Up)", func():
+		var plan := Game.dismantle_smart_plan()
+		_pick = plan
+		if plan.is_empty():
+			main.toast("No spare cards: every duplicate is needed for a next Star Up / Evolution.", UI.MUTED)
+		_render(), "GoldButton", Vector2(0, 40))
+	smart.add_theme_font_size_override("font_size", 13)
+	_side.add_child(smart)
 	_side.add_child(UI.label("QUICK PICK", 15, UI.GOLD, 3))
 	var qa := UI.hbox(8)
 	for q in [["N & R", ["N", "R"]], ["SR", ["SR"]], ["SSR", ["SSR"]]]:

@@ -6,6 +6,7 @@ var _art: TextureRect
 var _info: VBoxContainer
 var _list: VBoxContainer
 var _btns: HBoxContainer
+var _inv_warn: Button   # "Hero inventory 96 / 100" above the summon buttons when it is nearly full
 var _frames: Array = []     # special-event banner art (tap to animate, like a GIF)
 var _frame_i := 0
 var _bg_rect: TextureRect
@@ -58,6 +59,14 @@ func build() -> void:
 	_btns.offset_right = -16
 	_btns.offset_top = -112
 	_btns.offset_bottom = -16
+	_inv_warn = UI.button("", func(): main.go("dismantle"), "", Vector2(0, 30))
+	_inv_warn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_inv_warn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_inv_warn.offset_right = -16
+	_inv_warn.offset_bottom = -116
+	_inv_warn.offset_top = -148
+	_inv_warn.add_theme_font_size_override("font_size", 13)
+	_inv_warn.visible = false
 	_btns.alignment = BoxContainer.ALIGNMENT_END
 	add_child(_btns)
 	_render()
@@ -191,6 +200,13 @@ func _render() -> void:
 func _render_buttons() -> void:
 	for c in _btns.get_children():
 		c.queue_free()
+	if is_instance_valid(_inv_warn):
+		if _inv_warn.get_parent() == null:
+			_btns.get_parent().add_child(_inv_warn)
+		var room := Game.hero_room()
+		_inv_warn.visible = room <= 10
+		_inv_warn.text = ("HERO INVENTORY FULL  %d / %d  •  DISMANTLE ▶" if room <= 0 else "Hero inventory %d / %d  •  dismantle ▶") % [Game.hero_cards(), Game.hero_slots()]
+		_inv_warn.add_theme_color_override("font_color", UI.RED if room <= 0 else Color("#ffcf5a"))
 	if Game.can_free_pull() and not DB.BANNERS[_banner_i].has("tiers"):
 		_btns.add_child(_pull_btn("FREE DAILY\nSUMMON x1", 1, "free"))
 	var bid0: String = DB.BANNERS[_banner_i]["id"]
@@ -619,7 +635,20 @@ func _play_reveal(results: Array) -> void:
 			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT and is_instance_valid(_reveal) and _reveal.has_meta("done"):
 				Game.sfx("ui_click")
 				ArtViewer.open(main, rid, 0, [0]))
-		var tag := UI.label("NEW!" if r["new"] else "+1 CARD", 15, UI.GREEN if r["new"] else UI.GOLD, 5)
+		# duplicate: how many cards of her now, and whether that is enough for her next Star Up / Evolution
+		var tag_t := "NEW!"
+		var tag_c := UI.GREEN
+		if not r["new"]:
+			if r.has("auto"):
+				tag_t = "+%d CRYSTALS" % int(r["auto"])
+				tag_c = Color("#9fd0ff")
+			else:
+				tag_t = "+1 CARD  (x%d)" % Game.copies(rid)
+				tag_c = UI.GOLD
+				if Game.rank_up_ready(rid):
+					tag_t = "STAR UP READY!"
+					tag_c = Color("#7dffb0")
+		var tag := UI.label(tag_t, 14, tag_c, 5)
 		tag.position = Vector2(0, card_size.y + 2)
 		tag.size = Vector2(card_size.x, 20)
 		tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

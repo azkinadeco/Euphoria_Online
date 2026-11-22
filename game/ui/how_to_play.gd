@@ -24,6 +24,9 @@ const PAGES := [
 	{"title": "GROW YOUR TEAM", "hero": "shina",
 		"text": "LEVEL UP with Hero EXP · STAR UP & EVOLVE with duplicate cards + Evo Crystals · equip GEAR sets · raise BOND with gifts, talks and dates.\n\nIf a stage is too hard, the defeat screen tells you why and what to upgrade.",
 		"draw": "growth"},
+	{"title": "CARDS & EVOLUTION", "hero": "eropatra",
+		"text": "Summoning a hero you already have gives a DUPLICATE CARD. Cards + Evo Crystals raise her stars.\n\nAfter 6 gold stars she EVOLVES: Azure (blue), Crimson (red), Violet (purple), Abyss (black flame). Spare cards? MENU > DISMANTLE turns them into crystals.",
+		"draw": "evolution"},
 	{"title": "YOUR DAILY ROUTINE", "hero": "fidelia",
 		"text": "Claim the Login Bonus and AFK rewards, finish Daily Missions, run Dungeons for gold and EXP, fight in the Arena, and check your Mailbox.\n\nThe STEP guide in the lobby always shows the next thing to do. Good luck!",
 		"draw": "daily"},
@@ -269,6 +272,24 @@ func _draw_diag() -> void:
 				_diag.draw_texture_rect(DB.icon(str(e[1])), Rect2(Vector2(cx, cy) - Vector2(22, 22), Vector2(44, 44)), false)
 				_diag.draw_string(f, Vector2(cx - bw * 0.5, cy + bw * 0.36 + 22), str(e[0]), HORIZONTAL_ALIGNMENT_CENTER, bw, 15, col)
 			_diag.draw_string(f, Vector2(0, sz.y * 0.88), "= more POWER", HORIZONTAL_ALIGNMENT_CENTER, sz.x, 18, UI.GOLD)
+		"evolution":
+			# gold stars, then the four Evolution tiers as coloured star rows, lighting up in turn
+			var tiers := [["GOLD", "#ffcf4a"], ["AZURE", "#5fb8ff"], ["CRIMSON", "#ff4d5e"], ["VIOLET", "#b96bff"], ["ABYSS", "#8a3cff"]]
+			var y3 := sz.y * 0.07
+			var lit := int(fmod(t * 1.2, float(tiers.size()) + 1.0))
+			for k in tiers.size():
+				var col := Color(str(tiers[k][1]))
+				var rr := Rect2(Vector2(sz.x * 0.06, y3), Vector2(sz.x * 0.88, sz.y * 0.15))
+				_diag.draw_rect(rr, Color(col, 0.10 if k >= lit else 0.22))
+				_diag.draw_string(f, rr.position + Vector2(12, rr.size.y * 0.64), str(tiers[k][0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 15, col.lightened(0.2))
+				var star_c := Color("#0e0a14") if k == 4 else col
+				for s2 in 6:
+					var sx := rr.position.x + rr.size.x * 0.42 + s2 * rr.size.x * 0.09
+					if k == 4 and k < lit:
+						_diag.draw_circle(Vector2(sx + 8, rr.position.y + rr.size.y * 0.45), 11.0, Color(0.55, 0.15, 1.0, 0.35 + 0.15 * sin(t * 6.0 + s2)))
+					_diag.draw_string(f, Vector2(sx, rr.position.y + rr.size.y * 0.72), "★" if k < lit else "☆", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, star_c if k < lit else Color(col, 0.4))
+				y3 += sz.y * 0.175
+			_diag.draw_string(f, Vector2(0, sz.y * 0.97), "cards + Evo Crystals", HORIZONTAL_ALIGNMENT_CENTER, sz.x, 15, UI.GOLD)
 		"daily":
 			var items := [["Login Bonus", "icon_ticket"], ["Daily Missions", "icon_quest"], ["AFK Rewards", "icon_afk"], ["Dungeons", "icon_dungeon"], ["Arena", "icon_arena"], ["Mailbox", "icon_mail"]]
 			var y2 := sz.y * 0.06

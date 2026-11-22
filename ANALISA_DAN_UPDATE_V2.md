@@ -1262,6 +1262,27 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 3k. Batch 296-315 (23 Nov 2026): kenyamanan kartu & evolusi, Guild Base hidup
+- 296 Heroes: ketuk penghitung "Cards n / m ●/○" = tampil/sembunyi kartu COPY (`static _show_copies`), merah bila sisa slot ≤ 5.
+- 297 Summon: tombol peringatan di atas tombol summon bila sisa slot ≤ 10 (→ Dismantle). `settings.auto_dismantle` (toggle di Dismantle): duplikat N/R langsung jadi kristal di `add_hero` ({"auto": n}).
+- 298 Hasil gacha: "+1 CARD (xN)", "STAR UP READY!" bila cukup, "+n CRYSTALS" untuk auto-dismantle.
+- 299 `UI.costume_section` / `UI.costume_tile` dipakai Room dan Hero Detail > OUTFITS.
+- 300 Wardrobe: baris COSTUME STAGES (bust kecil, tooltip syarat).
+- 301 `game/ui/evo_ceremony.gd`: layar penuh saat masuk tier evolusi baru (cincin cahaya, art berwarna tier, judul, 6 bintang menyala).
+- 302 Panel rank: pratinjau bintang tier berikutnya; `_pulse_stars` setelah rank up; event log "rank".
+- 303 Battle `_evo_aura`: partikel naik warna tier (CPUParticles2D) + BlackFlame di kaki unit Abyss (mati saat reduce effects).
+- 304 HeroCard: cincin + glow tipis warna tier evolusi.
+- 305 Achievement evo_azure/crimson/violet/abyss (stat max_awaken = langkah evolusi 1/7/13/19), dism50/dism300 (`stat_value("dismantled")`); weekly w_rank (src "rank" dari rank_up) & w_dismantle (src "dismantle"); QUEST_ROUTE + ACH_CAT_OF.
+- 306 Log: "dism", "costume", "rank"; report bagian PROGRESSION.
+- 307 How to Play: halaman CARDS & EVOLUTION (diagram "evolution").
+- 308 Guild Base: panel GUILD CHAT (5 baris, sinyal `chatted`) + stiker Hi!/GG/♥/Raid? (`you_say`, balasan member).
+- 309 Guild Quest harian (`Game._gq/guild_quest/guild_quest_add/claim_guild_quest`, target 100, member simulasi ±70×activity sepanjang hari; check-in +10, donasi +10, raid +15; peti 50%/100%) di popup Notice Board.
+- 310 WAVE di profil member → `wave_to` (lompat + balas); `_rally` tiap 25-40 dtk 2-3 member berkumpul di portal raid.
+- 311 Lobby OUTFIT melewati tahap costume yang terbuka dulu; kilau costume warna tier.
+- 312 Dismantle: filter ALL / N & R / SR / SSR+, `Game.dismantle_smart_plan` (sisakan kartu rank berikutnya, UR+ tidak).
+- 313 Hero Detail: "Cards xN • Crystals" di header panel rank; Abyss 6★ + sisa kartu → saran DISMANTLE HER CARDS.
+- 314 QA: flow "[cards QoL / guild quest]", cek parse semua skrip (`--check-only`). GOTCHA: lambda multi-baris yang berakhir di dalam blok `if` tidak bisa di-parse GDScript (guild.gd) - pindahkan ke fungsi.
+
 ## 3j. Batch 295 (22 Nov 2026): tahap/evolusi costume, ganti costume di kamar, teks reaksi kecil
 - **Teks reaksi** (lobby `_say`, Hero Detail `_touch_art`, Room tap): `UI.float_speech(host, art, who, text, bounds)` = teks kecil 13 px tanpa kotak (outline + bayangan), di sisi kepala yang lebih lega (kepala dari rig `head`, `UI.head_on_screen`), dibatasi area (lobby: antara ikon kiri dan banner; Hero Detail: di bawah nama; Room: antara daftar kamar dan panel). Bubble lama lobby tidak dipakai lagi. Env `SPEECH_DEBUG=1` mencetak posisinya.
 - **Costume berevolusi**: `tools/costume_forms.py` membaca ulang urutan file set costume owner (sama seperti import_nov19) dan menulis `special_forms` [{base, interactions, kind stage/evo, n}] untuk angela (1 + evo1-3), mei (1-2 + evo1-2), eropatra (1-3 + evo1-5), rubby (1-2) - tanpa file art baru (semua pose sudah punya rig + depth). `DB.costume_form_def/art/art_path/alt_art(s)/sprite` mengikuti tahap terpilih; `DB._costume_form` memanggil autoload lewat root (db.gd tidak boleh menyebut "Game"). `Game.costume_form_req` (stage 2/3 = 4★/5★, evo1 = 6★, evo2-5 = Azure..Abyss), `costume_form_unlocked`, `costume_form` (pilihan atau tertinggi yang terbuka), `set_costume_form` (sekalian memakai costume).

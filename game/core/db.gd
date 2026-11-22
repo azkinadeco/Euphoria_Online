@@ -1594,6 +1594,8 @@ const WEEKLY_QUESTS := [
 	{"id": "w_arena", "src": "arena", "name": "Fight 10 Arena battles", "target": 10, "give": {"arena_coin": 300, "gems": 150}},
 	{"id": "w_bond", "src": "bond", "name": "Interact with heroes 25 times", "target": 25, "give": {"celestial_gem": 2, "perfume": 2}},
 	{"id": "w_daily", "src": "quest", "name": "Complete 25 daily missions", "target": 25, "give": {"gems": 500, "summon_ticket": 3, "gear_chest_ssr": 1}},
+	{"id": "w_rank", "src": "rank", "name": "Star Up or Evolve 3 times", "target": 3, "give": {"star_stone": 30, "gold": 60000}},
+	{"id": "w_dismantle", "src": "dismantle", "name": "Dismantle 10 duplicate cards", "target": 10, "give": {"star_stone": 20, "gems": 100}},
 ]
 
 ## Codex: one-time rewards per hero milestone.
@@ -1606,7 +1608,7 @@ const CODEX_STEPS := [
 
 ## Where a mission's GO button leads (by quest id / weekly "src" / achievement "stat").
 const QUEST_ROUTE := {
-	"stage": "story", "summon": "gacha", "levelup": "heroes", "afk": "lobby", "arena": "arena", "bond": "garden",
+	"stage": "story", "summon": "gacha", "levelup": "heroes", "rank": "heroes", "dismantle": "dismantle", "dismantled": "dismantle", "afk": "lobby", "arena": "arena", "bond": "garden",
 	"chat": "messenger", "cook": "kitchen", "dishes": "kitchen", "guild": "guild", "dungeon": "dungeon", "quest": "quests",
 	"stages_cleared": "story", "hard_cleared": "story", "heroes_owned": "gacha", "total_pulls": "gacha", "tower_floor": "tower",
 	"max_star": "heroes", "oaths": "heroes", "max_skill": "heroes", "memories": "heroes", "pass_level": "pass",
@@ -1770,6 +1772,12 @@ const ACHIEVEMENTS := [
 	{"id": "cmd60", "name": "Reach Commander Lv.60", "stat": "commander_level", "target": 60, "give": {"gems": 1000, "summon_ticket": 5}},
 	{"id": "cmd100", "name": "Reach Commander Lv.100", "stat": "commander_level", "target": 100, "give": {"gems": 3000, "celestial_gem": 5}},
 	{"id": "awaken5", "name": "Evolve a hero to Azure 5★", "stat": "max_awaken", "target": 5, "give": {"gems": 1000, "star_stone": 20}},
+	{"id": "evo_azure", "name": "First Evolution: Azure", "stat": "max_awaken", "target": 1, "give": {"gems": 300, "star_stone": 20}},
+	{"id": "evo_crimson", "name": "Reach Crimson Evolution", "stat": "max_awaken", "target": 7, "give": {"gems": 600, "star_stone": 40}},
+	{"id": "evo_violet", "name": "Reach Violet Evolution", "stat": "max_awaken", "target": 13, "give": {"gems": 1000, "star_stone": 80}},
+	{"id": "evo_abyss", "name": "Reach Abyss Evolution", "stat": "max_awaken", "target": 19, "give": {"gems": 2000, "summon_ticket": 5}},
+	{"id": "dism50", "name": "Dismantle 50 duplicate cards", "stat": "dismantled", "target": 50, "give": {"star_stone": 40, "gold": 50000}},
+	{"id": "dism300", "name": "Dismantle 300 duplicate cards", "stat": "dismantled", "target": 300, "give": {"gems": 500, "star_stone": 100}},
 	{"id": "lb4", "name": "Limit Break a hero to the max", "stat": "max_lb", "target": 4, "give": {"gems": 1500}},
 	{"id": "gearssr5", "name": "Own 5 SSR equipment", "stat": "gear_ssr", "target": 5, "give": {"gems": 500, "forge_ember": 20}},
 	{"id": "gearmax3", "name": "Enhance 3 equipment to +10", "stat": "gear_max", "target": 3, "give": {"gems": 500}},
@@ -1802,7 +1810,7 @@ const ACH_CAT_OF := {
 	"stages_cleared": "STORY", "hard_cleared": "STORY", "commander_level": "STORY", "days": "STORY",
 	"battles": "BATTLE", "kills_total": "BATTLE", "best_streak": "BATTLE", "flawless": "BATTLE", "arena_wins": "BATTLE", "tower_floor": "BATTLE",
 	"hunt_clears": "BATTLE", "rift_best": "BATTLE", "trials": "BATTLE",
-	"max_star": "HEROES", "max_skill": "HEROES", "max_awaken": "HEROES", "max_lb": "HEROES", "gear_ssr": "HEROES", "gear_max": "HEROES",
+	"max_star": "HEROES", "max_skill": "HEROES", "max_awaken": "HEROES", "dismantled": "HEROES", "max_lb": "HEROES", "gear_ssr": "HEROES", "gear_max": "HEROES",
 	"oaths": "BOND", "memories": "BOND", "chats": "BOND", "personal_chats": "BOND", "bond_max": "BOND", "dates": "BOND", "perfect_dates": "BOND", "dishes": "BOND",
 }
 static func ach_cat(a: Dictionary) -> String:

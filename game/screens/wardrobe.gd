@@ -135,6 +135,32 @@ func build() -> void:
 		cell.add_child(ring)
 		cell.tooltip_text = DB.SPECIAL_SKINS[_sel] if sp else "Outfit %d" % (k + 1)
 		lu.add_child(cell)
+	# the costume grows with the hero: preview every stage / evolution and the rank it needs
+	var forms := DB.special_forms(_sel)
+	if not forms.is_empty():
+		v.add_child(UI.label("COSTUME STAGES  (%d)" % forms.size(), 12, Color("#ffb8d6"), 2))
+		var fl := HFlowContainer.new()
+		fl.add_theme_constant_override("h_separation", 5)
+		fl.add_theme_constant_override("v_separation", 5)
+		v.add_child(fl)
+		for k in forms.size():
+			var fm: Dictionary = forms[k]
+			var open := Game.costume_form_unlocked(_sel, k)
+			var cell := Control.new()
+			cell.custom_minimum_size = Vector2(44, 56)
+			var ft := UI.tex_rect(DB.bust_tex(DB.tex(str(fm["base"])), 1.25), Vector2.ZERO, true)
+			ft.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			if not open:
+				ft.modulate = Color(0.45, 0.45, 0.5)
+			cell.add_child(ft)
+			var ring := Panel.new()
+			ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			ring.add_theme_stylebox_override("panel", UI.style(Color.TRANSPARENT, Color("#b96bff") if str(fm["kind"]) == "evo" else Color(1, 1, 1, 0.3), 6, 1, 0))
+			cell.add_child(ring)
+			cell.tooltip_text = "%s  •  %s" % [DB.costume_form_label(fm), "open" if open else "needs " + str(Game.costume_form_req(_sel, k)["label"])]
+			fl.add_child(cell)
+		v.add_child(UI.wrap_label("Stages open at 4★ / 5★, evolutions at 6★ and with each Evolution tier. Change it in the Private Room or Hero Detail > OUTFITS.", 11, UI.MUTED))
 	var owned2 := Game.skin_unlocked(_sel, idx)
 	if not Game.owns(_sel):
 		var np := UI.styled_panel(Color(1, 0.4, 0.5, 0.1), Color("#ff8a9a", 0.6), 10, 1, 8.0)

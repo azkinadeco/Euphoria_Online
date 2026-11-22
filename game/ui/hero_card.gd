@@ -201,6 +201,27 @@ func _init(id: String = "", card_size: Vector2 = Vector2(118, 150), opts: Dictio
 		tag.add_child(tl)
 		frame.add_child(tag)
 
+	# evolution tier: a thin inner ring + soft glow in the tier colour (Abyss: violet-black)
+	var evo_t := int(h.get("evo", 0)) if owned and not opts.get("copy", false) else 0
+	if evo_t > 0:
+		var ec2 := DB.evo_color(evo_t) if evo_t < DB.MAX_EVO else Color("#8a3cff")
+		var er := Panel.new()
+		er.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		er.offset_left = 3
+		er.offset_top = 3
+		er.offset_right = -3
+		er.offset_bottom = -3
+		er.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color.TRANSPARENT
+		sb.border_color = Color(ec2, 0.9)
+		sb.set_border_width_all(2)
+		sb.set_corner_radius_all(8)
+		sb.shadow_color = Color(ec2, 0.55)
+		sb.shadow_size = 6
+		er.add_theme_stylebox_override("panel", sb)
+		frame.add_child(er)
+
 	# ornate rarity frame overlay (art/ui/frame_*.png)
 	var fpath := "res://art/ui/frame_%s.png" % rarity.to_lower()
 	if ResourceLoader.exists(fpath):

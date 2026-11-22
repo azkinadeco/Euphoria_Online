@@ -10,6 +10,7 @@ extends Control
 
 signal station(key: String)
 signal member(m: Dictionary)
+signal chatted(name: String, text: String)   # every line said in the base (guild chat panel)
 
 const N := 12.0          # tiles along the right wall (x)
 const M := 10.0          # tiles along the left wall (y)
@@ -24,6 +25,7 @@ var _labels: Dictionary = {}   # station key -> Button (floating sign)
 var _anim: Control       # portal + motes, redrawn every frame
 var _t := 0.0
 var _chat_t := 4.0
+var _rally_t := 20.0   # every so often a few members gather at the raid portal
 var _bubbles: Array = [] # {node, owner, t}
 var _you: Dictionary = {}
 
@@ -282,6 +284,10 @@ func _process(delta: float) -> void:
 	_t += delta
 	_anim.queue_redraw()
 	_walk(delta)
+	_rally_t -= delta
+	if _rally_t <= 0.0:
+		_rally_t = randf_range(25.0, 40.0)
+		_rally()
 	_chat_t -= delta
 	if _chat_t <= 0.0:
 		_chat_t = randf_range(5.0, 10.0)
@@ -539,7 +545,71 @@ func _random_chat() -> void:
 	if others.is_empty():
 		return
 	var w: Dictionary = others[randi() % others.size()]
-	say(w["node"], str(CHAT[randi() % CHAT.size()]))
+	var line := str(CHAT[randi() % CHAT.size()])
+	say(w["node"], line)
+	chatted.emit(str(w["m"]["name"]), line)
+
+## The player's own chibi says something (emote sticker); a guildmate may answer.
+func you_say(text: String) -> void:
+	if _you.is_empty() or not is_instance_valid(_you["node"]):
+		return
+	say(_you["node"], text)
+	_hop(_you["node"])
+	chatted.emit("You", text)
+	var others := _walkers.filter(func(w): return not w["you"] and is_instance_valid(w["node"]))
+	if others.is_empty():
+		return
+	var w: Dictionary = others[randi() % others.size()]
+	var reply := str(REPLIES.get(text, ["Hey!", "Hi Commander!", "Ready when you are."]).pick_random())
+	get_tree().create_timer(randf_range(1.0, 2.0)).timeout.connect(func():
+		if is_instance_valid(w["node"]):
+			say(w["node"], reply)
+			_hop(w["node"])
+			chatted.emit(str(w["m"]["name"]), reply))
+
+## You waved at a member: she hops, waves back and says so in the chat.
+func wave_to(member_name: String) -> void:
+	if not _you.is_empty():
+		say(_you["node"], "*waves*")
+		_hop(_you["node"])
+	chatted.emit("You", "*waves at %s*" % member_name)
+	for w in _walkers:
+		if not w["you"] and str(w["m"]["name"]) == member_name and is_instance_valid(w["node"]):
+			var ww: Dictionary = w
+			get_tree().create_timer(0.7).timeout.connect(func():
+				if is_instance_valid(ww["node"]):
+					_hop(ww["node"])
+					var line := str(["*waves back*", "Hiii Commander!", "Hello! ♥", "Oh, hi there!"].pick_random())
+					say(ww["node"], line)
+					chatted.emit(member_name, line))
+			return
+
+## Two or three guildmates walk to the raid portal and cheer.
+func _rally() -> void:
+	var others := _walkers.filter(func(w): return not w["you"] and is_instance_valid(w["node"]))
+	others.shuffle()
+	var pc: Vector2 = STATIONS["raid"]["g"]
+	for i in mini(3, others.size()):
+		var w: Dictionary = others[i]
+		var a := TAU * (0.35 + i * 0.22)
+		var g := pc + Vector2(cos(a), sin(a)) * 1.6
+		if _walkable(g):
+			w["target"] = g
+			w["wait"] = 0.0
+	if not others.is_empty():
+		var first: Dictionary = others[0]
+		get_tree().create_timer(3.5).timeout.connect(func():
+			if is_instance_valid(first["node"]):
+				var line := str(["Raid time! Who's in?", "Ygg-Naar won't beat itself!", "Gather at the portal!"].pick_random())
+				say(first["node"], line)
+				chatted.emit(str(first["m"]["name"]), line))
+
+const REPLIES := {
+	"Hi!": ["Hi Commander!", "Hello hello!", "Welcome back!"],
+	"GG": ["GG!", "Great work today.", "GG, see you at the raid."],
+	"♥": ["Aww ♥", "♥♥", "You're sweet, Commander."],
+	"Raid?": ["I'm in!", "Give me five minutes.", "Let's take that boss down!"],
+}
 
 func walker_count() -> int:
 	return _walkers.size()

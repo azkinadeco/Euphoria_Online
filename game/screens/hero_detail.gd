@@ -1,4 +1,5 @@
 extends Screen
+const EvoCeremony = preload("res://game/ui/evo_ceremony.gd")
 ## Hero detail: art showcase, stats & skill range, upgrades, outfits, bond/oath.
 
 var id := ""
@@ -754,9 +755,18 @@ func _render_upgrade() -> void:
 		tutorial("evolution")
 	sh.add_child(UI.label("STAR UP" if int(h["star"]) < DB.MAX_STAR else "EVOLUTION", 20, UI.GOLD if e <= 0 else DB.evo_color(e).lightened(0.2 if e < DB.MAX_EVO else 0.6), 3))
 	sh.add_child(UI.hero_rank_stars(id, 20))
+	var sp_l := Control.new()
+	sp_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sh.add_child(sp_l)
+	var own_l := UI.label("Cards x%d  •  Crystals %s" % [Game.copies(id), Game.fmt(Game.amount("star_stone"))], 13, Color("#d8b4ff"), 2)
+	own_l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	sh.add_child(own_l)
 	sv.add_child(sh)
 	if Game.rank_maxed(id):
 		sv.add_child(UI.label("Abyss 6★ — the highest rank!", 16, UI.GREEN))
+		if Game.copies(id) > 0:
+			sv.add_child(UI.wrap_label("Her %d duplicate card(s) have no more use: dismantle them for %d Evo Crystals each." % [Game.copies(id), DB.dismantle_crystals(DB.rarity_of(id))], 13, UI.MUTED))
+			sv.add_child(UI.button("DISMANTLE HER CARDS", func(): main.go("dismantle", {"id": id}), "", Vector2(0, 42)))
 	else:
 		var c := Game.rank_cost(id)
 		var pay := Game.rank_pay(id)
@@ -780,6 +790,13 @@ func _render_upgrade() -> void:
 			"evolve": what = "Evolve to %s: the stars turn %s and you climb 6 new stars. Every Evolution star gives +%s%% HP/ATK/DEF.%s" % [DB.evo_name(int(c["tier"])), ["", "blue", "red", "purple", "black with a black-flame aura"][int(c["tier"])], str(DB.EVO_STEP_STAT * 100), "  Crimson and above: skill power +1 level." if int(c["tier"]) == 2 else ""]
 			"evo_star": what = "+%s%% HP/ATK/DEF." % str(DB.EVO_STEP_STAT * 100)
 		sv.add_child(UI.wrap_label(what, 13, UI.MUTED))
+		if str(c["kind"]) == "evolve":
+			# preview of the stars she is about to earn
+			var pv := UI.hbox(8)
+			pv.add_child(UI.label("Next tier:", 13, UI.MUTED, 2))
+			pv.add_child(UI.rank_stars(DB.MAX_STAR, int(c["tier"]), DB.EVO_STARS, 18, true))
+			pv.add_child(UI.label(DB.evo_name(int(c["tier"])).to_upper(), 13, DB.evo_color(int(c["tier"])).lightened(0.3) if int(c["tier"]) < DB.MAX_EVO else Color("#c99bff"), 2))
+			sv.add_child(pv)
 		var block := Game.rank_up_block(id)
 		var b2 := UI.button(("STAR UP ★" if str(c["kind"]) == "star" else ("EVOLVE ✦" if str(c["kind"]) == "evolve" else "EVOLUTION STAR ★")) if block == "" else block, _do_star, "GoldButton", Vector2(0, 50))
 		b2.disabled = block != ""
@@ -838,6 +855,8 @@ func _do_star() -> void:
 	if err != "":
 		main.toast(err, UI.RED)
 		return
+	Game.tele("rank", {"h": id, "r": UI.rank_text(id)})
+	_pulse_stars.call_deferred()
 	Game.sfx("awakening")
 	var hh := Game.hero(id)
 	var ev := int(hh.get("evo", 0))
@@ -850,7 +869,11 @@ func _do_star() -> void:
 		var first := int(hh.get("evo_star", 0)) == 1
 		_upgrade_fx(("✦ %s EVOLUTION ✦" % DB.evo_name(ev).to_upper()) if first else "★ EVOLUTION STAR ★", col, ["", "WATER", "FIRE", "DARK", "DARK"][ev])
 		_stat_gain(before)
-		_celebrate(("✦ %s EVOLUTION ✦" % DB.evo_name(ev).to_upper()) if first else "★ %s %d★ ★" % [DB.evo_name(ev).to_upper(), int(hh["evo_star"])], "%s reached %s!" % [DB.name_of(id), UI.rank_text(id)])
+		if first:
+			# a new Evolution tier gets its own full-screen moment
+			main.overlay.add_child(EvoCeremony.new(id, ev))
+		else:
+			_celebrate("★ %s %d★ ★" % [DB.evo_name(ev).to_upper(), int(hh["evo_star"])], "%s reached %s!" % [DB.name_of(id), UI.rank_text(id)])
 	_render()
 
 ## What the upgrade actually gave: "+HP 120  +ATK 14  +DEF 6" rises under the big text, so the player
@@ -1272,6 +1295,10 @@ func _render_outfits() -> void:
 			fr.add_child(ib)
 			fr.mouse_filter = Control.MOUSE_FILTER_PASS
 		g.add_child(b)
+	# costume stages / evolutions (same picker as the Private Room)
+	var cs := UI.costume_section(id, func(msg: String): main.toast(msg, UI.MUTED), func(): _render(), func(): main.go("wardrobe"))
+	if cs:
+		_panel_box.add_child(cs)
 
 func _read_memory(ep: int) -> void:
 	main.dialogue(DB.bond_story(id, ep), func():
@@ -1414,3 +1441,22 @@ func _source_row(parent: Control, title: String, item: String, list: Array = [])
 			break
 	if n > 0:
 		parent.add_child(row)
+
+## After a rank-up: the star row under her name swells and flashes in the tier colour.
+func _pulse_stars() -> void:
+	if not is_instance_valid(_name_box):
+		return
+	var ev := int(Game.hero(id).get("evo", 0))
+	var col := UI.GOLD if ev <= 0 else (DB.evo_color(ev) if ev < DB.MAX_EVO else Color("#b04bff"))
+	for c in _name_box.find_children("stars", "Label", true, false):
+		var row := (c as Control).get_parent() as Control
+		if row == null:
+			continue
+		row.pivot_offset = row.size * Vector2(0.0, 0.5)
+		var tw := row.create_tween()
+		tw.tween_property(row, "scale", Vector2(1.25, 1.25), 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		tw.parallel().tween_property(row, "modulate", Color(1.0 + col.r, 1.0 + col.g, 1.0 + col.b), 0.14)
+		tw.tween_property(row, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_SINE)
+		tw.parallel().tween_property(row, "modulate", Color.WHITE, 0.4)
+		break
+

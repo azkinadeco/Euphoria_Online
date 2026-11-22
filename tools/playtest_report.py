@@ -101,7 +101,8 @@ def main():
     boot = {"title": [], "lobby": []}
     fps = {}
     walls, shorts, bquits, lpicks = Counter(), Counter(), Counter(), Counter()
-    art_secs, art_errs = [], Counter()   # deferred HD art packs (game/core/art_pack.gd)
+    art_secs, art_errs = [], Counter()
+    rank_users, rank_n, dism_n, costume_picks = 0, [], 0, Counter()   # progression (cards / Evolution / costumes)   # deferred HD art packs (game/core/art_pack.gd)
     vn = {"story": [0, 0, 0], "tutorial": [0, 0, 0]}   # scenes, skipped, lines read share sum
     ratings = {}
     rtags = Counter()
@@ -175,6 +176,12 @@ def main():
                 if e.get("v", 0) > 0:
                     ratings.setdefault(e.get("k", "?"), []).append(e["v"])
                 rtags.update([x for x in str(e.get("tags", "")).split(",") if x])
+        rk = [e for e in evs if e["e"] == "rank"]
+        if rk:
+            rank_users += 1
+            rank_n.append(len(rk))
+        dism_n += sum(int(e.get("n", 0)) for e in evs if e["e"] == "dism")
+        costume_picks.update(f'{e.get("h")} {e.get("f")}' for e in evs if e["e"] == "costume")
         for f in d.get("feedback", []):
             feedback.append((d["id"], f.get("scr", ""), f.get("txt", "")))
         rows.append({"id": d["id"], "build": d.get("build", ""), "platform": st.get("plat", "") if st else "",
@@ -223,6 +230,11 @@ def main():
     for k, v in walls.most_common(8):
         print(f"  {v:>4}  {k}")
     print("  could not afford: " + (", ".join(f"{k} {v}" for k, v in shorts.most_common()) or "-"))
+    print("\nPROGRESSION (cards, Evolution, costumes)")
+    print(f"  testers who ranked a hero up: {rank_users} {pct(rank_users, n)}   median rank-ups: {med(rank_n)}")
+    print(f"  duplicate cards dismantled: {dism_n}")
+    for k, v in costume_picks.most_common(6):
+        print(f"  costume picked: {k} x{v}")
     print("\nSTORY / TUTORIAL TEXT")
     for k, (c, sk, rd) in vn.items():
         if c:
