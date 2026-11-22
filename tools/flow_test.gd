@@ -448,7 +448,7 @@ func _run() -> void:
 	var evf: String = DB.EVENT["featured"]
 	var evs0: int = G.amount("star_stone")
 	var shard_item: Dictionary = (DB.EVENT["shop"] as Array).filter(func(it): return (it["give"] as Dictionary).has("shard:" + evf))[0]
-	check(G.buy_event(shard_item) == "" and G.amount("star_stone") >= evs0 + 10, "event exchange: old hero shards arrive as Evo Crystals")
+	check(G.buy_event(shard_item) == "" and G.amount("star_stone") >= evs0 + DB.shard_crystals(10), "event exchange: old hero shards arrive as Evo Crystals (half)")
 	check(G.sweep_event(1, 1).has("error"), "cannot sweep an uncleared event stage")
 	G.s["cur"]["energy"] = 40
 	var evtk0: int = G.amount("festival_token")
@@ -710,6 +710,14 @@ func _run() -> void:
 	check(str(G.rank_cost("shina")["kind"]) == "evolve" and int(G.rank_cost("shina")["tier"]) == 1, "6★ -> next step is Azure Evolution")
 	G.give({"star_stone": 200000, "gold": 50000000})
 	var pw0: int = G.hero_power("shina")
+	var rq_keep: Dictionary = G.hero("rumi").duplicate()
+	var rq_cp: int = G.copies("rumi")
+	G.s["copies"]["rumi"] = 0
+	check(not DB.all_cards_payable(DB.rarity_of("rumi")) and G.rank_up_block("rumi").contains("duplicate card"), "N..SR heroes need real duplicate cards (half of each step)")
+	G.s["copies"]["rumi"] = rq_cp
+	G.s["heroes"]["rumi"] = rq_keep
+	check(DB.all_cards_payable("SSR") and DB.all_cards_payable("UR"), "SSR+ may pay every missing card with Evo Crystals")
+	check(int(G.rank_cost("shina")["copies"]) == 3 and int(G.rank_cost("shina")["crystals"]) == 150, "Azure Evolution costs 3 cards + 150 crystals")
 	check(G.rank_up("shina") == "" and int(G.hero("shina")["evo"]) == 1 and int(G.hero("shina")["evo_star"]) == 1, "evolve to Azure 1★")
 	check(G.hero_power("shina") > pw0, "evolution raises power")
 	check(int(G.hero("shina")["star"]) == DB.MAX_STAR, "gold stars stay 6 after evolving (6★ rules keep working)")
@@ -771,7 +779,7 @@ func _run() -> void:
 	var sid: String = hs0["shard_id"]
 	var sh0: int = G.amount("star_stone")
 	var hr: Dictionary = G.apply_hard_result(0, true, 3)
-	check(hr.has("gems") and G.amount("star_stone") == sh0 + int(hs0["shards"]), "hard clear gives Evo Crystals + first-clear gems")
+	check(hr.has("gems") and G.amount("star_stone") == sh0 + DB.shard_crystals(int(hs0["shards"])), "hard clear gives Evo Crystals + first-clear gems")
 	check(G.hard_unlocked(1) and G.hard_progress() == 1, "next hard stage unlocks")
 	G.s["cur"]["energy"] = 300
 	check(not G.sweep_stage(0, 2, true).has("error"), "hard sweep works")

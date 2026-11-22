@@ -94,20 +94,29 @@ const EVO_NAMES := ["", "Azure", "Crimson", "Violet", "Abyss"]
 const EVO_COLORS := ["#ffcf4a", "#5fb8ff", "#ff4d5e", "#b96bff", "#0e0a14"]
 const EVO_STEP_STAT := 0.025          # +2.5% HP/ATK/DEF per evolution star (max +60% at Abyss 6)
 ## Duplicate hero cards (Game.copies) needed for the next gold star, by current star.
-const STAR_COPIES := [0, 1, 1, 1, 2, 2, 0]
+const STAR_COPIES := [0, 1, 1, 2, 2, 3, 0]
 ## Hero inventory (heroes + duplicate cards): base slots, +10 per expansion, price in gems.
-const HERO_SLOTS_BASE := 120
+const HERO_SLOTS_BASE := 100
 const HERO_SLOTS_STEP := 10
-const HERO_SLOTS_PRICE := 100
+const HERO_SLOTS_PRICE := 150
 const HERO_SLOTS_MAX := 300
 
 ## Evo Crystals (item "star_stone") from dismantling one duplicate card, by rarity. A missing card in a
-## rank-up can be paid with twice that many crystals (Game.rank_cost).
+## rank-up can be paid with three times that many crystals, but only for half of the cards (Game.rank_pay):
+## the rest must be real duplicates. SSR and rarer (a given SSR/UR hero is only ~0.2-0.6% per pull) may
+## pay every card with crystals; for N / R / SR duplicates are common (5-15% per pull) so half must be real.
 static func dismantle_crystals(rarity: String) -> int:
 	return int(DUPE_SHARDS.get(rarity, 10))
 
 static func copy_crystals(rarity: String) -> int:
-	return 2 * dismantle_crystals(rarity)
+	return 3 * dismantle_crystals(rarity)
+
+static func all_cards_payable(rarity: String) -> bool:
+	return rarity_rank(rarity) >= rarity_rank("SSR")
+
+## Old hero-shard rewards ("shard:<id>" n) arrive as this many Evo Crystals (universal, so worth half).
+static func shard_crystals(n: int) -> int:
+	return (n + 1) / 2
 
 static func evo_name(evo: int) -> String:
 	return str(EVO_NAMES[clampi(evo, 0, MAX_EVO)])

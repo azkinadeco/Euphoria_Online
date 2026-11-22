@@ -767,7 +767,8 @@ func _render_upgrade() -> void:
 		crow.add_child(cl)
 		crow.add_child(UI.label("Gold %s" % Game.fmt(int(pay["gold"])), 15, UI.TEXT, 2))
 		if int(pay["missing"]) > 0:
-			sv.add_child(UI.wrap_label("Missing %d duplicate card(s): each one is replaced by %d Evo Crystals (already counted above)." % [int(pay["missing"]), DB.copy_crystals(DB.rarity_of(id))], 12, UI.MUTED))
+			var rule := "Every card can be replaced by %d Evo Crystals (already counted above)." % DB.copy_crystals(DB.rarity_of(id)) if int(pay["need_cards"]) == 0 else "At least %d must be real duplicate cards; each other missing card costs %d Evo Crystals (already counted above)." % [int(pay["need_cards"]), DB.copy_crystals(DB.rarity_of(id))]
+			sv.add_child(UI.wrap_label("Missing %d duplicate card(s). %s" % [int(pay["missing"]), rule], 12, UI.MUTED))
 		var what := ""
 		match str(c["kind"]):
 			"star": what = "+14%% all stats, level cap → %d, unlocks a new outfit. 5★ upgrades the battle sprite to its evolved form." % DB.level_cap(int(h["star"]) + 1)

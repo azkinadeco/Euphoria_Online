@@ -1262,6 +1262,12 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 3h. Batch 293 (22 Nov 2026): balans ekonomi kartu & Evolusi (lebih berat)
+- Ukur dulu: setelah shard jadi kristal universal, pemain aktif dapat ±150-200 Kristal Evo/hari → SSR 6★ dalam ±3 hari tanpa kartu. Terlalu mudah.
+- Hadiah `shard:<id>` n → `DB.shard_crystals(n)` = setengah (bulat ke atas). Bintang emas: kartu `STAR_COPIES` 1,1,2,2,3; kristal `shards_for_star` penuh (10-100); gold 10.000×bintang. Masuk tier t: 2t+1 kartu, 150t kristal, 80.000t gold; bintang dalam tier: t kartu, 60t kristal, 30.000t gold. Total sampai Abyss 6★ = 74 kartu + 4.500 kristal.
+- Kartu kurang = 3× nilai dismantle (`copy_crystals`). N/R/SR wajib kartu asli minimal setengah per langkah (`rank_pay.need_cards`); SSR+ boleh semua diganti kristal (`all_cards_payable`): satu hero SSR/UR tertentu hanya ±0,6%/0,2% per pull, kalau wajib kartu asli UR butuh ±2.000 pull untuk 6★ (mustahil).
+- Inventory 100 slot, +10 per 150 gems. Perkiraan: UR 3→6★ ±1.250 kristal (±12 hari aktif); Abyss = target endgame berbulan-bulan.
+
 ## 3g. Batch 283-292 (22 Nov 2026): kartu duplikat, Evolusi, Dismantle, kartu setengah badan, Guild Base
 Keputusan owner: kartu duplikat HANYA bahan (tidak bisa dipasang di formasi); shard hero dan Awakening DIGANTI.
 - **Kartu duplikat** (`s.copies` id -> jumlah, `Game.copies/total_copies/hero_cards`): `add_hero` pada hero yang sudah dimiliki menambah 1 kartu. Inventory hero = hero + kartu, `DB.HERO_SLOTS_BASE` 120, +10 per 100 gems (`expand_hero_slots`) sampai 300. `pull` menolak bila tidak muat (`{"full": true}`) → popup DISMANTLE / +10 SLOTS di gacha. `Game.unlimited_slots` hanya untuk flow_test (ribuan pull).

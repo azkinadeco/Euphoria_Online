@@ -648,8 +648,8 @@ func give(rewards: Dictionary) -> void:
 				else:
 					s["items"]["star_stone"] = int(s["items"].get("star_stone", 0)) + DB.dismantle_crystals(DB.rarity_of(cid))
 		elif k.begins_with("shard:"):
-			# hero shards became Evo Crystals (universal) with the duplicate-card system
-			s["items"]["star_stone"] = int(s["items"].get("star_stone", 0)) + n
+			# hero shards became Evo Crystals (universal, so a shard reward is worth half)
+			s["items"]["star_stone"] = int(s["items"].get("star_stone", 0)) + DB.shard_crystals(n)
 		elif k.begins_with("skin:"):
 			# special skin (event reward); usable once the hero is recruited
 			var sid: String = k.substr(5)
@@ -995,22 +995,25 @@ func rank_cost(id: String) -> Dictionary:
 	var e := int(h.get("evo", 0))
 	var es := int(h.get("evo_star", 0))
 	if star < DB.MAX_STAR:
-		return {"kind": "star", "copies": int(DB.STAR_COPIES[star]), "crystals": DB.shards_for_star(star) / 2,
-			"gold": 5000 * star, "label": "%d★" % (star + 1)}
+		return {"kind": "star", "copies": int(DB.STAR_COPIES[star]), "crystals": DB.shards_for_star(star),
+			"gold": 10000 * star, "label": "%d★" % (star + 1)}
 	if e <= 0 or es >= DB.EVO_STARS:
 		var t := e + 1
-		return {"kind": "evolve", "copies": t + 1, "crystals": 100 * t, "gold": 50000 * t,
+		return {"kind": "evolve", "copies": 2 * t + 1, "crystals": 150 * t, "gold": 80000 * t,
 			"label": "%s Evolution" % DB.evo_name(t), "tier": t}
-	return {"kind": "evo_star", "copies": e, "crystals": 40 * e, "gold": 20000 * e,
+	return {"kind": "evo_star", "copies": e, "crystals": 60 * e, "gold": 30000 * e,
 		"label": "%s %d★" % [DB.evo_name(e), es + 1], "tier": e}
 
 ## Cards / crystals actually used for the next step: own duplicates first, missing cards paid with crystals.
+## "need_cards" = real duplicates required (half the cards, rounded up; 0 for LR and rarer).
 func rank_pay(id: String) -> Dictionary:
 	var c := rank_cost(id)
-	var use_cards := mini(copies(id), int(c["copies"]))
-	var missing := int(c["copies"]) - use_cards
+	var need := int(c["copies"])
+	var use_cards := mini(copies(id), need)
+	var missing := need - use_cards
+	var must := 0 if DB.all_cards_payable(DB.rarity_of(id)) else (need + 1) / 2
 	var crystals := int(c["crystals"]) + missing * DB.copy_crystals(DB.rarity_of(id))
-	return {"cards": use_cards, "missing": missing, "crystals": crystals, "gold": int(c["gold"])}
+	return {"cards": use_cards, "missing": missing, "crystals": crystals, "gold": int(c["gold"]), "need_cards": must}
 
 func rank_up_block(id: String) -> String:
 	if not owns(id):
@@ -1018,6 +1021,8 @@ func rank_up_block(id: String) -> String:
 	if rank_maxed(id):
 		return "Maximum rank reached!"
 	var p := rank_pay(id)
+	if int(p["cards"]) < int(p["need_cards"]):
+		return "Need %d duplicate card(s) (have %d)." % [int(p["need_cards"]), int(p["cards"])]
 	if amount("star_stone") < int(p["crystals"]):
 		return "Need %d Evo Crystals (have %d)." % [int(p["crystals"]), amount("star_stone")]
 	if amount("gold") < int(p["gold"]):
