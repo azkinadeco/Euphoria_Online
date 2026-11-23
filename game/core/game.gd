@@ -4793,12 +4793,63 @@ func room_talk(loc: String) -> Array:
 	return out
 
 ## Rest together: once per room per day → +Energy and Bond.
+## A Private Room interaction: bond EXP while today's rewarded ones last. {"bond": gained, "left": n}
+func room_action(kind: String) -> Dictionary:
+	var r := _room()
+	if int(r.get("act_day", -1)) != day_key():
+		r["act_day"] = day_key()
+		r["acts"] = 0
+	var hid := room_hero()
+	var gain := 0
+	if int(r["acts"]) < DB.ROOM_ACTION_CAP:
+		r["acts"] = int(r["acts"]) + 1
+		for a in DB.ROOM_ACTIONS:
+			if a["id"] == kind:
+				gain = int(a["bond"]) * (2 if DB.fav_room(hid) == str(r["loc"]) else 1)
+		if gain > 0:
+			add_bond(hid, gain)
+	quest_progress("bond")
+	mark_dirty()
+	return {"bond": gain, "left": DB.ROOM_ACTION_CAP - int(r["acts"])}
+
+func room_actions_left() -> int:
+	var r := _room()
+	return DB.ROOM_ACTION_CAP if int(r.get("act_day", -1)) != day_key() else DB.ROOM_ACTION_CAP - int(r.get("acts", 0))
+
+# =================================================================== private outfit (Private Room > REST TOGETHER)
+# A hero with a private art (<id>_char_private.png, tools/import_private.py) wears it for one hour after
+# resting together; then her own outfit comes back by itself.
+
+const PRIVATE_SECS := 3600
+
+func private_path(id: String) -> String:
+	var p := str(DB._entry(DB.base_id(id)).get("private_art", ""))
+	return p if p != "" and ResourceLoader.exists(p) else ""
+
+func private_left(id: String) -> int:
+	return maxi(0, int((s.get("private_until", {}) as Dictionary).get(id, 0)) - now())
+
+func private_active(id: String) -> bool:
+	return private_left(id) > 0 and private_path(id) != ""
+
+## Art override for outfit `index`: the private art while it is active and `index` is what she wears.
+func private_override(id: String, index: int) -> String:
+	id = DB.base_id(id)
+	if not owns(id) or not private_active(id) or index != int(hero(id).get("skin", 0)):
+		return ""
+	return private_path(id)
+
 func room_rest(loc: String) -> Dictionary:
 	var r := _room()
 	if (r["rested"] as Array).has(loc):
 		return {}
 	r["rested"].append(loc)
 	var hid := room_hero()
+	if private_path(hid) != "":
+		var pu: Dictionary = s.get("private_until", {})
+		pu[hid] = now() + PRIVATE_SECS
+		s["private_until"] = pu
+		Tele.log_event("private", {"h": hid})
 	add_bond(hid, 60 if DB.fav_room(hid) == loc else 30)
 	give({"energy": 20})
 	mark_dirty()

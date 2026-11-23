@@ -2157,6 +2157,28 @@ func _run() -> void:
 		G.s["guild"]["gq"]["mine"] = 200
 		check(G.guild_quest_chest_state(1) == "ready" and not G.claim_guild_quest(1).is_empty() and G.guild_quest_chest_state(1) == "claimed", "guild quest chest opens once")
 
+	print("[private room outfit / interactions]")
+	if not G.owns("lucidria"):
+		G.add_hero("lucidria")
+	check(G.private_path("lucidria") != "", "Lucidria has a private outfit")
+	var rm_keep: Dictionary = G._room().duplicate(true)
+	G.s["room"]["hero"] = "lucidria"
+	G.s["room"]["rested"] = []
+	G.s.erase("private_until")
+	check(not G.private_active("lucidria"), "no private outfit before resting together")
+	G.room_rest(str(G.s["room"]["loc"]))
+	check(G.private_active("lucidria") and G.private_left("lucidria") > 3500, "rest together: private outfit for one hour")
+	check(G.private_override("lucidria", int(G.hero("lucidria")["skin"])) == G.private_path("lucidria"), "the private outfit replaces what she wears")
+	check(G.private_override("lucidria", int(G.hero("lucidria")["skin"]) + 1) == "", "other outfits keep their own art")
+	G.s["private_until"]["lucidria"] = G.now() - 1
+	check(not G.private_active("lucidria") and G.private_override("lucidria", int(G.hero("lucidria")["skin"])) == "", "after the hour her outfit comes back")
+	G.s["room"]["act_day"] = -1
+	var ra: Dictionary = G.room_action("pat")
+	check(int(ra["bond"]) > 0 and G.room_actions_left() == DB.ROOM_ACTION_CAP - 1, "room interaction gives bond")
+	G.s["room"]["acts"] = DB.ROOM_ACTION_CAP
+	check(int(G.room_action("tickle")["bond"]) == 0, "no bond after the daily cap")
+	G.s["room"] = rm_keep
+
 	print("[even frame pacing]")
 	var fpc: Array = [[60.0, 60, 60], [90.0, 60, 90], [120.0, 60, 60], [144.0, 60, 72], [60.0, 30, 30], [120.0, 30, 30]]
 	for fp in fpc:

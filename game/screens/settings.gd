@@ -195,8 +195,7 @@ func _data(parent: Control) -> void:
 	# web build: evolution / later-stage art arrives in the background (core/art_pack.gd)
 	if is_instance_valid(Game.art_pack) and Game.art_pack.progress().y > 0:
 		var pr: Vector2i = Game.art_pack.progress()
-		var hd := UI.label("HD ART  %d / %d downloaded" % [pr.x, pr.y] if pr.x < pr.y else "HD ART  ready", 12, UI.GREEN if pr.x >= pr.y else Color("#ffcf5a"), 0)
-		hd.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		var hd := UI.button("HD ART  %d / %d  •  DOWNLOAD" % [pr.x, pr.y] if pr.x < pr.y else "HD ART  ready", main.show_art_download, "GoldButton" if pr.x < pr.y else "", Vector2(0, 40))
 		hd.tooltip_text = "Evolved and later-stage hero art downloads while you play. Until then those forms show the Lv.1 art."
 		v.add_child(hd)
 

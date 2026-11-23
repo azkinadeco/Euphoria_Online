@@ -31,15 +31,46 @@ func build() -> void:
 	b.add_child(_art)
 	_art.resized.connect(func(): _art.pivot_offset = Vector2(_art.size.x * 0.5, _art.size.y))
 	UI.fade_in(_art, 0.5, Vector2(0, 30))
-	_art.gui_input.connect(func(e):
-		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
-			var line := Game.tap_hero(hid)
-			if line != "":
-				var g := get_global_rect()
-				UI.float_speech(self, _art, hid, line, Rect2(g.position + Vector2(g.size.x * 0.19, g.size.y * 0.12), Vector2(g.size.x * 0.44, g.size.y * 0.8)))
-			var tw := _art.create_tween()
-			tw.tween_property(_art, "scale", Vector2(1.03, 0.97), 0.08)
-			tw.tween_property(_art, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK))
+	_art.gui_input.connect(func(e): _art_input(hid, e))
+	# pinch (or Ctrl+wheel) to zoom on her; drag to look around while zoomed, double-tap to reset
+	_pinch = PinchZoom.new(func(f: float, c: Vector2): _zoom(_rz * f, c))
+	_art.add_child(_pinch)
+	# private outfit timer
+	if Game.private_active(hid):
+		var pl := UI.label("✦ PRIVATE OUTFIT  •  %d min left" % ceili(Game.private_left(hid) / 60.0), 13, Color("#ffb8d6"), 4)
+		pl.set_anchors_preset(Control.PRESET_CENTER_TOP)
+		pl.anchor_left = 0.2
+		pl.anchor_right = 0.62
+		pl.offset_top = 6
+		pl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		b.add_child(pl)
+	# interaction bar under her
+	var ab := HBoxContainer.new()
+	ab.add_theme_constant_override("separation", 5)
+	ab.alignment = BoxContainer.ALIGNMENT_CENTER
+	ab.anchor_left = 0.2
+	ab.anchor_right = 0.62
+	ab.anchor_top = 1.0
+	ab.anchor_bottom = 1.0
+	ab.offset_top = -44
+	ab.offset_bottom = -4
+	b.add_child(ab)
+	for a in DB.ROOM_ACTIONS:
+		var ad: Dictionary = a
+		var bt := UI.button(str(ad["label"]), func(): _do_action(hid, ad), "", Vector2(0, 38))
+		bt.add_theme_font_size_override("font_size", 12)
+		bt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		ab.add_child(bt)
+	_acts_l = UI.label("", 12, Color("#ff8fb8"), 3)
+	_acts_l.anchor_left = 0.2
+	_acts_l.anchor_right = 0.62
+	_acts_l.anchor_top = 1.0
+	_acts_l.anchor_bottom = 1.0
+	_acts_l.offset_top = -64
+	_acts_l.offset_bottom = -46
+	_acts_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.add_child(_acts_l)
+	_update_acts()
 
 	# ---------------------------------------------------------------- rooms (left)
 	var lv := UI.vbox(6)
@@ -104,7 +135,8 @@ func build() -> void:
 	v.add_child(tb)
 	var rested: bool = (Game._room()["rested"] as Array).has(_loc)
 	var rest_gain := 0 if maxb else (60 if fav else 30)
-	var rb := UI.button(("REST TOGETHER  +20 ⚡" + ("  +%d ♥" % rest_gain if rest_gain > 0 else "")) if not rested else "RESTED HERE TODAY", func():
+	var priv_note := "  +private 1h" if Game.private_path(hid) != "" else ""
+	var rb := UI.button(("REST TOGETHER  +20 ⚡" + ("  +%d ♥" % rest_gain if rest_gain > 0 else "") + priv_note) if not rested else "RESTED HERE TODAY", func():
 		var r := Game.room_rest(_loc)
 		if r.is_empty():
 			return
@@ -137,6 +169,9 @@ func build() -> void:
 	row.add_child(sl)
 
 	tutorial("room")
+	if params.get("costume", false):
+		params.erase("costume")
+		_costume_popup.call_deferred(hid)
 	if int(params.get("gain", 0)) > 0:
 		_float_hearts(int(params["gain"]))
 	params.erase("gain")
@@ -318,14 +353,6 @@ func _costume_popup(hid: String) -> void:
 	sc.add_child(body)
 	var cur := int(Game.hero(hid).get("skin", 0))
 	var si := DB.special_index(hid)
-	# --- costume forms (shared with Hero Detail > OUTFITS)
-	var cs := UI.costume_section(hid, func(msg: String): main.toast(msg, UI.MUTED), func():
-		main.close_popup(v)
-		main.replace("room", {"loc": _loc}), func():
-		main.close_popup(v)
-		main.go("wardrobe"))
-	if cs:
-		body.add_child(cs)
 	# --- outfits
 	body.add_child(UI.label("OUTFITS", 15, UI.GOLD, 3))
 	var g := HFlowContainer.new()
@@ -340,10 +367,123 @@ func _costume_popup(hid: String) -> void:
 			Game.set_skin(hid, idx)
 			Game.sfx("star_up")
 			main.close_popup(v)
-			main.replace("room", {"loc": _loc})))
+			main.replace("room", {"loc": _loc, "costume": true})))
+	# --- costume forms (shared with Hero Detail > OUTFITS)
+	var cs := UI.costume_section(hid, func(msg: String): main.toast(msg, UI.MUTED), func():
+		main.close_popup(v)
+		main.replace("room", {"loc": _loc, "costume": true}), func():
+		main.close_popup(v)
+		main.go("wardrobe"))
+	if cs:
+		body.add_child(cs)
 	var c := UI.button("CLOSE", func(): main.close_popup(v), "", Vector2(160, 44))
 	c.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	v.add_child(c)
 
 func _costume_tile(path: String, caption: String, open: bool, wearing: bool, cb: Callable, evo: bool = false) -> Control:
 	return UI.costume_tile(path, caption, open, wearing, cb, evo, func(msg: String): main.toast(msg, UI.MUTED))
+
+# ---------------------------------------------------------------- touch, zoom and interactions
+
+var _pinch: PinchZoom
+var _rz := 1.0
+var _acts_l: Label
+var _drag_from := Vector2.ZERO
+var _dragging := false
+var _last_tap := 0
+var _busy := false
+
+## Tap: head / body / legs answer differently. While zoomed: drag pans, double-tap resets.
+func _art_input(hid: String, e: InputEvent) -> void:
+	if _pinch and _pinch.active():
+		return
+	if e is InputEventMouseButton and (e.button_index == MOUSE_BUTTON_WHEEL_UP or e.button_index == MOUSE_BUTTON_WHEEL_DOWN) and e.ctrl_pressed and e.pressed:
+		_zoom(_rz * (1.1 if e.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 1.1), e.global_position)
+		return
+	if e is InputEventMouseMotion and _dragging and _rz > 1.01:
+		_art.position += (e as InputEventMouseMotion).relative
+		return
+	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT:
+		if e.pressed:
+			_dragging = true
+			_drag_from = e.global_position
+			if Time.get_ticks_msec() - _last_tap < 320 and _rz > 1.01:
+				_zoom(1.0, e.global_position)
+				_last_tap = 0
+				return
+			_last_tap = Time.get_ticks_msec()
+		else:
+			_dragging = false
+			if e.global_position.distance_to(_drag_from) < 12.0:
+				_touch(hid, e.global_position)
+
+func _zoom(z: float, centre: Vector2) -> void:
+	var nz := clampf(z, 1.0, 3.0)
+	if nz <= 1.01:
+		_rz = 1.0
+		var tw := _art.create_tween().set_parallel(true)
+		tw.tween_property(_art, "scale", Vector2.ONE, 0.2)
+		tw.tween_property(_art, "position", _art.get_meta("home", _art.position), 0.2)
+		return
+	if not _art.has_meta("home"):
+		_art.set_meta("home", _art.position)
+	if _rz <= 1.01:
+		_art.pivot_offset = _art.get_global_transform().affine_inverse() * centre
+	_rz = nz
+	_art.scale = Vector2(_rz, _rz)
+
+func _touch(hid: String, at: Vector2) -> void:
+	var hd := UI.head_on_screen(_art)
+	var hp: Vector2 = hd[0]
+	var hr: float = float(hd[1])
+	var zone := "head" if at.y < hp.y + hr * 1.2 else ("body" if at.y < hp.y + hr * 6.0 else "legs")
+	var line := Game.tap_hero(hid)
+	if zone == "head":
+		line = ["Hehe... you like my hair?", "Mm. Gentle, please.", line].pick_random()
+	elif zone == "legs":
+		line = ["H-hey! Where are you touching?!", "Kyaa! Commander!", line].pick_random()
+	_react(hid, line, zone)
+
+func _do_action(hid: String, a: Dictionary) -> void:
+	if _busy:
+		return
+	var r := Game.room_action(str(a["id"]))
+	Game.sfx("ui_click")
+	Game.voice(hid, "bond" if int(r["bond"]) > 0 else "tap")
+	_react(hid, str((a["lines"] as Array).pick_random()), str(a["id"]))
+	if int(r["bond"]) > 0:
+		_float_hearts(int(r["bond"]))
+	_update_acts()
+
+func _update_acts() -> void:
+	if is_instance_valid(_acts_l):
+		var left := Game.room_actions_left()
+		_acts_l.text = "♥ %d interactions with bond left today" % left if left > 0 else "♥ she still loves the attention (no more bond today)"
+
+## Her reaction: alternate expression, a small motion that fits the action, and her words next to her head.
+func _react(hid: String, line: String, kind: String) -> void:
+	_busy = true
+	UI.flash_expression(_art, DB.alt_art(hid, int(Game.hero(hid).get("skin", 0))))
+	if line != "":
+		var g := get_global_rect()
+		UI.float_speech(self, _art, hid, line, Rect2(g.position + Vector2(g.size.x * 0.19, g.size.y * 0.12), Vector2(g.size.x * 0.44, g.size.y * 0.7)))
+	var base := Vector2(_rz, _rz)
+	var tw := _art.create_tween()
+	match kind:
+		"tickle", "legs":
+			for i in 4:
+				tw.tween_property(_art, "rotation", 0.025 * (1 if i % 2 == 0 else -1), 0.06)
+			tw.tween_property(_art, "rotation", 0.0, 0.08)
+		"hands", "whisper":
+			tw.tween_property(_art, "rotation", -0.035, 0.25).set_trans(Tween.TRANS_SINE)
+			tw.tween_interval(0.4)
+			tw.tween_property(_art, "rotation", 0.0, 0.35).set_trans(Tween.TRANS_SINE)
+		"cheer", "snack":
+			var y0 := _art.position.y
+			tw.tween_property(_art, "position:y", y0 - 22, 0.14).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+			tw.tween_property(_art, "position:y", y0, 0.28).set_trans(Tween.TRANS_BOUNCE)
+		_:
+			tw.tween_property(_art, "scale", base * Vector2(1.03, 0.97), 0.08)
+			tw.tween_property(_art, "scale", base, 0.2).set_trans(Tween.TRANS_BACK)
+	tw.tween_callback(func(): _busy = false)
+

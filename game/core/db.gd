@@ -4079,6 +4079,9 @@ static func art_list(id: String) -> Array:
 ## Path of an outfit's art (same pick as art()), without loading it.
 static func art_path(id: String, index: int = 0) -> String:
 	id = base_id(id)
+	var pv := _private_override(id, index)
+	if pv != "":
+		return pv
 	var cf := costume_form_def(id, index)
 	if not cf.is_empty():
 		return str(cf["base"])
@@ -4124,6 +4127,17 @@ static func _art_list_scan(id: String) -> Array:
 			out.append(portrait)
 	return out
 
+## Private Room interactions (room.gd action bar): label, reaction lines, bond EXP (x2 in her favourite room).
+const ROOM_ACTIONS := [
+	{"id": "pat", "label": "PAT", "bond": 6, "lines": ["Mm... a little more.", "W-why are you patting me?", "...That's nice. Don't stop yet."]},
+	{"id": "hands", "label": "HANDS", "bond": 6, "lines": ["Your hand is warm.", "Don't let go, okay?", "Just for a moment... like this."]},
+	{"id": "tickle", "label": "TICKLE", "bond": 5, "lines": ["Hey! Stop it! Haha!", "Th-that tickles! Commander!", "You're unfair! Hahaha!"]},
+	{"id": "whisper", "label": "WHISPER", "bond": 7, "lines": ["...Really? You mean that?", "Say it again. Quietly.", "That stays our secret."]},
+	{"id": "cheer", "label": "CHEER", "bond": 5, "lines": ["Thanks. I feel better already.", "Then I'll do my best for you!", "Watch me shine, Commander."]},
+	{"id": "snack", "label": "SNACK", "bond": 5, "lines": ["Mmm! Delicious!", "You brought this just for me?", "Here, you have half."]},
+]
+const ROOM_ACTION_CAP := 12   # rewarded interactions per day (they still play after that, without bond)
+
 ## Costume (special skin) forms: [{"base", "interactions", "kind": "stage"|"evo", "n"}] (tools/costume_forms.py).
 ## Which one shows is the hero's chosen costume form (Game.costume_form), unlocked by her rank.
 static func special_forms(id: String) -> Array:
@@ -4137,6 +4151,12 @@ static func costume_form_def(id: String, index: int) -> Dictionary:
 	if f.is_empty():
 		return {}
 	return f[clampi(_costume_form(id), 0, f.size() - 1)]
+
+## Game.private_override(id, index) without naming the autoload: the private outfit path while it is worn.
+static func _private_override(id: String, index: int) -> String:
+	var ml := Engine.get_main_loop() as SceneTree
+	var g: Node = ml.root.get_node_or_null("Game") if ml else null
+	return str(g.call("private_override", id, index)) if g and g.has_method("private_override") else ""
 
 ## Game.costume_form(id) without naming the autoload (db.gd also compiles where "Game" is not a global).
 static func _costume_form(id: String) -> int:
@@ -4155,6 +4175,8 @@ static func lobby_art(id: String) -> Texture2D:
 
 ## Alternate expression (the "a" variants) for an outfit, or null.
 static func alt_art(id: String, index: int = 0) -> Texture2D:
+	if _private_override(base_id(id), index) != "":
+		return null   # the private outfit has no alternate expressions
 	var cf := costume_form_def(id, index)
 	if not cf.is_empty():
 		for p in cf.get("interactions", []):
@@ -4186,6 +4208,9 @@ static func alt_arts(id: String, index: int = 0) -> Array:
 
 static func art(id: String, index: int = 0) -> Texture2D:
 	id = base_id(id)
+	var pv := _private_override(id, index)
+	if pv != "":
+		return tex(pv)
 	var cf := costume_form_def(id, index)
 	if not cf.is_empty():
 		return tex(str(cf["base"]))

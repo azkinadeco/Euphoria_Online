@@ -251,6 +251,44 @@ func show_send_reminder() -> void:
 		show_feedback(), "", Vector2(200, 46)))
 	row.add_child(UI.button("LATER", func(): close_popup(v), "", Vector2(130, 46)))
 
+## In-game asset download: evolution / later-stage hero art comes after the first (small) download.
+## Shows progress, the last error and RETRY (Settings > HD ART, or tap a "Loading HD" note).
+func show_art_download() -> void:
+	var ap = Game.art_pack
+	var v: VBoxContainer = popup("DOWNLOAD HD ART", 560)
+	v.add_child(UI.wrap_label("Evolved and later-stage hero art downloads in the background while you play, so the first start stays small. It is kept on this device: the next visit does not download it again.", 14, UI.MUTED))
+	var bar := UI.bar(0, 1, "GoldBar", 14)
+	v.add_child(bar)
+	var st := UI.label("", 15, Color.WHITE, 2)
+	v.add_child(st)
+	var er := UI.wrap_label("", 13, UI.RED)
+	v.add_child(er)
+	var row := UI.hbox(10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	v.add_child(row)
+	row.add_child(UI.button("RETRY", func():
+		if is_instance_valid(ap):
+			ap.restart()
+		toast("Downloading HD art...", UI.GOLD), "GoldButton", Vector2(160, 46)))
+	row.add_child(UI.button("CLOSE", func(): close_popup(v), "", Vector2(140, 46)))
+	var upd := func():
+		if not is_instance_valid(ap) or ap.progress().y == 0:
+			st.text = "All hero art is already included in this build."
+			bar.max_value = 1
+			bar.value = 1
+			return
+		var pr: Vector2i = ap.progress()
+		bar.max_value = pr.y
+		bar.value = pr.x
+		st.text = ("HD ART READY  •  %d / %d packs" % [pr.x, pr.y]) if pr.x >= pr.y else "%d / %d packs  •  %.1f / %.1f MB" % [pr.x, pr.y, ap.bytes_done / 1e6, ap.bytes_total / 1e6]
+		er.text = ("Last problem: %s" % ap.last_error) if str(ap.last_error) != "" and pr.x < pr.y else ""
+	upd.call()
+	var tm := Timer.new()
+	tm.wait_time = 0.5
+	tm.autostart = true
+	v.add_child(tm)
+	tm.timeout.connect(upd)
+
 ## Free-text playtest feedback; saved into the playtest log (sent along with SEND LOG).
 func show_feedback() -> void:
 	var v: VBoxContainer = popup("WRITE FEEDBACK", 680)

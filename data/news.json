@@ -8,6 +8,13 @@
   "pin": true
  },
  {
+  "id": "n2026-11-23d",
+  "date": "2026-11-23",
+  "tag": "UPDATE",
+  "title": "Private Room: Private Outfits, Zoom and New Interactions",
+  "body": "REST TOGETHER now lets Lucidria, Morana, Schylua, Siv, Abadonia, Ning Er and Kyra wear their private outfit for one hour, then their own outfit comes back. In the Private Room you can pinch (or Ctrl + mouse wheel) to zoom on her and drag to look around, double-tap to reset; tap her head, body or legs, and try PAT, HANDS, TICKLE, WHISPER, CHEER and SNACK (bond EXP for the first 12 each day). Costume stages now show under OUTFITS only while she wears the costume. HD art: the download now uses the browser directly, and Settings > HD ART opens a download screen with progress and RETRY."
+ },
+ {
   "id": "n2026-11-23c",
   "date": "2026-11-23",
   "tag": "FIX",

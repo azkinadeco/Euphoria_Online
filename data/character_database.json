@@ -417,7 +417,8 @@
    },
    "sprites": [
     "res://art/characters/heroes/lucidria/sprite/lucidria_sprite_stage1.png"
-   ]
+   ],
+   "private_art": "res://art/characters/heroes/lucidria/char/lucidria_char_private.png"
   },
   "lumeira": {
    "id": "lumeira",
@@ -778,7 +779,8 @@
     "res://art/characters/heroes/abadonia/sprite/abadonia_sprite_stage1.png",
     "res://art/characters/heroes/abadonia/sprite/abadonia_sprite_evo1.png",
     "res://art/characters/heroes/abadonia/sprite/abadonia_sprite_evo2.png"
-   ]
+   ],
+   "private_art": "res://art/characters/heroes/abadonia/char/abadonia_char_private.png"
   },
   "aqua": {
    "id": "aqua",
@@ -1011,7 +1013,8 @@
     "res://art/characters/heroes/schylua/sprite/schylua_sprite_stage2.png",
     "res://art/characters/heroes/schylua/sprite/schylua_sprite_evo1.png",
     "res://art/characters/heroes/schylua/sprite/schylua_sprite_evo2.png"
-   ]
+   ],
+   "private_art": "res://art/characters/heroes/schylua/char/schylua_char_private.png"
   },
   "siv": {
    "id": "siv",
@@ -1049,7 +1052,8 @@
     "res://art/characters/heroes/siv/sprite/siv_sprite_stage2.png",
     "res://art/characters/heroes/siv/sprite/siv_sprite_evo1.png",
     "res://art/characters/heroes/siv/sprite/siv_sprite_evo2.png"
-   ]
+   ],
+   "private_art": "res://art/characters/heroes/siv/char/siv_char_private.png"
   },
   "vexira": {
    "id": "vexira",
@@ -1451,7 +1455,8 @@
     "res://art/characters/heroes/ninger/sprite/ninger_sprite_2.png",
     "res://art/characters/heroes/ninger/sprite/ninger_sprite_3.png",
     "res://art/characters/heroes/ninger/sprite/ninger_sprite_4.png"
-   ]
+   ],
+   "private_art": "res://art/characters/heroes/ninger/char/ninger_char_private.png"
   },
   "spimei": {
    "id": "spimei",
@@ -1641,7 +1646,8 @@
     "res://art/characters/heroes/morana/sprite/morana_sprite_2.png",
     "res://art/characters/heroes/morana/sprite/morana_sprite_3.png",
     "res://art/characters/heroes/morana/sprite/morana_sprite_4.png"
-   ]
+   ],
+   "private_art": "res://art/characters/heroes/morana/char/morana_char_private.png"
   },
   "seraph": {
    "id": "seraph",
@@ -1850,7 +1856,8 @@
     "res://art/characters/heroes/kyra/sprite/kyra_sprite_stage1.png",
     "res://art/characters/heroes/kyra/sprite/kyra_sprite_evo1.png",
     "res://art/characters/heroes/kyra/sprite/kyra_sprite_evo2.png"
-   ]
+   ],
+   "private_art": "res://art/characters/heroes/kyra/char/kyra_char_private.png"
   },
   "sharas": {
    "id": "sharas",

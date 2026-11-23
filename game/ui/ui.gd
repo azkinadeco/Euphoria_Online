@@ -459,8 +459,14 @@ static func pending_art(t: TextureRect, path: String, on_ready: Callable = Calla
 	note.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	note.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	note.offset_top = 6
-	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	note.tooltip_text = "Evolved and later-stage art downloads while you play. This is the Lv.1 art until then."
+	note.mouse_filter = Control.MOUSE_FILTER_STOP
+	note.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	note.tooltip_text = "Evolved and later-stage art downloads while you play. This is the Lv.1 art until then. Tap for the download."
+	note.gui_input.connect(func(e):
+		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
+			var mn := (Engine.get_main_loop() as SceneTree).root.get_node_or_null("Main")
+			if mn and mn.has_method("show_art_download"):
+				mn.show_art_download())
 	var nl := label("Loading HD", 12, Color("#ffe3a0"), 0)
 	nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	note.add_child(nl)
@@ -1295,6 +1301,9 @@ static func costume_section(hid: String, toast: Callable, after: Callable, open_
 		return null
 	var si := DB.special_index(hid)
 	var cur := int(Game.hero(hid).get("skin", 0))
+	# the costume's stages only show while she wears the costume (tap the costume outfit first)
+	if cur != si:
+		return null
 	var owned_c := Game.skin_unlocked(hid, si)
 	var box := vbox(8)
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
