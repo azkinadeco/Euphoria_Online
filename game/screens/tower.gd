@@ -269,7 +269,7 @@ func _enemy_card(e: Dictionary) -> Control:
 	c.custom_minimum_size = Vector2(84, 100)
 	c.clip_contents = true
 	fp.add_child(c)
-	var face := UI.face_rect(e["id"], Vector2.ZERO)
+	var face := UI.foe_rect(str(e["id"]), Vector2.ZERO, 100.0 / 84.0)
 	face.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	c.add_child(face)
 	var strip := ColorRect.new()

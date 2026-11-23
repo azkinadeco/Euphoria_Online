@@ -420,6 +420,18 @@ static func tex_rect_lazy(ready: bool, loader: Callable, size: Vector2 = Vector2
 		t.add_child(n)
 	return t
 
+## Enemy thumbnail: always the same head-normalised crop of the foe's full art (DB.bust_tex), so every foe in a
+## list looks alike (face() mixed chest-up portraits, chibi-style portraits and full-art crops). `aspect` = h / w;
+## by default the rect's own shape (square thumbs 1.0). Falls back to the battle sprite when there is no art.
+static func foe_rect(id: String, size: Vector2 = Vector2.ZERO, aspect: float = -1.0) -> TextureRect:
+	var asp := aspect if aspect > 0.0 else (size.y / size.x if size.x > 0.0 and size.y > 0.0 else 1.2)
+	var art_p := DB.art_path(id, 0)
+	var ready := art_p == "" or DB.tex_loaded(art_p)
+	var t := tex_rect_lazy(ready, func():
+		var a := DB.art(id, 0)
+		return DB.bust_tex(a, asp) if a else DB.sprite(id), size, true)
+	return t
+
 ## Hero / enemy face crop (DB.face), loaded lazily.
 static func face_rect(id: String, size: Vector2 = Vector2.ZERO, skin: int = -1) -> TextureRect:
 	return tex_rect_lazy(DB.face_ready(id, skin), func(): return DB.face(id, skin), size, true)

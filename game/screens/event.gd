@@ -261,7 +261,7 @@ func _stage_row(i: int) -> void:
 	var faces := UI.hbox(3)
 	for e in st["enemies"].slice(0, 3):
 		var fp := UI.styled_panel(Color.BLACK, Color("#ff5c6c") if e.get("boss", false) else Color(bc, 0.6), 6, 2, 1)
-		fp.add_child(UI.face_rect(e["id"], Vector2(44, 44)))
+		fp.add_child(UI.foe_rect(str(e["id"]), Vector2(44, 44)))
 		faces.add_child(fp)
 	h.add_child(faces)
 	var v := UI.vbox(2)

@@ -100,7 +100,7 @@ func _render() -> void:
 		fv.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		for e in st["enemies"].slice(0, 3):
 			var fp := UI.styled_panel(Color.BLACK, Color("#ff5c6c") if e.get("boss", false) else Color("#6b4a7e"), 6, 2, 1)
-			var ft := UI.tex_rect(DB.face(e["id"]), Vector2(40, 40), true)
+			var ft := UI.foe_rect(str(e["id"]), Vector2(40, 40))
 			if not unlocked:
 				ft.modulate = Color(0.3, 0.3, 0.35)
 			fp.add_child(ft)

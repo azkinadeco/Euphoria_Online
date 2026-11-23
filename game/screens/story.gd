@@ -638,7 +638,7 @@ func _render_detail() -> void:
 		fc.custom_minimum_size = Vector2(48, 48)
 		fc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		p.add_child(fc)
-		var ft := UI.tex_rect(DB.face(e["id"]), Vector2(48, 48), true)
+		var ft := UI.foe_rect(str(e["id"]), Vector2(48, 48))
 		ft.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		if e.get("mirror", false):
 			UI.corrupt(ft, str(e.get("variant", "")))

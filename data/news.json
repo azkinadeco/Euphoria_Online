@@ -8,6 +8,13 @@
   "pin": true
  },
  {
+  "id": "n2026-11-23c",
+  "date": "2026-11-23",
+  "tag": "FIX",
+  "title": "Hero Cards and Enemy Portraits Fixed",
+  "body": "Evolved heroes' cards no longer get a blue / red / purple tint over the picture: they look as before, the Evolution stars still show the tier. Enemy portraits in the Tower of Trials, Story, Dungeons and Events now all use the same half-body picture with the head at the same size, instead of a mix of chibi sprites and face close-ups."
+ },
+ {
   "id": "n2026-11-23b",
   "date": "2026-11-23",
   "tag": "NEW",

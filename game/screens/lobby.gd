@@ -1229,7 +1229,7 @@ func _open_profile() -> void:
 				rk.custom_minimum_size.x = 30
 				hh.add_child(rk)
 				var fp := UI.styled_panel(Color.BLACK, DB.RARITY_COLOR[DB.rarity_of(str(e["id"]))], 6, 1, 1)
-				fp.add_child(UI.face_rect(str(e["id"]), Vector2(34, 34)))
+				fp.add_child(UI.foe_rect(str(e["id"]), Vector2(34, 34)))
 				hh.add_child(fp)
 				var nv := UI.vbox(1)
 				nv.size_flags_horizontal = Control.SIZE_EXPAND_FILL

@@ -1262,6 +1262,10 @@ tools/
 - **2.5D untuk semua art ber-rig** (`char_rig.gdshader` + `char_rig.gd`): putaran kartu mengikuti pointer/orbit idle, parallax dari depth map (`art/depth`), cahaya kunci, cahaya tepi dan bayangan jatuh. Sebelumnya art ber-rig tidak mendapat lapisan depth sama sekali. `LiveRig.backdrop` juga bekerja untuk art ber-rig.
 - Flow test: bagian "[15 Nov enemies]"; cek rig musuh kini lewat `DB.char_rig` (rig tangan di db.gd atau JSON).
 
+## 3l. Batch 316 (23 Nov 2026): kartu tanpa tint evolusi, potret musuh seragam
+- Batch 304 dibatalkan: ring + glow `StyleBoxFlat` di atas art kartu menggambar shadow sebagai bidang terisi → kartu tier biru/merah tertutup warna transparan. Overlay dihapus (owner: kembalikan seperti sebelumnya); tier tetap terlihat dari warna bintang.
+- `UI.foe_rect(id, size, aspect)`: semua thumbnail musuh = `DB.bust_tex(DB.art(id, 0), aspect)` (potongan kepala sama seperti kartu Formation), dipakai Tower, Story, Dungeon, Event, lobby. Dulu `face()` memakai `portrait` (potret dada, potret bergaya chibi, atau crop art) sehingga campur aduk.
+
 ## 3k. Batch 296-315 (23 Nov 2026): kenyamanan kartu & evolusi, Guild Base hidup
 - 296 Heroes: ketuk penghitung "Cards n / m ●/○" = tampil/sembunyi kartu COPY (`static _show_copies`), merah bila sisa slot ≤ 5.
 - 297 Summon: tombol peringatan di atas tombol summon bila sisa slot ≤ 10 (→ Dismantle). `settings.auto_dismantle` (toggle di Dismantle): duplikat N/R langsung jadi kristal di `add_hero` ({"auto": n}).
