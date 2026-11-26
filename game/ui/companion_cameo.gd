@@ -57,10 +57,10 @@ func _on_input(e: InputEvent) -> void:
 	if not (e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT):
 		return
 	cheer()
-	var line := DB.pet_line(pet_id, 1 + randi() % 3)
+	var line := ""
 	if Game.pet_pat(pet_id):
 		Game.sfx("star_up")
-		line = DB.pet_line(pet_id, 3)
+		line = Game.pet_voice(pet_id, 3)
 		var h := UI.label("♥", 30, Color("#ff8fb8"), 6)
 		h.position = Vector2(size.x * 0.4, 0)
 		h.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -71,4 +71,5 @@ func _on_input(e: InputEvent) -> void:
 		ht.chain().tween_callback(h.queue_free)
 	else:
 		Game.sfx("ui_click")
+		line = Game.pet_voice(pet_id, 1 + randi() % 3)
 	said.emit(line)

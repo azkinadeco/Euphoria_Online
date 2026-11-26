@@ -124,7 +124,7 @@ func build() -> void:
 	var tk := _pill("♥ TALK", func(): main.talk(Game.s["lobby_hero"]), Color("#ff8fb8"))
 	var ob := _pill("OUTFIT", _next_outfit, Color.WHITE)
 	if _enemy != "":
-		tk = _pill("♥ TALK", func(): _say(DB.enemy_lobby_line(_enemy, Game.is_tamed(_enemy))), Color("#ff8fb8"))
+		tk = _pill("♥ TALK", func(): _say(Game.enemy_lobby_voice(_enemy, Game.is_tamed(_enemy))), Color("#ff8fb8"))
 		ob = _pill("FORM", _next_enemy_form, Color.WHITE)
 	var sc := _pill("SCENE", _pick_scene, Color.WHITE)
 	var fb := _pill("FORTUNE" + (" ✦" if Game.fortune_ready() else ""), _open_fortune, UI.GOLD if Game.fortune_ready() else Color.WHITE)
@@ -186,7 +186,7 @@ func build() -> void:
 		var hid0: String = Game.s["lobby_hero"]
 		get_tree().create_timer(0.4).timeout.connect(func():
 			if is_inside_tree():
-				_say(DB.enemy_lobby_line(_enemy, Game.is_tamed(_enemy)) if _enemy != "" else Game.voice(hid0, "greet")))
+				_say(Game.enemy_lobby_voice(_enemy, Game.is_tamed(_enemy)) if _enemy != "" else Game.voice(hid0, "greet")))
 
 func _build_top_bar() -> void:
 	var hid: String = Game.s["lobby_hero"]
@@ -1063,7 +1063,7 @@ func _clear_pat() -> void:
 func _close_up() -> void:
 	var hid: String = Game.s["lobby_hero"]
 	Game.sfx("ui_click")
-	_say(DB.enemy_lobby_line(_enemy, Game.is_tamed(_enemy)) if _enemy != "" else Game.voice(hid, "greet"))
+	_say(Game.enemy_lobby_voice(_enemy, Game.is_tamed(_enemy)) if _enemy != "" else Game.voice(hid, "greet"))
 	# zoom the holder (the art itself runs a looping breathing tween on its scale)
 	var head := _hero_art.position + Vector2(_hero_art.size.x * 0.5, _hero_art.size.y * 0.2)
 	_holder.pivot_offset = head
@@ -1511,14 +1511,14 @@ func _on_enemy_poke(uv: Vector2) -> void:
 		if Game.pet_pat(_enemy):
 			_heart_burst()
 			_float_mark(at, "♥ pat pat", Color("#ff8fb8"))
-			_say(DB.pet_line(_enemy, 3))
+			_say(Game.pet_voice(_enemy, 3))
 			return
 		_float_mark(at, "♥", Color("#ff8fb8"), 30)
 	elif zone == "legs":
 		_float_mark(at, "!", Color("#ffd479"), 48)
 	else:
 		_float_mark(at, "///" if tamed else "!?", col)
-	_say(DB.enemy_lobby_line(_enemy, tamed))
+	_say(Game.enemy_lobby_voice(_enemy, tamed))
 
 ## FORM pill: cycle through the enemy's unlocked forms.
 func _next_enemy_form() -> void:

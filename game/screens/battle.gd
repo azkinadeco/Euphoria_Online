@@ -552,21 +552,22 @@ const ELEMENT_SFX := {"FIRE": "fire", "WATER": "water", "ICE": "ice", "WIND": "w
 
 var _voice_cd := 0
 
-## Heroes cry out when hit hard or knocked out (rate-limited so it never spams).
+## Units cry out when hit hard or knocked out (rate-limited so it never spams).
 func _react_voice(g: Dictionary) -> void:
 	if _skip or _speed > 2.0:
 		return
 	var u: Dictionary = sim.units[g["uid"]]
-	if u["side"] != 0 or not DB.HEROES.has(u["id"]):
+	var uid_str := str(u["id"])
+	if not DB.HEROES.has(uid_str) and not DB.ENEMIES.has(uid_str):
 		return
 	var now := Time.get_ticks_msec()
 	if now < _voice_cd:
 		return
 	if g.get("dead", false):
-		Game.voice(u["id"], "ko")
+		Game.voice(uid_str, "ko")
 		_voice_cd = now + 900
 	elif g.get("crit", false) or randf() < 0.25:
-		Game.voice(u["id"], "hurt")
+		Game.voice(uid_str, "hurt")
 		_voice_cd = now + 1400
 
 ## Every illustration the playback will show (action banner faces, cut-ins, ultimates) is loaded while the
@@ -678,7 +679,7 @@ func _play_action(e: Dictionary, group: Array) -> void:
 			if not is_inside_tree():
 				return
 		_skill_fx(u, e, ec, melee)
-		if u["side"] == 0 and _speed <= 2.0 and (u["boss"] or randf() < 0.6):
+		if _speed <= 2.0 and (u["boss"] or randf() < 0.6):
 			Game.voice(u["id"], "skill")
 		_bsfx(ELEMENT_SFX.get(elem, "hit") if aim != "ally_all" else "heal")
 		await _wait(0.18 if melee else 0.3)

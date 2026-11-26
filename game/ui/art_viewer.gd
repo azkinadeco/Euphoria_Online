@@ -433,7 +433,8 @@ func _line(ry: float) -> String:
 		var cat := "bond" if ry < 0.32 and int(Game.hero(id).get("bond", 0)) >= 3 else ("greet" if ry < 0.32 else ("tap" if ry < 0.7 else "hurt"))
 		return Game.voice(id, cat)
 	if Game.is_tamed(id):
-		return DB.pet_line(id, 1 + randi() % 3)
+		return Game.pet_voice(id, 1 + randi() % 3)
+	Game.voice(id, "hurt")
 	return ["...!", "Hssss... don't touch me, tamer.", "You'll have to beat me first.", "Hmph. Bold, aren't you?", "...Again? You're strange."][randi() % 5]
 
 func _pat() -> void:
@@ -442,7 +443,7 @@ func _pat() -> void:
 		_say(Game.voice(id, "bond"))
 	elif not is_hero and Game.is_tamed(id):
 		if Game.pet_pat(id):
-			_say(DB.pet_line(id, 3))
+			_say(Game.pet_voice(id, 3))
 		else:
 			_say("%s is happy, but that's enough pats for today." % DB.name_of(id))
 	Game.sfx("star_up")

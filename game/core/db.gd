@@ -2742,6 +2742,12 @@ static func pet_line(id: String, slot: int) -> String:
 	var l: Array = PET_LINES.get(id, ["...", "...", "...", "...", "..."])
 	return str(l[clampi(slot, 0, l.size() - 1)])
 
+static func pet_voice_cat(id: String, slot: int) -> String:
+	var s := clampi(slot, 0, 4)
+	if id == "hairly":
+		return ["pet_0", "pet_1", "pet_2", "bond", "pet_4"][s]
+	return ["greet", "tap", "talk", "bond", "thanks"][s]
+
 static func pet_bond_next(lv: int) -> int:
 	return 40 + lv * 30
 

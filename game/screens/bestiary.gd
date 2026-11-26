@@ -418,7 +418,9 @@ func _react(ry: float) -> void:
 	fl.tween_property(_art, "self_modulate", Color(1.3, 1.15, 1.2), 0.08)
 	fl.tween_property(_art, "self_modulate", Color.WHITE, 0.3)
 	if Game.is_tamed(_sel):
-		main.toast("%s: \"%s\"" % [DB.name_of(_sel), DB.pet_line(_sel, 1 + randi() % 3)], Color("#ff8fb8"))
+		main.toast("%s: \"%s\"" % [DB.name_of(_sel), Game.pet_voice(_sel, 1 + randi() % 3)], Color("#ff8fb8"))
+	else:
+		Game.voice(_sel, "hurt")
 
 func _pat() -> void:
 	if not Game.pet_pat(_sel):
@@ -433,7 +435,7 @@ func _pat() -> void:
 	ht.tween_property(h, "position:y", h.position.y - 70, 0.9)
 	ht.tween_property(h, "modulate:a", 0.0, 0.5).set_delay(0.4)
 	ht.chain().tween_callback(h.queue_free)
-	main.toast("%s: \"%s\"" % [DB.name_of(_sel), DB.pet_line(_sel, 3)], Color("#ff8fb8"))
+	main.toast("%s: \"%s\"" % [DB.name_of(_sel), Game.pet_voice(_sel, 3)], Color("#ff8fb8"))
 	if _tab == "tame":
 		_render_detail()
 
@@ -458,7 +460,7 @@ func _render_tame(id: String) -> void:
 				main.toast(e2, UI.RED)
 				return
 			Game.sfx("awakening")
-			main.dialogue([[id, DB.pet_line(id, 0)]], func(): _render_detail(), "", true)
+			main.dialogue([[id, Game.pet_voice(id, 0)]], func(): _render_detail(), "", true)
 			_render(), "GoldButton", Vector2(0, 50))
 		tb.disabled = err != ""
 		_detail.add_child(tb)
@@ -481,7 +483,7 @@ func _render_tame(id: String) -> void:
 		Game.set_companion("" if is_comp else id)
 		Game.sfx("star_up")
 		if not is_comp:
-			main.toast("%s: \"%s\"" % [DB.name_of(id), DB.pet_line(id, 0)], Color("#ff8fb8"))
+			main.toast("%s: \"%s\"" % [DB.name_of(id), Game.pet_voice(id, 0)], Color("#ff8fb8"))
 		_render_detail(), "" if is_comp else "GoldButton", Vector2(0, 40))
 	cb.add_theme_font_size_override("font_size", 12)
 	_detail.add_child(cb)
@@ -507,7 +509,7 @@ func _render_tame(id: String) -> void:
 			if e3 != "":
 				main.toast(e3, UI.RED)
 				return
-			main.toast("%s: \"%s\"" % [DB.name_of(id), DB.pet_line(id, 4)], Color("#ff8fb8"))
+			main.toast("%s: \"%s\"" % [DB.name_of(id), Game.pet_voice(id, 4)], Color("#ff8fb8"))
 			_render_detail(), "", Vector2(0, 36))
 		gb.add_theme_font_size_override("font_size", 11)
 		gb.disabled = Game.amount(gid) <= 0

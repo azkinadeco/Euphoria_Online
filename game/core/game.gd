@@ -620,6 +620,18 @@ func voice(id: String, cat: String) -> String:
 		_voice.play()
 	return str(v["en"])
 
+## Plays an enemy / tamed companion personality voice clip and returns its English line.
+func pet_voice(id: String, slot: int) -> String:
+	voice(id, DB.pet_voice_cat(id, slot))
+	return DB.pet_line(id, slot)
+
+## Plays an enemy secretary lobby voice clip and returns its English line.
+func enemy_lobby_voice(id: String, tamed: bool) -> String:
+	if tamed:
+		return pet_voice(id, randi() % 4)
+	voice(id, DB.pet_voice_cat(id, 0))
+	return DB.enemy_lobby_line(id, false)
+
 func notify(text: String, color: Color = Color("#ffd479")) -> void:
 	toast.emit(text, color)
 
@@ -5080,7 +5092,7 @@ func pet_talk(id: String) -> String:
 	pet(id)["talk_day"] = day_key()
 	pet_add_exp(id, 25)
 	quest_progress("bond")
-	return DB.pet_line(id, 1 + randi() % 3)
+	return pet_voice(id, 1 + randi() % 3)
 
 func pet_pats_left(id: String) -> int:
 	var p := pet(id)
