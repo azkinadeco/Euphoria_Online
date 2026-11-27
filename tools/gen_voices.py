@@ -2,10 +2,10 @@
 Priority order:
   1. gemini-tts (Gemini 2.5 Flash/Pro TTS)
   2. freetts-api (FreeTTS Neural API, with automatic freetts.org watermark trimmer)
-  3. voicevox (Unlimited local VOICEVOX engine with character-specific speaker IDs)
+  3. voicevox (Unlimited local VOICEVOX engine with 100% female Anime JP speaker IDs)
 
 Usage:
-  python3 tools/gen_voices.py [--group heroes|npcs|enemies|all] [--force] [char_id ...]
+  python3 tools/gen_voices.py [--group heroes|npcs|enemies|all] [--force] [--reset-provider gemini-tts] [char_id ...]
 """
 import array
 import json
@@ -49,95 +49,121 @@ ENEMY_ORDER = [
 NPC_CATS = {"greet", "tap", "thanks", "poor", "tap_head", "tap_body", "tap_legs", "idle", "browse", "bye"}
 ENEMY_HAIRLY_CATS = {"pet_0", "pet_1", "pet_2", "bond", "pet_4", "skill", "hurt", "ko"}
 
-# Character -> Anime JP Voice Lab model + VoiceVox speaker ID + speed & pitch tuning
+# Compensate for negative pitchOffset in Voice Lab's voices-data.ts so FreeTTS/Edge Neural
+# NEVER shifts female voices down into a male register.
+VOICE_PITCH_COMPENSATION = {
+    "anime-reina-dewasa": 34,     # voices-data.ts has -30 -> effective +4Hz+
+    "anime-lilith-menggoda": 25,  # voices-data.ts has -20 -> effective +5Hz+
+    "anime-rika-marah": 23,       # voices-data.ts has -18 -> effective +5Hz+
+    "anime-rei-sedih": 10,        # voices-data.ts has -4  -> effective +6Hz+
+    "anime-akane-kasar": 3,       # voices-data.ts has +5  -> effective +8Hz+
+    "anime-yui-lembut": 2,        # voices-data.ts has +8  -> effective +10Hz+
+    "anime-hina-ceria": 0,        # voices-data.ts has +15 -> effective +15Hz+
+    "anime-momo-imut": 0,         # voices-data.ts has +25 -> effective +25Hz+
+}
+
+# VOICEVOX speakers where Voice Lab's getSpeakerAcousticProfile lowered basePitch;
+# we restore their natural feminine pitch factor during WAV post-processing.
+VV_PITCH_RESTORE = {
+    4: 1.038,
+    5: 1.038,
+    14: 1.018,
+    17: 1.045,
+    20: 1.045,
+    22: 1.018,
+    29: 1.045,
+    36: 1.018,
+}
+
+# 100% Female Anime JP Voice Lab model + 100% Female VOICEVOX speaker IDs (zero male speakers!)
 CHARACTER_VOICE_MAP = {
-    # --- 46 HEROES ---
+    # --- 46 HEROES (100% Female Anime JP) ---
     "shina":    {"voiceId": "anime-akane-kasar",     "vv": 6,  "speed": 1.04, "pitch": 2},
-    "xylia":    {"voiceId": "anime-reina-dewasa",    "vv": 65, "speed": 0.98, "pitch": 0},
+    "xylia":    {"voiceId": "anime-momo-imut",       "vv": 1,  "speed": 1.06, "pitch": 4},  # Imut (Zundamon Manis)
     "micca":    {"voiceId": "anime-momo-imut",       "vv": 43, "speed": 1.08, "pitch": 4},
-    "cthollia": {"voiceId": "anime-yui-lembut",      "vv": 14, "speed": 0.94, "pitch": -2},
-    "valeria":  {"voiceId": "anime-reina-dewasa",    "vv": 29, "speed": 0.96, "pitch": -1},
-    "eropatra": {"voiceId": "anime-lilith-menggoda", "vv": 4,  "speed": 0.95, "pitch": -2},
+    "cthollia": {"voiceId": "anime-yui-lembut",      "vv": 10, "speed": 0.96, "pitch": 2},
+    "valeria":  {"voiceId": "anime-hina-ceria",      "vv": 8,  "speed": 1.06, "pitch": 3},  # Ceria (Kasukabe Tsumugi)
+    "eropatra": {"voiceId": "anime-reina-dewasa",    "vv": 16, "speed": 0.95, "pitch": 2},  # Dewasa (Kyushu Sora Dewasa)
     "furu":     {"voiceId": "anime-yui-lembut",      "vv": 10, "speed": 0.96, "pitch": 2},
-    "glytta":   {"voiceId": "anime-hina-ceria",      "vv": 54, "speed": 1.10, "pitch": 3},
-    "hyeonxa":  {"voiceId": "anime-lilith-menggoda", "vv": 17, "speed": 0.94, "pitch": -3},
-    "scylla":   {"voiceId": "anime-rei-sedih",       "vv": 74, "speed": 0.92, "pitch": -2},
-    "lumeira":  {"voiceId": "anime-yui-lembut",      "vv": 46, "speed": 0.92, "pitch": 4},
-    "gemora":   {"voiceId": "anime-rei-sedih",       "vv": 47, "speed": 0.98, "pitch": 0},
-    "fidelia":  {"voiceId": "anime-yui-lembut",      "vv": 2,  "speed": 1.00, "pitch": 1},
-    "lucidria": {"voiceId": "anime-reina-dewasa",    "vv": 9,  "speed": 0.90, "pitch": -4},
-    "eurnipha": {"voiceId": "anime-lilith-menggoda", "vv": 16, "speed": 0.92, "pitch": -3},
-    "rumi":     {"voiceId": "anime-hina-ceria",      "vv": 70, "speed": 1.08, "pitch": 4},
-    "mora":     {"voiceId": "anime-yui-lembut",      "vv": 0,  "speed": 0.94, "pitch": 0},
-    "abadonia": {"voiceId": "anime-reina-dewasa",    "vv": 27, "speed": 0.94, "pitch": -3},
+    "glytta":   {"voiceId": "anime-rika-marah",      "vv": 78, "speed": 1.05, "pitch": 2},  # Marah (Mochiko-san Marah)
+    "hyeonxa":  {"voiceId": "anime-lilith-menggoda", "vv": 66, "speed": 0.95, "pitch": 2},  # Menggoda (Mochiko-san Sexy)
+    "scylla":   {"voiceId": "anime-rei-sedih",       "vv": 74, "speed": 0.94, "pitch": 2},
+    "lumeira":  {"voiceId": "anime-yui-lembut",      "vv": 46, "speed": 0.94, "pitch": 4},
+    "gemora":   {"voiceId": "anime-rei-sedih",       "vv": 47, "speed": 0.98, "pitch": 2},
+    "fidelia":  {"voiceId": "anime-yui-lembut",      "vv": 2,  "speed": 1.00, "pitch": 2},
+    "lucidria": {"voiceId": "anime-yui-lembut",      "vv": 10, "speed": 0.95, "pitch": 3},  # Suara Lembut (Amehare Hau)
+    "eurnipha": {"voiceId": "anime-lilith-menggoda", "vv": 15, "speed": 0.94, "pitch": 2},
+    "rumi":     {"voiceId": "anime-reina-dewasa",    "vv": 80, "speed": 0.96, "pitch": 2},  # Dewasa (Mochiko-san Dewasa)
+    "mora":     {"voiceId": "anime-yui-lembut",      "vv": 0,  "speed": 0.95, "pitch": 2},
+    "abadonia": {"voiceId": "anime-reina-dewasa",    "vv": 30, "speed": 0.96, "pitch": 2},
     "aqua":     {"voiceId": "anime-hina-ceria",      "vv": 69, "speed": 1.04, "pitch": 3},
-    "atalanta": {"voiceId": "anime-hina-ceria",      "vv": 73, "speed": 1.14, "pitch": 2},
-    "kali":     {"voiceId": "anime-reina-dewasa",    "vv": 30, "speed": 0.95, "pitch": 0},
+    "atalanta": {"voiceId": "anime-hina-ceria",      "vv": 73, "speed": 1.12, "pitch": 2},
+    "kali":     {"voiceId": "anime-reina-dewasa",    "vv": 77, "speed": 0.96, "pitch": 2},
     "zennyo":   {"voiceId": "anime-yui-lembut",      "vv": 15, "speed": 0.98, "pitch": 2},
     "rubby":    {"voiceId": "anime-lilith-menggoda", "vv": 5,  "speed": 0.98, "pitch": 2},
-    "schylua":  {"voiceId": "anime-rei-sedih",       "vv": 61, "speed": 0.92, "pitch": -1},
-    "vexira":   {"voiceId": "anime-lilith-menggoda", "vv": 4,  "speed": 0.93, "pitch": -1},
+    "schylua":  {"voiceId": "anime-rei-sedih",       "vv": 61, "speed": 0.94, "pitch": 2},
+    "vexira":   {"voiceId": "anime-lilith-menggoda", "vv": 66, "speed": 0.95, "pitch": 2},
     "siv":      {"voiceId": "anime-momo-imut",       "vv": 60, "speed": 1.04, "pitch": 4},
-    "sven":     {"voiceId": "anime-rika-marah",      "vv": 51, "speed": 0.92, "pitch": -5},
-    "angela":   {"voiceId": "anime-yui-lembut",      "vv": 20, "speed": 0.98, "pitch": 1},
-    "kara":     {"voiceId": "anime-reina-dewasa",    "vv": 14, "speed": 0.92, "pitch": -3},
+    "sven":     {"voiceId": "anime-akane-kasar",     "vv": 6,  "speed": 1.02, "pitch": 3},  # Tsundere (Shikoku Metan Tsundere)
+    "angela":   {"voiceId": "anime-yui-lembut",      "vv": 16, "speed": 0.98, "pitch": 2},
+    "kara":     {"voiceId": "anime-reina-dewasa",    "vv": 23, "speed": 0.95, "pitch": 2},
     "mei":      {"voiceId": "anime-akane-kasar",     "vv": 7,  "speed": 1.05, "pitch": 2},
     "ninger":   {"voiceId": "anime-hina-ceria",      "vv": 68, "speed": 1.06, "pitch": 4},
-    "spimei":   {"voiceId": "anime-rei-sedih",       "vv": 48, "speed": 0.98, "pitch": 1},
+    "spimei":   {"voiceId": "anime-rei-sedih",       "vv": 48, "speed": 0.98, "pitch": 2},
     "luby":     {"voiceId": "anime-momo-imut",       "vv": 58, "speed": 1.08, "pitch": 5},
-    "gala":     {"voiceId": "anime-lilith-menggoda", "vv": 4,  "speed": 0.96, "pitch": 0},
-    "morana":   {"voiceId": "anime-reina-dewasa",    "vv": 31, "speed": 0.90, "pitch": -4},
+    "gala":     {"voiceId": "anime-lilith-menggoda", "vv": 15, "speed": 0.96, "pitch": 2},
+    "morana":   {"voiceId": "anime-reina-dewasa",    "vv": 16, "speed": 0.94, "pitch": 2},
     "seraph":   {"voiceId": "anime-yui-lembut",      "vv": 10, "speed": 1.02, "pitch": 3},
-    "tamo":     {"voiceId": "anime-reina-dewasa",    "vv": 65, "speed": 0.96, "pitch": -2},
+    "tamo":     {"voiceId": "anime-reina-dewasa",    "vv": 15, "speed": 0.96, "pitch": 2},
     "aura":     {"voiceId": "anime-akane-kasar",     "vv": 2,  "speed": 1.02, "pitch": 2},
-    "fuji":     {"voiceId": "anime-yui-lembut",      "vv": 16, "speed": 0.95, "pitch": 0},
-    "kyra":     {"voiceId": "anime-rika-marah",      "vv": 9,  "speed": 0.96, "pitch": -2},
-    "sharas":   {"voiceId": "anime-rika-marah",      "vv": 57, "speed": 1.10, "pitch": 1},
-    "toka":     {"voiceId": "anime-hina-ceria",      "vv": 8,  "speed": 1.12, "pitch": 3},
-    "tora":     {"voiceId": "anime-reina-dewasa",    "vv": 29, "speed": 0.98, "pitch": 1},
-    "tsundae":  {"voiceId": "anime-akane-kasar",     "vv": 6,  "speed": 1.06, "pitch": 3},
+    "fuji":     {"voiceId": "anime-yui-lembut",      "vv": 16, "speed": 0.96, "pitch": 2},
+    "kyra":     {"voiceId": "anime-rika-marah",      "vv": 73, "speed": 1.02, "pitch": 2},
+    "sharas":   {"voiceId": "anime-rika-marah",      "vv": 78, "speed": 1.06, "pitch": 2},
+    "toka":     {"voiceId": "anime-hina-ceria",      "vv": 8,  "speed": 1.10, "pitch": 3},
+    "tora":     {"voiceId": "anime-reina-dewasa",    "vv": 80, "speed": 0.98, "pitch": 2},
+    "tsundae":  {"voiceId": "anime-lilith-menggoda", "vv": 4,  "speed": 0.96, "pitch": 3},  # Menggoda (Shikoku Metan Sexy)
     "vila":     {"voiceId": "anime-hina-ceria",      "vv": 68, "speed": 1.06, "pitch": 2},
     "yumi":     {"voiceId": "anime-momo-imut",       "vv": 45, "speed": 1.02, "pitch": 5},
 
-    # --- 4 NPCs ---
+    # --- 4 NPCs (100% Female Anime JP) ---
     "shop1":    {"voiceId": "anime-hina-ceria",      "vv": 8,  "speed": 1.05, "pitch": 2},
-    "shop2":    {"voiceId": "anime-lilith-menggoda", "vv": 4,  "speed": 0.94, "pitch": -2},
-    "hairly":   {"voiceId": "anime-reina-dewasa",    "vv": 14, "speed": 0.92, "pitch": -3},
-    "grafity":  {"voiceId": "anime-akane-kasar",     "vv": 6,  "speed": 1.06, "pitch": 3},
+    "shop2":    {"voiceId": "anime-lilith-menggoda", "vv": 66, "speed": 0.95, "pitch": 2},
+    "hairly":   {"voiceId": "anime-reina-dewasa",    "vv": 16, "speed": 0.95, "pitch": 2},
+    "grafity":  {"voiceId": "anime-akane-kasar",     "vv": 6,  "speed": 1.05, "pitch": 3},
 
-    # --- 32 OTHER ENEMIES ---
-    "amatera":        {"voiceId": "anime-rei-sedih",       "vv": 36, "speed": 0.92, "pitch": -2},
-    "anthis":         {"voiceId": "anime-yui-lembut",      "vv": 61, "speed": 0.90, "pitch": 3},
-    "cleara":         {"voiceId": "anime-reina-dewasa",    "vv": 65, "speed": 0.94, "pitch": -2},
-    "code_zero":      {"voiceId": "anime-rei-sedih",       "vv": 47, "speed": 0.98, "pitch": 0},
-    "cow_girl":       {"voiceId": "anime-hina-ceria",      "vv": 70, "speed": 1.08, "pitch": 3},
-    "eroghost":       {"voiceId": "anime-rei-sedih",       "vv": 22, "speed": 0.92, "pitch": 2},
-    "evy_blood_sage": {"voiceId": "anime-lilith-menggoda", "vv": 4,  "speed": 0.93, "pitch": -2},
-    "ex_nymph":       {"voiceId": "anime-yui-lembut",      "vv": 10, "speed": 0.93, "pitch": 2},
-    "graeae":         {"voiceId": "anime-rei-sedih",       "vv": 14, "speed": 0.90, "pitch": -3},
-    "gumi_wolf":      {"voiceId": "anime-hina-ceria",      "vv": 57, "speed": 1.08, "pitch": 3},
-    "kurenai":        {"voiceId": "anime-rika-marah",      "vv": 9,  "speed": 0.98, "pitch": -2},
-    "lamia":          {"voiceId": "anime-akane-kasar",     "vv": 6,  "speed": 1.00, "pitch": -1},
-    "lizamorph":      {"voiceId": "anime-rei-sedih",       "vv": 50, "speed": 0.88, "pitch": -2},
-    "lolth":          {"voiceId": "anime-lilith-menggoda", "vv": 17, "speed": 0.92, "pitch": -3},
-    "nagini":         {"voiceId": "anime-yui-lembut",      "vv": 74, "speed": 0.92, "pitch": -1},
-    "nox":            {"voiceId": "anime-momo-imut",       "vv": 1,  "speed": 1.10, "pitch": 5},
-    "octavia":        {"voiceId": "anime-reina-dewasa",    "vv": 29, "speed": 0.94, "pitch": -3},
-    "octra":          {"voiceId": "anime-reina-dewasa",    "vv": 20, "speed": 0.94, "pitch": -2},
-    "rin":            {"voiceId": "anime-akane-kasar",     "vv": 2,  "speed": 1.02, "pitch": 1},
-    "roza":           {"voiceId": "anime-rika-marah",      "vv": 73, "speed": 1.05, "pitch": 0},
-    "scomantis":      {"voiceId": "anime-akane-kasar",     "vv": 55, "speed": 1.04, "pitch": 2},
-    "selene":         {"voiceId": "anime-lilith-menggoda", "vv": 4,  "speed": 0.92, "pitch": -2},
-    "serpentia":      {"voiceId": "anime-lilith-menggoda", "vv": 16, "speed": 0.93, "pitch": -2},
-    "skelinch":       {"voiceId": "anime-rika-marah",      "vv": 8,  "speed": 1.06, "pitch": 0},
-    "slarkoi":        {"voiceId": "anime-akane-kasar",     "vv": 7,  "speed": 1.04, "pitch": 2},
-    "slime":          {"voiceId": "anime-momo-imut",       "vv": 43, "speed": 1.10, "pitch": 6},
-    "svormentis":     {"voiceId": "anime-reina-dewasa",    "vv": 27, "speed": 0.90, "pitch": -5},
-    "veyr_nok":       {"voiceId": "anime-momo-imut",       "vv": 46, "speed": 0.96, "pitch": 4},
-    "voodoo":         {"voiceId": "anime-yui-lembut",      "vv": 28, "speed": 0.96, "pitch": 3},
-    "xaniyus":        {"voiceId": "anime-yui-lembut",      "vv": 14, "speed": 0.94, "pitch": -1},
-    "ygg_naar":       {"voiceId": "anime-reina-dewasa",    "vv": 31, "speed": 0.88, "pitch": -4},
-    "ymir":           {"voiceId": "anime-reina-dewasa",    "vv": 65, "speed": 0.92, "pitch": -3},
+    # --- 32 OTHER ENEMIES (100% Female Anime JP) ---
+    "amatera":        {"voiceId": "anime-rei-sedih",       "vv": 25, "speed": 0.95, "pitch": 2},
+    "anthis":         {"voiceId": "anime-yui-lembut",      "vv": 10, "speed": 0.95, "pitch": 3},
+    "cleara":         {"voiceId": "anime-reina-dewasa",    "vv": 30, "speed": 0.96, "pitch": 2},
+    "code_zero":      {"voiceId": "anime-rei-sedih",       "vv": 47, "speed": 0.98, "pitch": 2},
+    "cow_girl":       {"voiceId": "anime-hina-ceria",      "vv": 70, "speed": 1.06, "pitch": 3},
+    "eroghost":       {"voiceId": "anime-lilith-menggoda", "vv": 15, "speed": 0.95, "pitch": 3},
+    "evy_blood_sage": {"voiceId": "anime-lilith-menggoda", "vv": 66, "speed": 0.95, "pitch": 2},
+    "ex_nymph":       {"voiceId": "anime-yui-lembut",      "vv": 46, "speed": 0.96, "pitch": 3},
+    "graeae":         {"voiceId": "anime-rei-sedih",       "vv": 61, "speed": 0.94, "pitch": 2},
+    "gumi_wolf":      {"voiceId": "anime-hina-ceria",      "vv": 54, "speed": 1.08, "pitch": 4},
+    "kurenai":        {"voiceId": "anime-rika-marah",      "vv": 78, "speed": 1.02, "pitch": 2},
+    "lamia":          {"voiceId": "anime-akane-kasar",     "vv": 6,  "speed": 1.02, "pitch": 2},
+    "lizamorph":      {"voiceId": "anime-yui-lembut",      "vv": 60, "speed": 0.96, "pitch": 4},
+    "lolth":          {"voiceId": "anime-lilith-menggoda", "vv": 66, "speed": 0.95, "pitch": 2},
+    "nagini":         {"voiceId": "anime-yui-lembut",      "vv": 15, "speed": 0.96, "pitch": 3},
+    "nox":            {"voiceId": "anime-momo-imut",       "vv": 1,  "speed": 1.08, "pitch": 5},
+    "octavia":        {"voiceId": "anime-lilith-menggoda", "vv": 16, "speed": 0.96, "pitch": 2},
+    "octra":          {"voiceId": "anime-reina-dewasa",    "vv": 80, "speed": 0.96, "pitch": 2},
+    "rin":            {"voiceId": "anime-akane-kasar",     "vv": 18, "speed": 1.02, "pitch": 2},
+    "roza":           {"voiceId": "anime-rika-marah",      "vv": 73, "speed": 1.04, "pitch": 2},
+    "scomantis":      {"voiceId": "anime-akane-kasar",     "vv": 7,  "speed": 1.05, "pitch": 3},
+    "selene":         {"voiceId": "anime-lilith-menggoda", "vv": 66, "speed": 0.95, "pitch": 2},
+    "serpentia":      {"voiceId": "anime-lilith-menggoda", "vv": 15, "speed": 0.95, "pitch": 2},
+    "skelinch":       {"voiceId": "anime-hina-ceria",      "vv": 8,  "speed": 1.06, "pitch": 2},
+    "slarkoi":        {"voiceId": "anime-akane-kasar",     "vv": 6,  "speed": 1.04, "pitch": 3},
+    "slime":          {"voiceId": "anime-momo-imut",       "vv": 43, "speed": 1.08, "pitch": 5},
+    "svormentis":     {"voiceId": "anime-reina-dewasa",    "vv": 30, "speed": 0.96, "pitch": 2},
+    "veyr_nok":       {"voiceId": "anime-momo-imut",       "vv": 45, "speed": 1.00, "pitch": 5},
+    "voodoo":         {"voiceId": "anime-momo-imut",       "vv": 58, "speed": 1.04, "pitch": 4},
+    "xaniyus":        {"voiceId": "anime-yui-lembut",      "vv": 0,  "speed": 0.96, "pitch": 3},
+    "ygg_naar":       {"voiceId": "anime-reina-dewasa",    "vv": 77, "speed": 0.94, "pitch": 2},
+    "ymir":           {"voiceId": "anime-reina-dewasa",    "vv": 16, "speed": 0.96, "pitch": 2},
 }
 
 
@@ -158,9 +184,10 @@ def download_file(url, dest_path, timeout=30):
             f.write(resp.read())
 
 
-def process_and_save_wav(raw_audio_path, out_wav_path, is_freetts=False):
+def process_and_save_wav(raw_audio_path, out_wav_path, is_freetts=False, pitch_factor=1.0):
     """Convert raw audio (WAV or MP3) to 22050Hz 16-bit mono WAV, strip FreeTTS watermark if present,
-    trim leading/trailing dead silence, apply short fade in/out, and normalize peak to 0.88."""
+    restore feminine pitch if needed, trim leading/trailing dead silence, apply short fade in/out,
+    and normalize peak to 0.88."""
     with tempfile.TemporaryDirectory() as td:
         conv_wav = os.path.join(td, "conv.wav")
         subprocess.run(
@@ -188,7 +215,6 @@ def process_and_save_wav(raw_audio_path, out_wav_path, is_freetts=False):
             if abs(samples[i]) < 65:
                 run += 1
                 if run >= win:
-                    # Walk backward to the start of this silence block
                     j = i
                     while j > lo and abs(samples[j - 1]) < 65:
                         j -= 1
@@ -212,6 +238,22 @@ def process_and_save_wav(raw_audio_path, out_wav_path, is_freetts=False):
         start = max(0, first_idx - int(0.03 * sr))
         end = min(n, last_idx + int(0.09 * sr))
         samples = samples[start:end]
+        n = len(samples)
+
+    # Restore feminine pitch if Voice Lab lowered basePitch for this speaker
+    if abs(pitch_factor - 1.0) > 0.005 and n > 64:
+        new_n = max(1, int(n / pitch_factor))
+        resampled = array.array("h", [0] * new_n)
+        for i in range(new_n):
+            pos = i * pitch_factor
+            idx = int(pos)
+            frac = pos - idx
+            if idx + 1 < n:
+                val = samples[idx] * (1.0 - frac) + samples[idx + 1] * frac
+            else:
+                val = samples[min(idx, n - 1)]
+            resampled[i] = int(max(-32768, min(32767, val)))
+        samples = resampled
         n = len(samples)
 
     # Peak normalize to 0.88 * 32767 (~28835) and apply 12ms fade-in/out
@@ -268,11 +310,13 @@ def synthesize_line(cid, cat, jp_text, vcfg, rep):
     voice_id = vcfg["voiceId"]
     vv_id = vcfg["vv"]
     speed = vcfg.get("speed", 1.0)
-    pitch = vcfg.get("pitch", 0)
+    raw_pitch = vcfg.get("pitch", 2)
+    # Compensate for negative pitchOffset in Voice Lab so effective pitch is ALWAYS feminine (>0)
+    compensated_pitch = raw_pitch + VOICE_PITCH_COMPENSATION.get(voice_id, 0)
 
-    style_exag = 45 if cat in ("skill", "win") else 20
+    style_exag = 45 if cat in ("skill", "win", "hurt") else 25
     if cat == "ko":
-        speed = max(0.75, round(speed * 0.92, 2))
+        speed = max(0.78, round(speed * 0.92, 2))
 
     while True:
         payload = {
@@ -282,7 +326,7 @@ def synthesize_line(cid, cat, jp_text, vcfg, rep):
             "type": "tts",
             "settings": {
                 "speed": speed,
-                "pitch": pitch,
+                "pitch": compensated_pitch,
                 "stability": 75,
                 "similarity": 80,
                 "styleExaggeration": style_exag,
@@ -322,14 +366,12 @@ def synthesize_line(cid, cat, jp_text, vcfg, rep):
         if provider == "gemini-tts":
             if model.startswith("Gemini") and not fb:
                 return audio_url, model, "gemini", False
-            # Gemini hit quota/limit and fell back inside Voice Lab!
             event = f"Gemini TTS quota exhausted at {cid}_{cat} (notice: {fb or model}) -> switching to freetts-api"
             print("  [!]", event, flush=True)
             rep["quota_events"].append({"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "event": event, "char": cid, "cat": cat})
             rep["active_provider"] = "freetts-api"
             provider = "freetts-api"
             save_report(rep)
-            # If the fallback response already used FreeTTS/Neural, we can use it right away!
             if ("FreeTTS" in model or "Neural Turbo" in model) and audio_url:
                 return audio_url, model, "freetts", ("FreeTTS" in model)
             continue
@@ -337,7 +379,6 @@ def synthesize_line(cid, cat, jp_text, vcfg, rep):
         if provider == "freetts-api":
             if ("FreeTTS" in model or "Neural Turbo" in model) and "429" not in fb:
                 return audio_url, model, "freetts", ("FreeTTS" in model)
-            # FreeTTS hit quota/limit! Switch to VoiceVox
             event = f"FreeTTS quota exhausted at {cid}_{cat} (notice: {fb or model}) -> switching to voicevox"
             print("  [!]", event, flush=True)
             rep["quota_events"].append({"time": time.strftime("%Y-%m-%dT%H:%M:%S"), "event": event, "char": cid, "cat": cat})
@@ -421,16 +462,17 @@ def main():
             done_count += 1
             continue
 
-        vcfg = CHARACTER_VOICE_MAP.get(cid, {"voiceId": "anime-yui-lembut", "vv": 0, "speed": 1.0, "pitch": 0})
+        vcfg = CHARACTER_VOICE_MAP.get(cid, {"voiceId": "anime-yui-lembut", "vv": 0, "speed": 1.0, "pitch": 2})
         t0 = time.time()
         audio_url, model, engine_key, is_freetts = synthesize_line(cid, cat, jp_text, vcfg, rep)
 
+        pitch_factor = VV_PITCH_RESTORE.get(vcfg["vv"], 1.0) if engine_key == "voicevox" else 1.0
         full_url = audio_url if audio_url.startswith("http") else f"{VOICELAB_BASE}{audio_url}"
         ext = ".mp3" if ".mp3" in audio_url else ".wav"
         with tempfile.TemporaryDirectory() as td:
             raw_path = os.path.join(td, f"raw{ext}")
             download_file(full_url, raw_path)
-            process_and_save_wav(raw_path, out_wav, is_freetts=is_freetts)
+            process_and_save_wav(raw_path, out_wav, is_freetts=is_freetts, pitch_factor=pitch_factor)
 
         # If hairly's bond line is also pet_3, copy to hairly_pet_3.wav as well
         if cid == "hairly" and cat == "bond":
@@ -452,11 +494,11 @@ def main():
         rep["counts_by_engine"][engine_key] = rep["counts_by_engine"].get(engine_key, 0) + 1
         save_report(rep)
         done_count += 1
-        print(f"[{idx}/{total}] ({kind}) {key} -> {vcfg['voiceId']} via {model} ({dt:.1f}s)", flush=True)
+        print(f"[{idx}/{total}] ({kind}) {key} -> {vcfg['voiceId']} (vv={vcfg['vv']}) via {model} ({dt:.1f}s)", flush=True)
 
     print(f"=== Completed {done_count}/{total} clips === Counts: {rep['counts_by_engine']}", flush=True)
     if rep["quota_events"]:
-        print("Quota events:", json.dumps(rep["quota_events"], ensure_ascii=False, indent=2), flush=True)
+        print("Quota events:", json.dumps(rep["quota_events"][-6:], ensure_ascii=False, indent=2), flush=True)
 
 
 if __name__ == "__main__":

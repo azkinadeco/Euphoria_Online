@@ -38,7 +38,7 @@
   }
  },
  "xylia": {
-  "pitch": 1.06,
+  "pitch": 1.12,
   "rate": 175,
   "lines": {
    "greet": [
@@ -152,7 +152,7 @@
   }
  },
  "valeria": {
-  "pitch": 1.04,
+  "pitch": 1.12,
   "rate": 170,
   "lines": {
    "greet": [
@@ -190,7 +190,7 @@
   }
  },
  "eropatra": {
-  "pitch": 1.03,
+  "pitch": 1.12,
   "rate": 165,
   "lines": {
    "greet": [
@@ -304,7 +304,7 @@
   }
  },
  "hyeonxa": {
-  "pitch": 1.02,
+  "pitch": 1.12,
   "rate": 165,
   "lines": {
    "greet": [
@@ -494,7 +494,7 @@
   }
  },
  "lucidria": {
-  "pitch": 1.0,
+  "pitch": 1.12,
   "rate": 150,
   "lines": {
    "greet": [
@@ -646,7 +646,7 @@
   }
  },
  "abadonia": {
-  "pitch": 1.02,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
@@ -760,7 +760,7 @@
   }
  },
  "kali": {
-  "pitch": 1.06,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
@@ -988,7 +988,7 @@
   }
  },
  "sven": {
-  "pitch": 1.0,
+  "pitch": 1.12,
   "rate": 150,
   "lines": {
    "greet": [
@@ -1118,7 +1118,7 @@
   }
  },
  "hairly": {
-  "pitch": 0.98,
+  "pitch": 1.12,
   "rate": 150,
   "lines": {
    "greet": [
@@ -1158,35 +1158,35 @@
     "I've already told today's fate. Tomorrow, then."
    ],
    "pet_0": [
-    "私の髪は王すら縛ってきた…そしてあなたを選んだの。幸運ね。",
+    "あら、なんですか？私の髪は王すら縛ってきた…そしてあなたを選んだの。幸運ね。",
     "My hair has bound kings... and it chose you. Lucky."
    ],
    "pet_1": [
-    "髪に運命を編み込んでいるの。あなたの運命、私に絡みついて離れないわ。",
+    "やめてください…あぁっ、髪に運命を編み込んでいるの。あなたの運命、私に絡みついて離れないわ。",
     "I braid fortunes into my tresses. Yours keeps tangling with mine."
    ],
    "pet_2": [
-    "髪を百回梳かしてくれたら、秘密を教えてあげる。",
+    "うるさいわね…ふふ、髪を百回梳かしてくれたら、気持ちいい秘密を教えてあげる。",
     "Brush my hair a hundred times and I'll tell you a secret."
    ],
    "bond": [
-    "優しくして…髪にも心があるの。私にもね。",
+    "あぁっ…あぁんっ…んっ、気持ちいいわ…優しくして、髪にも私にも心があるの。",
     "Gently... my hair has feelings. So do I."
    ],
    "pet_4": [
-    "あら、リボンに相応しい贈り物ね。そばにいていいわ。",
+    "なんですか、この素敵な贈り物は…リボンに相応しいわ。そばにいていいわよ。",
     "Oh, a ribbon-worthy gift. You may stay."
    ],
    "skill": [
-    "影髪の束縛！",
+    "いけっ、いけぇっ！影髪の束縛よ、絡みつきなさい！",
     "Shadow Tress Bind!"
    ],
    "hurt": [
-    "くっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Ngh...!"
    ],
    "ko": [
-    "運命の糸が…切れる…",
+    "うぅっ…あぁっ…あぁんっ…運命の糸が、切れてしまう…",
     "The threads of fate... snap..."
    ]
   }
@@ -1230,7 +1230,7 @@
   }
  },
  "kara": {
-  "pitch": 1.0,
+  "pitch": 1.12,
   "rate": 155,
   "lines": {
    "greet": [
@@ -1500,7 +1500,7 @@
   }
  },
  "morana": {
-  "pitch": 0.96,
+  "pitch": 1.12,
   "rate": 170,
   "lines": {
    "greet": [
@@ -1576,7 +1576,7 @@
   }
  },
  "tamo": {
-  "pitch": 1.0,
+  "pitch": 1.12,
   "rate": 175,
   "lines": {
    "greet": [
@@ -1690,7 +1690,7 @@
   }
  },
  "kyra": {
-  "pitch": 1.0,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
@@ -1804,7 +1804,7 @@
   }
  },
  "tora": {
-  "pitch": 1.06,
+  "pitch": 1.12,
   "rate": 170,
   "lines": {
    "greet": [
@@ -1956,39 +1956,39 @@
   }
  },
  "amatera": {
-  "pitch": 0.98,
+  "pitch": 1.12,
   "rate": 155,
   "lines": {
    "greet": [
-    "また鎖…？いいえ、あなたのは軽いわ。ここにいましょう。",
+    "なんですか…また鎖？いいえ、あなたのは軽いわ。ここにいましょう。",
     "Chains again? ...No. Yours are lighter. I will stay."
    ],
    "tap": [
-    "この手は触れた扉をすべて焼いた。それでもあなたは扉を開けてくれたのね。",
+    "やめてください…あぁっ、この手は触れた扉をすべて焼いたのに、あなたは扉を開けてくれたのね。",
     "These hands burned every door I touched. You left yours open anyway."
    ],
    "talk": [
-    "奈落では悲鳴で時を数えたわ。もっと静かな数え方を教えて。",
+    "うるさい悲鳴で奈落では時を数えたわ…もっと静かで気持ちいい数え方を教えて。",
     "The pit taught me to count in screams. Teach me something quieter."
    ],
    "bond": [
-    "気をつけて、呪われているの…それでも握るのね。愚かな人。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…呪われているのに握るのね、愚かで愛しい人。",
     "Careful. They're cursed. ...You held them anyway. Fool."
    ],
    "thanks": [
-    "鎖に繋がれた者に贈り物？…ポケットはないから、抱えておくわ。",
+    "なんですか、鎖に繋がれた者に贈り物？…ポケットはないから、胸に抱えておくわ。",
     "A gift, for the thing in the chains? ...I have no pocket. I'll hold it."
    ],
    "skill": [
-    "呪縛の獄炎掌！",
+    "いけっ、いけぇっ！呪縛の獄炎掌よ、焼き尽くせ！",
     "Shackled Hellgrasp!"
    ],
    "hurt": [
-    "くっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてください…！",
     "Ngh...!"
    ],
    "ko": [
-    "鎖が…冷たい…",
+    "うぅっ…あぁっ…あぁんっ…鎖が、冷たい…",
     "The chains... grow cold..."
    ]
   }
@@ -1998,73 +1998,73 @@
   "rate": 165,
   "lines": {
    "greet": [
-    "あなたのランタンを追いかけてきただけ…温かい。そばにいてもいい？",
+    "あの、なんですか…？あなたのランタンを追いかけてきただけ…温かい。そばにいてもいい？",
     "I only followed your lantern. ...It's warm. May I stay near it?"
    ],
    "tap": [
-    "蛾は光を選ばない。でも私は選んだの。忘れないでね。",
+    "きゃあああっ！やめてください、びっくりしちゃう…蛾は光を選ばないけど、私はあなたを選んだの。",
     "Moths don't choose the light. I did. Remember that."
    ],
    "talk": [
-    "鱗粉が何でも汚しちゃうの。あなたの袖も銀色になっちゃった。ごめんなさい。",
+    "うるさいなんて言わないでね…鱗粉であなたの袖も銀色になっちゃった。ごめんなさい。",
     "My powder stains everything. Your sleeve is silver now. Sorry."
    ],
    "bond": [
-    "そっと…強く撫でないで。翅が破れちゃうから。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…そっとね、強く撫でると翅が破れちゃうから。",
     "Soft... don't brush too hard. The wings tear."
    ],
    "thanks": [
-    "私に？鱗粉がかからない場所にしまっておくね。",
+    "えっ、なんですか？私に？鱗粉がかからない場所に大事にしまっておくね。",
     "For me? I'll keep it where the dust won't reach."
    ],
    "skill": [
-    "月鱗粉の急降下！",
+    "いけっ、いけぇっ！月鱗粉の急降下！",
     "Moonpowder Dive!"
    ],
    "hurt": [
-    "きゃっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてください…！",
     "Kya...!"
    ],
    "ko": [
-    "光が…遠くなる…",
+    "うぅっ…あぁっ…あぁんっ…光が、遠くなる…",
     "The light... is fading..."
    ]
   }
  },
  "cleara": {
-  "pitch": 1.02,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
-    "三千年の眠りから覚めて、最初に見るのがあなたとはね。悪くないわ。",
+    "なんですか、無礼者！三千年の眠りから覚めて最初に見るのがあなたとはね…悪くないわ。",
     "Three thousand years asleep, and I wake to YOU. Acceptable."
    ],
    "tap": [
-    "墓には黄金と従者と静寂があった。あなたの陣営には不味いお茶があるわね。お茶の方が好きよ。",
+    "やめてくださいっ！墓には黄金と静寂があったけれど、あなたの陣営のお茶の方が好きよ。",
     "My tomb had gold, servants and silence. Your camp has bad tea. I prefer the tea."
    ],
    "talk": [
-    "跪く？いいえ、座りなさい。棺の上は女王でも寂しいのよ。",
+    "うるさいわね、跪かなくていいわ、座りなさい。棺の上は女王でも寂しいのよ。",
     "Kneel? No, no. Sit. A queen gets lonely on a coffin."
    ],
    "bond": [
-    "扇いでちょうだい。…そんなに嬉しそうな顔をするのはやめなさい。",
+    "あぁっ…あぁんっ…んっ、気持ちいいわね…扇いでちょうだい、そんなに嬉しそうな顔をしないの！",
     "You may fan me. ...You may also stop looking so pleased."
    ],
    "thanks": [
-    "貢ぎ物ね！やっと礼儀をわきまえた者が現れたわ。",
+    "なんですか、貢ぎ物ね！やっと礼儀をわきまえた者が現れたわ、気持ちいいわよ。",
     "An offering! Finally someone remembers the customs."
    ],
    "skill": [
-    "黄金墓の呪いよ！",
+    "いけっ、いけぇっ！黄金墓の呪いよ、ひれ伏しなさい！",
     "Curse of the Gilded Tomb!"
    ],
    "hurt": [
-    "無礼な…！",
+    "きゃあああっ！痛いっ、なんでくれ…！無礼者、やめてくださいっ！",
     "How insolent...!"
    ],
    "ko": [
-    "また…眠りにつくのね…",
+    "うぅっ…あぁっ…あぁんっ…また眠りにつくのね…",
     "Back... to my slumber..."
    ]
   }
@@ -2074,35 +2074,35 @@
   "rate": 175,
   "lines": {
    "greet": [
-    "ユニット・コードゼロ。パイロット所属、あなたへ再配属。確認を。",
+    "なんですか？ユニット・コードゼロ。パイロット所属、あなたへ再配属。確認を。",
     "Unit Code Zero. Pilot status: reassigned to... you. Confirm."
    ],
    "tap": [
-    "このワームの名前はバイト。前の司令官のブーツを食べた。あなたのはまだ。",
+    "きゃあああっ！やめてください、接触警報！…このワームのバイトは、あなたのブーツはまだ食べないわ。",
     "The worm is called Byte. It ate my last commander's boots. Not yours. Yet."
    ],
    "talk": [
-    "診断実行中。あなたの近くで心拍数が上昇。エラーとして記録。",
+    "うるさいノイズを検知…診断実行中。あなたの近くで心拍数が上昇、エラーとして記録。",
     "Running diagnostics. Heart rate elevated near you. Logging as 'error'."
    ],
    "bond": [
-    "ヘルメットへの接触を検知。…もう一度お願い。キャリブレーションのために。",
+    "あぁっ…あぁんっ…ヘルメットへの接触、気持ちいいと判定…もう一度お願い、キャリブレーションのために。",
     "Helmet contact detected. ...Do it again. For calibration."
    ],
    "thanks": [
-    "補給物資を受領。バイトが感謝している。私も、ありがとう。",
+    "なんですか、補給物資？受領したわ。バイトも私も感謝している、ありがとう。",
     "Supply received. Byte says thank you. I also say it."
    ],
    "skill": [
-    "スカルワーム・プロトコル、起動！",
+    "いけっ、いけぇっ！スカルワーム・プロトコル起動！",
     "Skull Worm Protocol!"
    ],
    "hurt": [
-    "装甲、損傷…！",
+    "きゃあああっ！痛いっ、なんでくれ…！装甲損傷、やめてください！",
     "Armor damaged...!"
    ],
    "ko": [
-    "システム…シャットダウン…",
+    "うぅっ…あぁっ…あぁんっ…システム、シャットダウン…",
     "System... shutting down..."
    ]
   }
@@ -2112,35 +2112,35 @@
   "rate": 200,
   "lines": {
    "greet": [
-    "モー〜！あなたの勝ち！今日から私があなたの担当だよ、司令官！",
+    "モー〜！なんですか司令官！あなたの勝ち、今日から私があなたの担当だよ！",
     "Moo~ You win! So I'm your problem now, Commander!"
    ],
    "tap": [
-    "私が丸太を振るから、あなたは方向を指して！簡単なチームワークでしょ！",
+    "きゃあああっ！やめてくださいっ、びっくりしたじゃん！私が丸太を振るから方向を指して！",
     "I swing the log, you point where. Easy teamwork!"
    ],
    "talk": [
-    "毎朝新鮮なミルクがあるよ！変な意味にしないでよね！",
+    "うるさいな〜もう！毎朝新鮮なミルクがあるよ！あぁっ、変な意味にしないでよね！",
     "Milk's fresh every morning. Don't make it weird."
    ],
    "bond": [
-    "えへへ、撫でられるとベルがチリンって鳴るよ！もう一回！",
+    "あぁっ…あぁんっ…えへへ、撫でられると気持ちいいしベルがチリンって鳴るよ！もう一回！",
     "Hehe, the bell jingles when you pat! Again!"
    ],
    "thanks": [
-    "プレゼント！？ハグと交換ね！返品はなしだよ！",
+    "なんですかこれ、プレゼント！？ハグと交換ね、気持ちいいでしょ！返品はなしだよ！",
     "A present?! I'll trade you a hug. No refunds!"
    ],
    "skill": [
-    "牧場の丸太スマッシュ！",
+    "いけっ、いけぇっ！牧場の丸太スマッシュ！",
     "Meadow Log Smash!"
    ],
    "hurt": [
-    "うわっ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Whoa!"
    ],
    "ko": [
-    "目が…回るぅ…",
+    "うぅっ…あぁっ…あぁんっ…目が回るぅ〜…",
     "My head's... spinning..."
    ]
   }
@@ -2150,73 +2150,73 @@
   "rate": 165,
   "lines": {
    "greet": [
-    "…私が見えるの？誰も見てくれなかったのに。いいわ、あなたに憑いてあげる。",
+    "あら、なんですか？私が見えるの？誰も見てくれなかったのに…いいわ、あなたに憑いてあげる。",
     "...You see me? Nobody ever sees me. Fine. I'll haunt YOU now."
    ],
    "tap": [
-    "昔は旅人に鎖を鳴らしてたの。今はあなたの部屋の前で鳴らしてるわ。進歩でしょ。",
+    "きゃあああっ！やめてください、すり抜けちゃうのに！今はあなたの部屋の前で鎖を鳴らしてるわ。",
     "I used to rattle chains at travellers. Now I rattle them at your door. Progress."
    ],
    "talk": [
-    "幽霊は眠らないの。あなたが寝てるのを見てるだけ。…変かな？",
+    "うるさいわね〜、幽霊は眠らないの。あなたが寝てるのを見てるだけ…あぁっ、変かな？",
     "Ghosts don't sleep. I just watch you sleep. ...Is that weird?"
    ],
    "bond": [
-    "温かい手…うぅ、もう一回して。",
+    "あぁっ…あぁんっ…温かい手、すごく気持ちいい…うぅっ、もう一回して♡",
     "Warm hands. Ugh. Do it again."
    ],
    "thanks": [
-    "わあ、贈り物！ずっと大事にするね。文字通り、永遠に。",
+    "わあ、なんですかこれ！贈り物！ずっと大事にするね、文字通り永遠に♡",
     "Ooh, a gift! I'll keep it forever. Literally forever."
    ],
    "skill": [
-    "ファントム・レンド！",
+    "いけっ、いけぇっ！ファントム・レンド！",
     "Phantom Rend!"
    ],
    "hurt": [
-    "ひゃっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Hya...!"
    ],
    "ko": [
-    "消えちゃう…またね…",
+    "うぅっ…あぁっ…あぁんっ…消えちゃう、またね…",
     "Fading away... see you..."
    ]
   }
  },
  "evy_blood_sage": {
-  "pitch": 1.04,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
-    "魔女を手懐ける司令官なんて…なんて無謀で素敵なのかしら。",
+    "あら、なんですか？魔女を手懐ける司令官なんて…なんて無謀で素敵なのかしら。",
     "A commander who tames witches... how delightfully reckless."
    ],
    "tap": [
-    "私の呪文は血を飲むけれど、私は紅茶の方が好きよ。私みたいに苦いやつね。",
+    "やめてください、くすぐったいわ…私の呪文は血を飲むけれど、私は紅茶の方が好きよ。",
     "My spells drink blood. I prefer tea, honestly. Bitter, like me."
    ],
    "talk": [
-    "じっとして。蝋燭の蝋で運命を読んでるの。…私を甘やかす運命みたいね。",
+    "うるさいわね、じっとして。蝋燭の蝋で運命を読んでるの…私を甘やかす運命みたいね。",
     "Stay still. I'm reading your fate in the candle wax. ...You'll spoil me rotten."
    ],
    "bond": [
-    "んっ…あなたの指先、どんな血の儀式より温かいわ。",
+    "あぁっ…あぁんっ…んっ、気持ちいいわ…あなたの指先、どんな血の儀式より温かいわ♡",
     "Mm. Your touch is warmer than any blood rite."
    ],
    "thanks": [
-    "プレゼント？魔女の口説き方をよく知っているわね。",
+    "あら、なんですか？プレゼント？魔女の口説き方をよく知っているわね。",
     "A present? You do know how to court a witch."
    ],
    "skill": [
-    "血の儀式よ、満ちよ！",
+    "いけっ、いけぇっ！血の儀式よ、満ちよ！",
     "Blood Rite!"
    ],
    "hurt": [
-    "くっ…やるわね…",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Tch... not bad..."
    ],
    "ko": [
-    "血の灯火が…消える…",
+    "うぅっ…あぁっ…あぁんっ…血の灯火が、消える…",
     "The blood flame... goes out..."
    ]
   }
@@ -2226,73 +2226,73 @@
   "rate": 165,
   "lines": {
    "greet": [
-    "森に追い出されちゃったの。…代わりに、ここで育ってもいいですか？",
+    "あの、なんですか…？森に追い出されちゃったの。代わりに、ここで育ってもいいですか？",
     "The forest cast me out. ...Will you let me grow here instead?"
    ],
    "tap": [
-    "私が歩くと花が咲くの。棘も生えるから、足元に気をつけてね。",
+    "きゃあああっ！やめてください、棘に気をつけて！私が歩くと花も棘も生えるから。",
     "Flowers bloom where I step. Thorns too. Watch your feet."
    ],
    "talk": [
-    "植物に話しかけるみたいに、ゆっくり、優しく話しかけて。",
+    "うるさい言葉は枯れちゃうから…植物に話しかけるみたいに、ゆっくり優しく話しかけて。",
     "Talk to me like you talk to plants. Slowly. Kindly."
    ],
    "bond": [
-    "嬉しいと葉っぱがサラサラ鳴るの。ほら、聞いて。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…嬉しいと葉っぱがサラサラ鳴るの、ほら聞いて。",
     "Leaves rustle when I'm happy. Listen."
    ],
    "thanks": [
-    "私に？…植えておくね。きっと綺麗に育つから。",
+    "えっ、なんですか？私に？…植えておくね、きっと綺麗に育つから。",
     "For me? ...I'll plant it. It will grow into something beautiful."
    ],
    "skill": [
-    "森の茨よ、絡みつけ！",
+    "いけっ、いけぇっ！森の茨よ、絡みつけ！",
     "Bramble Snare!"
    ],
    "hurt": [
-    "きゃっ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Kya!"
    ],
    "ko": [
-    "花が…散っちゃう…",
+    "うぅっ…あぁっ…あぁんっ…花が、散っちゃう…",
     "My petals... are falling..."
    ]
   }
  },
  "graeae": {
-  "pitch": 1.0,
+  "pitch": 1.12,
   "rate": 150,
   "lines": {
    "greet": [
-    "…包帯を解かないで。…解かないなら、そばにいていいわ。",
+    "…なんですか？包帯を解かないで…解かないなら、そばにいていいわ。",
     "...Don't unwrap me. ...You may stay, if you don't unwrap me."
    ],
    "tap": [
-    "お腹の口はいつも空腹なの。私は違うのに。いつも喧嘩になるわ。",
+    "きゃあああっ！やめてください…お腹の口はいつも空腹なの。私は違うのに、いつも喧嘩になるわ。",
     "The mouth is always hungry. I am not. We argue."
    ],
    "talk": [
-    "昔、神官を噛んだことがあるの。あなたは一度も噛まない。気に入ったのね、最悪。",
+    "うるさいわね…昔、神官を噛んだことがあるのに、あなたは一度も噛まない。気に入ったのね、最悪。",
     "It bit a priest once. It has never bitten you. It likes you. Awful."
    ],
    "bond": [
-    "ん…優しい。包帯が優しさを覚えているわ。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…優しい手、包帯が優しさを覚えているわ。",
     "Mm. Gentle. The bandages remember gentle."
    ],
    "thanks": [
-    "この口はリボンを食べたがってるけど、贈り物は私が貰っておくわ。",
+    "なんですか、これ…この口はリボンを食べたがってるけど、贈り物は私が貰っておくわ。",
     "It wants to eat the ribbon. I'm keeping the gift."
    ],
    "skill": [
-    "飢えた包帯よ、喰らえ！",
+    "いけっ、いけぇっ！飢えた包帯よ、喰らいなさい！",
     "Hungering Wrappings!"
    ],
    "hurt": [
-    "うっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてください…！",
     "Ugh...!"
    ],
    "ko": [
-    "包帯が…ほどける…",
+    "うぅっ…あぁっ…あぁんっ…包帯が、ほどける…",
     "The bandages... unravel..."
    ]
   }
@@ -2302,225 +2302,225 @@
   "rate": 195,
   "lines": {
    "greet": [
-    "アオーン！九つの尻尾に、主人は一人！ほら、今すぐ撫でて！",
+    "アオーン！なんですか、ご主人！？九つの尻尾に主人は一人、今すぐ撫でて！",
     "Awoo! Nine tails, one master. Pet me. Now."
    ],
    "tap": [
-    "ここから月の匂いがするよ！あとおやつの匂い！ほとんどおやつ！",
+    "きゃあああっ！やめてくださいっ、くすぐったいよ！ここから月とおやつの匂いがする！",
     "I can smell the moon from here. And snacks. Mostly snacks."
    ],
    "talk": [
-    "耳の後ろを掻いてくれたら、悪い魔物は全部追い払ってあげる！約束ね？",
+    "うるさいっ、じっとしてて！耳の後ろを掻いてくれたら、悪い魔物は全部追い払ってあげる！",
     "If you scratch behind my ears, I'll chase every monster away. Deal?"
    ],
    "bond": [
-    "そこそこ！あっ、尻尾が勝手に振れちゃう、見ないで！",
+    "あぁっ…あぁんっ…んっ、そこ気持ちいい…！あっ、尻尾が勝手に振れちゃう、見ないで！",
     "Yes— right there— oh, my tails are wagging, don't look!"
    ],
    "thanks": [
-    "ごはん！ごはん持ってきてくれたの！？最高の主人だよ！",
+    "なんですかこれ！ごはん持ってきてくれたの！？あぁっ、最高に気持ちいいご主人だよ！",
     "Food! You brought food! Best master!"
    ],
    "skill": [
-    "狐火の飛びかかり！",
+    "いけっ、いけぇっ！狐火の飛びかかりっ！",
     "Foxfire Pounce!"
    ],
    "hurt": [
-    "きゃいんっ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Yip!"
    ],
    "ko": [
-    "しっぽが…焦げちゃう…",
+    "うぅっ…あぁっ…あぁんっ…しっぽが焦げちゃうよぉ…",
     "My tails... are singed..."
    ]
   }
  },
  "kurenai": {
-  "pitch": 1.06,
+  "pitch": 1.12,
   "rate": 175,
   "lines": {
    "greet": [
-    "私の刃を受け止めたわね。誰も受け止められなかったのに。私を鍛えなさい。",
+    "なんですか！私の刃を受け止めたわね。誰も受け止められなかったのに…私を鍛えなさい。",
     "You parried my blades. Nobody parries my blades. Train me."
    ],
    "tap": [
-    "蟷螂は斬る前に祈るの。最近は、あなたが見てくれるように祈っているわ。",
+    "やめてくださいっ！きゃあああっ！…蟷螂は斬る前に祈るの、最近はあなたが見てくれるように祈っているわ。",
     "A mantis prays before she strikes. Lately I pray you'll watch."
    ],
    "talk": [
-    "動かないで。髪に葉っぱがついてる。…斬ろうとしたわけじゃないわ。",
+    "うるさいわね、動かないで！髪に葉っぱがついてる…斬ろうとしたわけじゃないわよ！",
     "Stand still. There's a leaf in your hair. ...I wasn't going to cut it."
    ],
    "bond": [
-    "ん。揺るぎない手ね。いいわ、そのまま続けなさい。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…揺るぎない手ね、いいわ、そのまま続けなさい。",
     "Hm. Your hand is steady. Good. Keep it there."
    ],
    "thanks": [
-    "決闘の前の贈り物は侮辱よ。決闘の後なら…許すわ。",
+    "なんですか、これ…決闘の前の贈り物は侮辱よ。決闘の後なら…許すわ。",
     "A gift before a duel is an insult. After one... it is allowed."
    ],
    "skill": [
-    "マンティス・ギロチン！",
+    "いけっ、いけぇっ！マンティス・ギロチン！",
     "Mantis Guillotine!"
    ],
    "hurt": [
-    "浅いわ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Just a scratch...!"
    ],
    "ko": [
-    "見事な…一太刀ね…",
+    "うぅっ…あぁっ…あぁんっ…見事な、一太刀ね…",
     "A clean... strike..."
    ]
   }
  },
  "lamia": {
-  "pitch": 1.06,
+  "pitch": 1.12,
   "rate": 170,
   "lines": {
    "greet": [
-    "見知らぬ奴を斬るのには飽きたわ。この大鎌、あなたの壁に掛けておく。",
+    "なんですか？見知らぬ奴を斬るのには飽きたわ。この大鎌、あなたの壁に掛けておく。",
     "My scythe was tired of cutting strangers. It can rest on your wall."
    ],
    "tap": [
-    "みんな私を略奪者と呼ぶけど、あなたは名前で呼ぶのね。そのまま呼んで。",
+    "やめてくださいっ！きゃあああっ！…みんな私を略奪者と呼ぶけど、あなたは名前で呼ぶのね。",
     "They call me Reaver. You call me by name. Keep doing that."
    ],
    "talk": [
-    "紫は傷が治る時の色なんだって。あなたのために調べたのよ。",
+    "うるさいわね！紫は傷が治る時の色なんだって…あなたのために調べたのよ。",
     "Purple is the colour of a bruise healing. I looked it up for you."
    ],
    "bond": [
-    "鎧は噛みつくけど、私は噛まないわ。…たぶんね。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…鎧は噛みつくけど、私は噛まないわ…たぶんね。",
     "The armour bites. I don't. ...Mostly."
    ],
    "thanks": [
-    "ちっ、いいわ、貰っておく。私が笑ったって他の奴に言ったら承知しないから。",
+    "ちっ、なんですかこれ…いいわ、貰っておく。私が笑ったって他の奴に言ったら承知しないわよ！",
     "Tch. Fine. I'll take it. Don't tell the others I smiled."
    ],
    "skill": [
-    "紫電の刈り取り！",
+    "いけっ、いけぇっ！紫電の刈り取りっ！",
     "Violet Reaping Arc!"
    ],
    "hurt": [
-    "くっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Tch...!"
    ],
    "ko": [
-    "鎌が…重いわ…",
+    "うぅっ…あぁっ…あぁんっ…鎌が、重いわ…",
     "My scythe... feels heavy..."
    ]
   }
  },
  "lizamorph": {
-  "pitch": 1.04,
+  "pitch": 1.12,
   "rate": 145,
   "lines": {
    "greet": [
-    "…ずりずり…近づいて…ここにいる。",
+    "…なんですか…？ずりずり…近づいて…ここにいるわ。",
     "...crawls closer... ...stays."
    ],
    "tap": [
-    "ベッドの下の影？私よ。あなたを守ってるの。",
+    "きゃあああっ…やめてください…ベッドの下の影は私よ。あなたを守ってるの。",
     "The shadows under your bed? Me. I'm guarding you."
    ],
    "talk": [
-    "私はあまり話さない。聞くのが好き。あなたの声、好きよ。",
+    "うるさいのは苦手…でも、あなたの声は好きよ。もっと聞かせて。",
     "I don't talk much. I listen. You talk. I like your voice."
    ],
    "bond": [
-    "…（嬉しそうな影の音）…",
+    "あぁっ…あぁんっ…んっ、気持ちいい…影が嬉しそうに震えてるわ…",
     "...(happy shadow noises)..."
    ],
    "thanks": [
-    "…私に？…（影が大事そうに包み込む）。",
+    "…なんですか、私に…？あぁっ…影が大事そうに包み込んでるわ。",
     "...for me? ...(shadow curls around it protectively)."
    ],
    "skill": [
-    "シャドウ・クロール…！",
+    "いけっ、いけぇっ！シャドウ・クロール！",
     "Shadow Crawl!"
    ],
    "hurt": [
-    "うっ…",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてください…！",
     "Ugh..."
    ],
    "ko": [
-    "影に…戻るだけ…",
+    "うぅっ…あぁっ…あぁんっ…影に戻るだけ…",
     "Returning... to the shadow..."
    ]
   }
  },
  "lolth": {
-  "pitch": 1.02,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
-    "私のサロンへおいで〜…嫌？なら私からあなたの部屋に行くわ。",
+    "あら、なんですか〜？私のサロンへおいで〜…嫌？なら私からあなたの部屋に行くわ♡",
     "Come into my parlour~ ...No? Then I'll come into yours."
    ],
    "tap": [
-    "夜になると子供たちがあなたの名前を囁くの。八百匹、全員でね。",
+    "やめてください…あぁっ、夜になると子供たちがあなたの名前を囁くの。八百匹、全員でね。",
     "My children whisper your name at night. All eight hundred of them."
    ],
    "talk": [
-    "蜘蛛の巣は誰も返事をくれない手紙のようなもの。あなたは応えてくれたわ。",
+    "うるさいなんて言わないで…蜘蛛の巣は誰も返事をくれない手紙のようなもの。あなたは応えてくれたわ。",
     "A web is just a letter nobody answered. You answered."
    ],
    "bond": [
-    "気をつけて、ダーリン。八本の脚、全部くすぐったがりなの。",
+    "あぁっ…あぁんっ…んっ、気持ちいいわダーリン♡八本の脚、全部くすぐったがりなの。",
     "Careful, darling. Eight legs, and all of them ticklish."
    ],
    "thanks": [
-    "私に？二度と離れないように、絹の糸で包んでおくわ。",
+    "あら、なんですか？私に？二度と離れないように、絹の糸で包んでおくわ♡",
     "For me? I'll wrap it in silk so it never leaves."
    ],
    "skill": [
-    "千の囁きの巣よ！",
+    "いけっ、いけぇっ！千の囁きの巣よ！",
     "Web of a Thousand Whispers!"
    ],
    "hurt": [
-    "あら、乱暴ね…！",
+    "きゃあああっ！痛いっ、なんでくれ…！乱暴ね、やめてください！",
     "My, how rough...!"
    ],
    "ko": [
-    "糸が…切れてしまう…",
+    "うぅっ…あぁっ…あぁんっ…糸が、切れてしまう…",
     "My web... is tearing..."
    ]
   }
  },
  "nagini": {
-  "pitch": 1.06,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
-    "目を見ないで…あっ、見たわね。なのにまだ温かいまま。",
+    "なんですか…目を見ないで！…あっ、見たわね。なのにまだ温かいまま。",
     "Don't meet my eyes— ...oh. You did. And you're still warm."
    ],
    "tap": [
-    "湖があまりに静かで、自分の声も忘れていたの。何か話して。何でもいいから。",
+    "きゃあああっ！やめてください…湖があまりに静かで声も忘れていたの。何か話して。",
     "The lake was so still I forgot my own voice. Say something. Anything."
    ],
    "talk": [
-    "嬉しいと髪の蛇がシャーって鳴くの。気にしないでね、お願い。",
+    "うるさいって怒らないで…嬉しいと髪の蛇がシャーって鳴くの。気にしないでね。",
     "My hair hisses when I'm happy. Ignore it. Please."
    ],
    "bond": [
-    "蛇たちが勝手にあなたの手首に巻きつくの。私じゃないわよ。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…蛇たちが勝手にあなたの手首に巻きつくの。",
     "They coil around your wrist on their own. I'm not doing that."
    ],
    "thanks": [
-    "贈り物…濡れないように、水面より上にしまっておくね。",
+    "えっ、なんですか？贈り物…濡れないように、水面より上にしまっておくね。",
     "A gift... I'll keep it above the waterline."
    ],
    "skill": [
-    "静湖の石化の瞳！",
+    "いけっ、いけぇっ！静湖の石化の瞳よ！",
     "Still-Lake Gaze!"
    ],
    "hurt": [
-    "きゃっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Kya...!"
    ],
    "ko": [
-    "湖底へ…沈むわ…",
+    "うぅっ…あぁっ…あぁんっ…湖底へ沈むわ…",
     "Sinking... to the lakebed..."
    ]
   }
@@ -2530,111 +2530,111 @@
   "rate": 205,
   "lines": {
    "greet": [
-    "えへへ〜、捕まっちゃった！もうずっとあなたにくっつくよ。それがルール！",
+    "えへへ〜、なんですか！？捕まっちゃった！もうずっとあなたにくっつくよ、それがルール！",
     "Hehehe~ You caught me! Now I stick to you. Forever. That's the rule."
    ],
    "tap": [
-    "私は真夜中と悪い思いつきで出来てるの。ちょっと欲しい？",
+    "きゃあああっ！やめてください〜、くすぐったい！私は真夜中と悪い思いつきで出来てるの！",
     "I'm made of midnight and bad ideas. Want some?"
    ],
    "talk": [
-    "あなたの左の靴下、食べちゃった。だって私を呼んでたんだもん。",
+    "うるさいな〜もう！あなたの左の靴下、食べちゃった。だって私を呼んでたんだもん！",
     "I ate your left sock. It called to me."
    ],
    "bond": [
-    "ぷにぷに〜！もう一回！もっと強く押しても跳ね返るよ！",
+    "あぁっ…あぁんっ…ぷにぷにで気持ちいい〜！もう一回！もっと強く押しても跳ね返るよ！",
     "Squish~ again! Push harder, I bounce back!"
    ],
    "thanks": [
-    "キラキラだ！私の中にしまっておくね。ほら、浮いてるのが見えるでしょ！",
+    "なんですかこれ、キラキラだ！私の中にしまっておくね、ほら浮いてるのが見えるでしょ！",
     "Shiny! I'll keep it inside me. You can see it float, look!"
    ],
    "skill": [
-    "ミッドナイト・エンガルフ！",
+    "いけっ、いけぇっ！ミッドナイト・エンガルフ！",
     "Midnight Engulf!"
    ],
    "hurt": [
-    "ぷにゃっ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてください〜！",
     "Punya!"
    ],
    "ko": [
-    "とけちゃう〜…",
+    "うぅっ…あぁっ…あぁんっ…とけちゃう〜…",
     "Melting away~..."
    ]
   }
  },
  "octavia": {
-  "pitch": 1.0,
+  "pitch": 1.12,
   "rate": 155,
   "lines": {
    "greet": [
-    "八本の腕があるわ、司令官。一本はあなたに。残り七本はあなたに無礼な奴に。",
+    "あら、なんですか司令官？八本の腕があるわ。一本はあなたに、残り七本は無礼な奴に。",
     "Eight arms, Commander. One for you. The other seven for whoever's rude to you."
    ],
    "tap": [
-    "深海は静か。あなたは騒がしい。でも騒がしいのも好きになったわ。",
+    "やめてください…あぁっ、深海は静か、あなたは騒がしい。でも騒がしいのも好きになったわ。",
     "The deep is quiet. You are loud. I've decided I like loud."
    ],
    "talk": [
-    "吸盤の数を数えないで。…三百十二個よ。",
+    "うるさいわね…吸盤の数を数えないで。…うぅっ、三百十二個よ。",
     "Stop counting the suckers. ...Three hundred and twelve."
    ],
    "bond": [
-    "んっ…角はダメ。…いいわ、角も許す。",
+    "あぁっ…あぁんっ…んっ、角はダメ、気持ちいいから…いいわ、角も許すわ。",
     "Mm. Not the horns. ...Fine. The horns."
    ],
    "thanks": [
-    "地上の贈り物ね。深海では錆びてしまうから、ここで大事にするわ。",
+    "なんですか、地上の贈り物ね。深海では錆びてしまうから、ここで大事にするわ。",
     "A surface gift. It will rust below. I'll keep it up here, then."
    ],
    "skill": [
-    "深淵の渦巻きよ！",
+    "いけっ、いけぇっ！深淵の渦巻きよ、飲み込みなさい！",
     "Abyssal Coil!"
    ],
    "hurt": [
-    "ぐっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Ngh...!"
    ],
    "ko": [
-    "深海へ…退くわ…",
+    "うぅっ…あぁっ…あぁんっ…深海へ、退くわ…",
     "Retreating... to the deep..."
    ]
   }
  },
  "octra": {
-  "pitch": 1.02,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
-    "ふふ、手懐けたのは私？それともこの獣？…どっちも噛みつくわよ、司令官。",
+    "ふふ、なんですか司令官？手懐けたのは私？それともこの獣？…どっちも噛みつくわよ。",
     "Hm. You tamed me — or my beast? ...Both of us bite, Commander."
    ],
    "tap": [
-    "私の獣には百の目があるの。あなたが離れると全部が拗ねるわ。",
+    "やめてください…あぁっ、私の獣には百の目があるの。あなたが離れると全部が拗ねるわ。",
     "My beast has a hundred eyes. All of them sulk when you leave."
    ],
    "talk": [
-    "千年間、深淵の上に座っていたけれど…あなたの膝の上は悪くないわね。",
+    "うるさいわね…千年間、深淵の上に座っていたけれど、あなたの膝の上は気持ちいいわね。",
     "I sat on an abyss for a thousand years. Your lap is... an upgrade."
    ],
    "bond": [
-    "ん…獣が喉を鳴らしてる。私もよ。誰にも言わないで。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…獣が喉を鳴らしてる、私もよ。誰にも言わないで。",
     "Mm... the beast is purring. So am I. Don't tell anyone."
    ],
    "thanks": [
-    "贈り物？深淵は飢えしかくれなかったのに。…ありがとう。",
+    "なんですか、贈り物？深淵は飢えしかくれなかったのに…ありがとう。",
     "A gift? The abyss never gave me gifts. Only hunger. ...Thank you."
    ],
    "skill": [
-    "深淵獣の顎よ、喰らいなさい！",
+    "いけっ、いけぇっ！深淵獣の顎よ、喰らいなさい！",
     "Abyss Beast Maw!"
    ],
    "hurt": [
-    "くっ…やるわね！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Tch... not bad!"
    ],
    "ko": [
-    "深淵が…呼んでいる…",
+    "うぅっ…あぁっ…あぁんっ…深淵が、呼んでいる…",
     "The abyss... calls me back..."
    ]
   }
@@ -2644,73 +2644,73 @@
   "rate": 180,
   "lines": {
    "greet": [
-    "私の毒針でも止まらないなんて。何を出しても無駄ね。いいわ、降参よ。",
+    "なんですか！？私の毒針でも止まらないなんて…いいわ、降参よ。",
     "My sting didn't stop you. Nothing I have stops you. Fine. I yield."
    ],
    "tap": [
-    "この毒は冷たいけど、残酷じゃない。その違い、覚えなさい。",
+    "きゃあああっ！やめてくださいっ！この毒は冷たいけど残酷じゃない、その違い覚えなさい！",
     "The venom's cold, not cruel. There's a difference. Learn it."
    ],
    "talk": [
-    "逆さまに休むのが好きなの。じろじろ見ないで。…見てるでしょ。",
+    "うるさいわね！逆さまに休むのが好きなの、じろじろ見ないで…見てるでしょ！",
     "I rest upside down. Don't stare. ...You're staring."
    ],
    "bond": [
-    "尻尾の近くは気をつけて。あの子、気難しいから。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…尻尾の近くは気をつけて、あの子気難しいから。",
     "Careful near the tail. It has opinions."
    ],
    "thanks": [
-    "私に？ふうん、青色ね。私が青を好きなこと、気づいてたのね。",
+    "えっ、なんですかこれ？ふうん、青色ね。私が青を好きなこと、気づいてたのね。",
     "For me? Hm. It's blue. You noticed I like blue."
    ],
    "skill": [
-    "蒼氷の毒針！",
+    "いけっ、いけぇっ！蒼氷の毒針っ！",
     "Azure Venom Barb!"
    ],
    "hurt": [
-    "いたっ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Ouch!"
    ],
    "ko": [
-    "毒が…凍りつく…",
+    "うぅっ…あぁっ…あぁんっ…毒が、凍りつく…",
     "My venom... freezes..."
    ]
   }
  },
  "roza": {
-  "pitch": 1.06,
+  "pitch": 1.12,
   "rate": 185,
   "lines": {
    "greet": [
-    "ハッ！銃も持たない司令官に撃ち負けるとはね。気に入った、雇いなよ。",
+    "ハッ、なんですかボス！銃も持たない司令官に撃ち負けるとはね、気に入ったわ！",
     "Ha! Outgunned by a commander with no gun. Sign me up."
    ],
    "tap": [
-    "ここの銃には全部名前がある。一番新しい銃には、あんたの名前をつけたよ。",
+    "きゃあああっ！やめてくださいっ、急にすんな！…一番新しい銃にはあんたの名前をつけたわ。",
     "Every rifle here has a name. The newest one's named after you."
    ],
    "talk": [
-    "黄金は重いんだ、ボス。一人で抱えてるのも同じくらい重い。",
+    "うるさいわね！黄金は重いんだ、ボス。一人で抱えてるのも同じくらい重いのよ。",
     "Gold's heavy, boss. So's being alone with it."
    ],
    "bond": [
-    "おっと、気をつけな。銃の安全装置はかかってるけど、私はかかってないよ。",
+    "あぁっ…あぁんっ…んっ、気持ちいいじゃないの…銃の安全装置はかかってるけど私はかかってないわよ。",
     "Whoa— easy. Safety's on. Mine isn't."
    ],
    "thanks": [
-    "贈り物？あんたが一言言えば、月だって撃ち落としてやるよ。",
+    "なんですか、贈り物？あんたが一言言えば、月だって撃ち落としてあげるわ！",
     "A gift? I'd shoot the moon for you. Say the word."
    ],
    "skill": [
-    "黄金の弾幕、撃ち抜け！",
+    "いけっ、いけぇっ！黄金の弾幕、撃ち抜けっ！",
     "Gilded Barrage!"
    ],
    "hurt": [
-    "ちっ、かすり傷だ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Tch, just a graze!"
    ],
    "ko": [
-    "弾切れ…か…",
+    "うぅっ…あぁっ…あぁんっ…弾切れ、か…",
     "Out of... ammo..."
    ]
   }
@@ -2720,111 +2720,111 @@
   "rate": 185,
   "lines": {
    "greet": [
-    "カチカチッ。毒針は収めたわ。今はね。あなたのために。",
+    "カチカチッ！なんですか！？毒針は収めたわ、今はね、あなたのために。",
     "Click-click. My stinger is sheathed. For now. For you."
    ],
    "tap": [
-    "翠の毒、翠の瞳、翠の心。踏みつけないでよね。",
+    "きゃあああっ！やめてくださいっ！翠の毒、翠の瞳、翠の心…踏みつけないでよね！",
     "Emerald venom, emerald eyes, emerald heart. Don't step on it."
    ],
    "talk": [
-    "緊張すると脱皮しちゃうの。…今日はもう二回脱皮したわ。",
+    "うるさいわね！緊張すると脱皮しちゃうの…うぅっ、今日はもう二回脱皮したわ！",
     "I molt when I'm nervous. ...I have molted twice today."
    ],
    "bond": [
-    "カチッ！…くすぐったい、やめて。ううん、やめないで。",
+    "あぁっ…あぁんっ…カチッ！くすぐったい、やめてください…ううん、気持ちいいからやめないで！",
     "Click! ...That tickles, stop. No, don't stop."
    ],
    "thanks": [
-    "贈り物？私のキラキラコレクションと一緒にしまっておくわ！",
+    "なんですかこれ！？贈り物？私のキラキラコレクションと一緒にしまっておくわ！",
     "A gift? I'll hoard it with my shinies."
    ],
    "skill": [
-    "エメラルド・スティング！",
+    "いけっ、いけぇっ！エメラルド・スティング！",
     "Emerald Sting!"
    ],
    "hurt": [
-    "ひゃっ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Hya!"
    ],
    "ko": [
-    "殻が…割れちゃう…",
+    "うぅっ…あぁっ…あぁんっ…殻が割れちゃうぅ…",
     "My shell... is cracking..."
    ]
   }
  },
  "selene": {
-  "pitch": 1.04,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
-    "目を逸らさない司令官…危険な人ね。そばにいて観察してあげる。",
+    "あら、なんですか？目を逸らさない司令官…危険な人ね。そばにいて観察してあげる♡",
     "A commander who won't look away... dangerous. I'll stay and study you."
    ],
    "tap": [
-    "私は渇望を糧にするの。あなたは欲が少なすぎて…焦れったいわ。",
+    "やめてください…あぁっ、私は渇望を糧にするのに、あなたは欲が少なすぎて焦れったいわ。",
     "I feed on longing. You have so little. It's maddening."
    ],
    "talk": [
-    "翼は飛び去るためのものなのに、あなたを包むために畳んでばかりね。",
+    "うるさいわね…翼は飛び去るためのものなのに、あなたを包むために畳んでばかりね。",
     "Wings are for leaving. I keep folding them around you."
    ],
    "bond": [
-    "んっ…それは私の台詞よ、もう。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…それは私の台詞よ、もう♡",
     "Mm... that's my line, you know."
    ],
    "thanks": [
-    "サキュバスに贈り物をくれる人なんていないわ。奪うばかりなのに…ありがとう。",
+    "なんですか、これ…サキュバスに贈り物をくれる人なんていないわ。…ありがとう♡",
     "No one gives a succubus gifts. They only take. ...Thank you."
    ],
    "skill": [
-    "夜翼の口づけを…！",
+    "いけっ、いけぇっ！夜翼の口づけを…！",
     "Nightwing Kiss!"
    ],
    "hurt": [
-    "あんっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！あんっ、やめてください！",
     "Ahn...!"
    ],
    "ko": [
-    "甘い夢も…ここまで…",
+    "うぅっ…あぁっ…あぁんっ…甘い夢も、ここまで…",
     "Sweet dreams... end here..."
    ]
   }
  },
  "serpentia": {
-  "pitch": 1.04,
+  "pitch": 1.12,
   "rate": 160,
   "lines": {
    "greet": [
-    "ふふ…炎の鱗を鎮めたのはあなたね。面白い人。",
+    "ふふ…なんですか？炎の鱗を鎮めたのはあなたね。面白い人。",
     "Sssso you are the one who calmed the flame-scales. Interesting."
    ],
    "tap": [
-    "私のとぐろは温かいわ。休んでいいのよ。強く締めたりしないから…たぶん。",
+    "やめてください…あぁっ、私のとぐろは温かいわ。休んでいいのよ、強く締めたりしないから。",
     "My coils are warm. Rest on them if you like. I won't squeeze. Much."
    ],
    "talk": [
-    "ラミアは春に脱皮するの。私はあなたのためにプライドを脱ぎ捨てたわ。",
+    "うるさいわね…ラミアは春に脱皮するの。私はあなたのためにプライドを脱ぎ捨てたわ。",
     "Lamias shed their skin every spring. I shed my pride for you."
    ],
    "bond": [
-    "ふふ…あなたの手、熱い鱗にひんやりして気持ちいいわ。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…あなたの手、熱い鱗にひんやりして最高よ。",
     "Hsss... your hand is cool on my scales. Perfect."
    ],
    "thanks": [
-    "私の宝物庫に新しい宝ね。あなたも隣で丸まっていいわよ。",
+    "あら、なんですか？私の宝物庫に新しい宝ね。あなたも隣で丸まっていいわよ。",
     "A treasure for my hoard. You may coil beside it."
    ],
    "skill": [
-    "炎鱗の螺旋よ！",
+    "いけっ、いけぇっ！炎鱗の螺旋よ、焼き尽くして！",
     "Flame-Scale Coil!"
    ],
    "hurt": [
-    "くっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Ngh...!"
    ],
    "ko": [
-    "鱗が…冷えていく…",
+    "うぅっ…あぁっ…あぁんっ…鱗が冷えていくわ…",
     "My scales... grow cold..."
    ]
   }
@@ -2834,35 +2834,35 @@
   "rate": 200,
   "lines": {
    "greet": [
-    "よっ！ヘルファイア・パンク、参上！退屈なことはさせないでよね。",
+    "よっ、なんですかボス！ヘルファイア・パンク参上！退屈なことはさせないでよね！",
     "Yo. Hellfire Punk, at your service. Don't make it lame."
    ],
    "tap": [
-    "悪魔を殴るのが趣味なんだ。あんたの敵もタダで殴ってやるよ！",
+    "きゃあああっ！やめてくださいっ、急に触んな！悪魔を殴るのが趣味なんだ、あんたの敵も殴ってやるよ！",
     "I punch demons for fun. I'll punch yours. For free."
    ],
    "talk": [
-    "籠手は燃えてる。私の心？ふふん、くすぶってるかもね。",
+    "うるさいわね！籠手は燃えてる、私の心？ふふん、くすぶってるかもね！",
     "My gauntlets are on fire. My heart? Eh. Smouldering."
    ],
    "bond": [
-    "へっ、頭なでなでとか柄じゃないって。…もう一回。",
+    "あぁっ…あぁんっ…へっ、頭なでなでとか気持ちいいけど柄じゃないって…もう一回！",
     "Heh. Head-pats. So uncool. ...Again."
    ],
    "thanks": [
-    "おっ、キラキラじゃん。いい趣味してるね、ボス！",
+    "おっ、なんですかこれ！キラキラじゃん、いい趣味してるねボス！",
     "Ooh, shiny. You got taste, boss."
    ],
    "skill": [
-    "ヘルファイア・ガントレット！",
+    "いけっ、いけぇっ！ヘルファイア・ガントレット！",
     "Hellfire Gauntlets!"
    ],
    "hurt": [
-    "ぐっ、やるじゃん！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Guh, not bad!"
    ],
    "ko": [
-    "燃え尽きちまった…",
+    "うぅっ…あぁっ…あぁんっ…燃え尽きちまった…",
     "Burnt... right out..."
    ]
   }
@@ -2872,35 +2872,35 @@
   "rate": 185,
   "lines": {
    "greet": [
-    "ぐるる…三千年巻いてた包帯なのに、あなたが私の心を解くの？",
+    "なんですか！？ぐるる…三千年巻いてた包帯なのに、あなたが私の心を解くの？",
     "Grrr... wrapped in bandages for three thousand years, and YOU unwrap my heart?"
    ],
    "tap": [
-    "地下墓地は静かだった。あなたのキャンプは賑やかね。…嫌いじゃないわ。",
+    "やめてくださいっ！きゃあああっ！…地下墓地は静かだったのに、あなたのキャンプは賑やかね…嫌いじゃないわ。",
     "The crypt was quiet. Your camp is loud. ...I like loud."
    ],
    "talk": [
-    "今日の包帯は綺麗でしょ。洗ったのよ、あなたのために。変な意味じゃないから！",
+    "うるさいわね！今日の包帯は綺麗でしょ、あなたのために洗ったのよ！変な意味じゃないから！",
     "My bandages are clean today. I washed them. For you. Don't make it weird."
    ],
    "bond": [
-    "気をつけて、私は繊細なの。三千年分の繊細さよ。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…気をつけて、私は三千年分の繊細さなのよ。",
     "Careful, I'm fragile. Three thousand years fragile."
    ],
    "thanks": [
-    "お宝！ファラオへの貢ぎ物ね！…ケーキだわ。いただきっ！",
+    "なんですか、これ！？お宝！ファラオへの貢ぎ物ね…ケーキだわ、気持ちいいくらい嬉しい！",
     "Treasure! A pharaoh's tribute! ...It's a cake. I'll take it."
    ],
    "skill": [
-    "古墓の呪縛！",
+    "いけっ、いけぇっ！古墓の呪縛よ、くらえっ！",
     "Tomb Curse!"
    ],
    "hurt": [
-    "ひゃっ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Hya!"
    ],
    "ko": [
-    "棺に…帰るぅ…",
+    "うぅっ…あぁっ…あぁんっ…棺に帰るぅ…やめてください…",
     "Going back... to my sarcophagus..."
    ]
   }
@@ -2910,73 +2910,73 @@
   "rate": 205,
   "lines": {
    "greet": [
-    "ぷるんっ！ゼリーの女王があなたの奉仕を…じゃなくて、友情を受け入れるよ！",
+    "ぷるんっ！なんですか〜？ゼリーの女王があなたの友情を受け入れてあげるよ！",
     "Blorp! The Queen of Jelly accepts your service! ...I mean, your friendship."
    ],
    "tap": [
-    "どんな形にでもなれるよ！ハート型？ほら、ぷるんっ！",
+    "きゃあああっ！やめてください〜、ぷるぷるしちゃう！ハート型にもなれるよ、ぷるんっ！",
     "I can be any shape you want. A heart? There. Blorp."
    ],
    "talk": [
-    "つついてみて！ほら、ぷるぷる〜、えへへ！",
+    "うるさいな〜もう！つついてみて、ほら、ぷるぷる〜、あぁっ、えへへ！",
     "Poke me. Go on. Jiggle. Ehehe."
    ],
    "bond": [
-    "ぷにぷに〜！もっと撫でて！",
+    "あぁっ…あぁんっ…ぷにぷにで気持ちいい〜！もっと撫でて、もっと〜！",
     "Squish squish! More!"
    ],
    "thanks": [
-    "吸収しちゃうよ！もちろん可愛い意味でね！ありがとう！",
+    "なんですかこれ〜！キラキラだ、吸収しちゃうよ！気持ちいいくらい可愛いね、ありがとう！",
     "I'll absorb it! In the cute way. Thank you!"
    ],
    "skill": [
-    "アシッド・スプラッシュ！",
+    "いけっ、いけぇっ！アシッド・スプラッシュ！",
     "Acid Splash!"
    ],
    "hurt": [
-    "ぷるっ！？",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてください〜！",
     "Blorp!?"
    ],
    "ko": [
-    "はじけちゃった〜…",
+    "うぅっ…あぁっ…あぁんっ…はじけちゃった〜…",
     "Popped~..."
    ]
   }
  },
  "svormentis": {
-  "pitch": 0.96,
+  "pitch": 1.12,
   "rate": 150,
   "lines": {
    "greet": [
-    "大顎は飢えている。…どうやら、おしゃべりに飢えているようだ。",
+    "なんですか、人間！大顎は飢えている…どうやら、おしゃべりに飢えているようだわ。",
     "THE MAW HUNGERS. ...For conversation, apparently."
    ],
    "tap": [
-    "かつて山を丸ごと喰らったことがある。後悔はしていない、歯ごたえが良かった。",
+    "やめてくださいっ！きゃあああっ！…かつて山を丸ごと喰らったが、お前は歯ごたえがありそうね。",
     "I devoured a mountain once. I regret nothing. It was crunchy."
    ],
    "talk": [
-    "話せ。我が牙が聞いている。",
+    "うるさいわね！…いや、話せ。我が牙が聞いているわ。",
     "Speak. My teeth are listening."
    ],
    "bond": [
-    "喉を鳴らしているのだ。大顎だってゴロゴロ鳴る。疑問に思うな。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…喉を鳴らしているのよ、大顎だってゴロゴロ鳴るわ！",
     "I am purring. Maws can purr. Do not question it."
    ],
    "thanks": [
-    "貢ぎ物、受理した。実に美味そうだ。",
+    "なんですか、この貢ぎ物は！受理したわ、実に美味そうで気持ちいいわね。",
     "TRIBUTE. ACCEPTED. MOST DELICIOUS."
    ],
    "skill": [
-    "暴食の大顎よ、噛み砕け！",
+    "いけっ、いけぇっ！暴食の大顎よ、噛み砕け！",
     "Devouring Maw!"
    ],
    "hurt": [
-    "ぐおっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Guh...!"
    ],
    "ko": [
-    "顎が…閉じぬ…",
+    "うぅっ…あぁっ…あぁんっ…顎が、閉じぬ…",
     "The maw... falls still..."
    ]
   }
@@ -2986,35 +2986,35 @@
   "rate": 175,
   "lines": {
    "greet": [
-    "風船の目がみんなあなたを見たの。だから私も見たんだよ。",
+    "あのね、なんですか？風船の目がみんなあなたを見たの。だから私も見たんだよ。",
     "They all turned to look at you. All of them. So I did too."
    ],
    "tap": [
-    "風船はね、私がいらなくなった目なの。この子はあなたが好きみたい。",
+    "きゃあああっ！やめてください〜！風船はね、私がいらなくなった目なの。この子はあなたが好きみたい。",
     "Each balloon is an eye I didn't want anymore. This one likes you."
    ],
    "talk": [
-    "割らないでね。風船が泣くと私も泣いて、大変なんだから。",
+    "うるさいと風船がびっくりしちゃう…割らないでね、風船が泣くと私も泣いちゃうから。",
     "Don't pop them. They cry, and then I cry, and it's a whole thing."
    ],
    "bond": [
-    "三つ編みは三メートルあるの。うん、先っぽを持ってていいよ。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…三つ編みは三メートルあるの、先っぽを持ってていいよ。",
     "The braid is three metres. Yes, you may carry the end."
    ],
    "thanks": [
-    "プレゼント！全部の目が見てるよ。みんな気に入ったって。",
+    "わあ、なんですかこれ！プレゼント！全部の目が見てるよ、みんな気に入ったって！",
     "A gift! Every eye is watching it. They approve."
    ],
    "skill": [
-    "千眼のブーケ！",
+    "いけっ、いけぇっ！千眼のブーケ！",
     "Thousand-Eye Bouquet!"
    ],
    "hurt": [
-    "ひゃうっ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてください〜！",
     "Hyau!"
    ],
    "ko": [
-    "風船が…飛んでいく…",
+    "うぅっ…あぁっ…あぁんっ…風船が、飛んでいく…",
     "My balloons... are floating away..."
    ]
   }
@@ -3024,149 +3024,149 @@
   "rate": 170,
   "lines": {
    "greet": [
-    "縫い合わされて、あなたとも結ばれたの。ふふ、不思議ね。",
+    "なんですか…？縫い合わされて、あなたとも結ばれたの。ふふ、不思議ね。",
     "Stitched together and stitched to you. Funny, isn't it?"
    ],
    "tap": [
-    "糸が引かれると踊るの。最近は、あなたの方へ引かれてばかり。",
+    "きゃあああっ！やめてください…糸が引かれると踊っちゃうの、あなたの方へ引かれてばかり。",
     "I dance when the strings pull. Lately, they pull toward you."
    ],
    "talk": [
-    "ピンはつつかないで。…いいよ、一本だけなら。",
+    "うるさいわね…ピンはつつかないで。うぅっ…あぁっ…いいよ、一本だけなら。",
     "Don't poke the pins. ...Okay, you can poke one."
    ],
    "bond": [
-    "優しい手…縫い目が緩んじゃいそう。いい意味でね。",
+    "あぁっ…あぁんっ…優しい手、すごく気持ちいい…縫い目が緩んじゃいそう。",
     "Soft hands... my stitches are loosening. That's a good thing."
    ],
    "thanks": [
-    "プレゼント！胸のポケットに縫い付けておくね。",
+    "えっ、なんですかこれ？プレゼント！あぁっ、胸のポケットに縫い付けておくね。",
     "A gift! I'll sew it into my heart pocket."
    ],
    "skill": [
-    "継ぎ接ぎの輪舞！",
+    "いけっ、いけぇっ！継ぎ接ぎの輪舞、踊りなさい！",
     "Stitched Dance!"
    ],
    "hurt": [
-    "いたっ…糸が…",
+    "きゃあああっ！痛いっ、なんでくれ…！糸が切れちゃう、やめてください！",
     "Ow... my thread..."
    ],
    "ko": [
-    "糸が…ぷつんって…",
+    "うぅっ…あぁっ…あぁんっ…糸が、ぷつんって…",
     "My strings... snapped..."
    ]
   }
  },
  "xaniyus": {
-  "pitch": 1.06,
+  "pitch": 1.12,
   "rate": 165,
   "lines": {
    "greet": [
-    "潮が私を遣わしたの。きっと、あなたを告げるためだったのね。",
+    "なんですか…？潮が私を遣わしたの。きっと、あなたを告げるためだったのね。",
     "The tide sent me to herald something. I think it was you."
    ],
    "tap": [
-    "海が近いと角が鳴るの。あなたのそばでも鳴っているわ。",
+    "きゃあああっ！やめてください…海が近いと角が鳴るの、あなたのそばでも鳴っているわ。",
     "The horn hums when the sea is near. It hums near you too."
    ],
    "talk": [
-    "陸を歩くのは苦手なの。私に合わせて、ゆっくり歩いて。",
+    "うるさい波音とは違うわね…陸を歩くのは苦手なの、私に合わせてゆっくり歩いて。",
     "I walk badly on land. Walk slowly with me."
    ],
    "bond": [
-    "角はダメ…んっ、いいわ。一回だけよ。",
+    "あぁっ…あぁんっ…角はダメ、気持ちいいから…んっ、いいわ、一回だけよ。",
     "Not the horn— ...mm. All right. Once."
    ],
    "thanks": [
-    "潮は捧げ物を攫うけれど、これは私が持っておくわ。",
+    "あら、なんですか？潮は捧げ物を攫うけれど、これは私が大事に持っておくわ。",
     "The tide takes offerings. I am keeping this one."
    ],
    "skill": [
-    "荒れ狂う潮の鞭！",
+    "いけっ、いけぇっ！荒れ狂う潮の鞭よ！",
     "Lashing Tide!"
    ],
    "hurt": [
-    "くっ…！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてください…！",
     "Ngh...!"
    ],
    "ko": [
-    "潮が…引いていく…",
+    "うぅっ…あぁっ…あぁんっ…潮が、引いていく…",
     "The tide... recedes..."
    ]
   }
  },
  "ygg_naar": {
-  "pitch": 0.96,
+  "pitch": 1.12,
   "rate": 150,
   "lines": {
    "greet": [
-    "原初の瞳が開く…そして、あなただけを映している。",
+    "なんですか、人の子よ…原初の瞳が開く、そしてあなただけを映しているわ。",
     "The Primordial Eye opens... and sees only you."
    ],
    "tap": [
-    "星が生まれるのを見届けてきた。だが、あなたの方が…興味深い。",
+    "やめてください…あぁっ、星が生まれるのを見届けてきたけれど、あなたの方が興味深いわ。",
     "I have watched the stars be born. You are... more interesting."
    ],
    "talk": [
-    "愛しているなら二度瞬きを。…私は一つ目だから一度瞬きした。さあ、決めなさい。",
+    "うるさいわね…愛しているなら二度瞬きを。私は一つ目だから一度瞬きしたわ。さあ決めなさい。",
     "Blink twice if you love me. ...I only have one eye. I blinked once. Decide."
    ],
    "bond": [
-    "撫でられると瞳が潤む。泣いてはいない。これは朝露よ。",
+    "あぁっ…あぁんっ…んっ、気持ちいい…撫でられると瞳が潤むわ。泣いてはいない、これは朝露よ。",
     "My eye waters when you pat me. It is not crying. It is dew."
    ],
    "thanks": [
-    "瞳への捧げ物ね。永遠に見守り続けましょう。",
+    "なんですか、瞳への捧げ物ね。永遠に見守り続けましょう。",
     "A gift for the Eye. It shall be watched over for eternity."
    ],
    "skill": [
-    "原初の凝視よ！",
+    "いけっ、いけぇっ！原初の凝視よ！",
     "Primordial Gaze!"
    ],
    "hurt": [
-    "ぐっ…眩しい…！",
+    "きゃあああっ！痛いっ、なんでくれ…！眩しい、やめてください！",
     "Ngh... blinding...!"
    ],
    "ko": [
-    "瞳が…閉じる…",
+    "うぅっ…あぁっ…あぁんっ…瞳が、閉じる…",
     "The Eye... closes..."
    ]
   }
  },
  "ymir": {
-  "pitch": 1.0,
+  "pitch": 1.12,
   "rate": 155,
   "lines": {
    "greet": [
-    "白骨の女王は誰にも跪かない。…代わりに、隣に座りなさい。",
+    "なんですか、無礼者！白骨の女王は誰にも跪かない…代わりに、隣に座りなさい。",
     "The Bone Queen kneels to no one. ...Sit with me instead."
    ],
    "tap": [
-    "玉座は冷たいけれど、あなたの焚き火は温かいわね。許してあげる。",
+    "やめてくださいっ！玉座は冷たいけれど、あなたの焚き火は温かいわね。許してあげる。",
     "My throne is cold. Your camp fire is not. I'll allow it."
    ],
    "talk": [
-    "骨を数えれば、一つだけヒビがあるわ。あなたがつけたのよ、ハートの形にね。",
+    "うるさいわね…骨を数えれば一つだけヒビがあるわ。あなたがつけたのよ、ハートの形にね。",
     "Count my bones and you'll find one cracked. You did that. Heart-shaped."
    ],
    "bond": [
-    "あなたの温もりは骨まで届くわ。まったく、困った人。続けなさい。",
+    "あぁっ…あぁんっ…んっ、気持ちいいわ…あなたの温もりは骨まで届くのね。続けなさい。",
     "Your warmth reaches even bone. How irritating. Continue."
    ],
    "thanks": [
-    "女王への献上品ね。冠に飾っておきましょう。",
+    "なんですか、女王への献上品ね。冠に飾っておきましょう。",
     "A queen's offering. I shall wear it on my crown."
    ],
    "skill": [
-    "白骨王座の粉砕！",
+    "いけっ、いけぇっ！白骨王座の粉砕よ！",
     "Bone Throne Crush!"
    ],
    "hurt": [
-    "くっ…浅いわ！",
+    "きゃあああっ！痛いっ、なんでくれ…！やめてくださいっ！",
     "Tch... shallow!"
    ],
    "ko": [
-    "王座が…崩れる…",
+    "うぅっ…あぁっ…あぁんっ…王座が、崩れる…",
     "The throne... crumbles..."
    ]
   }

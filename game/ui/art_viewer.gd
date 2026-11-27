@@ -216,6 +216,8 @@ func _ready() -> void:
 	Game.sfx("ui_click")
 	if is_hero and Game.owns(id):
 		_say(Game.voice(id, "greet"))
+	elif not is_hero:
+		_say(Game.pet_voice(id, 0))
 
 func _round_btn(t: String, tip: String, cb: Callable, sz: Vector2 = Vector2(52, 52)) -> Button:
 	var b := UI.button(t, cb, "", sz)
@@ -433,19 +435,26 @@ func _line(ry: float) -> String:
 		var cat := "bond" if ry < 0.32 and int(Game.hero(id).get("bond", 0)) >= 3 else ("greet" if ry < 0.32 else ("tap" if ry < 0.7 else "hurt"))
 		return Game.voice(id, cat)
 	if Game.is_tamed(id):
-		return Game.pet_voice(id, 1 + randi() % 3)
-	Game.voice(id, "hurt")
-	return ["...!", "Hssss... don't touch me, tamer.", "You'll have to beat me first.", "Hmph. Bold, aren't you?", "...Again? You're strange."][randi() % 5]
+		var p_idx := 3 if ry < 0.32 else (1 if ry < 0.55 else 2)
+		return Game.pet_voice(id, p_idx)
+	if ry < 0.32:
+		return Game.pet_voice(id, 3)
+	elif ry < 0.7:
+		return Game.pet_voice(id, 1 + randi() % 2)
+	return Game.voice(id, "hurt" if randf() < 0.65 else "ko")
 
 func _pat() -> void:
 	if is_hero and Game.owns(id):
 		Game.add_bond(id, 2)
 		_say(Game.voice(id, "bond"))
-	elif not is_hero and Game.is_tamed(id):
-		if Game.pet_pat(id):
-			_say(Game.pet_voice(id, 3))
+	elif not is_hero:
+		if Game.is_tamed(id):
+			if Game.pet_pat(id):
+				_say(Game.pet_voice(id, 3))
+			else:
+				_say("%s is happy, but that's enough pats for today." % DB.name_of(id))
 		else:
-			_say("%s is happy, but that's enough pats for today." % DB.name_of(id))
+			_say(Game.pet_voice(id, 3))
 	Game.sfx("star_up")
 
 func _bounce(ry: float) -> void:

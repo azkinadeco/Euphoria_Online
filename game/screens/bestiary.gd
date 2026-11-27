@@ -180,6 +180,7 @@ func _render() -> void:
 		btn.pressed.connect(func():
 			Game.sfx("ui_click")
 			_sel = eid
+			Game.pet_voice(eid, 0)
 			_render())
 		_grid.add_child(btn)
 	_render_detail()
@@ -238,6 +239,7 @@ func _render_detail() -> void:
 		_render_detail(), "" if in_lobby else "GoldButton", Vector2(0, 38))
 	lb.add_theme_font_size_override("font_size", 12)
 	_detail.add_child(lb)
+	_detail.add_child(_voice_card(id))
 	_detail.add_child(_lore_card(id))
 	_detail.add_child(UI.label("HUNTER MILESTONES", 14, UI.GOLD, 3))
 	for t in DB.BESTIARY_TIERS.size():
@@ -365,8 +367,6 @@ func _set_zoom(z: float) -> void:
 		_art.position = Vector2.ZERO
 
 func _art_input(e: InputEvent) -> void:
-	if Game.kills_of(_sel) <= 0:
-		return
 	if e is InputEventMouseButton:
 		if e.button_index == MOUSE_BUTTON_WHEEL_UP and e.pressed:
 			_set_zoom(_zoom * 1.1)
@@ -378,7 +378,7 @@ func _art_input(e: InputEvent) -> void:
 				_start = e.position
 				_rub = 0.0
 				_moved = false
-				if e.double_click:
+				if e.double_click and Game.kills_of(_sel) > 0:
 					_set_zoom(1.0 if _zoom > 1.4 else 2.0)
 			elif _down:
 				_down = false
@@ -390,13 +390,16 @@ func _art_input(e: InputEvent) -> void:
 		if _zoom > 1.01:
 			# pan while zoomed
 			_art.position += e.relative
-		elif Game.is_tamed(_sel) and e.position.y / maxf(1.0, _art.size.y) < 0.35:
+		elif e.position.y / maxf(1.0, _art.size.y) < 0.35:
 			_rub += (e.relative as Vector2).length()
 			if _rub > 260.0:
 				_rub = 0.0
-				_pat()
+				if Game.is_tamed(_sel):
+					_pat()
+				else:
+					_react(0.2)
 
-## Tap: a reaction animation (hop / shiver / lean) and a line if she is tamed.
+## Tap: a reaction animation (hop / shiver / lean) and a zone-based Anime JP voice reaction.
 func _react(ry: float) -> void:
 	Game.sfx("ui_click")
 	_rig.react(ry)
@@ -418,9 +421,18 @@ func _react(ry: float) -> void:
 	fl.tween_property(_art, "self_modulate", Color(1.3, 1.15, 1.2), 0.08)
 	fl.tween_property(_art, "self_modulate", Color.WHITE, 0.3)
 	if Game.is_tamed(_sel):
-		main.toast("%s: \"%s\"" % [DB.name_of(_sel), Game.pet_voice(_sel, 1 + randi() % 3)], Color("#ff8fb8"))
+		var p_idx := 3 if ry < 0.35 else (1 if ry < 0.55 else 2)
+		main.toast("%s: \"%s\"" % [DB.name_of(_sel), Game.pet_voice(_sel, p_idx)], Color("#ff8fb8"))
 	else:
-		Game.voice(_sel, "hurt")
+		var line := ""
+		if ry < 0.35:
+			line = Game.pet_voice(_sel, 3)
+		elif ry < 0.7:
+			line = Game.pet_voice(_sel, 1 + randi() % 2)
+		else:
+			line = Game.voice(_sel, "hurt" if randf() < 0.65 else "ko")
+		if Game.kills_of(_sel) > 0 and line != "":
+			main.toast("%s: \"%s\"" % [DB.name_of(_sel), line], Color("#d4b8ff"))
 
 func _pat() -> void:
 	if not Game.pet_pat(_sel):
@@ -546,9 +558,33 @@ func _render_tame(id: String) -> void:
 		_detail.add_child(row)
 
 
+## Voice preview card for any foe in the Bestiary (Greet, Touch, Talk, Pat, Gift, Skill, Hurt, KO).
+func _voice_card(id: String) -> Control:
+	var vp := UI.panel("CardPanel")
+	var vv := UI.vbox(6)
+	vp.add_child(vv)
+	vv.add_child(UI.label("♪ VOICE", 13, UI.GOLD, 3))
+	var vf := HFlowContainer.new()
+	vf.add_theme_constant_override("h_separation", 5)
+	vf.add_theme_constant_override("v_separation", 5)
+	vv.add_child(vf)
+	var sub := UI.wrap_label("", 11, UI.TEXT)
+	for item in [["pet_0", "Greet", 0], ["pet_1", "Touch", 1], ["pet_2", "Talk", 2], ["pet_3", "Pat ♥", 3], ["pet_4", "Gift", 4], ["skill", "Skill", -1], ["hurt", "Hurt", -1], ["ko", "KO", -1]]:
+		var k: String = item[0]
+		var lbl: String = item[1]
+		var pidx: int = item[2]
+		var vb := UI.button(lbl, func():
+			var line := Game.pet_voice(id, pidx) if pidx >= 0 else Game.voice(id, k)
+			sub.text = "\"%s\"" % line if line != "" else "", "", Vector2(0, 30))
+		vb.add_theme_font_size_override("font_size", 11)
+		vf.add_child(vb)
+	vv.add_child(sub)
+	return vp
+
 ## Entry for a foe not met yet: where to find her and what hunting her is worth.
 func _unknown_detail(id: String) -> void:
 	_detail.add_child(UI.wrap_label("Defeat this enemy once to reveal her entry, art and forms.", 13, UI.MUTED))
+	_detail.add_child(_voice_card(id))
 	var role := str(DB.ENEMIES[id].get("role", ""))
 	if role != "":
 		var rp := UI.styled_panel(Color(1, 1, 1, 0.05), Color(1, 1, 1, 0.2), 8, 1, 6.0)
